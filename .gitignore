@@ -47,5 +47,6 @@ flycheck_*.el
 # network security
 /network-security.data
 
-# custom.el
+# my ignore files
 custom.el
+README.el
