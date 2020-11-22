@@ -2,7 +2,7 @@
 ** head
 Copyright など。
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 ;;; README.el --- My README.el  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020 Yoshihide Chubachi
@@ -27,152 +27,172 @@ Copyright など。
 ;;  My README.el.
 
 ;;; Code:
-#+END_SRC
+#+end_src
 
 ** body
-#+BEGIN_SRC emacs-lisp
-;; this enables this running method
-;;   emacs -q -l ~/.debug.emacs.d/{{pkg}}/init.el
-(eval-and-compile
-  (when (or load-file-name byte-compile-current-file)
-    (setq user-emacs-directory
-          (expand-file-name
-           (file-name-directory
-            (or load-file-name byte-compile-current-file))))))
 
-(eval-and-compile
-  (customize-set-variable
-   'package-archives '(("org"   . "https://orgmode.org/elpa/")
-                       ("melpa" . "https://melpa.org/packages/")
-                       ("gnu"   . "https://elpa.gnu.org/packages/")))
-  (package-initialize)
-  (unless (package-installed-p 'leaf)
-    (package-refresh-contents)
-    (package-install 'leaf))
+#+begin_src emacs-lisp
+  ;; this enables this running method
+  ;;   emacs -q -l ~/.debug.emacs.d/{{pkg}}/init.el
+  (eval-and-compile
+    (when (or load-file-name byte-compile-current-file)
+      (setq user-emacs-directory
+            (expand-file-name
+             (file-name-directory
+              (or load-file-name byte-compile-current-file))))))
 
-  (leaf leaf-keywords
-    :ensure t
-    :init
-    ;; optional packages if you want to use :hydra, :el-get, :blackout,,,
-    (leaf hydra :ensure t)
-    (leaf el-get :ensure t)
-    (leaf blackout :ensure t)
+  (eval-and-compile
+    (customize-set-variable
+     'package-archives '(("org"   . "https://orgmode.org/elpa/")
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("gnu"   . "https://elpa.gnu.org/packages/")))
+    (package-initialize)
+    (unless (package-installed-p 'leaf)
+      (package-refresh-contents)
+      (package-install 'leaf))
 
+    (leaf leaf-keywords
+      :ensure t
+      :init
+      ;; optional packages if you want to use :hydra, :el-get, :blackout,,,
+      (leaf hydra :ensure t)
+      (leaf el-get :ensure t)
+      (leaf blackout :ensure t)
+
+      :config
+      ;; initialize leaf-keywords.el
+      (leaf-keywords-init)))
+
+  (leaf leaf
     :config
-    ;; initialize leaf-keywords.el
-    (leaf-keywords-init)))
+    (leaf leaf-convert :ensure t)
+    (leaf leaf-tree
+      :ensure t
+      :custom ((imenu-list-size . 30)
+               (imenu-list-position . 'left))))
 
-(leaf leaf
-  :config
-  (leaf leaf-convert :ensure t)
-  (leaf leaf-tree
-    :ensure t
-    :custom ((imenu-list-size . 30)
-             (imenu-list-position . 'left))))
+  ;; We do not use costom.el.
+  (leaf cus-edit
+    :doc "tools for customizing Emacs and Lisp packages"
+    :tag "builtin" "faces" "help"
+    :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
 
-;; We do not use costom.el.
-(leaf cus-edit
-  :doc "tools for customizing Emacs and Lisp packages"
-  :tag "builtin" "faces" "help"
-  :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
-
-;; You can also configure builtin package via leaf!
-(leaf cus-start
-  :doc "define customization properties of builtins"
-  :tag "builtin" "internal"
-  :bind (("\C-z" . undo))
-  :custom ((user-full-name . "Yoshihide Chubachi")
-           (user-mail-address . "yoshi@chubachi.net")
-           (user-login-name . "yc")
-           ;; (truncate-lines . t)
-           ;; (menu-bar-mode . t)
-           ;; (tool-bar-mode . nil)
-           ;; (scroll-bar-mode . nil)
-           ;; (indent-tabs-mode . nil)
-           (blink-cursor-mode . nil))
-  :config
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  (keyboard-translate ?\C-h ?\C-?) ;; ???
-  )
-
-;; ;; builtin packages
-(leaf paren
-  :doc "highlight matching paren"
-  :tag "builtin"
-  :custom ((show-paren-delay . 0.1))
-  :global-minor-mode show-paren-mode)
-
-(leaf isearch
-  :bind ((isearch-mode-map
-	  ("C-o" . isearch-toggle-input-method))))
-
-;; 多分設定が中途はんぱ
-(leaf wdired
-  :doc "Rename files editing their names in dired buffers"
-  :tag "builtin"
-  :added "2020-11-21"
-  :bind ((wdired-mode-map
-          ("C-o" . toggle-input-method))))
-
-(leaf autorevert
-  :doc "revert buffers when files on disk change"
-  :tag "builtin"
-  :custom ((auto-revert-interval . 0.1))
-  :global-minor-mode global-auto-revert-mode)
-
-(leaf macrostep
-  :doc "interactive macro expander"
-  :req "cl-lib-0.5"
-  :tag "debugging" "macro" "languages" "lisp"
-  :added "2020-11-21"
-  :url "https://github.com/joddie/macrostep"
-  :bind (("C-c e" . macrostep-expand)))
-
-(leaf mozc-im
-  :doc "Mozc with input-method-function interface."
-  :req "mozc-0"
-  :tag "extentions" "i18n"
-  :added "2020-11-21"
-  :ensure t
-  :require mozc-im
-  :custom
-  ((default-input-method . "japanese-mozc-im"))
-  :bind (("C-o" . toggle-input-method))
-  )
-
-(leaf flycheck
-  :doc "On-the-fly syntax checking"
-  :emacs>= 24.3
-  :ensure t
-  :bind (("M-n" . flycheck-next-error)
-         ("M-p" . flycheck-previous-error))
-  :custom ((flycheck-emacs-lisp-initialize-packages . t))
-  :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
-  :config
-  (leaf flycheck-package
-    :doc "A Flycheck checker for elisp package authors"
-    :ensure t
+  ;; You can also configure builtin package via leaf!
+  (leaf cus-start
+    :doc "define customization properties of builtins"
+    :tag "builtin" "internal"
+    :bind (("\C-z" . undo))
+    :custom ((user-full-name . "Yoshihide Chubachi")
+             (user-mail-address . "yoshi@chubachi.net")
+             (user-login-name . "yc")
+             ;; (truncate-lines . t)
+             ;; (menu-bar-mode . t)
+             ;; (tool-bar-mode . nil)
+             ;; (scroll-bar-mode . nil)
+             ;; (indent-tabs-mode . nil)
+             (blink-cursor-mode . nil))
     :config
-    (flycheck-package-setup))
+    (defalias 'yes-or-no-p 'y-or-n-p)
+    (keyboard-translate ?\C-h ?\C-?) ;; ???
+    )
 
-  (leaf flycheck-elsa
-    :doc "Flycheck for Elsa."
-    :emacs>= 25
+  ;; ;; builtin packages
+  (leaf paren
+    :doc "highlight matching paren"
+    :tag "builtin"
+    :custom ((show-paren-delay . 0.1))
+    :global-minor-mode show-paren-mode)
+
+  (leaf isearch
+    :bind ((isearch-mode-map
+            ("C-o" . isearch-toggle-input-method))))
+
+  ;; 多分設定が中途はんぱ
+  (leaf wdired
+    :doc "Rename files editing their names in dired buffers"
+    :tag "builtin"
+    :added "2020-11-21"
+    :bind ((wdired-mode-map
+            ("C-o" . toggle-input-method))))
+
+  (leaf autorevert
+    :doc "revert buffers when files on disk change"
+    :tag "builtin"
+    :custom ((auto-revert-interval . 0.1))
+    :global-minor-mode global-auto-revert-mode)
+
+  (leaf macrostep
+    :doc "interactive macro expander"
+    :req "cl-lib-0.5"
+    :tag "debugging" "macro" "languages" "lisp"
+    :added "2020-11-21"
+    :url "https://github.com/joddie/macrostep"
+    :bind (("C-c e" . macrostep-expand)))
+
+  (leaf mozc-im
+    :doc "Mozc with input-method-function interface."
+    :req "mozc-0"
+    :tag "extentions" "i18n"
+    :added "2020-11-21"
     :ensure t
+    :require mozc-im
+    :custom
+    ((default-input-method . "japanese-mozc-im"))
+    :bind (("C-o" . toggle-input-method))
+    )
+
+#+end_src
+
+** fly-check
+
+- emacs-lispのドキュメント用のチェック(emacs-lisp-checkdoc)を無効にする。
+
+#+begin_src emacs-lisp
+  (leaf flycheck
+    :doc "On-the-fly syntax checking"
+    :emacs>= 24.3
+    :ensure t
+    :bind (("M-n" . flycheck-next-error)
+           ("M-p" . flycheck-previous-error))
+    :custom ((flycheck-emacs-lisp-initialize-packages . t)
+             (flycheck-disabled-checkers . '(emacs-lisp-checkdoc)))
+    :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
     :config
-    (flycheck-elsa-setup))
-  )
+    (leaf flycheck-package
+      :doc "A Flycheck checker for elisp package authors"
+      :ensure t
+      :config
+      (flycheck-package-setup))
 
-(provide 'init)
+    (leaf flycheck-elsa
+      :doc "Flycheck for Elsa."
+      :emacs>= 25
+      :ensure t
+      :config
+      (flycheck-elsa-setup))
+    )
+#+end_src
 
-#+END_SRC
+** org-mode
+
+- "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
+
+#+begin_src emacs-lisp
+  (require 'org-tempo)
+  (add-to-list 'org-structure-template-alist
+               '("el" . "src emacs-lisp"))
+#+end_src
 
 ** Footer
 
-#+BEGIN_SRC
+- お約束
+
+#+begin_src emacs-lisp
+(provide 'README)
+
 ;; Local Variables:
 ;; indent-tabs-mode: nil
 ;; End:
 
 ;;; README.el ends here
-#+END_SRC
+#+end_src
