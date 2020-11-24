@@ -23,7 +23,7 @@
 ;;; Code:
 
 (require 'org-install)
-(org-babel-load-file "README.org")
+(org-babel-load-file "~/.emacs.d/README.org")
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
