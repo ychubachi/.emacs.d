@@ -1,6 +1,7 @@
 * Emacs init.el
 ** head
-Copyright など。
+
+- Copyright など。
 
 #+begin_src emacs-lisp
 ;;; README.el --- My README.el  -*- lexical-binding: t; -*-
@@ -174,6 +175,7 @@ Copyright など。
 #+end_src
 
 ** org-mode
+*** org-tempo
 
 - "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
 
@@ -181,6 +183,59 @@ Copyright など。
   (require 'org-tempo)
   (add-to-list 'org-structure-template-alist
                '("el" . "src emacs-lisp"))
+#+end_src
+
+*** beamer
+
+- pygmentをインストールしておく
+- beamerの作成は C-c C-e l P
+
+#+begin_src emacs-lisp
+  (require 'ox-latex)
+  (require 'ox-beamer)
+
+  (setq org-latex-pdf-process
+        '("platex -shell-escape %f"
+          "platex -shell-escape %f"
+          "pbibtex %b"
+          "platex -shell-escape %f"
+          "platex -shell-escape %f"
+          "dvipdfmx %b.dvi"))
+
+  (setq org-export-latex-listings t)
+  (setq org-latex-listings 'minted)
+  (setq org-beamer-outline-frame-title "目次")
+
+  (setq org-latex-minted-options
+        '(("frame" "lines")
+          ("framesep=2mm")
+          ("linenos=true")
+          ("baselinestretch=1.2")
+          ("fontsize=\\footnotesize")
+          ("breaklines")
+          ))
+#+end_src
+
+- フレームの位置をtopにする。
+
+#+begin_src emacs-lisp
+  (setq org-beamer-frame-default-options "t")
+#+end_src
+
+** pandoc-mode
+
+- C-c / でメニュー表示
+- http://joostkremers.github.io/pandoc-mode/
+
+#+begin_src emacs-lisp
+  (leaf pandoc-mode
+    :doc "Minor mode for interacting with Pandoc"
+    :req "hydra-0.10.0" "dash-2.10.0"
+    :tag "pandoc" "text"
+    :added "2020-11-24"
+    :url "http://joostkremers.github.io/pandoc-mode/"
+    :ensure t
+    :after hydra)
 #+end_src
 
 ** Footer
