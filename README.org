@@ -32,6 +32,8 @@
 
 ** body
 
+- ここの意味が理解できてない
+
 #+begin_src emacs-lisp
   ;; this enables this running method
   ;;   emacs -q -l ~/.debug.emacs.d/{{pkg}}/init.el
@@ -41,13 +43,22 @@
             (expand-file-name
              (file-name-directory
               (or load-file-name byte-compile-current-file))))))
+#+end_src
 
+- パッケージの設定
+
+#+begin_src emacs-lisp
   (eval-and-compile
     (customize-set-variable
      'package-archives '(("org"   . "https://orgmode.org/elpa/")
                          ("melpa" . "https://melpa.org/packages/")
                          ("gnu"   . "https://elpa.gnu.org/packages/")))
     (package-initialize)
+#+end_src
+
+- leafの導入
+
+#+begin_src emacs-lisp
     (unless (package-installed-p 'leaf)
       (package-refresh-contents)
       (package-install 'leaf))
@@ -72,12 +83,21 @@
       :custom ((imenu-list-size . 30)
                (imenu-list-position . 'left))))
 
+#+end_src
+
+- 自動で生成される設定は別ファイルとする。
+- このファイルはあえてよみこまない。
+
+#+begin_src emacs-lisp
   ;; We do not use costom.el.
   (leaf cus-edit
     :doc "tools for customizing Emacs and Lisp packages"
     :tag "builtin" "faces" "help"
     :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
+#+end_src
 
+*** ビルトインパッケージのカスタマイズ
+#+begin_src emacs-lisp
   ;; You can also configure builtin package via leaf!
   (leaf cus-start
     :doc "define customization properties of builtins"
@@ -96,32 +116,61 @@
     (defalias 'yes-or-no-p 'y-or-n-p)
     (keyboard-translate ?\C-h ?\C-?) ;; ???
     )
+#+end_src
 
-  ;; ;; builtin packages
+** ビルトインパッケージの設定
+*** paren
+
+- 対応するカッコの表示
+
+#+begin_src emacs-lisp
   (leaf paren
     :doc "highlight matching paren"
     :tag "builtin"
     :custom ((show-paren-delay . 0.1))
     :global-minor-mode show-paren-mode)
+#+end_src
 
+*** isearch
+
+- isearch で漢字入力ができるようにする
+
+#+begin_src emacs-lisp
   (leaf isearch
     :bind ((isearch-mode-map
             ("C-o" . isearch-toggle-input-method))))
+#+end_src
 
-  ;; 多分設定が中途はんぱ
+*** wdired
+
+- 多分設定が中途はんぱ
+
+#+begin_src emacs-lisp
   (leaf wdired
     :doc "Rename files editing their names in dired buffers"
     :tag "builtin"
     :added "2020-11-21"
     :bind ((wdired-mode-map
             ("C-o" . toggle-input-method))))
+#+end_src
+
+*** autorevert
+- ディスクのファイルが更新されたらバッファも自動で更新する
+
+#+begin_src emacs-lisp
 
   (leaf autorevert
     :doc "revert buffers when files on disk change"
     :tag "builtin"
     :custom ((auto-revert-interval . 0.1))
     :global-minor-mode global-auto-revert-mode)
+#+end_src
 
+*** macrostep
+
+- elispのマクロを展開する
+
+#+begin_src emacs-lisp
   (leaf macrostep
     :doc "interactive macro expander"
     :req "cl-lib-0.5"
@@ -129,7 +178,13 @@
     :added "2020-11-21"
     :url "https://github.com/joddie/macrostep"
     :bind (("C-c e" . macrostep-expand)))
+#+end_src
 
+*** mozc-im
+
+- elispのマクロを展開する
+
+#+begin_src emacs-lisp
   (leaf mozc-im
     :doc "Mozc with input-method-function interface."
     :req "mozc-0"
@@ -141,10 +196,10 @@
     ((default-input-method . "japanese-mozc-im"))
     :bind (("C-o" . toggle-input-method))
     )
-
 #+end_src
 
-** fly-check
+** 外部パッケージ
+*** fly-check
 
 - emacs-lispのドキュメント用のチェック(emacs-lisp-checkdoc)を無効にする。
 
@@ -174,8 +229,8 @@
     )
 #+end_src
 
-** org-mode
-*** org-tempo
+**** org-mode
+**** org-tempo
 
 - "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
 
@@ -185,7 +240,7 @@
                '("el" . "src emacs-lisp"))
 #+end_src
 
-*** beamer
+**** beamer
 
 - pygmentをインストールしておく
 - beamerの作成は C-c C-e l P
@@ -222,7 +277,7 @@
   (setq org-beamer-frame-default-options "t")
 #+end_src
 
-** pandoc-mode
+*** pandoc-mode
 
 - C-c / でメニュー表示
 - http://joostkremers.github.io/pandoc-mode/
