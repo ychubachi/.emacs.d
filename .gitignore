@@ -50,3 +50,4 @@ flycheck_*.el
 # my ignore files
 custom.el
 README.el
+transient/
