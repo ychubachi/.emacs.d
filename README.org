@@ -1,4 +1,7 @@
 * Emacs init.el
+
+init.elの実行時、このREADME.orgからREADME.elを生成します。
+
 ** head
 
 - Copyright など。
