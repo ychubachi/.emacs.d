@@ -189,6 +189,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
 
 #+begin_src emacs-lisp
   (leaf mozc-im
+    :if (eq system-type 'gnu/linux)
     :doc "Mozc with input-method-function interface."
     :req "mozc-0"
     :tag "extentions" "i18n"
@@ -200,6 +201,21 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :bind (("C-o" . toggle-input-method))
     )
 #+end_src
+
+*** Windows IME設定
+
+
+    - OSの判定方法
+      [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
+
+
+    #+begin_src emacs-lisp
+      (when (eq system-type 'windows-nt)
+        (package-install 'tr-ime)
+        (tr-ime-standard-install)
+        (setq default-input-method "W32-IME")
+        (w32-ime-initialize))
+    #+end_src
 
 ** 外部パッケージ
 *** fly-check
