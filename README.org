@@ -1,9 +1,9 @@
-* Emacs init.el
+#+startup: content num noindent
+* Header
+** はじめに
+- init.elの実行時、このREADME.orgからREADME.elを生成します。
 
-init.elの実行時、このREADME.orgからREADME.elを生成します。
-
-** head
-
+** Copyright
 - Copyright など。
 
 #+begin_src emacs-lisp
@@ -33,14 +33,14 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
 ;;; Code:
 #+end_src
 
-** 準備
-*** (require 'cl)を検査しない
+* 準備
+** (require 'cl)を検査しない
 
 #+begin_src emacs-lisp
 (setq byte-compile-warnings '(not cl-functions obsolete))
 #+end_src
 
-*** ここの意味が理解できてない
+** ここの意味が理解できてない
 
 #+begin_src emacs-lisp
   ;; this enables this running method
@@ -53,7 +53,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
               (or load-file-name byte-compile-current-file))))))
 #+end_src
 
-*** パッケージの設定
+** パッケージの設定
 
 #+begin_src emacs-lisp
   (eval-and-compile
@@ -64,7 +64,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     (package-initialize)
 #+end_src
 
-*** leafの導入
+** leafの導入
 
 #+begin_src emacs-lisp
     (unless (package-installed-p 'leaf)
@@ -93,7 +93,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
 
 #+end_src
 
-*** cutom-fileを別ファイルにする
+** cutom-fileを別ファイルにする
 - 自動で生成される設定は別ファイルとする。
 - このファイルはあえてよみこまない。
 
@@ -105,8 +105,8 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
 #+end_src
 
-** ビルトインパッケージの設定
-*** leafを使ってビルトインパッケージのカスタマイズ
+* ビルトインパッケージの設定
+** leafを使ってビルトインパッケージのカスタマイズ
 #+begin_src emacs-lisp
   ;; You can also configure builtin package via leaf!
   (leaf cus-start
@@ -127,7 +127,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     (keyboard-translate ?\C-h ?\C-?) ;; ???
     )
 #+end_src
-*** paren
+** paren
 
 - 対応するカッコの表示
 
@@ -139,7 +139,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :global-minor-mode show-paren-mode)
 #+end_src
 
-*** isearch
+** isearch
 
 - isearch で漢字入力ができるようにする
 
@@ -149,7 +149,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
             ("C-o" . isearch-toggle-input-method))))
 #+end_src
 
-*** wdired
+** wdired
 
 - 多分設定が中途はんぱ
 
@@ -162,7 +162,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
             ("C-o" . toggle-input-method))))
 #+end_src
 
-*** autorevert
+** autorevert
 - ディスクのファイルが更新されたらバッファも自動で更新する
 
 #+begin_src emacs-lisp
@@ -174,7 +174,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :global-minor-mode global-auto-revert-mode)
 #+end_src
 
-*** macrostep
+** macrostep
 
 - elispのマクロを展開する
 
@@ -183,12 +183,12 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :doc "interactive macro expander"
     :req "cl-lib-0.5"
     :tag "debugging" "macro" "languages" "lisp"
-    :added "2020-11-21"
     :url "https://github.com/joddie/macrostep"
+    :ensure t
     :bind (("C-c e" . macrostep-expand)))
 #+end_src
 
-*** mozc-im
+** mozc-im
 
 - elispのマクロを展開する
 
@@ -198,7 +198,6 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :doc "Mozc with input-method-function interface."
     :req "mozc-0"
     :tag "extentions" "i18n"
-    :added "2020-11-21"
     :ensure t
     :require mozc-im
     :custom
@@ -207,7 +206,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     )
 #+end_src
 
-*** Windows IME設定
+** Windows IME設定
 
 
     - OSの判定方法
@@ -222,27 +221,35 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
         (w32-ime-initialize))
     #+end_src
 
-** org-mode
-*** Activation
+* org-mode
+** 基本設定
+
+- org-agenda-filesのリストにDropboxのディレクトリを追加しておく。
+  - この中にあるorgファイルがすべてagendaに反映される。
+- org-num-modeをすべてのファイルで実行する
+  - (org-startup-numerated . t)がうまく反映されない。
+- Androd端末から利用するには [[https://play.google.com/store/apps/details?id=com.orgzly][Orgzly]] が良さそう。
 
    #+begin_src emacs-lisp
      (leaf org-mode
+       :custom (org-agenda-files . '("~/Dropbox/org/"))
        :bind (("C-c l" . org-store-link)
               ("C-c a" . org-agenda)
               ("C-c c" . org-capture)))
    #+end_src
    
-*** org-tempo
+** org-tempo
 
 - "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
 
 #+begin_src emacs-lisp
-  (require 'org-tempo)
-  (add-to-list 'org-structure-template-alist
-               '("el" . "src emacs-lisp"))
+  (leaf org-tempo
+    :config
+    (add-to-list 'org-structure-template-alist
+                 '("el" . "src emacs-lisp")))
 #+end_src
 
-*** latex/beamer
+** latex/beamer
 
 - pygmentをインストールしておく
 - beamerの作成は C-c C-e l P
@@ -279,8 +286,8 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
   (setq org-beamer-frame-default-options "t")
 #+end_src
 
-** 外部パッケージ
-*** fly-check
+* 外部パッケージ
+** fly-check
 
 - emacs-lispのドキュメント用のチェック(emacs-lisp-checkdoc)を無効にする。
 
@@ -310,7 +317,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     )
 #+end_src
 
-*** pandoc-mode
+** pandoc-mode
 
 - C-c / でメニュー表示
 - http://joostkremers.github.io/pandoc-mode/
@@ -326,7 +333,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :after hydra)
 #+end_src
 
-*** magict
+** magict
 - EmacsのGit
 #+begin_src emacs-lisp
   (leaf magit
@@ -339,7 +346,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :after git-commit with-editor
     :bind (("C-x g" . magit-status)))
 #+end_src
-** Footer
+* Footer
 
 - お約束の記述
 
