@@ -35,7 +35,14 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
 
 ** body
 
-- ここの意味が理解できてない
+*** (require 'cl)を検査しない
+
+#+begin_src emacs-lisp
+(setq byte-compile-warnings '(not cl-functions obsolete))
+#+end_src
+
+
+*** ここの意味が理解できてない
 
 #+begin_src emacs-lisp
   ;; this enables this running method
@@ -48,7 +55,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
               (or load-file-name byte-compile-current-file))))))
 #+end_src
 
-- パッケージの設定
+*** パッケージの設定
 
 #+begin_src emacs-lisp
   (eval-and-compile
@@ -59,7 +66,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     (package-initialize)
 #+end_src
 
-- leafの導入
+*** leafの導入
 
 #+begin_src emacs-lisp
     (unless (package-installed-p 'leaf)
@@ -88,6 +95,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
 
 #+end_src
 
+*** cutom-fileを別ファイルにする
 - 自動で生成される設定は別ファイルとする。
 - このファイルはあえてよみこまない。
 
@@ -99,7 +107,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
 #+end_src
 
-*** ビルトインパッケージのカスタマイズ
+*** leafを使ってビルトインパッケージのカスタマイズ
 #+begin_src emacs-lisp
   ;; You can also configure builtin package via leaf!
   (leaf cus-start
@@ -334,6 +342,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
+;; byte-compile-warnings: (not cl-functions obsolete)
 ;; End:
 
 ;;; README.el ends here
