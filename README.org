@@ -33,14 +33,12 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
 ;;; Code:
 #+end_src
 
-** body
-
+** 準備
 *** (require 'cl)を検査しない
 
 #+begin_src emacs-lisp
 (setq byte-compile-warnings '(not cl-functions obsolete))
 #+end_src
-
 
 *** ここの意味が理解できてない
 
@@ -107,6 +105,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
 #+end_src
 
+** ビルトインパッケージの設定
 *** leafを使ってビルトインパッケージのカスタマイズ
 #+begin_src emacs-lisp
   ;; You can also configure builtin package via leaf!
@@ -128,8 +127,6 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     (keyboard-translate ?\C-h ?\C-?) ;; ???
     )
 #+end_src
-
-** ビルトインパッケージの設定
 *** paren
 
 - 対応するカッコの表示
@@ -225,6 +222,63 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
         (w32-ime-initialize))
     #+end_src
 
+** org-mode
+*** Activation
+
+   #+begin_src emacs-lisp
+     (leaf org-mode
+       :bind (("C-c l" . org-store-link)
+              ("C-c a" . org-agenda)
+              ("C-c c" . org-capture)))
+   #+end_src
+   
+*** org-tempo
+
+- "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
+
+#+begin_src emacs-lisp
+  (require 'org-tempo)
+  (add-to-list 'org-structure-template-alist
+               '("el" . "src emacs-lisp"))
+#+end_src
+
+*** latex/beamer
+
+- pygmentをインストールしておく
+- beamerの作成は C-c C-e l P
+
+#+begin_src emacs-lisp
+  (require 'ox-latex)
+  (require 'ox-beamer)
+
+  (setq org-latex-pdf-process
+        '("platex -shell-escape %f"
+          "platex -shell-escape %f"
+          "pbibtex %b"
+          "platex -shell-escape %f"
+          "platex -shell-escape %f"
+          "dvipdfmx %b.dvi"))
+
+  (setq org-export-latex-listings t)
+  (setq org-latex-listings 'minted)
+  (setq org-beamer-outline-frame-title "目次")
+
+  (setq org-latex-minted-options
+        '(("frame" "lines")
+          ("framesep=2mm")
+          ("linenos=true")
+          ("baselinestretch=1.2")
+          ("fontsize=\\footnotesize")
+          ("breaklines")
+          ))
+#+end_src
+
+- beamerのフレームの位置をtopにする。
+
+#+begin_src emacs-lisp
+  (setq org-beamer-frame-default-options "t")
+#+end_src
+
 ** 外部パッケージ
 *** fly-check
 
@@ -256,54 +310,6 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     )
 #+end_src
 
-**** org-mode
-**** org-tempo
-
-- "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
-
-#+begin_src emacs-lisp
-  (require 'org-tempo)
-  (add-to-list 'org-structure-template-alist
-               '("el" . "src emacs-lisp"))
-#+end_src
-
-**** beamer
-
-- pygmentをインストールしておく
-- beamerの作成は C-c C-e l P
-
-#+begin_src emacs-lisp
-  (require 'ox-latex)
-  (require 'ox-beamer)
-
-  (setq org-latex-pdf-process
-        '("platex -shell-escape %f"
-          "platex -shell-escape %f"
-          "pbibtex %b"
-          "platex -shell-escape %f"
-          "platex -shell-escape %f"
-          "dvipdfmx %b.dvi"))
-
-  (setq org-export-latex-listings t)
-  (setq org-latex-listings 'minted)
-  (setq org-beamer-outline-frame-title "目次")
-
-  (setq org-latex-minted-options
-        '(("frame" "lines")
-          ("framesep=2mm")
-          ("linenos=true")
-          ("baselinestretch=1.2")
-          ("fontsize=\\footnotesize")
-          ("breaklines")
-          ))
-#+end_src
-
-- フレームの位置をtopにする。
-
-#+begin_src emacs-lisp
-  (setq org-beamer-frame-default-options "t")
-#+end_src
-
 *** pandoc-mode
 
 - C-c / でメニュー表示
@@ -320,7 +326,7 @@ init.elの実行時、このREADME.orgからREADME.elを生成します。
     :after hydra)
 #+end_src
 
-*** magic
+*** magict
 - EmacsのGit
 #+begin_src emacs-lisp
   (leaf magit

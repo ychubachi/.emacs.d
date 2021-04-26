@@ -51,3 +51,4 @@ flycheck_*.el
 custom.el
 README.el
 transient/
+bookmarks
