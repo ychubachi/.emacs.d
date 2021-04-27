@@ -346,6 +346,23 @@
     :after git-commit with-editor
     :bind (("C-x g" . magit-status)))
 #+end_src
+
+** doomthemes
+   - custom-faceが機能していないかも
+
+   #+begin_src emacs-lisp
+     (leaf doom-themes
+       :ensure t
+       :custom ((doom-themes-enable-italic . t)
+                (doom-themes-enable-bold . t))
+       :custom-face
+         (doom-modeline-bar . '((t (:background "#6272a4"))))
+       :config
+       (load-theme 'doom-dracula t)
+         (doom-themes-neotree-config)
+         (doom-themes-org-config))
+   #+end_src
+
 * OS依存の設定
 ** Linuxでmozcの設定
    - elispのマクロを展開する
