@@ -52,3 +52,4 @@ custom.el
 README.el
 transient/
 bookmarks
+straight/

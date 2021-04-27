@@ -1,7 +1,8 @@
 #+startup: content num noindent
 * Header
 ** はじめに
-- init.elの実行時、このREADME.orgからREADME.elを生成します。
+   - init.elの実行時、このREADME.orgからREADME.elを生成します。
+   - orgのハッケージは手動で最新版に更新しておきます。 
 
 ** Copyright
 - Copyright など。
@@ -121,7 +122,8 @@
              ;; (tool-bar-mode . nil)
              ;; (scroll-bar-mode . nil)
              ;; (indent-tabs-mode . nil)
-             (blink-cursor-mode . nil))
+             (blink-cursor-mode . nil)
+             (global-auto-revert-mode . t))
     :config
     (defalias 'yes-or-no-p 'y-or-n-p)
     (keyboard-translate ?\C-h ?\C-?) ;; ???
@@ -188,39 +190,37 @@
     :bind (("C-c e" . macrostep-expand)))
 #+end_src
 
-** mozc-im
+* helm
+** straightパッケージマネージャー
 
-- elispのマクロを展開する
+   #+begin_src emacs-lisp
+     (defvar bootstrap-version)
+     (let ((bootstrap-file
+            (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+           (bootstrap-version 5))
+       (unless (file-exists-p bootstrap-file)
+         (with-current-buffer
+             (url-retrieve-synchronously
+              "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+              'silent 'inhibit-cookies)
+           (goto-char (point-max))
+           (eval-print-last-sexp)))
+       (load bootstrap-file nil 'nomessage))
 
-#+begin_src emacs-lisp
-  (leaf mozc-im
-    :if (eq system-type 'gnu/linux)
-    :doc "Mozc with input-method-function interface."
-    :req "mozc-0"
-    :tag "extentions" "i18n"
-    :ensure t
-    :require mozc-im
-    :custom
-    ((default-input-method . "japanese-mozc-im"))
-    :bind (("C-o" . toggle-input-method))
-    )
-#+end_src
+     (setq package-enable-at-startup nil)
+   #+end_src
 
-** Windows IME設定
-
-
-    - OSの判定方法
-      [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
-
-
-    #+begin_src emacs-lisp
-      (when (eq system-type 'windows-nt)
-        (package-install 'tr-ime)
-        (tr-ime-standard-install)
-        (setq default-input-method "W32-IME")
-        (w32-ime-initialize))
-    #+end_src
-
+** Helm
+   - [[https://github.com/emacs-helm/helm/wiki#from-straight-package-manager][Home · emacs-helm/helm Wiki]]
+     
+   #+begin_src emacs-lisp
+     (straight-use-package 'helm)
+     (global-set-key (kbd "M-x") #'helm-M-x)
+     (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+     (global-set-key (kbd "C-x C-f") #'helm-find-files)
+     (helm-mode 1)
+   #+end_src
+  
 * org-mode
 ** 基本設定
 
@@ -346,6 +346,36 @@
     :after git-commit with-editor
     :bind (("C-x g" . magit-status)))
 #+end_src
+* OS依存の設定
+** Linuxでmozcの設定
+   - elispのマクロを展開する
+
+#+begin_src emacs-lisp
+  (leaf mozc-im
+    :if (eq system-type 'gnu/linux)
+    :doc "Mozc with input-method-function interface."
+    :req "mozc-0"
+    :tag "extentions" "i18n"
+    :ensure t
+    :require mozc-im
+    :custom
+    ((default-input-method . "japanese-mozc-im"))
+    :bind (("C-o" . toggle-input-method))
+    )
+#+end_src
+
+** Windows IME設定
+   - OSの判定方法
+     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
+
+    #+begin_src emacs-lisp
+      (when (eq system-type 'windows-nt)
+        (package-install 'tr-ime)
+        (tr-ime-standard-install)
+        (setq default-input-method "W32-IME")
+        (w32-ime-initialize))
+    #+end_src
+
 * Footer
 
 - お約束の記述
