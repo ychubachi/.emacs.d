@@ -231,23 +231,77 @@
 - Androd端末から利用するには [[https://play.google.com/store/apps/details?id=com.orgzly][Orgzly]] が良さそう。
 
    #+begin_src emacs-lisp
-     (leaf org-mode
-       :custom (org-agenda-files . '("~/Dropbox/org/"))
-       :bind (("C-c l" . org-store-link)
-              ("C-c a" . org-agenda)
-              ("C-c c" . org-capture)))
+     (leaf org-mode 
+       :custom
+       (org-directory . "~/Dropbox/org/")
+       (org-agenda-files . '("~/Dropbox/org/"))
+       (org-default-notes-file . "Notes.org")
+       :bind
+       ("C-c l" . org-store-link)
+       ("C-c a" . org-agenda)
+       ("C-c c" . org-capture))
    #+end_src
-   
+
+   #+RESULTS:
+   : org-mode
+
+** org-captureのテンプレート設定
+
+   - [[https://orgmode.org/manual/Capture.html][Capture (The Org Manual)]]
+   - [[https://orgmode.org/manual/Setting-up-capture.html#Setting-up-capture][Setting up capture (The Org Manual)]]
+
+   - [[https://www.5ing-myway.com/org-capture/][org-captureをカスタマイズして、すばやくメモを取る方法 | 趣味に生きる。]]
+   #+begin_src emacs-lisp
+     ;;ファイルパスの設定
+     (setq work-directory "~/Dropbox/org/")
+     (setq journalfile (concat work-directory "Journal.org"))
+     (setq taskfile (concat work-directory "ToDo.org"))
+     (setq listfile (concat work-directory "List.org"))
+
+     (setq org-capture-templates
+           '(
+             ("j" "記録" entry (file+datetree journalfile)
+              "* %?\n\nEntered on %t\n%a\n%i")
+
+             ;; タスク（スケジュールなし）
+             ("t" "タスク（スケジュールなし）" entry (file+headline taskfile "Tasks")
+              "** TODO %? \n")
+
+             ;; タスク（スケジュールあり）
+             ("s" "タスク（スケジュールあり）" entry (file+headline taskfile "Tasks")
+              "** TODO %? \n   SCHEDULED: %^t \n")
+
+             ("l" "やりたいこと" checkitem (file+headline listfile "やりたいこと")
+              "[ ] %? \n")
+
+             ("b" "欲しいもの" checkitem (file+headline listfile "欲しいもの")
+              "[ ] %? \n")
+
+             ("g" "行きたいところ" checkitem (file+headline listfile "行きたいところ")
+              "[ ] %? \n")
+
+           )
+     )
+   #+end_src
+
+   #+RESULTS:
+   | j | 記録 | entry | (file+datetree journalfile) | * %? |
+
+
+
 ** org-tempo
+   - "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
+   
+   #+begin_src emacs-lisp
+     (leaf org-tempo
+       :require t
+       :config
+       (add-to-list 'org-structure-template-alist
+                    '("el" . "src emacs-lisp")))
+   #+end_src
 
-- "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
-
-#+begin_src emacs-lisp
-  (leaf org-tempo
-    :config
-    (add-to-list 'org-structure-template-alist
-                 '("el" . "src emacs-lisp")))
-#+end_src
+   #+RESULTS:
+   : org-tempo
 
 ** latex/beamer
 
