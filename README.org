@@ -450,7 +450,7 @@
     :after hydra)
 #+end_src
 
-** magict
+** magit
 - EmacsのGit
 #+begin_src emacs-lisp
   (leaf magit
