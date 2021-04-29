@@ -394,6 +394,16 @@
 #+end_src
 
 * 外部パッケージ
+** undo-tree
+   - [[https://elpa.gnu.org/packages/undo-tree.html][GNU ELPA - undo-tree]]
+     
+   #+begin_src emacs-lisp
+     (leaf undo-tree
+       :ensure t
+       :config
+       (global-undo-tree-mode))
+   #+end_src
+   
 ** fly-check
 
 - emacs-lispのドキュメント用のチェック(emacs-lisp-checkdoc)を無効にする。
