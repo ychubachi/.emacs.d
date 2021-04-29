@@ -53,7 +53,6 @@
              (file-name-directory
               (or load-file-name byte-compile-current-file))))))
 #+end_src
-
 ** パッケージの設定
 
 #+begin_src emacs-lisp
@@ -62,73 +61,103 @@
      'package-archives '(("org"   . "https://orgmode.org/elpa/")
                          ("melpa" . "https://melpa.org/packages/")
                          ("gnu"   . "https://elpa.gnu.org/packages/")))
-    (package-initialize)
+    (package-initialize))
 #+end_src
 
-** leafの導入
+#+RESULTS:
 
-#+begin_src emacs-lisp
-    (unless (package-installed-p 'leaf)
-      (package-refresh-contents)
-      (package-install 'leaf))
+** leaf
+*** パッケージのインストール
+    #+begin_src emacs-lisp
+      (unless (package-installed-p 'leaf)
+        (package-refresh-contents)
+        (package-install 'leaf))
+    #+end_src
 
-    (leaf leaf-keywords
-      :ensure t
-      :init
+    #+RESULTS:
+
+*** leaf-keywords
+
+    #+begin_src emacs-lisp
       ;; optional packages if you want to use :hydra, :el-get, :blackout,,,
-      (leaf hydra :ensure t)
-      (leaf el-get :ensure t)
-      (leaf blackout :ensure t)
+      (leaf leaf-keywords
+        :ensure t
+        :init
+        (leaf hydra :ensure t)
+        (leaf el-get :ensure t)
+        (leaf blackout :ensure t)
+        :config
+        ;; initialize leaf-keywords.el
+        (leaf-keywords-init))
+    #+end_src
 
-      :config
-      ;; initialize leaf-keywords.el
-      (leaf-keywords-init)))
+*** leaf-convert
+    #+begin_src emacs-lisp
+      (leaf leaf-convert :ensure t)
+    #+end_src
 
-  (leaf leaf
-    :config
-    (leaf leaf-convert :ensure t)
-    (leaf leaf-tree
-      :ensure t
-      :custom ((imenu-list-size . 30)
-               (imenu-list-position . 'left))))
+*** leaf-tree
+    #+begin_src emacs-lisp
+      (leaf leaf-tree
+        :ensure t
+        :custom
+        ((imenu-list-size . 30)
+         (imenu-list-position . 'left)))
+    #+end_src
 
-#+end_src
+*** cus-edit
 
-** cutom-fileを別ファイルにする
-- 自動で生成される設定は別ファイルとする。
-- このファイルはあえてよみこまない。
+    #+begin_src emacs-lisp
+      (leaf cus-edit
+        :doc "tools for customizing Emacs and Lisp packages"
+        :tag "builtin" "faces" "help"
+        :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
+    #+end_src
+ 
+*** cus-start
+    
+    #+begin_src emacs-lisp
+            (leaf cus-start
+              :doc "define customization properties of builtins"
+              :tag "builtin" "internal"
+              :bind (("\C-z" . undo))
+              :preface
+              (defun c/redraw-frame nil
+                (interactive)
+                (redraw-frame))
+              :bind (("M-ESC ESC" . c/redraw-frame))
+              :custom '((user-full-name . "Yoshihide Chubachi")
+                        (user-mail-address . "yoshi@chubachi.net")
+                        (user-login-name . "yc")
+                        (create-lockfiles . nil)
+                        (debug-on-error . t)
+                        (init-file-debug . t)
+                        (frame-resize-pixelwise . t)
+                        (enable-recursive-minibuffers . t)
+                        (history-length . 1000)
+                        (history-delete-duplicates . t)
+                        (scroll-preserve-screen-position . t)
+                        (scroll-conservatively . 100)
+                        (mouse-wheel-scroll-amount . '(1 ((control) . 5)))
+                        (ring-bell-function . 'ignore)
+                        (text-quoting-style . 'straight)
+                        (truncate-lines . t)
+                        ;; (use-dialog-box . nil)
+                        ;; (use-file-dialog . nil)
+                        ;; (menu-bar-mode . t)
+                        ;; (tool-bar-mode . nil)
+                        (scroll-bar-mode . nil)
+                        (indent-tabs-mode . nil)
+                        (inhibit-startup-screen . t))
+              :config
+              (defalias 'yes-or-no-p 'y-or-n-p)
+              (keyboard-translate ?\C-h ?\C-?))
+    #+end_src
 
-#+begin_src emacs-lisp
-  ;; We do not use costom.el.
-  (leaf cus-edit
-    :doc "tools for customizing Emacs and Lisp packages"
-    :tag "builtin" "faces" "help"
-    :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
-#+end_src
+    #+RESULTS:
+    : cus-start
 
 * ビルトインパッケージの設定
-** leafを使ってビルトインパッケージのカスタマイズ
-#+begin_src emacs-lisp
-  ;; You can also configure builtin package via leaf!
-  (leaf cus-start
-    :doc "define customization properties of builtins"
-    :tag "builtin" "internal"
-    :bind (("\C-z" . undo))
-    :custom ((user-full-name . "Yoshihide Chubachi")
-             (user-mail-address . "yoshi@chubachi.net")
-             (user-login-name . "yc")
-             ;; (truncate-lines . t)
-             ;; (menu-bar-mode . t)
-             ;; (tool-bar-mode . nil)
-             ;; (scroll-bar-mode . nil)
-             ;; (indent-tabs-mode . nil)
-             (blink-cursor-mode . nil)
-             (global-auto-revert-mode . t))
-    :config
-    (defalias 'yes-or-no-p 'y-or-n-p)
-    (keyboard-translate ?\C-h ?\C-?) ;; ???
-    )
-#+end_src
 ** paren
 
 - 対応するカッコの表示
@@ -211,16 +240,42 @@
    #+end_src
 
 ** Helm
-   - [[https://github.com/emacs-helm/helm/wiki#from-straight-package-manager][Home · emacs-helm/helm Wiki]]
+*** Helm本体
+    - [[https://github.com/emacs-helm/helm/wiki#helm-mode][Home · emacs-helm/helm Wiki]]
      
    #+begin_src emacs-lisp
-     (straight-use-package 'helm)
-     (global-set-key (kbd "M-x") #'helm-M-x)
-     (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-     (global-set-key (kbd "C-x C-f") #'helm-find-files)
-     (helm-mode 1)
+     (leaf helm
+       :preface
+       (straight-use-package 'helm)
+       :bind
+       ("M-x" . helm-M-x)
+       ("C-x r b" . helm-filtered-bookmarks)
+       ("C-x C-f" . helm-find-files)
+       ("C-c h" . helm-mini)
+       :config
+       (helm-mode 1))
    #+end_src
+
+   #+RESULTS:
+   : helm
   
+*** helm-recentf
+   #+begin_src emacs-lisp
+     (leaf helm-recentf
+       :bind ("C-c r" . helm-recentf)
+       :custom
+       (recentf-max-saved-items . 2000)
+       (recentf-auto-cleanup quote never)
+       (recentf-exclude quote
+                        ("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:"))
+       :config
+       (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
+       (recentf-mode 1))
+   #+end_src
+
+   #+RESULTS:
+   : helm-recentf
+
 * org-mode
 ** 基本設定
 
@@ -286,7 +341,6 @@
 
    #+RESULTS:
    | j | 記録 | entry | (file+datetree journalfile) | * %? |
-
 
 ** org-tempo
    - "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
@@ -402,10 +456,14 @@
 
 ** doomthemes
 *** all-the-icons
+    - パッケージ導入後、 M-x all-the-icons-install-fonts でインストールする
    #+begin_src emacs-lisp
      (leaf all-the-icons
        :ensure t)
    #+end_src
+
+   #+RESULTS:
+   : all-the-icons
     
 *** doom-themes
    - custom-faceが機能していないかも
@@ -447,6 +505,9 @@
    #+end_src
 
 * OS依存の設定
+  - OSの判定方法
+    [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
+
 ** Linuxでmozcの設定
    - elispのマクロを展開する
 
@@ -465,8 +526,37 @@
 #+end_src
 
 ** Windows IME設定
-   - OSの判定方法
-     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
+   - [[https://nosubject.io/windows10-emacs-27-w32-ime/][[Emacs] Windows10 で Emacs 27 を使う | ** nosubject.io **]]
+
+     #+begin_src emacs-lisp
+       (leaf tr-ime
+         :when (eq system-type 'windows-nt)
+         :ensure t
+         :setq
+         (default-input-method . "W32-IME")
+         (w32-ime-mode-line-state-indicator-list . '("[--]" "[あ]" "[--]"))
+         :setq-default
+         (w32-ime-mode-line-state-indicator . "[--]")
+         :config
+         (tr-ime-standard-install)
+         (w32-ime-initialize)
+         ;; IME制御（yes/noなどの入力時にIMEをoffにする
+         (wrap-function-to-control-ime 'universal-argument t nil)
+         (wrap-function-to-control-ime 'read-string nil nil)
+         (wrap-function-to-control-ime 'read-char nil nil)
+         (wrap-function-to-control-ime 'read-from-minibuffer nil nil)
+         (wrap-function-to-control-ime 'y-or-n-p nil nil)
+         (wrap-function-to-control-ime 'yes-or-no-p nil nil)
+         (wrap-function-to-control-ime 'map-y-or-n-p nil nil)
+         ;; IME未確定時のフォント設定
+         (set-frame-font "Meiryo UI-12" nil t)
+         (modify-all-frames-parameters '((ime-font . "Meiryo UI-12")))
+         :bind
+         ("C-o" . toggle-input-method))
+     #+end_src
+
+     #+RESULTS:
+     : tr-ime
 
     #+begin_src emacs-lisp
       (when (eq system-type 'windows-nt)
