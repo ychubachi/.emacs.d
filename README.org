@@ -291,7 +291,7 @@
        (org-directory . "~/Dropbox/org/")
        (org-agenda-files . '("~/Dropbox/org/"))
        (org-default-notes-file . "Notes.org")
-       (org-refile-targets . '((org-agenda-files :maxlevel . 3)))
+       (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
        :bind
        ("C-c l" . org-store-link)
        ("C-c a" . org-agenda)
