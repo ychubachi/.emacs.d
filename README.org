@@ -515,30 +515,30 @@
        )
    #+end_src
 
-*** migemo
+** migemo
   
-    - [[https://hangstuck.com/emacs-cmigemo-windows/][Windowsでの Emacsでmigemo を有効にする設定方法 | ハングスタック]]
-    - migemoの辞書は絶対パスで参照する
-    - とりあえずWindowsで動くようにした
+   - [[https://hangstuck.com/emacs-cmigemo-windows/][Windowsでの Emacsでmigemo を有効にする設定方法 | ハングスタック]]
+   - migemoの辞書は絶対パスで参照する
+   - とりあえずWindowsで動くようにした
 
-   #+begin_src emacs-lisp
-     (leaf migemo
-       :when (eq system-type 'windows-nt)
-       :ensure t
-       :setq 
-       (migemo-dictionary . "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict")
-       ;; (migemo-command . "cmigemo")
-       ;; (migemo-options quote ("-q" "--emacs" "-i" "\a"))
-       ;; (migemo-user-dictionary)
-       ;; (migemo-regex-dictionary)
-       ;; (migemo-coding-system quote utf-8-unix)
-       :config
-       (load-library "migemo")
-       (migemo-init))
-   #+end_src
+  #+begin_src emacs-lisp
+    (leaf migemo
+      :when (eq system-type 'windows-nt)
+      :ensure t
+      :setq 
+      (migemo-dictionary . "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict")
+      ;; (migemo-command . "cmigemo")
+      ;; (migemo-options quote ("-q" "--emacs" "-i" "\a"))
+      ;; (migemo-user-dictionary)
+      ;; (migemo-regex-dictionary)
+      ;; (migemo-coding-system quote utf-8-unix)
+      :config
+      (load-library "migemo")
+      (migemo-init))
+  #+end_src
 
-   #+RESULTS:
-   : migemo
+  #+RESULTS:
+  : migemo
 
 * OS依存の設定
   - OSの判定方法
