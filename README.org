@@ -519,6 +519,7 @@
   
    - [[https://hangstuck.com/emacs-cmigemo-windows/][Windowsでの Emacsでmigemo を有効にする設定方法 | ハングスタック]]
    - migemoの辞書は絶対パスで参照する
+   - その他の変数はデフォルトで動作する
    - とりあえずWindowsで動くようにした
 
   #+begin_src emacs-lisp
@@ -527,11 +528,6 @@
       :ensure t
       :setq 
       (migemo-dictionary . "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict")
-      ;; (migemo-command . "cmigemo")
-      ;; (migemo-options quote ("-q" "--emacs" "-i" "\a"))
-      ;; (migemo-user-dictionary)
-      ;; (migemo-regex-dictionary)
-      ;; (migemo-coding-system quote utf-8-unix)
       :config
       (load-library "migemo")
       (migemo-init))
