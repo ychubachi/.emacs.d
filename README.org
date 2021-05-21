@@ -305,43 +305,35 @@
 
    - [[https://orgmode.org/manual/Capture.html][Capture (The Org Manual)]]
    - [[https://orgmode.org/manual/Setting-up-capture.html#Setting-up-capture][Setting up capture (The Org Manual)]]
-
    - [[https://www.5ing-myway.com/org-capture/][org-captureをカスタマイズして、すばやくメモを取る方法 | 趣味に生きる。]]
+
+   - ファイルは org-directory 以下にある。
+     
    #+begin_src emacs-lisp
-     ;;ファイルパスの設定
-     (setq work-directory "~/Dropbox/org/")
-     (setq journalfile (concat work-directory "Journal.org"))
-     (setq taskfile (concat work-directory "ToDo.org"))
-     (setq listfile (concat work-directory "List.org"))
-
-     (setq org-capture-templates
-           '(
-             ("j" "記録" entry (file+datetree journalfile)
-              "* %?\n\nEntered on %t\n%a\n%i")
-
-             ;; タスク（スケジュールなし）
-             ("t" "タスク（スケジュールなし）" entry (file+headline taskfile "Tasks")
-              "** TODO %? \n")
-
-             ;; タスク（スケジュールあり）
-             ("s" "タスク（スケジュールあり）" entry (file+headline taskfile "Tasks")
-              "** TODO %? \n   SCHEDULED: %^t \n")
-
-             ("l" "やりたいこと" checkitem (file+headline listfile "やりたいこと")
-              "[ ] %? \n")
-
-             ("b" "欲しいもの" checkitem (file+headline listfile "欲しいもの")
-              "[ ] %? \n")
-
-             ("g" "行きたいところ" checkitem (file+headline listfile "行きたいところ")
-              "[ ] %? \n")
-
-           )
-     )
+     (leaf org-capture-templates
+       :setq ((org-capture-templates quote
+                                     (("m" "メモ" entry
+                                       (file "Memo.org")
+                                       "* %?\nEntered on %t\n%a\n%i\n")
+                                      ("t" "タスク（スケジュールなし）" entry
+                                       (file+headline "List.org" "すること")
+                                       "** TODO %? \n")
+                                      ("s" "タスク（スケジュールあり）" entry
+                                       (file+headline "List.org" "すること")
+                                       "** TODO %? \n   SCHEDULED: %^t \n")
+                                      ("l" "やりたいこと" checkitem
+                                       (file+headline "List.org" "やりたいこと")
+                                       "[ ] %? \n")
+                                      ("b" "欲しいもの" checkitem
+                                       (file+headline "List.org" "欲しいもの")
+                                       "[ ] %? \n")
+                                      ("g" "行きたいところ" checkitem
+                                       (file+headline "List.org" "行きたいところ")
+                                       "[ ] %? \n")))))
    #+end_src
 
    #+RESULTS:
-   | j | 記録 | entry | (file+datetree journalfile) | * %? |
+   : org-capture-templates
 
 ** org-tempo
    - "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
