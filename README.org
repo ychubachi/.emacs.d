@@ -516,7 +516,9 @@
 
   #+begin_src emacs-lisp
     (leaf migemo
-      :when (eq system-type 'windows-nt)
+      :when (and
+             (eq system-type 'windows-nt)
+             (file-exists-p "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict"))
       :ensure t
       :setq 
       (migemo-dictionary . "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict")
