@@ -2,7 +2,7 @@
 * Header
 ** はじめに
    - init.elの実行時、このREADME.orgからREADME.elを生成します。
-   - orgのハッケージは手動で最新版に更新しておきます。 
+   - orgのハッケージは手動で最新版に更新しておきます。
 
 ** Copyright
 - Copyright など。
@@ -574,9 +574,12 @@
          (wrap-function-to-control-ime 'y-or-n-p nil nil)
          (wrap-function-to-control-ime 'yes-or-no-p nil nil)
          (wrap-function-to-control-ime 'map-y-or-n-p nil nil)
+         ;; 通常使用するフォント
+         (set-frame-font "BIZ UDゴシック-12" nil t)
+         ;; 行間
+         (setq-default line-spacing 6)
          ;; IME未確定時のフォント設定
-         (set-frame-font "Meiryo UI-12" nil t)
-         (modify-all-frames-parameters '((ime-font . "Meiryo UI-12")))
+         (modify-all-frames-parameters '((ime-font . "BIZ UDゴシック-12")))
          :bind
          ("C-o" . toggle-input-method))
      #+end_src
