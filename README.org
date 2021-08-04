@@ -34,6 +34,9 @@
 ;;; Code:
 #+end_src
 
+** フォントのインストール
+   - (font-family-list) で利用できるフォントが確認できる。
+
 * 準備
 ** (require 'cl)を検査しない
 
@@ -553,47 +556,48 @@
 
 ** Windows IME設定
    - [[https://nosubject.io/windows10-emacs-27-w32-ime/][[Emacs] Windows10 で Emacs 27 を使う | ** nosubject.io **]]
+   - [[https://qiita.com/tawara_/items/0a7b8c50a48ea86b2d91][あの IBM が作ったオープンソース日本語フォントを使い、プログラミングフォント『PlemolJP』を作ってみた - Qiita]]
 
-     #+begin_src emacs-lisp
-       (leaf tr-ime
-         :when (eq system-type 'windows-nt)
-         :ensure t
-         :setq
-         (default-input-method . "W32-IME")
-         (w32-ime-mode-line-state-indicator-list . '("[--]" "[あ]" "[--]"))
-         :setq-default
-         (w32-ime-mode-line-state-indicator . "[--]")
-         :config
-         (tr-ime-standard-install)
-         (w32-ime-initialize)
-         ;; IME制御（yes/noなどの入力時にIMEをoffにする
-         (wrap-function-to-control-ime 'universal-argument t nil)
-         (wrap-function-to-control-ime 'read-string nil nil)
-         (wrap-function-to-control-ime 'read-char nil nil)
-         (wrap-function-to-control-ime 'read-from-minibuffer nil nil)
-         (wrap-function-to-control-ime 'y-or-n-p nil nil)
-         (wrap-function-to-control-ime 'yes-or-no-p nil nil)
-         (wrap-function-to-control-ime 'map-y-or-n-p nil nil)
-         ;; 通常使用するフォント
-         (set-frame-font "BIZ UDゴシック-12" nil t)
-         ;; 行間
-         (setq-default line-spacing 6)
-         ;; IME未確定時のフォント設定
-         (modify-all-frames-parameters '((ime-font . "BIZ UDゴシック-12")))
-         :bind
-         ("C-o" . toggle-input-method))
-     #+end_src
-
-     #+RESULTS:
-     : tr-ime
-
-    #+begin_src emacs-lisp
-      (when (eq system-type 'windows-nt)
-        (package-install 'tr-ime)
-        (tr-ime-standard-install)
-        (setq default-input-method "W32-IME")
-        (w32-ime-initialize))
+   #+begin_src emacs-lisp
+     (leaf tr-ime
+       :when (eq system-type 'windows-nt)
+       :ensure t
+       :setq
+       (default-input-method . "W32-IME")
+       (w32-ime-mode-line-state-indicator-list . '("[--]" "[あ]" "[--]"))
+       :setq-default
+       (w32-ime-mode-line-state-indicator . "[--]")
+       :config
+       (tr-ime-standard-install)
+       (w32-ime-initialize)
+       ;; IME制御（yes/noなどの入力時にIMEをoffにする
+       (wrap-function-to-control-ime 'universal-argument t nil)
+       (wrap-function-to-control-ime 'read-string nil nil)
+       (wrap-function-to-control-ime 'read-char nil nil)
+       (wrap-function-to-control-ime 'read-from-minibuffer nil nil)
+       (wrap-function-to-control-ime 'y-or-n-p nil nil)
+       (wrap-function-to-control-ime 'yes-or-no-p nil nil)
+       (wrap-function-to-control-ime 'map-y-or-n-p nil nil)
+       ;; 通常使用するフォント
+       ;; (set-frame-font "BIZ UDゴシック-12" nil t)
+       (set-frame-font "PlemolJP-12" nil t)
+       (setq-default line-spacing 0) ; 行間
+       ;; IME未確定時のフォント設定
+       (modify-all-frames-parameters '((ime-font . "PlemolJP-12")))
+       :bind
+       ("C-o" . toggle-input-method))
     #+end_src
+
+    #+RESULTS:
+    : tr-ime
+
+   #+begin_src emacs-lisp
+     (when (eq system-type 'windows-nt)
+       (package-install 'tr-ime)
+       (tr-ime-standard-install)
+       (setq default-input-method "W32-IME")
+       (w32-ime-initialize))
+   #+end_src
 
 * Footer
 
