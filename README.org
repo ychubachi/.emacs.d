@@ -352,41 +352,54 @@
    #+RESULTS:
    : org-tempo
 
-** latex/beamer
+** latex関連
+*** latex本体
+    - latexでPDFを作成するには C-c C-e l p
+    - Windows用のPDFビューワはsumatrapdf（scoopでインストール可）
 
-- pygmentをインストールしておく
+    #+begin_src emacs-lisp
+      (require 'ox-latex)
+
+      (setq org-latex-pdf-process
+            '("platex -shell-escape %f"
+              "platex -shell-escape %f"
+              "pbibtex %b"
+              "platex -shell-escape %f"
+              "platex -shell-escape %f"
+              "dvipdfmx %b.dvi"))
+    #+end_src
+
+*** ソースコード整形
+    - pygmentをインストールしておく
+      - python インストールして pip install pygments
+
+    #+begin_src emacs-lisp
+      (setq org-export-latex-listings t)
+
+      (setq org-latex-listings 'minted)
+      (setq org-latex-minted-options
+            '(("frame" "lines")
+              ("framesep=2mm")
+              ("linenos=true")
+              ("baselinestretch=1.2")
+              ("fontsize=\\footnotesize")
+              ("breaklines")
+              ))
+
+      (add-to-list 'org-latex-packages-alist "\\usepackage{minted}" t)
+    #+end_src
+
+    #+RESULTS:
+    | \usepackage{minted} |
+
+*** Beamer
+
 - beamerの作成は C-c C-e l P
 
 #+begin_src emacs-lisp
-  (require 'ox-latex)
   (require 'ox-beamer)
-
-  (setq org-latex-pdf-process
-        '("platex -shell-escape %f"
-          "platex -shell-escape %f"
-          "pbibtex %b"
-          "platex -shell-escape %f"
-          "platex -shell-escape %f"
-          "dvipdfmx %b.dvi"))
-
-  (setq org-export-latex-listings t)
-  (setq org-latex-listings 'minted)
   (setq org-beamer-outline-frame-title "目次")
-
-  (setq org-latex-minted-options
-        '(("frame" "lines")
-          ("framesep=2mm")
-          ("linenos=true")
-          ("baselinestretch=1.2")
-          ("fontsize=\\footnotesize")
-          ("breaklines")
-          ))
-#+end_src
-
-- beamerのフレームの位置をtopにする。
-
-#+begin_src emacs-lisp
-  (setq org-beamer-frame-default-options "t")
+  (setq org-beamer-frame-default-options "t") ; フレームの位置をtopにする。
 #+end_src
 
 * 外部パッケージ
