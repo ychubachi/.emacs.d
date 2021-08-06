@@ -54,3 +54,10 @@ transient/
 bookmarks
 straight/
 recentf
+
+*.bbl
+*.dvi
+*.pdf
+*.pyg
+*.tex
+_minted-*/
