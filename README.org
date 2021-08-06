@@ -353,13 +353,26 @@
    : org-tempo
 
 ** latex関連
-*** latex本体
-    - latexでPDFを作成するには C-c C-e l p
-    - Windows用のPDFビューワはsumatrapdf（scoopでインストール可）
-    - orgファイルの設定例
-      - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
+*** orgでlatexの設定例
+    - 表題・筆者・日付の書き方
+
+    #+begin_comment
+    #+TITLE: とても素晴らしい研究の発表
+    #+AUTHOR: 中鉢 欣秀, CHUBACHI Yoshihide
+    #+DATE: 2021-08-06
+    #+end_comment
+
+    - 目次を出力しない
       
-      #+begin_src
+    #+begin_comment
+    #+OPTIONS: toc:nil # hoge
+    #+end_comment
+
+    - 参考
+      - [[https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:org:latex:start][Org-LaTeX [QumaWiki]]]
+      - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
+
+    #+begin_comment
 #+LaTeX_CLASS: koma-jarticle
 #+LaTeX_CLASS_OPTIONS: [12pt]
 #+LATEX_HEADER: \usepackage{geometry}
@@ -369,12 +382,11 @@
 #+STARTUP:  hidestars
 #+OPTIONS:   H:4 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
 #+OPTIONS: date:nil
-#+LINK_UP:
-#+LINK_HOME:
+      #+end_comment
 
-#+TITLE: hoge/fugaによる相補的な治療における高難度症例の治療と成績
-#+AUTHOR: taipapa, 織田信長, 豊臣秀吉, 徳川家康
-      #+end_src
+*** latex本体
+    - latexでPDFを作成するには C-c C-e l p
+    - Windows用のPDFビューワはsumatrapdf（scoopでインストール可）
 
     #+begin_src emacs-lisp
       (require 'ox-latex)
@@ -389,8 +401,10 @@
     #+end_src
 
 *** ソースコード整形
-    - pygmentをインストールしておく
+    - scoopでpygmentをインストールしておく
       - python インストールして pip install pygments
+      - PATHの登録
+        - C:\Users\yc\scoop\apps\python\current\Scripts
 
     #+begin_src emacs-lisp
       (setq org-export-latex-listings t)
@@ -586,6 +600,13 @@
     )
 #+end_src
 
+** Windowsで文字のエンコードをUTF-8に
+   #+begin_src emacs-lisp
+        (leaf windows
+          :when (eq system-type 'windows-nt)
+          :config
+          (prefer-coding-system 'utf-8))
+   #+end_src
 ** Windows IME設定
    - [[https://nosubject.io/windows10-emacs-27-w32-ime/][[Emacs] Windows10 で Emacs 27 を使う | ** nosubject.io **]]
    - [[https://qiita.com/tawara_/items/0a7b8c50a48ea86b2d91][あの IBM が作ったオープンソース日本語フォントを使い、プログラミングフォント『PlemolJP』を作ってみた - Qiita]]
