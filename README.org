@@ -356,6 +356,25 @@
 *** latex本体
     - latexでPDFを作成するには C-c C-e l p
     - Windows用のPDFビューワはsumatrapdf（scoopでインストール可）
+    - orgファイルの設定例
+      - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
+      
+      #+begin_src
+#+LaTeX_CLASS: koma-jarticle
+#+LaTeX_CLASS_OPTIONS: [12pt]
+#+LATEX_HEADER: \usepackage{geometry}
+#+LATEX_HEADER: \geometry{left=1in,right=1in,top=1in,bottom=1in}
+#+LaTeX_HEADER: \usepackage[sort,compress,super,comma]{natbib}
+#+STARTUP:  overview
+#+STARTUP:  hidestars
+#+OPTIONS:   H:4 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+OPTIONS: date:nil
+#+LINK_UP:
+#+LINK_HOME:
+
+#+TITLE: hoge/fugaによる相補的な治療における高難度症例の治療と成績
+#+AUTHOR: taipapa, 織田信長, 豊臣秀吉, 徳川家康
+      #+end_src
 
     #+begin_src emacs-lisp
       (require 'ox-latex)
