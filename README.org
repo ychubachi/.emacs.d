@@ -1,4 +1,4 @@
-#+startup: content num noindent
+#+startup: content num indent
 * Header
 ** はじめに
    - init.elの実行時、このREADME.orgからREADME.elを生成します。
@@ -400,7 +400,7 @@
               "dvipdfmx %b.dvi"))
     #+end_src
 
-*** ソースコード整形
+*** ソースコードの pretty print
     - scoopでpygmentをインストールしておく
       - python インストールして pip install pygments
       - PATHの登録
@@ -433,6 +433,61 @@
   (require 'ox-beamer)
   (setq org-beamer-outline-frame-title "目次")
   (setq org-beamer-frame-default-options "t") ; フレームの位置をtopにする。
+#+end_src
+
+*** 参考文献 RefTex-Mode
+    - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
+    - [[https://github.com/jkitchin/org-ref][jkitchin/org-ref: org-mode modules for citations, cross-references, bibliographies in org-mode and useful bibtex tools to go with it.]]
+    - [[https://aliquote.org/post/org-and-bibtex/][Org and Bibtex - aliquote]]
+      
+    #+begin_src emacs-lisp 
+            (leaf org-ref
+              :ensure t
+              :require t
+              :setq ((reftex-default-bibliography quote
+                                                  ("~/Dropbox/bibliography/references.bib"))
+         
+                     (org-ref-bibliography-notes . "~/Dropbox/bibliography/notes.org")
+                     (org-ref-default-bibliography quote
+                                                   ("~/Dropbox/bibliography/references.bib"))
+                     (org-ref-pdf-directory . "~/Dropbox/bibliography/bibtex-pdfs/")
+         
+                     (bibtex-completion-bibliography . "~/Dropbox/bibliography/references.bib")
+                     (bibtex-completion-library-path . "~/Dropbox/bibliography/bibtex-pdfs")
+                     (bibtex-completion-notes-path . "~/Dropbox/bibliography/helm-bibtex-notes")
+                     )
+              :config 
+              (push '(migemo) helm-source-bibtex)
+         
+              ;; (define-key org-mode-map (kbd "C-c b c") `org-ref-helm-insert-cite-link)
+              ;; (define-key org-mode-map (kbd "C-c b l") `org-ref-helm-insert-label-link)
+              ;; (define-key org-mode-map (kbd "C-c b r") `org-ref-helm-insert-ref-link)
+              )
+    #+end_src
+
+    #+RESULTS:
+    : org-ref
+
+    - org-ref-helmが使える
+      - 
+    - org-bibtexがよいのかも
+      - https://github.com/yyr/org-mode/blob/master/contrib/lisp/ox-bibtex.el
+      - M-x org-bibtex
+
+*** babel - Grophviz (dot)
+
+- dotコードの評価を行うようにする
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((dot . t))) ; this line activates dot
+#+end_src
+
+- babelで評価するときに確認を出さない
+  - [[https://emacs.stackexchange.com/questions/23946/how-can-i-stop-the-confirmation-to-evaluate-source-code-when-exporting-to-html][org mode - How can I stop the confirmation to evaluate source code when exporting to html? - Emacs Stack Exchange]]
+
+#+begin_src emacs-lisp
+  (setq org-confirm-babel-evaluate nil)
 #+end_src
 
 * 外部パッケージ
@@ -607,6 +662,10 @@
           :config
           (prefer-coding-system 'utf-8))
    #+end_src
+
+   #+RESULTS:
+   : windows
+
 ** Windows IME設定
    - [[https://nosubject.io/windows10-emacs-27-w32-ime/][[Emacs] Windows10 で Emacs 27 を使う | ** nosubject.io **]]
    - [[https://qiita.com/tawara_/items/0a7b8c50a48ea86b2d91][あの IBM が作ったオープンソース日本語フォントを使い、プログラミングフォント『PlemolJP』を作ってみた - Qiita]]
