@@ -35,7 +35,9 @@
 #+end_src
 
 ** フォントのインストール
-   - (font-family-list) で利用できるフォントが確認できる。
+- 利用できるフォントの確認
+  - Emacs: (font-family-list) で
+  - Ubuntu: fc-list コマンド
 
 * 準備
 ** (require 'cl)を検査しない
@@ -44,7 +46,7 @@
 (setq byte-compile-warnings '(not cl-functions obsolete))
 #+end_src
 
-** ここの意味が理解できてない
+** COMMENT ここの意味が理解できてない
 
 #+begin_src emacs-lisp
   ;; this enables this running method
@@ -56,7 +58,7 @@
              (file-name-directory
               (or load-file-name byte-compile-current-file))))))
 #+end_src
-** パッケージの設定
+** org/melpa/gnuパッケージの設定
 
 #+begin_src emacs-lisp
   (eval-and-compile
@@ -69,7 +71,7 @@
 
 #+RESULTS:
 
-** leaf
+** パッケージ管理
 *** パッケージのインストール
     #+begin_src emacs-lisp
       (unless (package-installed-p 'leaf)
@@ -100,6 +102,7 @@
     #+end_src
 
 *** leaf-tree
+
     #+begin_src emacs-lisp
       (leaf leaf-tree
         :ensure t
@@ -108,7 +111,8 @@
          (imenu-list-position . 'left)))
     #+end_src
 
-*** cus-edit
+* Emacs本体の設定
+** cus-edit
 
     #+begin_src emacs-lisp
       (leaf cus-edit
@@ -117,8 +121,8 @@
         :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
     #+end_src
  
-*** cus-start
-    
+** cus-start
+
     #+begin_src emacs-lisp
             (leaf cus-start
               :doc "define customization properties of builtins"
@@ -160,9 +164,81 @@
     #+RESULTS:
     : cus-start
 
-* ビルトインパッケージの設定
-** paren
+** フォントの設定
+- Noto Sansの等幅フォントを設定する
+- 表示の確認
 
+| mmmm |
+| llll |
+| 日本 |
+| 漢字 |
+| ああ |
+| んん |
+| ￥￥ |
+| \\\\ |
+| 　　   |
+|      |
+
+#+begin_src emacs-lisp
+(set-frame-font "Noto Sans Mono CJK JP-12" nil t)
+;; ↓漢字がボールド体にならない
+;; (set-frame-font "PlemolJP-12" nil t)
+;; (set-frame-font "HackGen-12" nil t)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src emacs-lisp
+(setq-default line-spacing 0) ; 行間
+#+end_src
+
+#+RESULTS:
+: 0
+
+* ビルトインパッケージの設定
+** whitespace - 空白文字の可視化
+　　　ああ全角　　　　　←全角　あいうえお  
+あいうえお　漢字  
+
+#+begin_src emacs-lisp
+(progn
+  (require 'whitespace)
+  (setq whitespace-style
+        '(
+          face ; faceで可視化
+          trailing ; 行末
+          tabs ; タブ
+          spaces ; スペース
+          space-mark ; 表示のマッピング
+          tab-mark
+          ))
+  (setq whitespace-display-mappings
+        '(
+          ;; (space-mark ?\u3000 [?\u2423])
+          (space-mark ?\u3000 [?□])
+          (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+          ))
+  (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+  (setq whitespace-space-regexp "\\(\u3000+\\)")
+  (set-face-attribute 'whitespace-trailing nil
+                      :foreground "RoyalBlue4"
+                      :background "RoyalBlue4"
+                      :underline nil)
+  (set-face-attribute 'whitespace-tab nil
+                      :foreground "yellow4"
+                      :background "yellow4"
+                      :underline nil)
+  (set-face-attribute 'whitespace-space nil
+                      :foreground "gray40"
+                      :background "gray20"
+                      :underline nil)
+  (global-whitespace-mode t)
+  )
+#+end_src
+
+#+RESULTS:
+: t
+** paren
 - 対応するカッコの表示
 
 #+begin_src emacs-lisp
