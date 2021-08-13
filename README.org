@@ -34,11 +34,6 @@
 ;;; Code:
 #+end_src
 
-** フォントのインストール
-- 利用できるフォントの確認
-  - Emacs: (font-family-list) で
-  - Ubuntu: fc-list コマンド
-
 * 準備
 ** (require 'cl)を検査しない
 
