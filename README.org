@@ -34,6 +34,18 @@
 ;;; Code:
 #+end_src
 
+** 事前にインストールしておくもの準備
+- 各種フォント
+  - Noto Sans Mono CJK JP-12
+- migemo
+  - cmigemo
+- pygment
+  - python3をインストール
+  - /home/yc/.local/binにパス
+  - pip install -U pip
+  - pip install pygments
+- graphviz(dot)
+  - sudo apt install graphviz
 * 準備
 ** (require 'cl)を検査しない
 
@@ -472,29 +484,30 @@
     #+end_src
 
 *** ソースコードの pretty print
-    - scoopでpygmentをインストールしておく
-      - python インストールして pip install pygments
-      - PATHの登録
-        - C:\Users\yc\scoop\apps\python\current\Scripts
+- Windowsの場合
+  - scoopでpygmentをインストールしておく
+  - python インストールして pip install pygments
+  - PATHの登録
+    - C:\Users\yc\scoop\apps\python\current\Scripts
 
-    #+begin_src emacs-lisp
-      (setq org-export-latex-listings t)
+  #+begin_src emacs-lisp
+    (setq org-export-latex-listings t)
 
-      (setq org-latex-listings 'minted)
-      (setq org-latex-minted-options
-            '(("frame" "lines")
-              ("framesep=2mm")
-              ("linenos=true")
-              ("baselinestretch=1.2")
-              ("fontsize=\\footnotesize")
-              ("breaklines")
-              ))
+    (setq org-latex-listings 'minted)
+    (setq org-latex-minted-options
+          '(("frame" "lines")
+            ("framesep=2mm")
+            ("linenos=true")
+            ("baselinestretch=1.2")
+            ("fontsize=\\footnotesize")
+            ("breaklines")
+            ))
 
-      (add-to-list 'org-latex-packages-alist "\\usepackage{minted}" t)
-    #+end_src
+    (add-to-list 'org-latex-packages-alist "\\usepackage{minted}" t)
+  #+end_src
 
-    #+RESULTS:
-    | \usepackage{minted} |
+  #+RESULTS:
+  | \usepackage{minted} |
 
 *** Beamer
 
