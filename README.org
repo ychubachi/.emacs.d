@@ -363,29 +363,28 @@
    : helm-recentf
 
 * org-mode
-** 基本設定
-
+** org-agenda-files
 - org-agenda-filesのリストにDropboxのディレクトリを追加しておく。
   - この中にあるorgファイルがすべてagendaに反映される。
 - org-num-modeをすべてのファイルで実行する
   - (org-startup-numerated . t)がうまく反映されない。
 - Androd端末から利用するには [[https://play.google.com/store/apps/details?id=com.orgzly][Orgzly]] が良さそう。
 
-   #+begin_src emacs-lisp
-     (leaf org-mode 
-       :custom
-       (org-directory . "~/Dropbox/org/")
-       (org-agenda-files . '("~/Dropbox/org/"))
-       (org-default-notes-file . "Notes.org")
-       (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
-       :bind
-       ("C-c l" . org-store-link)
-       ("C-c a" . org-agenda)
-       ("C-c c" . org-capture))
-   #+end_src
+#+begin_src emacs-lisp
+  (leaf org-mode 
+    :custom
+    (org-directory . "~/Dropbox/org/")
+    (org-agenda-files . '("~/Dropbox/org/"))
+    (org-default-notes-file . "Notes.org")
+    (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
+    :bind
+    ("C-c l" . org-store-link)
+    ("C-c a" . org-agenda)
+    ("C-c c" . org-capture))
+#+end_src
 
-   #+RESULTS:
-   : org-mode
+#+RESULTS:
+: org-mode
 
 ** org-captureのテンプレート設定
 
@@ -558,7 +557,7 @@
       - https://github.com/yyr/org-mode/blob/master/contrib/lisp/ox-bibtex.el
       - M-x org-bibtex
 
-*** babel - Grophviz (dot)
+** babel - Grophviz (dot)
 
 - dotコードの評価を行うようにする
 #+begin_src emacs-lisp
@@ -573,6 +572,15 @@
 #+begin_src emacs-lisp
   (setq org-confirm-babel-evaluate nil)
 #+end_src
+
+- インラインイメージの自動再描画
+  - [[https://emacs.stackexchange.com/questions/3302/live-refresh-of-inline-images-with-org-display-inline-images][org mode - live refresh of inline images with org-display-inline-images - Emacs Stack Exchange]]
+#+begin_src emacs-lisp
+(eval-after-load 'org
+  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images))
+#+end_src
+
+#+RESULTS:
 
 * 外部パッケージ
 ** undo-tree
