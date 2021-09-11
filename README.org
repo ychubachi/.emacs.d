@@ -393,7 +393,7 @@
    - [[https://www.5ing-myway.com/org-capture/][org-captureをカスタマイズして、すばやくメモを取る方法 | 趣味に生きる。]]
 
    - ファイルは org-directory 以下にある。
-     
+
    #+begin_src emacs-lisp
      (leaf org-capture-templates
        :setq ((org-capture-templates quote
