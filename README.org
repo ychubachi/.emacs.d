@@ -398,8 +398,8 @@
      (leaf org-capture-templates
        :setq ((org-capture-templates quote
                                      (("m" "メモ" entry
-                                       (file "Memo.org")
-                                       "* %?\nEntered on %t\n%a\n%i\n")
+                                       (file+olp+datetree "Memo.org")
+                                       "* %?\nEntered on %T\n")
                                       ("t" "タスク（スケジュールなし）" entry
                                        (file+headline "List.org" "すること")
                                        "** TODO %? \n")
@@ -528,16 +528,16 @@
               :ensure t
               :require t
               :setq ((reftex-default-bibliography quote
-                                                  ("~/Dropbox/bibliography/references.bib"))
+                                                  ("~/git/bibliography/references.bib"))
          
-                     (org-ref-bibliography-notes . "~/Dropbox/bibliography/notes.org")
+                     (org-ref-bibliography-notes . "~/git/bibliography/notes.org")
                      (org-ref-default-bibliography quote
-                                                   ("~/Dropbox/bibliography/references.bib"))
-                     (org-ref-pdf-directory . "~/Dropbox/bibliography/bibtex-pdfs/")
+                                                   ("~/git/bibliography/references.bib"))
+                     (org-ref-pdf-directory . "~/git/bibliography/bibtex-pdfs/")
          
-                     (bibtex-completion-bibliography . "~/Dropbox/bibliography/references.bib")
-                     (bibtex-completion-library-path . "~/Dropbox/bibliography/bibtex-pdfs")
-                     (bibtex-completion-notes-path . "~/Dropbox/bibliography/helm-bibtex-notes")
+                     (bibtex-completion-bibliography . "~/git/bibliography/references.bib")
+                     (bibtex-completion-library-path . "~/git/bibliography/bibtex-pdfs")
+                     (bibtex-completion-notes-path . "~/git/bibliography/helm-bibtex-notes")
                      )
               :config 
               (push '(migemo) helm-source-bibtex)
