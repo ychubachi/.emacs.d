@@ -371,7 +371,7 @@
 - Androd端末から利用するには [[https://play.google.com/store/apps/details?id=com.orgzly][Orgzly]] が良さそう。
 
 #+begin_src emacs-lisp
-  (leaf org-mode 
+  (leaf org-mode
     :custom
     (org-directory . "~/Dropbox/org/")
     (org-agenda-files . '("~/Dropbox/org/"))
@@ -396,29 +396,40 @@
 
    #+begin_src emacs-lisp
      (leaf org-capture-templates
-       :setq ((org-capture-templates quote
-                                     (("m" "メモ" entry
-                                       (file+olp+datetree "Memo.org")
-                                       "* %?\nEntered on %T\n")
-                                      ("t" "タスク（スケジュールなし）" entry
-                                       (file+headline "List.org" "すること")
-                                       "** TODO %? \n")
-                                      ("s" "タスク（スケジュールあり）" entry
-                                       (file+headline "List.org" "すること")
-                                       "** TODO %? \n   SCHEDULED: %^t \n")
-                                      ("l" "やりたいこと" checkitem
-                                       (file+headline "List.org" "やりたいこと")
-                                       "[ ] %? \n")
-                                      ("b" "欲しいもの" checkitem
-                                       (file+headline "List.org" "欲しいもの")
-                                       "[ ] %? \n")
-                                      ("g" "行きたいところ" checkitem
-                                       (file+headline "List.org" "行きたいところ")
-                                       "[ ] %? \n")))))
+       :setq ((org-capture-templates
+               quote
+               (("m" "メモ" entry
+                 (file+olp+datetree "Memo.org")
+                 "* %?\n  Entered on %T\n"
+                 :tree-type month) ; this doesn't seem to work
+                ("t" "タスク（スケジュールなし）" entry
+                 (file+headline "List.org" "すること")
+                 "** TODO %? \n")
+                ("s" "タスク（スケジュールあり）" entry
+                 (file+headline "List.org" "すること")
+                 "** TODO %? \n   SCHEDULED: %^t \n")
+                ("l" "やりたいこと" checkitem
+                 (file+headline "List.org" "やりたいこと")
+                 "[ ] %? \n")
+                ("b" "欲しいもの" checkitem
+                 (file+headline "List.org" "欲しいもの")
+                 "[ ] %? \n")
+                ("g" "行きたいところ" checkitem
+                 (file+headline "List.org" "行きたいところ")
+                 "[ ] %? \n")))))
    #+end_src
 
    #+RESULTS:
    : org-capture-templates
+
+   #+begin_src emacs-lisp
+     (define-key global-map
+       (kbd "C-c m")
+       (lambda () (interactive) (org-capture nil "m")))
+   #+end_src
+
+   #+RESULTS:
+   | lambda | nil | (interactive) | (org-capture nil m) |
 
 ** org-tempo
    - "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
