@@ -593,6 +593,15 @@
 
 #+RESULTS:
 
+** スピードコマンド
+
+#+begin_src emacs-lisp
+(setq org-use-speed-commands t)
+#+end_src
+
+#+RESULTS:
+: t
+
 * 外部パッケージ
 ** undo-tree
    - [[https://elpa.gnu.org/packages/undo-tree.html][GNU ELPA - undo-tree]]
