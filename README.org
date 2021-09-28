@@ -778,6 +778,29 @@
   #+RESULTS:
   : migemo
 
+** org2blog
+- [[https://github.com/org2blog/org2blog#requirements-and-compatibility][org2blog/org2blog: Blog from Org mode to WordPress.]]
+- パスワードは~/.netrcに書く
+
+#+begin_src emacs-lisp
+    (leaf org2blog
+      :ensure t
+      :config
+      (require 'auth-source)
+      (let* ((credentials (auth-source-user-and-password "plover.grats.jp"))
+             (username (nth 0 credentials))
+             (password (nth 1 credentials))
+             (config `("plover"
+                       :url "https://plover.grats.jp/xmlrpc.php"
+                       :username ,username
+                       :password ,password)))
+        (setq org2blog/wp-blog-alist `(,config))) ;; FIXED
+  )
+#+end_src
+
+#+RESULTS:
+: org2blog
+
 * OS依存の設定
   - OSの判定方法
     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
@@ -798,6 +821,9 @@
     :bind (("C-o" . toggle-input-method))
     )
 #+end_src
+
+#+RESULTS:
+: mozc-im
 
 ** Windowsで文字のエンコードをUTF-8に
    #+begin_src emacs-lisp
