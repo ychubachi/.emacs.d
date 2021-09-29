@@ -268,16 +268,22 @@
 
 ** wdired
 
-- 多分設定が中途はんぱ
+- [[https://ohzeki.hatenablog.com/entry/20160115/1452838970][Emacsのdired表示でファイル名編集 - ohzeki’s diary]]
 
 #+begin_src emacs-lisp
   (leaf wdired
     :doc "Rename files editing their names in dired buffers"
     :tag "builtin"
     :added "2020-11-21"
+    :require t
+    :config
+    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
     :bind ((wdired-mode-map
             ("C-o" . toggle-input-method))))
 #+end_src
+
+#+RESULTS:
+: wdired
 
 ** autorevert
 - ディスクのファイルが更新されたらバッファも自動で更新する
