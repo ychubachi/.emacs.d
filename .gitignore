@@ -62,3 +62,4 @@ recentf
 *.tex
 _minted-*/
 url/
+/el-get/

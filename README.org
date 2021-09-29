@@ -812,7 +812,8 @@
     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
 
 ** Linuxでmozcの設定
-   - elispのマクロを展開する
+- 参考
+  - [[https://w.atwiki.jp/ntemacs/pages/48.html][emacs-mozc を動かすための設定（Emacs 設定編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
 
 #+begin_src emacs-lisp
   (leaf mozc-im
@@ -825,6 +826,143 @@
     :custom
     ((default-input-method . "japanese-mozc-im"))
     :bind (("C-o" . toggle-input-method))
+    :config
+    (require 'mozc-im)
+    (require 'wdired)
+
+    ;; Mozc をデフォルトにする
+    (setq default-input-method "japanese-mozc-im")
+
+    ;; カーソルの点滅を OFF にする
+    (blink-cursor-mode 0)
+
+    ;; popup スタイルを使用する
+    ;; (leaf mozc-popup
+    ;;   :ensure t
+    ;;   :config
+    ;;   (setq mozc-candidate-style 'popup))
+
+    ;; カーソルカラーを設定する
+    (leaf mozc-cursor-color
+      :require t ; el-get を利用するため ensure ではなく require
+      :el-get iRi-E/mozc-el-extensions
+      :config
+      ;; カーソルカラーを設定する
+      (setq mozc-cursor-color-alist '((direct        . "orchid")
+                                      (read-only     . "yellow")
+                                      (hiragana      . "green")
+                                      (full-katakana . "goldenrod")
+                                      (half-ascii    . "dark orchid")
+                                      (full-ascii    . "orchid")
+                                      (half-katakana . "dark goldenrod")))
+
+      (defvar-local mozc-im-mode nil)
+      (add-hook 'mozc-im-activate-hook
+                (lambda nil
+                  (setq mozc-im-mode t)))
+      (add-hook 'mozc-im-deactivate-hook
+                (lambda nil
+                  (setq mozc-im-mode nil)))
+      (advice-add 'mozc-cursor-color-update :around
+                  (lambda (orig-fun &rest args)
+                    (let ((mozc-mode mozc-im-mode))
+                      (apply orig-fun args)))))
+
+    (defun enable-input-method (&optional arg interactive)
+      (interactive "P\np")
+      (if (not current-input-method)
+          (toggle-input-method arg interactive)))
+
+    (defun disable-input-method (&optional arg interactive)
+      (interactive "P\np")
+      (if current-input-method
+          (toggle-input-method arg interactive)))
+
+    ;; isearch 関連
+    (defun isearch-enable-input-method ()
+      (interactive)
+      (if (not current-input-method)
+          (isearch-toggle-input-method)
+        (cl-letf (((symbol-function 'toggle-input-method)
+                   (symbol-function 'ignore)))
+          (isearch-toggle-input-method))))
+
+    (defun isearch-disable-input-method ()
+      (interactive)
+      (if current-input-method
+          (isearch-toggle-input-method)
+        (cl-letf (((symbol-function 'toggle-input-method)
+                   (symbol-function 'ignore)))
+          (isearch-toggle-input-method))))
+
+    ;; IME をトグルするキー設定
+    (global-set-key (kbd "C-o") 'toggle-input-method)
+    (define-key isearch-mode-map (kbd "C-o") 'isearch-toggle-input-method)
+    (define-key wdired-mode-map (kbd "C-o") 'toggle-input-method)
+
+    ;; IME を無効にするキー設定
+    (global-set-key (kbd "C-<f1>") 'disable-input-method)
+    (define-key isearch-mode-map (kbd "C-<f1>") 'isearch-disable-input-method)
+    (define-key wdired-mode-map (kbd "C-<f1>") 'disable-input-method)
+
+    (global-set-key (kbd "C-j") 'disable-input-method)
+    (define-key isearch-mode-map (kbd "C-j") 'isearch-disable-input-method)
+    (define-key wdired-mode-map (kbd "C-j") 'disable-input-method)
+
+    ;; IME を有効にするキー設定
+    (global-set-key (kbd "C-<f2>") 'enable-input-method)
+    (define-key isearch-mode-map (kbd "C-<f2>") 'isearch-enable-input-method)
+    (define-key wdired-mode-map (kbd "C-<f2>") 'enable-input-method)
+
+    ;; (global-set-key (kbd "C-o") 'enable-input-method)
+    ;; (define-key isearch-mode-map (kbd "C-o") 'isearch-enable-input-method)
+    ;; (define-key wdired-mode-map (kbd "C-o") 'enable-input-method)
+
+    ;; isearch を利用する前後で IME の状態を維持するための対策
+    (add-hook 'isearch-mode-hook (lambda () (setq im-state mozc-im-mode)))
+    (add-hook 'isearch-mode-end-hook
+              (lambda ()
+                (unless (eq im-state mozc-im-mode)
+                  (if im-state
+                      (activate-input-method default-input-method)
+                    (deactivate-input-method)))))
+
+    ;; wdired 終了時に IME を OFF にする
+    (advice-add 'wdired-finish-edit
+                :after (lambda (&rest args)
+                         (deactivate-input-method)))
+    (leaf helm
+      :config
+      (require 'cl-lib)
+
+      ;; helm でミニバッファの入力時に IME の状態を継承しない
+      (setq helm-inherit-input-method nil)
+
+      ;; helm の検索パターンを mozc を使って入力した場合にエラーが発生することがあるのを改善する
+      (advice-add 'mozc-helper-process-recv-response
+                  :around (lambda (orig-fun &rest args)
+                            (cl-loop for return-value = (apply orig-fun args)
+                                     if return-value return it)))
+
+      ;; helm の検索パターンを mozc を使って入力する場合、入力中は helm の候補の更新を停止する
+      (advice-add 'mozc-candidate-dispatch
+                  :before (lambda (&rest args)
+                            (when helm-alive-p
+                              (cl-case (nth 0 args)
+                                ('update
+                                 (unless helm-suspend-update-flag
+                                   (helm-kill-async-processes)
+                                   (setq helm-pattern "")
+                                   (setq helm-suspend-update-flag t)))
+                                ('clean-up
+                                 (when helm-suspend-update-flag
+                                   (setq helm-suspend-update-flag nil)))))))
+
+      ;; helm で候補のアクションを表示する際に IME を OFF にする
+      (advice-add 'helm-select-action
+                  :before (lambda (&rest args)
+                            (deactivate-input-method)))
+      )
     )
 #+end_src
 
