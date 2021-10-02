@@ -1025,6 +1025,32 @@
        (w32-ime-initialize))
    #+end_src
 
+** WSLでWindows側のブラウザを立ち上げる
+
+- WSL側からWindowsを制御するユーテリティ
+  - [[https://github.com/wslutilities/wslu][wslutilities/wslu: A collection of utilities for Windows 10 Linux Subsystems]]
+  - wslviewコマンドを利用する
+
+- Emacsが使うブラウザを設定する
+  - [[https://www.emacswiki.org/emacs/BrowseUrl#h5o-4][[Home] Browse Url]]
+
+- WSLかどうか判断
+  - [[https://qiita.com/miy4/items/acf50a9c0a053b878b56#%E7%92%B0%E5%A2%83%E5%A4%89%E6%95%B0%E3%82%92%E6%8E%A2%E3%81%99][EmacsでWSLを使っている/いないを判断する - Qiita]]
+
+#+begin_src emacs-lisp
+(when (and (eq system-type 'gnu/linux)
+           (getenv "WSLENV"))
+  (setq browse-url-browser-function 'my/browser))
+
+(defun my/browser (url &rest ignore)
+      "Browse URL using wslview."
+      (interactive "sURL: ")
+      (shell-command (concat "wslview " url)))
+#+end_src
+
+#+RESULTS:
+: my/browser
+
 * Footer
 
 - お約束の記述
