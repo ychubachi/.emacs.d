@@ -1,8 +1,23 @@
 #+startup: content num indent
-* Header
-** はじめに
+* はじめに
+** この設定について
    - init.elの実行時、このREADME.orgからREADME.elを生成します。
    - orgのハッケージは手動で最新版に更新しておきます。
+
+** 事前にインストールしておくもの
+- 各種フォント
+  - Noto Sans Mono CJK JP-12
+- migemo
+  - cmigemo
+- pygment
+  - python3をインストール
+  - /home/yc/.local/binにパス
+  - pip install -U pip
+  - pip install pygments
+- graphviz(dot)
+  - sudo apt install graphviz
+- org-roam
+  - sqlite3
 
 ** Copyright
 - Copyright など。
@@ -34,19 +49,7 @@
 ;;; Code:
 #+end_src
 
-** 事前にインストールしておくもの準備
-- 各種フォント
-  - Noto Sans Mono CJK JP-12
-- migemo
-  - cmigemo
-- pygment
-  - python3をインストール
-  - /home/yc/.local/binにパス
-  - pip install -U pip
-  - pip install pygments
-- graphviz(dot)
-  - sudo apt install graphviz
-* 準備
+* 基本設定
 ** (require 'cl)を検査しない
 
 #+begin_src emacs-lisp
@@ -65,60 +68,35 @@
              (file-name-directory
               (or load-file-name byte-compile-current-file))))))
 #+end_src
-** org/melpa/gnuパッケージの設定
+
+** C-hをBSに
 
 #+begin_src emacs-lisp
-  (eval-and-compile
-    (customize-set-variable
-     'package-archives '(("org"   . "https://orgmode.org/elpa/")
-                         ("melpa" . "https://melpa.org/packages/")
-                         ("gnu"   . "https://elpa.gnu.org/packages/")))
-    (package-initialize))
+(global-set-key (kbd "C-@") help-map)
+(global-set-key (kbd "C-h") 'delete-backward-char)
 #+end_src
 
 #+RESULTS:
+: delete-backward-char
+** yes/noの選択をy/nに簡略化
 
-** パッケージ管理
-*** パッケージのインストール
-    #+begin_src emacs-lisp
-      (unless (package-installed-p 'leaf)
-        (package-refresh-contents)
-        (package-install 'leaf))
-    #+end_src
+#+begin_src emacs-lisp
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+end_src
 
-    #+RESULTS:
+#+RESULTS:
+: yes-or-no-p
 
-*** leaf-keywords
+** 保存時、不要な空白を削除
 
-    #+begin_src emacs-lisp
-      ;; optional packages if you want to use :hydra, :el-get, :blackout,,,
-      (leaf leaf-keywords
-        :ensure t
-        :init
-        (leaf hydra :ensure t)
-        (leaf el-get :ensure t)
-        (leaf blackout :ensure t)
-        :config
-        ;; initialize leaf-keywords.el
-        (leaf-keywords-init))
-    #+end_src
+#+begin_src emacs-lisp
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
 
-*** leaf-convert
-    #+begin_src emacs-lisp
-      (leaf leaf-convert :ensure t)
-    #+end_src
-
-*** leaf-tree
-
-    #+begin_src emacs-lisp
-      (leaf leaf-tree
-        :ensure t
-        :custom
-        ((imenu-list-size . 30)
-         (imenu-list-position . 'left)))
-    #+end_src
-
-** straightパッケージマネージャー
+#+RESULTS:
+| delete-trailing-whitespace |
+* パッケージ管理
+** パッケージ管理（straight）
 
    #+begin_src emacs-lisp
      (defvar bootstrap-version)
@@ -137,6 +115,47 @@
      (setq package-enable-at-startup nil)
    #+end_src
 
+** Leaf
+
+*** leaf
+
+#+begin_src emacs-lisp
+  (prog1 "prepare leaf"
+    (prog1 "package"
+      (custom-set-variables
+       '(package-archives '(("org"   . "https://orgmode.org/elpa/")
+                            ("melpa" . "https://melpa.org/packages/")
+                            ("gnu"   . "https://elpa.gnu.org/packages/"))))
+      (package-initialize))
+
+    (prog1 "leaf"
+      (unless (package-installed-p 'leaf)
+        (unless (assoc 'leaf package-archive-contents)
+          (package-refresh-contents))
+        (condition-case err
+            (package-install 'leaf)
+          (error
+           (package-refresh-contents)       ; renew local melpa cache if fail
+           (package-install 'leaf))))
+
+      (leaf leaf-keywords
+        :ensure t
+        :config (leaf-keywords-init)))
+
+    (prog1 "optional packages for leaf-keywords"
+      ;; optional packages if you want to use :hydra, :el-get,,,
+      (leaf hydra :ensure t)
+      (leaf el-get :ensure t
+        :custom ((el-get-git-shallow-clone  . t)))))
+#+end_src
+
+#+RESULTS:
+: leaf-keywords
+
+*** Leaf tree
+#+begin_src emacs-lisp
+#+end_src
+
 * Emacs本体の設定
 ** cus-edit
 
@@ -146,14 +165,14 @@
         :tag "builtin" "faces" "help"
         :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
     #+end_src
- 
-** cus-start
+
+** TODO 設定がまぜこぜ？customizeの設定（cus-start）
+- 設定がまぜこぜになっている気が。
 
     #+begin_src emacs-lisp
             (leaf cus-start
               :doc "define customization properties of builtins"
               :tag "builtin" "internal"
-              :bind (("\C-z" . undo))
               :preface
               (defun c/redraw-frame nil
                 (interactive)
@@ -181,10 +200,7 @@
                         ;; (tool-bar-mode . nil)
                         (scroll-bar-mode . nil)
                         (indent-tabs-mode . nil)
-                        (inhibit-startup-screen . t))
-              :config
-              (defalias 'yes-or-no-p 'y-or-n-p)
-              (keyboard-translate ?\C-h ?\C-?))
+                        (inhibit-startup-screen . t)))
     #+end_src
 
     #+RESULTS:
@@ -223,8 +239,8 @@
 
 * ビルトインパッケージの設定
 ** whitespace - 空白文字の可視化
-　　　ああ全角　　　　　←全角　あいうえお  
-あいうえお　漢字  
+　　　ああ全角　　　　　←全角　あいうえお
+あいうえお　漢字
 
 #+begin_src emacs-lisp
 (progn
@@ -326,15 +342,17 @@
     :req "cl-lib-0.5"
     :tag "debugging" "macro" "languages" "lisp"
     :url "https://github.com/joddie/macrostep"
-    :ensure t
+    :require t
     :bind (("C-c e" . macrostep-expand)))
 #+end_src
+
+#+RESULTS:
+: macrostep
 
 ** recentf
 
 #+begin_src emacs-lisp
      (leaf recentf
-       ;; :bind ("C-c r" . helm-recentf)
        :custom
        (recentf-max-saved-items . 2000)
        (recentf-auto-cleanup quote never)
@@ -348,36 +366,13 @@
 #+RESULTS:
 : recentf
 
+** midnight -
+
+#+begin_src emacs-lisp
+
+#+end_src
+
 * ミニバッファ補完UI
-** COMMENT Helm
-*** Helm本体
-    - [[https://github.com/emacs-helm/helm/wiki#helm-mode][Home · emacs-helm/helm Wiki]]
-     
-   #+begin_src emacs-lisp
-     (leaf helm
-       :preface
-       (straight-use-package 'helm)
-       :bind
-       ("M-x" . helm-M-x)
-       ("C-x r b" . helm-filtered-bookmarks)
-       ("C-x C-f" . helm-find-files)
-       ("C-c h" . helm-mini)
-       :config
-       (helm-mode 1))
-   #+end_src
-
-   #+RESULTS:
-   : helm
-  
-*** helm-recentf
-   #+begin_src emacs-lisp
-     (leaf helm-recentf
-       :bind ("C-c r" . helm-recentf))
-   #+end_src
-
-   #+RESULTS:
-   : helm-recentf
-
 ** vertico
 *** vertico:本体の設定
 
@@ -445,7 +440,7 @@
 #+RESULTS:
 : marginalia
 
-*** embark
+*** TODO embark
 - [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
 
 #+begin_src emacs-lisp
@@ -455,7 +450,7 @@
     :bind
     (("C-." . embark-act)         ;; pick some comfortable binding
      ("C-;" . embark-dwim)        ;; good alternative: M-.
-     ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+     ("C-@ B" . embark-bindings)) ;; alternative for `describe-bindings' (C-h->C-@)
 
     :init
     ;; Optionally replace the key help with a completing-read interface
@@ -485,7 +480,7 @@
            ("C-c m" . consult-mode-command)
            ("C-c b" . consult-bookmark)
            ("C-c k" . consult-kmacro)
-           ("C-c r" . consult-recent-file)           ;; added by yc
+           ;; ("C-c r" . consult-recent-file)           ;; added by yc
            ;; C-x bindings (ctl-x-map)
            ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
            ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
@@ -618,7 +613,7 @@
 : embark-consult
 
 * org-mode
-** org-agenda-files
+** orgのためのディレクトリ設定
 - org-agenda-filesのリストにDropboxのディレクトリを追加しておく。
   - この中にあるorgファイルがすべてagendaに反映される。
 - org-num-modeをすべてのファイルで実行する
@@ -628,8 +623,8 @@
 #+begin_src emacs-lisp
   (leaf org-mode
     :custom
-    (org-directory . "~/Dropbox/org/")
-    (org-agenda-files . '("~/Dropbox/org/"))
+    (org-directory . "~/Dropbox/Org/")
+    (org-agenda-files . '("~/Dropbox/Org/"))
     (org-default-notes-file . "Notes.org")
     (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
     :bind
@@ -641,52 +636,27 @@
 #+RESULTS:
 : org-mode
 
-** org-captureのテンプレート設定
+** org-modeでRETURNでリンクを開く
 
-   - [[https://orgmode.org/manual/Capture.html][Capture (The Org Manual)]]
-   - [[https://orgmode.org/manual/Setting-up-capture.html#Setting-up-capture][Setting up capture (The Org Manual)]]
-   - [[https://www.5ing-myway.com/org-capture/][org-captureをカスタマイズして、すばやくメモを取る方法 | 趣味に生きる。]]
+- C-mでも可
 
-   - ファイルは org-directory 以下にある。
+#+begin_src emacs-lisp
+  (leaf org-mode
+    :config
+    (setq org-return-follows-link  t))
+#+end_src
 
-   #+begin_src emacs-lisp
-     (leaf org-capture-templates
-       :setq ((org-capture-templates
-               quote
-               (("m" "メモ" entry
-                 (file+olp+datetree "Memo.org")
-                 "* %?\n  Entered on %T\n"
-                 :empty-lines 1 :tree-type month) ; this doesn't seem to work
-                ("t" "タスク（スケジュールなし）" entry
-                 (file+headline "List.org" "すること")
-                 "** TODO %? \n")
-                ("s" "タスク（スケジュールあり）" entry
-                 (file+headline "List.org" "すること")
-                 "** TODO %? \n   SCHEDULED: %^t \n")
-                ("l" "やりたいこと" checkitem
-                 (file+headline "List.org" "やりたいこと")
-                 "[ ] %? \n")
-                ("b" "欲しいもの" checkitem
-                 (file+headline "List.org" "欲しいもの")
-                 "[ ] %? \n")
-                ("g" "行きたいところ" checkitem
-                 (file+headline "List.org" "行きたいところ")
-                 "[ ] %? \n")))))
-   #+end_src
+#+RESULTS:
+: org-mode
 
-   #+RESULTS:
-   : org-capture-templates
+** doctを利用したorg-captureの設定
 
-   #+begin_src emacs-lisp
-     (define-key global-map
-       (kbd "C-c m")
-       (lambda () (interactive) (org-capture nil "m")))
-   #+end_src
+- [[https://orgmode.org/manual/Capture.html][Capture (The Org Manual)]]
+- [[https://orgmode.org/manual/Setting-up-capture.html#Setting-up-capture][Setting up capture (The Org Manual)]]
+- [[https://www.5ing-myway.com/org-capture/][org-captureをカスタマイズして、すばやくメモを取る方法 | 趣味に生きる。]]
 
-   #+RESULTS:
-   | lambda | nil | (interactive) | (org-capture nil m) |
+- ファイルは org-directory 以下にある。
 
-** COMMENT doctを利用したorg-capture
 - [[https://github.com/progfolio/doct#installation][GitHub - progfolio/doct: DOCT: Declarative Org Capture Templates for Emacs]]
 - ミニバッファで日本語が入力できない
 - [[https://blog.tomoya.dev/posts/a-new-wave-has-arrived-at-emacs/][Emacsの次世代ミニバッファ補完UI | 日々、とんは語る。]]
@@ -698,7 +668,48 @@
     ;:commands (doct)
     :config
     (setq org-capture-templates
-        (doct '(("Parent" :keys "p"
+        (doct '(("Memo" :keys "m"
+                 :prepend t
+                 :empty-lines-after 1
+                 :jump-to-captured t
+                 :file "~/Dropbox/Org/Memo.org"
+                 :datetree t
+                 :todo-state "TODO"
+                 :template ("* %{todo-state} %^{Description}"
+                            ":PROPERTIES:"
+                            ":Created: %U"
+                            ":END:"
+                            "\n%?"))
+                ("Blog" :keys "b"
+                 :prepend t
+                 :empty-lines-after 1
+                 :jump-to-captured t
+                 :children (
+                   ("ychubachi.github.io"  :keys "g"
+                             :file "~/Dropbox/Org/ychubachi.github.io.org"
+                             :headline   "Blog"
+                             :todo-state "TODO"
+                             :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
+                             :template ("* %{todo-state} %^{Description}"
+                                        ":PROPERTIES:"
+                                        ":Created: %T"
+                                        ":EXPORT_FILE_NAME: %{export_file_name}"
+                                        ":EXPORT_DATE: %U"
+                                        ":END:"
+                                        "\n%?"))
+                   ("ploversky.net" :keys "p"
+                             :file "~/Dropbox/Org/blog/ploversky.net/ploversky.net.org"
+                             :todo-state "TODO"
+                             :template ("* %{todo-state} %^{Description}"
+                                        ":PROPERTIES:"
+                                        ":Created: %u"
+                                        ":CATEGORY: Blog"
+                                        ":POST_TAGS: Blog"
+                                        ":BLOG:     plover"
+                                        ":END:"
+                                        "%?"))
+                            ))
+                ("Parent" :keys "p"
                  :file "~/example.org"
                  :prepend t
                  :template ("* %{todo-state} %^{Description}"
@@ -715,14 +726,26 @@
                              :todo-state "NEXT")
                             ("Third Child"  :keys "3"
                              :headline   "Three"
-                             :todo-state "MAYBE"))))))
+                             :todo-state "MAYBE")))
+                )
+              )
+        )
   )
 #+end_src
 
 #+RESULTS:
 : doct
 
-** org-tempo
+#+begin_src emacs-lisp
+  (define-key global-map
+    (kbd "C-c m")
+    (lambda () (interactive) (org-capture nil "m")))
+#+end_src
+
+#+RESULTS:
+| lambda | nil | (interactive) | (org-capture nil m) |
+
+** ソースコードブロック入力の省力化（org-tempo）
    - "<el"+<TAB>　でemacs-lispのソースコードブロックがでるように設定。
 
    #+begin_src emacs-lisp
@@ -747,7 +770,7 @@
     #+end_comment
 
     - 目次を出力しない
-      
+
     #+begin_comment
     #+OPTIONS: toc:nil # hoge
     #+end_comment
@@ -820,41 +843,41 @@
   (setq org-beamer-frame-default-options "t") ; フレームの位置をtopにする。
 #+end_src
 
-*** 参考文献 RefTex-Mode
+*** COMMENT TODO 参考文献 RefTex-Mode
     - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
     - [[https://github.com/jkitchin/org-ref][jkitchin/org-ref: org-mode modules for citations, cross-references, bibliographies in org-mode and useful bibtex tools to go with it.]]
     - [[https://aliquote.org/post/org-and-bibtex/][Org and Bibtex - aliquote]]
-      
-    #+begin_src emacs-lisp 
-            (leaf org-ref
-              :ensure t
-              :require t
-              :setq ((reftex-default-bibliography quote
-                                                  ("~/git/bibliography/references.bib"))
-         
-                     (org-ref-bibliography-notes . "~/git/bibliography/notes.org")
-                     (org-ref-default-bibliography quote
-                                                   ("~/git/bibliography/references.bib"))
-                     (org-ref-pdf-directory . "~/git/bibliography/bibtex-pdfs/")
-         
-                     (bibtex-completion-bibliography . "~/git/bibliography/references.bib")
-                     (bibtex-completion-library-path . "~/git/bibliography/bibtex-pdfs")
-                     (bibtex-completion-notes-path . "~/git/bibliography/helm-bibtex-notes")
-                     )
-              :config 
-              (push '(migemo) helm-source-bibtex)
-         
-              ;; (define-key org-mode-map (kbd "C-c b c") `org-ref-helm-insert-cite-link)
-              ;; (define-key org-mode-map (kbd "C-c b l") `org-ref-helm-insert-label-link)
-              ;; (define-key org-mode-map (kbd "C-c b r") `org-ref-helm-insert-ref-link)
-              )
+
+      ;; (leaf org-ref
+      ;;   :ensure t
+      ;;   :require t
+      ;;   :setq ((reftex-default-bibliography quote
+      ;;                                       ("~/git/bibliography/references.bib"))
+
+      ;;          (org-ref-bibliography-notes . "~/git/bibliography/notes.org")
+      ;;          (org-ref-default-bibliography quote
+      ;;                                        ("~/git/bibliography/references.bib"))
+      ;;          (org-ref-pdf-directory . "~/git/bibliography/bibtex-pdfs/")
+
+      ;;          (bibtex-completion-bibliography . "~/git/bibliography/references.bib")
+      ;;          (bibtex-completion-library-path . "~/git/bibliography/bibtex-pdfs")
+      ;;          (bibtex-completion-notes-path . "~/git/bibliography/helm-bibtex-notes")
+      ;;          )
+      ;;   :config
+      ;;   (push '(migemo) helm-source-bibtex)
+
+      ;;   ;; (define-key org-mode-map (kbd "C-c b c") `org-ref-helm-insert-cite-link)
+      ;;   ;; (define-key org-mode-map (kbd "C-c b l") `org-ref-helm-insert-label-link)
+      ;;   ;; (define-key org-mode-map (kbd "C-c b r") `org-ref-helm-insert-ref-link)
+      ;;   )
+
+#+begin_src emacs-lisp :exports none
     #+end_src
 
     #+RESULTS:
-    : org-ref
 
     - org-ref-helmが使える
-      - 
+      -
     - org-bibtexがよいのかも
       - https://github.com/yyr/org-mode/blob/master/contrib/lisp/ox-bibtex.el
       - M-x org-bibtex
@@ -922,23 +945,99 @@
 #+begin_src emacs-lisp
   (leaf ox-hugo
     :ensure t
+    :require t
     :after ox)
 #+end_src
 
 #+RESULTS:
 : ox-hugo
 
+** org-bullets
+
+#+begin_src emacs-lisp
+  (leaf org-bullets
+    :ensure t
+    :require t
+    :config
+    (add-hook 'org-mode-hook
+              (lambda nil
+                (org-bullets-mode 1))))
+#+end_src
+
+#+RESULTS:
+: org-bullets
+
+** org-rome
+
+- org-romeを利用するための設定
+
+#+begin_src emacs-lisp
+  (leaf org-roam
+    :ensure t
+    :require t
+    :custom
+    (org-roam-directory . "~/Dropbox/Org/Roam/")
+    (org-roam-completion-everywhere . t)
+    (org-roam-capture-templates
+     . '(("d" "default" plain
+          "%?"
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+          :unnarrowed t)
+         ("m" "備忘録（Memo）" plain
+          (file "~/Dropbox/Org/Roam/Templates/MemoTemplate.org")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+          :unnarrowed t)
+         ("k" "会議録（Meeting）" plain
+          (file "~/Dropbox/Org/Roam/Templates/MeetingTemplate.org")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+          :unnarrowed t)
+         ))
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n g" . org-roam-graph)
+           ("C-c n i" . org-roam-node-insert)
+           ("C-c n c" . org-roam-capture)
+           ;; Dailies
+           ("C-c n j" . org-roam-dailies-capture-today))
+    :init
+    (setq org-roam-v2-ack t)
+    :config
+    (org-roam-db-autosync-mode)
+    ;; If using org-roam-protocol
+    (require 'org-roam-protocol))
+#+end_src
+
+#+RESULTS:
+: org-roam
+
+#+begin_src emacs-lisp
+  (leaf org-roam-dailies
+    :after org-roam
+
+    :config
+    (setq org-roam-dailies-directory "Journals/")
+
+    (setq org-roam-dailies-capture-templates
+          '(("d" "default" entry
+             "* %?"
+             :target (file+head "%<%Y-%m-%d>.org"
+                                "#+title: %<%Y-%m-%d>\n")))))
+#+end_src
+
+#+RESULTS:
+: org-roam-dailies
+
 * 外部パッケージ
 ** undo-tree
    - [[https://elpa.gnu.org/packages/undo-tree.html][GNU ELPA - undo-tree]]
-     
+
    #+begin_src emacs-lisp
      (leaf undo-tree
        :ensure t
        :config
        (global-undo-tree-mode))
    #+end_src
-   
+
 ** fly-check
 
 - emacs-lispのドキュメント用のチェック(emacs-lisp-checkdoc)を無効にする。
@@ -1009,7 +1108,7 @@
 
    #+RESULTS:
    : all-the-icons
-    
+
 *** doom-themes
    - custom-faceが機能していないかも
    - [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf][Emacsモダン化計画 -かわEmacs編- - Qiita]]
@@ -1022,7 +1121,7 @@
        :custom-face
        (doom-modeline-bar . '((t (:background "#6272a4"))))
        :config
-       (doom-themes-visual-bell-config)  
+       (doom-themes-visual-bell-config)
        (doom-themes-neotree-config)
        (doom-themes-org-config)
        (load-theme 'doom-dracula t))
@@ -1053,7 +1152,7 @@
 *** Linux
 - .emacs.d/migemo-dictを用意
   - cmigemoをインストールして
-  - /usr/share/cmigemo/utfg-8/migemo-dictをコピー 
+  - /usr/share/cmigemo/utfg-8/migemo-dictをコピー
 - [[https://github.com/emacs-jp/migemo][emacs-jp/migemo: emacs migemo client]]
 #+begin_src emacs-lisp
   (leaf migemo
@@ -1227,40 +1326,7 @@
     ;; wdired 終了時に IME を OFF にする
     (advice-add 'wdired-finish-edit
                 :after (lambda (&rest args)
-                         (deactivate-input-method)))
-    (leaf helm
-      :config
-      (require 'cl-lib)
-
-      ;; helm でミニバッファの入力時に IME の状態を継承しない
-      (setq helm-inherit-input-method nil)
-
-      ;; helm の検索パターンを mozc を使って入力した場合にエラーが発生することがあるのを改善する
-      (advice-add 'mozc-helper-process-recv-response
-                  :around (lambda (orig-fun &rest args)
-                            (cl-loop for return-value = (apply orig-fun args)
-                                     if return-value return it)))
-
-      ;; helm の検索パターンを mozc を使って入力する場合、入力中は helm の候補の更新を停止する
-      (advice-add 'mozc-candidate-dispatch
-                  :before (lambda (&rest args)
-                            (when helm-alive-p
-                              (cl-case (nth 0 args)
-                                ('update
-                                 (unless helm-suspend-update-flag
-                                   (helm-kill-async-processes)
-                                   (setq helm-pattern "")
-                                   (setq helm-suspend-update-flag t)))
-                                ('clean-up
-                                 (when helm-suspend-update-flag
-                                   (setq helm-suspend-update-flag nil)))))))
-
-      ;; helm で候補のアクションを表示する際に IME を OFF にする
-      (advice-add 'helm-select-action
-                  :before (lambda (&rest args)
-                            (deactivate-input-method)))
-      )
-    )
+                         (deactivate-input-method))))
 #+end_src
 
 #+RESULTS:
