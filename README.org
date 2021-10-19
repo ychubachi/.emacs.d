@@ -72,8 +72,8 @@
 ** C-hをBSに
 
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-@") help-map)
-(global-set-key (kbd "C-h") 'delete-backward-char)
+  (global-set-key (kbd "C-@") help-map)
+  (global-set-key (kbd "C-h") 'delete-backward-char)
 #+end_src
 
 #+RESULTS:
@@ -81,7 +81,7 @@
 ** yes/noの選択をy/nに簡略化
 
 #+begin_src emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p)
+  (defalias 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
 #+RESULTS:
@@ -95,6 +95,7 @@
 
 #+RESULTS:
 | delete-trailing-whitespace |
+
 * パッケージ管理
 ** パッケージ管理（straight）
 
@@ -115,9 +116,9 @@
      (setq package-enable-at-startup nil)
    #+end_src
 
-** Leaf
-
+** パッケージ管理（Leaf）
 *** leaf
+- [[https://qiita.com/conao3/items/dc88bdadb0523ef95878#%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][[正式リリース]leaf.elで雑然としたEmacs設定ファイル「init.el」をクリーンにする - Qiita]]
 
 #+begin_src emacs-lisp
   (prog1 "prepare leaf"
@@ -152,9 +153,21 @@
 #+RESULTS:
 : leaf-keywords
 
-*** Leaf tree
+*** Leaf tree/leaf-convert
+- [[https://qiita.com/conao3/items/347d7e472afd0c58fbd7#%E4%BE%BF%E5%88%A9%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][Emacs入門から始めるleaf.el入門 - Qiita]]
+
 #+begin_src emacs-lisp
+  (leaf leaf
+    :config
+    (leaf leaf-convert :ensure t)
+    (leaf leaf-tree
+      :ensure t
+      :custom ((imenu-list-size . 30)
+               (imenu-list-position . 'left))))
 #+end_src
+
+#+RESULTS:
+: leaf
 
 * Emacs本体の設定
 ** cus-edit
@@ -342,7 +355,7 @@
     :req "cl-lib-0.5"
     :tag "debugging" "macro" "languages" "lisp"
     :url "https://github.com/joddie/macrostep"
-    :require t
+    :package t
     :bind (("C-c e" . macrostep-expand)))
 #+end_src
 
@@ -440,7 +453,7 @@
 #+RESULTS:
 : marginalia
 
-*** TODO embark
+*** embark
 - [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
 
 #+begin_src emacs-lisp
@@ -843,10 +856,12 @@
   (setq org-beamer-frame-default-options "t") ; フレームの位置をtopにする。
 #+end_src
 
-*** COMMENT TODO 参考文献 RefTex-Mode
+*** TODO 参考文献 RefTex-Mode
     - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
     - [[https://github.com/jkitchin/org-ref][jkitchin/org-ref: org-mode modules for citations, cross-references, bibliographies in org-mode and useful bibtex tools to go with it.]]
     - [[https://aliquote.org/post/org-and-bibtex/][Org and Bibtex - aliquote]]
+
+    - org-refはHelmに依存しているようだ
 
       ;; (leaf org-ref
       ;;   :ensure t
@@ -871,16 +886,54 @@
       ;;   ;; (define-key org-mode-map (kbd "C-c b r") `org-ref-helm-insert-ref-link)
       ;;   )
 
-#+begin_src emacs-lisp :exports none
-    #+end_src
+#+begin_src emacs-lisp
+  (leaf org-ref
+    :package t
+    :config
+    (setq bibtex-completion-bibliography '("~/git/bibliography/references.bib")
+          bibtex-completion-library-path '("~/git/bibliography/bibtex-pdfs/")
+          bibtex-completion-notes-path "~/git/bibliography/notes/"
+          bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
 
-    #+RESULTS:
+          bibtex-completion-additional-search-fields '(keywords)
+          bibtex-completion-display-formats
+          '((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+            (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+            (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+            (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+            (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
+          bibtex-completion-pdf-open-function
+          (lambda (fpath)
+            (call-process "open" nil 0 nil fpath))))
+#+end_src
 
-    - org-ref-helmが使える
-      -
-    - org-bibtexがよいのかも
-      - https://github.com/yyr/org-mode/blob/master/contrib/lisp/ox-bibtex.el
-      - M-x org-bibtex
+#+RESULTS:
+: org-ref
+
+#+begin_src emacs-lisp
+  (leaf bibtex
+    :require t
+    :config
+    (setq bibtex-autokey-year-length 4
+            bibtex-autokey-name-year-separator "-"
+            bibtex-autokey-year-title-separator "-"
+            bibtex-autokey-titleword-separator "-"
+            bibtex-autokey-titlewords 2
+            bibtex-autokey-titlewords-stretch 1
+            bibtex-autokey-titleword-length 5
+            org-ref-bibtex-hydra-key-binding (kbd "H-b"))
+
+    (define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
+#+end_src
+
+#+RESULTS:
+: org-ref-bibtex-hydra/body
+
+
+- org-ref-insert-cite-function = nil
+- org-ref-insert-label-function = nil
+- org-ref-insert-ref-function = nil
+
 
 ** babel - Grophviz (dot)
 
