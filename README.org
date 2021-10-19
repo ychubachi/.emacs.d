@@ -379,11 +379,20 @@
 #+RESULTS:
 : recentf
 
-** midnight -
+** midnight - 一定期間使用しなかった buffer を自動削除
+
+- [[https://uwabami.github.io/cc-env/Emacs.html][midnight: 一定期間使用しなかった buffer を自動削除]]
 
 #+begin_src emacs-lisp
-
+(leaf midnight
+  :custom
+  ((clean-buffer-list-delay-general . 1))
+  :hook
+  (emacs-startup-hook . midnight-mode))
 #+end_src
+
+#+RESULTS:
+: midnight
 
 * ミニバッファ補完UI
 ** vertico
@@ -934,7 +943,6 @@
 - org-ref-insert-label-function = nil
 - org-ref-insert-ref-function = nil
 
-
 ** babel - Grophviz (dot)
 
 - dotコードの評価を行うようにする
@@ -1062,6 +1070,8 @@
 
 #+RESULTS:
 : org-roam
+
+** org-roam-dialiesでジャーナル
 
 #+begin_src emacs-lisp
   (leaf org-roam-dailies
