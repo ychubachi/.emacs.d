@@ -428,6 +428,34 @@
 #+RESULTS:
 : midnight
 
+** which-key - キーバインドのガイド
+
+#+begin_src emacs-lisp
+  (leaf which-key
+    :doc "Display available keybindings in popup"
+    :req "emacs-24.4"
+    :tag "emacs>=24.4"
+    :url "https://github.com/justbur/emacs-which-key"
+    :added "2021-10-20"
+    :emacs>= 24.4
+    :ensure t
+    :config
+    (which-key-mode))
+#+end_src
+
+#+RESULTS:
+: which-key
+
+** imenu-list
+
+#+begin_src emacs-lisp
+  (leaf *imenu-list
+    :bind (("C-^" . imenu-list-smart-toggle)))
+#+end_src
+
+#+RESULTS:
+: *imenu-list
+
 * ミニバッファ補完UI
 ** vertico
 *** vertico:本体の設定
