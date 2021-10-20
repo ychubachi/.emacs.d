@@ -69,33 +69,6 @@
               (or load-file-name byte-compile-current-file))))))
 #+end_src
 
-** C-hをBSに
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-@") help-map)
-  (global-set-key (kbd "C-h") 'delete-backward-char)
-#+end_src
-
-#+RESULTS:
-: delete-backward-char
-** yes/noの選択をy/nに簡略化
-
-#+begin_src emacs-lisp
-  (defalias 'yes-or-no-p 'y-or-n-p)
-#+end_src
-
-#+RESULTS:
-: yes-or-no-p
-
-** 保存時、不要な空白を削除
-
-#+begin_src emacs-lisp
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-#+end_src
-
-#+RESULTS:
-| delete-trailing-whitespace |
-
 * パッケージ管理
 ** パッケージ管理（straight）
 
@@ -170,6 +143,46 @@
 : leaf
 
 * Emacs本体の設定
+** C-hをBSに
+
+#+begin_src emacs-lisp
+  (leaf *backspace
+    :bind (("C-h" . delete-backward-char))
+    :config
+    (global-set-key (kbd "C-@") help-map))
+#+end_src
+
+#+RESULTS:
+: *backspace
+
+** UndoをC-zに
+- 指が覚えてしまっている
+
+#+begin_src emacs-lisp
+  (leaf *undo :bind (("C-z" . undo)))
+#+end_src
+
+#+RESULTS:
+: *undo
+
+** yes/noの選択をy/nに簡略化
+
+#+begin_src emacs-lisp
+  (defalias 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+#+RESULTS:
+: yes-or-no-p
+
+** 保存時、不要な空白を削除
+
+#+begin_src emacs-lisp
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
+
+#+RESULTS:
+| delete-trailing-whitespace |
+
 ** cus-edit
 
     #+begin_src emacs-lisp
@@ -233,6 +246,27 @@
 | \\\\ |
 | 　　   |
 |      |
+
+- [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]] より
+
+|abcdefghijkl|
+|ABCDEFGHIJKL|
+|'";:-+=/\~`?|
+|∞≤≥∏∑∫|
+|×±≒≡⊆⊇|  ← GUI だと一部半角になる
+|αβγδεζ|  ← GUI だと半角になる
+|ηθικλμ|  ← GUI だと半角になる
+|ΑΒΓΔΕΖ|  ← GUI だと半角になる
+|ΗΘΙΚΛΜ|  ← GUI だと半角になる
+|日本語の美観|
+|あいうえおか|
+|アイウエオカ|
+|ｱｲｳｴｵｶｷｸｹｺｻｼ|
+
+| hoge                 | hogeghoe | age              |
+|----------------------+----------+------------------|
+| 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
+|----------------------+----------+------------------|
 
 #+begin_src emacs-lisp
 (set-frame-font "Noto Sans Mono CJK JP-12" nil t)
@@ -472,8 +506,8 @@
     :bind
     (("C-." . embark-act)         ;; pick some comfortable binding
      ("C-;" . embark-dwim)        ;; good alternative: M-.
-     ("C-@ B" . embark-bindings)) ;; alternative for `describe-bindings' (C-h->C-@)
-
+     ;; ("C-@ B" . embark-bindings) ;; alternative for `describe-bindings' (C-h->C-@)
+)
     :init
     ;; Optionally replace the key help with a completing-read interface
     (setq prefix-help-command #'embark-prefix-help-command)
@@ -932,11 +966,11 @@
             bibtex-autokey-titleword-length 5
             org-ref-bibtex-hydra-key-binding (kbd "H-b"))
 
-    (define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
+    (define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body))
 #+end_src
 
 #+RESULTS:
-: org-ref-bibtex-hydra/body
+: bibtex
 
 
 - org-ref-insert-cite-function = nil
@@ -1478,9 +1512,8 @@
 #+RESULTS:
 : my/browser
 
-* Footer
-
-- お約束の記述
+* おわりに
+** お約束の記述
 
 #+begin_src emacs-lisp
 (provide 'README)
@@ -1492,3 +1525,6 @@
 
 ;;; README.el ends here
 #+end_src
+
+** 参考文献
+1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
