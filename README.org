@@ -285,48 +285,6 @@
 : 0
 
 * ビルトインパッケージの設定
-** whitespace - 空白文字の可視化
-　　　ああ全角　　　　　←全角　あいうえお
-あいうえお　漢字
-
-#+begin_src emacs-lisp
-(progn
-  (require 'whitespace)
-  (setq whitespace-style
-        '(
-          face ; faceで可視化
-          trailing ; 行末
-          tabs ; タブ
-          spaces ; スペース
-          space-mark ; 表示のマッピング
-          tab-mark
-          ))
-  (setq whitespace-display-mappings
-        '(
-          ;; (space-mark ?\u3000 [?\u2423])
-          (space-mark ?\u3000 [?□])
-          (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
-          ))
-  (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
-  (setq whitespace-space-regexp "\\(\u3000+\\)")
-  (set-face-attribute 'whitespace-trailing nil
-                      :foreground "RoyalBlue4"
-                      :background "RoyalBlue4"
-                      :underline nil)
-  (set-face-attribute 'whitespace-tab nil
-                      :foreground "yellow4"
-                      :background "yellow4"
-                      :underline nil)
-  (set-face-attribute 'whitespace-space nil
-                      :foreground "gray40"
-                      :background "gray20"
-                      :underline nil)
-  (global-whitespace-mode t)
-  )
-#+end_src
-
-#+RESULTS:
-: t
 ** paren
 - 対応するカッコの表示
 
@@ -456,7 +414,7 @@
 #+RESULTS:
 : *imenu-list
 
-* ミニバッファ補完UI
+* ミニバッファ補完UI関連の設定
 ** vertico
 *** vertico:本体の設定
 
@@ -696,7 +654,7 @@
 #+RESULTS:
 : embark-consult
 
-* org-mode
+* org-mode関連の設定
 ** orgのためのディレクトリ設定
 - org-agenda-filesのリストにDropboxのディレクトリを追加しておく。
   - この中にあるorgファイルがすべてagendaに反映される。
@@ -1223,56 +1181,6 @@
     :bind (("C-x g" . magit-status)))
 #+end_src
 
-** doomthemes
-*** all-the-icons
-    - パッケージ導入後、 M-x all-the-icons-install-fonts でインストールする
-   #+begin_src emacs-lisp
-     (leaf all-the-icons
-       :ensure t)
-   #+end_src
-
-   #+RESULTS:
-   : all-the-icons
-
-*** doom-themes
-   - custom-faceが機能していないかも
-   - [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf][Emacsモダン化計画 -かわEmacs編- - Qiita]]
-
-   #+begin_src emacs-lisp
-     (leaf doom-themes
-       :ensure t
-       :custom ((doom-themes-enable-italic . t)
-                (doom-themes-enable-bold . t))
-       :custom-face
-       (doom-modeline-bar . '((t (:background "#6272a4"))))
-       :config
-       (doom-themes-visual-bell-config)
-       (doom-themes-neotree-config)
-       (doom-themes-org-config)
-       (load-theme 'doom-dracula t))
-   #+end_src
-
-*** modeline
-   #+begin_src emacs-lisp
-     (leaf doom-modeline
-       :ensure t
-       :custom
-       ;; (doom-modeline-buffer-file-name-style . 'truncate-with-project)
-       ;; (doom-modeline-icon . t)
-       ;; (doom-modeline-major-mode-icon . nil)
-       ;; (doom-modeline-minor-modes . nil)
-       :init
-       ;; (after-init . doom-modeline-mode)
-       (doom-modeline-mode 1)
-       :config
-       ;;   (line-number-mode 0)
-       ;;   (column-number-mode 0)
-       ;;   (doom-modeline-def-modeline 'main
-       ;; '(bar workspace-number window-number evil-state god-state ryo-modal xah-fly-keys matches buffer-info remote-host buffer-position parrot selection-info)
-           ;; '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
-       )
-   #+end_src
-
 ** migemo
 *** Linux
 - .emacs.d/migemo-dictを用意
@@ -1327,6 +1235,89 @@
 
   #+RESULTS:
   : migemo
+
+* UI・見た目
+
+** all-the-icons
+- [[https://github.com/domtronn/all-the-icons.el][GitHub - domtronn/all-the-icons.el: A utility package to collect various Icon Fonts and propertize them within Emacs.]]
+
+- パッケージ導入後、 M-x all-the-icons-install-fonts でインストールする
+
+#+begin_src emacs-lisp
+  (leaf all-the-icons :ensure t)
+#+end_src
+
+#+RESULTS:
+: all-the-icons
+
+** modus-themes
+
+#+begin_src emacs-lisp
+  (leaf modus-themes
+    :ensure t                        ; omit this to use the built-in themes
+    :init
+    ;; Add all your customizations prior to loading the themes
+    (setq modus-themes-italic-constructs t
+          modus-themes-bold-constructs nil
+          modus-themes-region '(bg-only no-extend))
+
+    ;; Load the theme files before enabling a theme (else you get an error).
+    (modus-themes-load-themes)
+    :config
+    ;; Load the theme of your choice:
+    (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+    :bind ("<f5>" . modus-themes-toggle))
+#+end_src
+
+#+RESULTS:
+: modus-themes
+
+** whitespace - 空白文字の可視化
+- [[https://yanqirenshi.hatenablog.com/entry/2016/07/03/Emacs%3A_whitespace_%E3%81%A7%E4%BD%99%E5%88%86%E3%81%AA%E7%A9%BA%E7%99%BD/%E3%82%BF%E3%83%96%E3%81%AB%E8%89%B2%E3%81%A5%E3%81%91][Emacs: whitespace で余分な空白/タブに色づけ - ほんとのこと知りたいだけなのに。]]
+  - M-x list-faces-display で設定する色の種類と色を確認できます。
+  - 設定する色は M-x list-colors-display で確認する感じ。
+- 色はテーマのデフォルトのままにしておく。
+
+　　　ああ全角　　　　　←全角　あいうえお
+あいうえお　漢字
+
+#+begin_src emacs-lisp
+  (progn
+    (require 'whitespace)
+    (setq whitespace-style
+          '(
+            face ; faceで可視化
+            trailing ; 行末
+            tabs ; タブ
+            spaces ; スペース
+            space-mark ; 表示のマッピング
+            tab-mark
+            ))
+    (setq whitespace-display-mappings
+          '(
+            (space-mark ?\u3000 [?□])
+            (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+            ))
+    (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+    (setq whitespace-space-regexp "\\(\u3000+\\)")
+    ;; (set-face-attribute 'whitespace-trailing nil
+    ;;                     :foreground nil
+    ;;                     :background "DarkOrange1"
+    ;;                     :underline nil)
+    ;; (set-face-attribute 'whitespace-tab nil
+    ;;                     :foreground "DarkOrange1"
+    ;;                     :background nil
+    ;;                     :underline nil)
+    ;; (set-face-attribute 'whitespace-space nil
+    ;;                     :foreground "DarkOrange1"
+    ;;                     :background nil
+    ;;                     :underline nil)
+    (global-whitespace-mode t))
+#+end_src
+
+#+RESULTS:
+: t
+
 
 * OS依存の設定
   - OSの判定方法
