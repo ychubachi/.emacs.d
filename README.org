@@ -49,27 +49,7 @@
 ;;; Code:
 #+end_src
 
-* 基本設定
-** (require 'cl)を検査しない
-
-#+begin_src emacs-lisp
-(setq byte-compile-warnings '(not cl-functions obsolete))
-#+end_src
-
-** COMMENT ここの意味が理解できてない
-
-#+begin_src emacs-lisp
-  ;; this enables this running method
-  ;;   emacs -q -l ~/.debug.emacs.d/{{pkg}}/init.el
-  (eval-and-compile
-    (when (or load-file-name byte-compile-current-file)
-      (setq user-emacs-directory
-            (expand-file-name
-             (file-name-directory
-              (or load-file-name byte-compile-current-file))))))
-#+end_src
-
-* パッケージ管理
+* パッケージ管理・カスタマイズ変数
 ** パッケージ管理（straight）
 
    #+begin_src emacs-lisp
@@ -142,7 +122,70 @@
 #+RESULTS:
 : leaf
 
+** カスタマイズファイルの設定（cus-edit）
+
+#+begin_src emacs-lisp
+  (leaf cus-edit
+    :doc "tools for customizing Emacs and Lisp packages"
+    :tag "builtin" "faces" "help"
+    :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
+#+end_src
+
+#+RESULTS:
+: cus-edit
+
+** customize変数の設定（cus-start）
+- 設定がまぜこぜになっている気が。
+
+#+begin_src emacs-lisp
+  (leaf cus-start
+    :doc "define customization properties of builtins"
+    :tag "builtin" "internal"
+    :preface
+    (defun c/redraw-frame nil
+      (interactive)
+      (redraw-frame))
+    :bind (("M-ESC ESC" . c/redraw-frame))
+    :custom '((user-full-name . "Yoshihide Chubachi")
+              (user-mail-address . "yoshi@chubachi.net")
+              (user-login-name . "yc")
+              (create-lockfiles . nil)
+              (debug-on-error . t)
+              (init-file-debug . t)
+              (frame-resize-pixelwise . t)
+              (enable-recursive-minibuffers . t)
+              (history-length . 1000)
+              (history-delete-duplicates . t)
+              (scroll-preserve-screen-position . t)
+              (scroll-conservatively . 100)
+              (mouse-wheel-scroll-amount . '(1 ((control) . 5)))
+              (ring-bell-function . 'ignore)
+              (text-quoting-style . 'straight)
+              (truncate-lines . t)
+              ;; (use-dialog-box . nil)
+              ;; (use-file-dialog . nil)
+              ;; (menu-bar-mode . t)
+              ;; (tool-bar-mode . nil)
+              (scroll-bar-mode . nil)
+              (indent-tabs-mode . nil)
+              (inhibit-startup-screen . t)))
+#+end_src
+
+#+RESULTS:
+: cus-start
+
 * Emacs本体の設定
+** (require 'cl)を検査しない
+
+#+begin_src emacs-lisp
+  (leaf *emacs
+    :config
+    (setq byte-compile-warnings '(not cl-functions obsolete)))
+#+end_src
+
+#+RESULTS:
+: *emacs
+
 ** C-hをBSに
 
 #+begin_src emacs-lisp
@@ -182,55 +225,6 @@
 
 #+RESULTS:
 | delete-trailing-whitespace |
-
-** cus-edit
-
-    #+begin_src emacs-lisp
-      (leaf cus-edit
-        :doc "tools for customizing Emacs and Lisp packages"
-        :tag "builtin" "faces" "help"
-        :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
-    #+end_src
-
-** TODO 設定がまぜこぜ？customizeの設定（cus-start）
-- 設定がまぜこぜになっている気が。
-
-    #+begin_src emacs-lisp
-            (leaf cus-start
-              :doc "define customization properties of builtins"
-              :tag "builtin" "internal"
-              :preface
-              (defun c/redraw-frame nil
-                (interactive)
-                (redraw-frame))
-              :bind (("M-ESC ESC" . c/redraw-frame))
-              :custom '((user-full-name . "Yoshihide Chubachi")
-                        (user-mail-address . "yoshi@chubachi.net")
-                        (user-login-name . "yc")
-                        (create-lockfiles . nil)
-                        (debug-on-error . t)
-                        (init-file-debug . t)
-                        (frame-resize-pixelwise . t)
-                        (enable-recursive-minibuffers . t)
-                        (history-length . 1000)
-                        (history-delete-duplicates . t)
-                        (scroll-preserve-screen-position . t)
-                        (scroll-conservatively . 100)
-                        (mouse-wheel-scroll-amount . '(1 ((control) . 5)))
-                        (ring-bell-function . 'ignore)
-                        (text-quoting-style . 'straight)
-                        (truncate-lines . t)
-                        ;; (use-dialog-box . nil)
-                        ;; (use-file-dialog . nil)
-                        ;; (menu-bar-mode . t)
-                        ;; (tool-bar-mode . nil)
-                        (scroll-bar-mode . nil)
-                        (indent-tabs-mode . nil)
-                        (inhibit-startup-screen . t)))
-    #+end_src
-
-    #+RESULTS:
-    : cus-start
 
 * ビルトインパッケージの設定
 ** paren

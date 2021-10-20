@@ -30,3 +30,22 @@ Archived entries from file /home/yc/.emacs.d/README.org
 
   #+RESULTS:
   : doom-themes
+
+* COMMENT ここの意味が理解できてない
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-21 Thu 00:23
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: 基本設定
+  :ARCHIVE_CATEGORY: README
+  :END:
+
+#+begin_src emacs-lisp
+  ;; this enables this running method
+  ;;   emacs -q -l ~/.debug.emacs.d/{{pkg}}/init.el
+  (eval-and-compile
+    (when (or load-file-name byte-compile-current-file)
+      (setq user-emacs-directory
+            (expand-file-name
+             (file-name-directory
+              (or load-file-name byte-compile-current-file))))))
+#+end_src
