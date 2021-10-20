@@ -1,0 +1,32 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/yc/.emacs.d/README.org
+
+
+* doom-themes
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-20 Wed 14:05
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: UI・見た目
+  :ARCHIVE_CATEGORY: README
+  :END:
+  - custom-faceが機能していないかも
+  - [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
+  #+begin_src emacs-lisp
+    (leaf doom-themes
+      :ensure t
+      :custom ((doom-themes-enable-italic . t)
+               (doom-themes-enable-bold . t))
+      :custom-face
+      (doom-modeline-bar . '((t (:background "#6272a4"))))
+      :config
+      (doom-themes-visual-bell-config)
+      (doom-themes-neotree-config)
+      (doom-themes-org-config)
+      (load-theme 'doom-dracula t))
+  #+end_src
+
+  #+RESULTS:
+  : doom-themes
