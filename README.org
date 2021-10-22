@@ -729,7 +729,7 @@
 #+RESULTS:
 | lambda | nil | (interactive) | (org-capture nil m) |
 
-** ソースコードブロック入力の省力化（org-tempo）
+** org-tempo - ソースコードブロック入力の省力化
    - "<el"+<TAB> 等でemacs-lispのソースコードブロックがでるように設定。
 
 #+begin_src emacs-lisp
