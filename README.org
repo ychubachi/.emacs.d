@@ -1135,7 +1135,7 @@
 
     (setq org-roam-dailies-capture-templates
           '(("d" "default" entry
-             "* %?"
+             "* %?\n#+DATE: %T"
              :target (file+head "%<%Y-%m-%d>.org"
                                 "#+title: %<%Y-%m-%d>\n")))))
 #+end_src
