@@ -608,7 +608,7 @@
   (leaf org-mode
     :custom
     (org-directory . "~/Dropbox/Org/")
-    (org-agenda-files . '("~/Dropbox/Org/"))
+    (org-agenda-files . '("~/Dropbox/Org/" "~/Dropbox/Org/Roam"))
     (org-default-notes-file . "Notes.org")
     (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
     :bind
