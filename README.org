@@ -1091,15 +1091,15 @@
     (org-roam-capture-templates
      . '(("d" "default" plain
           "%?"
-          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
           :unnarrowed t)
          ("m" "備忘録（Memo）" plain
           (file "~/Dropbox/Org/Roam/Templates/MemoTemplate.org")
-          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
           :unnarrowed t)
          ("k" "会議録（Meeting）" plain
           (file "~/Dropbox/Org/Roam/Templates/MeetingTemplate.org")
-          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
           :unnarrowed t)
          ("t" "文書（LaTeX）" plain
           (file "~/Dropbox/Org/Roam/Templates/LaTeXTemplate.org")
@@ -1268,6 +1268,20 @@
 
   #+RESULTS:
   : migemo
+
+** yasnippet
+- [[https://github.com/joaotavora/yasnippet][joaotavora/yasnippet: A template system for Emacs]]
+
+#+begin_src emacs-lisp
+      (leaf yasnippet-snippets
+        :ensure t
+        :config
+        (yas-global-mode 1))
+#+end_src
+
+#+RESULTS:
+: yasnippet-snippets
+
 
 * UI・見た目
 ** フォントの設定
