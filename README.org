@@ -187,12 +187,20 @@
 : *emacs
 
 ** C-hをBSに
+- [[https://www.reddit.com/r/spacemacs/comments/l2fjzy/remapping_ch_to_backspace_and_remap_help_menu_to/][Remapping C-h to backspace, and remap "help" menu to anything else? : spacemacs]]
+
+- :init ではなく :config だと機能しない
+  - :config の中身は eval-after-load で実行される
+  - :bindがあるとこうなるようだ
+- help-map は :bind で設定できない
+  - ここでは :bind を利用しない
+  - :bind を利用しなければ :init と :config に違いはない
 
 #+begin_src emacs-lisp
   (leaf *backspace
-    :bind (("C-h" . delete-backward-char))
     :config
-    (global-set-key (kbd "C-@") help-map))
+    (global-set-key (kbd "C-@") help-map)
+    (global-set-key (kbd "C-h") 'delete-backward-char))
 #+end_src
 
 #+RESULTS:
