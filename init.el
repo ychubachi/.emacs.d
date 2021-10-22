@@ -31,4 +31,3 @@
 ;; indent-tabs-mode: nil
 ;; End:
 ;;; init.el ends here
-(put 'narrow-to-region 'disabled nil)
