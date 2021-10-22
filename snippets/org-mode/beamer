@@ -1,0 +1,38 @@
+# -*- mode: snippet -*-
+# name: beamer
+# key: beamer_
+# --
+#+STARTUP: overview indent num inlineimage hidestars
+#+FILETAGS: :LaTeX:Beamer:
+
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [presentation,smaller]
+# #+BEAMER_THEME: Copenhagen
+# #+BEAMER_THEME: Rochester
+#+BEAMER_THEME: metropolis [progressbar=frametitle]
+#+OPTIONS:   H:2 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+
+#+TITLE: ${1:title}
+# #+SUBTITLE:
+#+AUTHOR: ${2:author}
+# #+email:
+#+DATE: ${3:date}
+# #+institute:
+
+* はじめに
+** 1ページ
+  - uasoetnh
+  - suoenhtastnheu
+  - ausotnetns
+
+** 2ページ
+   - uasoetnh
+   - suoenhtastnheu
+   - ausotnetns
+
+* つぎに
+** 3ページ
+   - aoeutnstsnh
+     tsahouthns
+    - aouesnhtth

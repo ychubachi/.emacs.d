@@ -1,4 +1,4 @@
-#+startup: overview num indent
+#+startup: overview indent num hidestars
 * はじめに
 ** この設定について
    - init.elの実行時、このREADME.orgからREADME.elを生成します。
@@ -1271,17 +1271,19 @@
 
 ** yasnippet
 - [[https://github.com/joaotavora/yasnippet][joaotavora/yasnippet: A template system for Emacs]]
+- サンプルは次の場所にあるので必要なものは ~/.emacs.d/snippets にコピー
+  - ~/.emacs.d/elpa/yasnippet-snippets-20210910.1959/snippets/
 
 #+begin_src emacs-lisp
-      (leaf yasnippet-snippets
-        :ensure t
-        :config
-        (yas-global-mode 1))
+  (leaf yasnippet-snippets
+    :ensure t
+    :setq (yasnippet-snippets-dir . "~/.emacs.d/snippets")
+    :config
+    (yas-global-mode 1))
 #+end_src
 
 #+RESULTS:
 : yasnippet-snippets
-
 
 * UI・見た目
 ** フォントの設定

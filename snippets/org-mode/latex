@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: latex
+# key: latex_
+# --
+#+STARTUP: overview indent num inlineimage hidestars
+#+FILETAGS: :LaTeX:
+
+#+LaTeX_CLASS: jlreq
+# #+LaTeX_CLASS: jlreq-tate
+# #+LaTeX_CLASS: bxjsarticle
+#+OPTIONS: H:4 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t
+#+OPTIONS: TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+
+#+TITLE: ${1:title}
+#+AUTHOR: ${2:author}
+#+DATE: ${3:date}
