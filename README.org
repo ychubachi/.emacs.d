@@ -1280,10 +1280,67 @@
 - サンプルは次の場所にあるので必要なものは ~/.emacs.d/snippets にコピー
   - ~/.emacs.d/elpa/yasnippet-snippets-20210910.1959/snippets/
 
+- :setq を使う場合の注意
+  - :init だと :init -> :setq の順番でNG
+  - :config なら :setq -> :init
+- :require との関係
+  -  :init -> :require -> :setq -> :config
+
+- :require なし
+  - :init -> NG
+
+    #+begin_src
+  (prog1 'yasnippet-snippets
+    (leaf-handler-leaf-path yasnippet-snippets)
+    (leaf-handler-leaf-protect yasnippet-snippets
+      (leaf-handler-package yasnippet-snippets yasnippet-snippets nil)
+      (yas-global-mode 1) ; <- 2
+      (setq yasnippet-snippets-dir "~/.emacs.d/snippets"))) ; <- 1
+    #+end_src
+
+  - :config -> NG
+
+    #+begin_src
+  (prog1 'yasnippet-snippets
+    (leaf-handler-leaf-path yasnippet-snippets)
+    (leaf-handler-leaf-protect yasnippet-snippets
+      (leaf-handler-package yasnippet-snippets yasnippet-snippets nil)
+      (setq yasnippet-snippets-dir "~/.emacs.d/snippets") ; <- 1
+      (yas-global-mode 1))) ; <- 2
+    #+end_src
+
+- :require あり
+
+  - :init -> NG
+
+    #+begin_src
+(prog1 'yasnippet-snippets
+  (leaf-handler-leaf-path yasnippet-snippets)
+  (leaf-handler-leaf-protect yasnippet-snippets
+    (leaf-handler-package yasnippet-snippets yasnippet-snippets nil)
+    (yas-global-mode 1)
+    (require 'yasnippet-snippets)
+    (setq yasnippet-snippets-dir "~/.emacs.d/snippets")))
+    #+end_src
+
+  - :config -> OK
+
+    #+begin_src
+(prog1 'yasnippet-snippets
+  (leaf-handler-leaf-path yasnippet-snippets)
+  (leaf-handler-leaf-protect yasnippet-snippets
+    (leaf-handler-package yasnippet-snippets yasnippet-snippets nil)
+    (require 'yasnippet-snippets)
+    (setq yasnippet-snippets-dir "~/.emacs.d/snippets")
+    (yas-global-mode 1)))
+    #+end_src
+
 #+begin_src emacs-lisp
   (leaf yasnippet-snippets
     :package t
-    :setq (yasnippet-snippets-dir . "~/.emacs.d/snippets")
+    :require t
+    :setq
+    (yasnippet-snippets-dir . "~/.emacs.d/snippets")
     :config
     (yas-global-mode 1))
 #+end_src
