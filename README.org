@@ -1291,20 +1291,6 @@
 #+RESULTS:
 : yasnippet-snippets
 
-** EXWM
-- [[https://github.com/ch11ng/exwm/wiki][Home · ch11ng/exwm Wiki]]
-
-#+begin_src emacs-lisp
-  ;; (leaf exwm
-  ;;   :straight t
-  ;;   :require exwm exwm-config
-  ;;   :config
-  ;;   (exwm-config-example))
-#+end_src
-
-#+RESULTS:
-: exwm
-
 * UI・見た目（Non X）
 ** modus-themes
 - [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]

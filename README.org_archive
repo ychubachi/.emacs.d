@@ -49,3 +49,23 @@ Archived entries from file /home/yc/.emacs.d/README.org
              (file-name-directory
               (or load-file-name byte-compile-current-file))))))
 #+end_src
+
+* EXWM
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-23 Sat 15:49
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: 外部パッケージ
+  :ARCHIVE_CATEGORY: README
+  :END:
+- [[https://github.com/ch11ng/exwm/wiki][Home · ch11ng/exwm Wiki]]
+
+#+begin_src emacs-lisp
+  (leaf exwm
+    :straight t
+    :require exwm exwm-config
+    :config
+    (exwm-config-example))
+#+end_src
+
+#+RESULTS:
+: exwm
