@@ -365,8 +365,7 @@
 : *imenu-list
 
 * ミニバッファ補完UI関連の設定
-** vertico
-*** vertico:本体の設定
+** vertico:本体の設定
 
 - [[https://github.com/minad/vertico/][GitHub - minad/vertico: vertico.el - VERTical Interactive COmpletion]]
 
@@ -386,7 +385,7 @@
 #+RESULTS:
 : vertico
 
-*** orderless
+** orderless
 - [[https://github.com/oantolin/orderless][GitHub - oantolin/orderless: Emacs completion style that matches multiple regexps in any order]]
 
 #+begin_src emacs-lisp
@@ -403,7 +402,7 @@
 #+RESULTS:
 : orderless
 
-*** savehist
+** savehist
 
 #+begin_src emacs-lisp
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
@@ -416,7 +415,7 @@
 #+RESULTS:
 : savehist
 
-*** Marginalia
+** Marginalia
 - [[https://github.com/minad/marginalia][GitHub - minad/marginalia: marginalia.el - Marginalia in the minibuffer]]
 - Enable richer annotations using the Marginalia package
 
@@ -432,7 +431,7 @@
 #+RESULTS:
 : marginalia
 
-*** embark
+** embark
 - [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
 
 #+begin_src emacs-lisp
@@ -458,7 +457,7 @@
 #+RESULTS:
 : embark
 
-*** consult
+** consult
 - [[https://github.com/minad/consult][GitHub - minad/consult: consult.el - Consulting completing-read]]
 
 #+begin_src emacs-lisp
@@ -585,7 +584,7 @@
 #+RESULTS:
 : consult
 
-*** embark-consult
+** embark-consult
 
 #+begin_src emacs-lisp
   ;; Consult users will also want the embark-consult package.
