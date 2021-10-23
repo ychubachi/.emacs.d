@@ -378,7 +378,7 @@
   (vertico-count . 20)
   :config
   (vertico-mode)
-  (setq vertico-resize nil)
+  (setq vertico-resize t)
   (setq vertico-cycle t)
   )
 #+end_src
