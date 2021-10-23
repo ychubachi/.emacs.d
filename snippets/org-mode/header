@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: header
+# key: header_
+# --
+#+STARTUP: overview indent num hidestars
+#+TITLE: ${1:title}
+#+AUTHOR: ${2:author}
+#+DATE: ${3:date}
