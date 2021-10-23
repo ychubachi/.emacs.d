@@ -436,13 +436,12 @@
 - [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
 
 #+begin_src emacs-lisp
-
   (leaf embark
     :straight t
     :bind
     (("C-." . embark-act)         ;; pick some comfortable binding
      ("C-;" . embark-dwim)        ;; good alternative: M-.
-     ;; ("C-@ B" . embark-bindings) ;; alternative for `describe-bindings' (C-h->C-@)
+     ("C-@ B" . embark-bindings) ;; alternative for `describe-bindings' (C-h->C-@)
 )
     :init
     ;; Optionally replace the key help with a completing-read interface
