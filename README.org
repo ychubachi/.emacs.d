@@ -194,7 +194,7 @@
   - :bindがあるとこうなるようだ
 - help-map は :bind で設定できない
   - ここでは :bind を利用しない
-  - :bind を利用しなければ :init と :config に違いはない
+  - :bind を利用しなければ :init と :config
 
 #+begin_src emacs-lisp
   (leaf *backspace
