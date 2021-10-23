@@ -1282,7 +1282,7 @@
 
 #+begin_src emacs-lisp
   (leaf yasnippet-snippets
-    :ensure t
+    :package t
     :setq (yasnippet-snippets-dir . "~/.emacs.d/snippets")
     :config
     (yas-global-mode 1))
