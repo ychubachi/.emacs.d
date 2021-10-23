@@ -1488,8 +1488,6 @@
 - [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Window-Frame-Parameters.html][https://www.gnu.org/software/emacs/manual/html_node/elisp/Window-Frame-Parameters.html]]
 - [[https://www.grugrut.net/posts/my-emacs-init-el/][My Emacs Config - ぐるっとぐりっど]]
 
-- menu bar, tool bar はcustom変数でも変えられる
-
 #+begin_src emacs-lisp
   (setq default-frame-alist
         (append '((width                . 120)   ; フレーム幅
