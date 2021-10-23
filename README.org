@@ -180,7 +180,7 @@
 
 #+begin_src emacs-lisp
   (leaf *backup
-    :custom ((version-control . nil)
+    :custom ((version-control . t)
              (backup-directory-alist . '(("." . ".~")))))
 #+end_src
 
