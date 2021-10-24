@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: startup
+# key: startup_
+# --
+#+STARTUP: overview indent num align inlineimages logdone hidestars hideblocks
