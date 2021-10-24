@@ -2,7 +2,7 @@
 # name: header
 # key: header_
 # --
-#+STARTUP: overview indent num hidestars
+#+STARTUP: overview indent num align inlineimages logdone hidestars hideblocks
 #+TITLE: ${1:title}
 #+AUTHOR: ${2:author}
 #+DATE: ${3:date}
