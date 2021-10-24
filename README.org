@@ -1440,6 +1440,9 @@
 - Noto Sansの等幅フォントを設定する
 - 表示の確認
 
+- [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]] より
+
+#+begin_example
 | mmmm |
 | llll |
 | 日本 |
@@ -1450,8 +1453,6 @@
 | \\\\ |
 | 　　   |
 |      |
-
-- [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]] より
 
 |abcdefghijkl|
 |ABCDEFGHIJKL|
@@ -1471,6 +1472,7 @@
 |----------------------+----------+------------------|
 | 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
 |----------------------+----------+------------------|
+#+end_example
 
 #+begin_src emacs-lisp
 (set-frame-font "Noto Sans Mono CJK JP-12" nil t)
