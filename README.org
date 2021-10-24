@@ -177,11 +177,13 @@
 ** バックアップの設定
 - 文献
   - [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
+  - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Backup-Deletion.html][If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
 
 #+begin_src emacs-lisp
-  (leaf *backup
-    :custom ((version-control . t)
-             (backup-directory-alist . '(("." . ".~")))))
+    (leaf *backup
+      :custom ((version-control . t)
+               (backup-directory-alist . '(("." . ".~")))
+               (delete-old-versions . t)))
 #+end_src
 
 #+RESULTS:
