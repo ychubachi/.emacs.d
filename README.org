@@ -1083,20 +1083,22 @@
 #+RESULTS:
 : ox-hugo
 
-** org-bullets
+** org-superstar
+  * org-bullets の進化版
+    + [[https://github.com/integral-dw/org-superstar-mode/blob/master/DEMO.org][org-superstar-mode/DEMO.org at master · integral-dw/org-superstar-mode · GitHub]]
+  * asterisk
+    + plus
+      - minus
 
 #+begin_src emacs-lisp
-  (leaf org-bullets
+  (leaf org-superstar
     :ensure t
-    :require t
     :config
-    (add-hook 'org-mode-hook
-              (lambda nil
-                (org-bullets-mode 1))))
+    (add-hook 'org-mode-hook (lambda nil (org-superstar-mode 1))))
 #+end_src
 
 #+RESULTS:
-: org-bullets
+: org-superstar
 
 ** org-rome
 
