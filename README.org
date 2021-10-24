@@ -1,4 +1,4 @@
-#+startup: overview indent num hidestars
+#+STARTUP: overview indent num align inlineimages logdone hidestars hideblocks
 * はじめに
 ** この設定について
    - init.elの実行時、このREADME.orgからREADME.elを生成します。
