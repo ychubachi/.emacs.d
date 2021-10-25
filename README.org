@@ -168,7 +168,10 @@
               (tool-bar-mode . nil)
               (scroll-bar-mode . nil)
               (indent-tabs-mode . nil)
-              (inhibit-startup-screen . t)))
+              (inhibit-startup-screen . t)
+              (vc-follow-symlinks . t) ; VC対象ファイルのシンボリックリンクの場合、本体を辿る
+              (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
+              ))
 #+end_src
 
 #+RESULTS:
@@ -1234,8 +1237,12 @@
     :emacs>= 25.1
     :ensure t
     :after git-commit with-editor
-    :bind (("C-x g" . magit-status)))
+    :bind (("C-x g" . magit-status))
+    )
 #+end_src
+
+#+RESULTS:
+: magit
 
 ** migemo
 *** Linux
