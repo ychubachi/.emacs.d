@@ -1823,6 +1823,7 @@
   - 2回目は.folderから設定を読むようだ
 
 + el-getではなくpackageでインストールしたほうが挙動がよい
++ 設定等が複雑で、古臭い・・・
 
 #+begin_example
 ユーザ名  -> 変数 elmo-imap4-default-user の値。
@@ -1867,6 +1868,8 @@
      wl-from "Yoshihide Chubachi <yoshihide.chubachi@gmail.com>"  ; Our From: header field
      wl-fcc-force-as-read t           ; Mark sent mail (in the wl-fcc folder) as read
      wl-default-spec "%")             ; For auto-completion
+
+    (require 'mime-w3m)
     )
      #+end_src
 
@@ -1906,8 +1909,8 @@
 #+RESULTS:
 | ^Subject: | ^From: | ^To: | ^Cc: | ^Date: | ^Message-ID: |
 
-    - 大きなメールを取得する際、確認しない
-      - [[http://quruli.ivory.ne.jp/document/wl_2.14.0/wl-ja_4.html][Wanderlust – Yet Another Message Interface On Emacsen –: 5. サマリモード]]
+ｑ- 大きなメールを取得する際、確認しない
+  - [[http://quruli.ivory.ne.jp/document/wl_2.14.0/wl-ja_4.html][Wanderlust – Yet Another Message Interface On Emacsen –: 5. サマリモード]]
 
 #+begin_src emacs-lisp
   (setq elmo-message-fetch-confirm nil)
