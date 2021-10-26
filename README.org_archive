@@ -88,3 +88,115 @@ Archived entries from file /home/yc/.emacs.d/README.org
 
 #+RESULTS:
 : ace-jump-mode
+
+* Wanderlust - Mailクライアント
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-10-26 Tue 10:54
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: 未整理
+  :ARCHIVE_CATEGORY: README
+  :END:
++ 参考
+  - [[https://wanderlust.github.io/wl-docs/wl-ja.html#Install][Wanderlust – Yet Another Message Interface On Emacsen –]]
+  - [[https://www.emacswiki.org/emacs/WanderLust][[Home] Wander Lust]]
+
++ You have to specify the value of 'wl-icon-directory'
+
++ 問題点：起動して最初にM-x wlをすると、localhostにimap接続に行く
+  - .folderに設定がある
+  - もともとのデフォルト（一回目に使われる）はこれっぽい
+    [[http://quruli.ivory.ne.jp/document/wl_2.14.0/wl-ja_2.html][Wanderlust – Yet Another Message Interface On Emacsen –: 3. Wanderlust で扱えるフォルダたち]]
+  - 2回目は.folderから設定を読むようだ
+
++ el-getではなくpackageでインストールしたほうが挙動がよい
+
+#+begin_example
+ユーザ名  -> 変数 elmo-imap4-default-user の値。
+             初期設定は 環境変数 USER か、LOGNAME か、
+             (user-login-name) の返り値。
+認証法    -> 変数 elmo-imap4-default-authenticate-type の値。
+             初期設定は login。
+ホスト名  -> 変数 elmo-imap4-default-server の値。
+             初期設定は ‘localhost’。
+ポート番号-> 変数 elmo-imap4-default-port の値。
+             初期設定は 143。
+#+end_example
+
+#+begin_src emacs-lisp
+  (leaf wanderlust
+    :package t
+    :config
+    ;; For non ascii-characters in folder-names
+    (setq elmo-imap4-use-modified-utf7 t)
+
+    ;; SMTP
+    (setq
+     wl-smtp-connection-type   'starttls         ; Use TLS
+     wl-smtp-posting-port      587               ; The SMTP port
+     wl-smtp-authenticate-type "plain"           ; Authentication type
+     wl-smtp-posting-user      "yoshihide.chubachi"          ; Username
+     wl-smtp-posting-server    "smtp.gmail.com"  ; SMTP server
+     wl-local-domain           "gmail.com"       ; The SMTP server again
+     wl-message-id-domain      "smtp.gmail.com") ; And... Again?
+
+    (setq
+     ;; All system folders (draft, trash, spam, etc) are placed in the
+     ;; [Gmail]-folder, except inbox. "%" means it's an IMAP-folder
+     wl-default-folder "%inbox"
+     wl-draft-folder   "%[Gmail]/Drafts"
+     wl-trash-folder   "%[Gmail]/Trash"
+
+     ;; The below is not necessary when you send mail through Gmail's SMTP server,
+     ;; see https://support.google.com/mail/answer/78892?hl=en&rd=1
+     ;; wl-fcc            "%[Gmail]/Sent"
+
+     wl-from "Yoshihide Chubachi <yoshihide.chubachi@gmail.com>"  ; Our From: header field
+     wl-fcc-force-as-read t           ; Mark sent mail (in the wl-fcc folder) as read
+     wl-default-spec "%")             ; For auto-completion
+    )
+     #+end_src
+
+#+RESULTS:
+: wanderlust
+
+#+begin_src emacs-lisp
+  (autoload 'wl-user-agent-compose "wl-draft" nil t)
+  (if (boundp 'mail-user-agent)
+      (setq mail-user-agent 'wl-user-agent))
+  (if (fboundp 'define-mail-user-agent)
+      (define-mail-user-agent
+        'wl-user-agent
+        'wl-user-agent-compose
+        'wl-draft-send
+        'wl-draft-kill
+        'mail-send-hook))
+#+end_src
+
+#+RESULTS:
+: mail-send-hook
+
+- 表示するヘッダを設定
+
+#+begin_src emacs-lisp
+  (setq wl-message-ignored-field-list '("^.*:")) ; 一旦全て非表示
+  (setq wl-message-visible-field-list ; 見たいヘッダだけ表示
+        '("^Subject:"
+          "^From:"
+          "^To:"
+          "^Cc:"
+          "^Date:"
+          "^Message-ID:"
+          ))
+#+end_src
+
+#+RESULTS:
+| ^Subject: | ^From: | ^To: | ^Cc: | ^Date: | ^Message-ID: |
+
+    - 大きなメールを取得する際、確認しない
+      - [[http://quruli.ivory.ne.jp/document/wl_2.14.0/wl-ja_4.html][Wanderlust – Yet Another Message Interface On Emacsen –: 5. サマリモード]]
+
+#+begin_src emacs-lisp
+  (setq elmo-message-fetch-confirm nil)
+#+end_src
+
+#+RESULTS:
