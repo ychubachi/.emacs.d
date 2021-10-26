@@ -1796,6 +1796,19 @@
 1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
 
 * 未整理
+** w3m - Webブラウザ
+
+#+begin_src emacs-lisp
+  (leaf w3m
+    :doc "an Emacs interface to w3m"
+    :tag "hypermedia" "www" "w3m"
+    :added "2021-10-26"
+    :ensure t)
+    #+end_src
+
+#+RESULTS:
+: w3m
+
 ** Wanderlust - Mailクライアント
 + 参考
   - [[https://wanderlust.github.io/wl-docs/wl-ja.html#Install][Wanderlust – Yet Another Message Interface On Emacsen –]]

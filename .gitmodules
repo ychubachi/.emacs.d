@@ -1,0 +1,3 @@
+[submodule "/home/yc/.emacs.d/site-lisp/emacs-application-framework"]
+	path = /home/yc/.emacs.d/site-lisp/emacs-application-framework
+	url = https://github.com/emacs-eaf/emacs-application-framework.git
