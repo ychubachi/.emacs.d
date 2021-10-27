@@ -325,15 +325,16 @@
 ** recentf
 
 #+begin_src emacs-lisp
-     (leaf recentf
-       :custom
-       (recentf-max-saved-items . 2000)
-       (recentf-auto-cleanup quote never)
-       (recentf-exclude quote
-                        ("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:"))
-       :config
-       (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
-       (recentf-mode 1))
+  (leaf recentf
+    :custom
+    (recentf-max-saved-items . 2000)
+    (recentf-auto-cleanup quote never)
+    (recentf-exclude quote
+                     ("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:"))
+    :config
+    (setq recentf-auto-save-timer
+          (run-with-idle-timer 30 t (lambda () (let ((save-silently t)) (recentf-save-list)))))
+    (recentf-mode 1))
 #+end_src
 
 #+RESULTS:
