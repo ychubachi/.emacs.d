@@ -1795,7 +1795,6 @@
 
 ** 参考文献
 1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
-
 * 未整理
 ** w3m - Webブラウザ
 
@@ -2007,14 +2006,82 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
 + /usr/local/share/emacs/site-lisp/mu4e/
 + [[https://cheatography.com/ddoherty03/cheat-sheets/mu4e-with-gmail-hints/][mu4e (With GMail Hints) Keyboard Shortcuts by ddoherty03 - Download free from Cheatography - Cheatography.com: Cheat Sheets For Every Occasion]]
   - cheetsheet
++ [[https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html][Gmail configuration (Mu4e 1.6.0 user manual)]]
+  - 前半はofflineimap用
++ 送信時、パスワードを入力すると、~/.authinfo に自動で追加
 
 #+begin_src emacs-lisp
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
-(require 'mu4e)
-(setq mu4e-get-mail-command "mbsync -a")
-(setq mu4e-headers-fields '((:human-date . 16) (:flags . 6) (:mailing-list . 6) (:from . 22) (:subject)))
-;; この下に後述のコンテキスト設定を書きます。コンテキストは特に送信時に重要なものなのですが、今はなしでいいです。
+  (leaf leaf-convert
+    :load-path "/usr/local/share/emacs/site-lisp/mu4e/"
+    :require mu4e
+    :config
+    ;; use mu4e for e-mail in emacs
+    (setq mail-user-agent 'mu4e-user-agent)
+
+    ;; (setq mu4e-headers-fields '((:human-date . 16) (:flags . 6) (:mailing-list . 6) (:from . 22) (:subject)))
+    (setq mu4e-headers-fields '((:human-date . 12) (:flags . 6) (:from . 22) (:subject)))
+
+    (setq mu4e-drafts-folder "/Gmail/draft")
+    (setq mu4e-sent-folder   "/Gmail/sent")
+    (setq mu4e-trash-folder  "/Gmail/trash")
+    (setq mu4e-refile-folder "/Gmail/archive")
+
+    ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+    (setq mu4e-sent-messages-behavior 'delete)
+
+    ;; (See the documentation for `mu4e-sent-messages-behavior' if you have
+    ;; additional non-Gmail addresses and want assign them different
+    ;; behavior.)
+
+    ;; setup some handy shortcuts
+    ;; you can quickly switch to your Inbox -- press ``ji''
+    ;; then, when you want archive some messages, move them to
+    ;; the 'All Mail' folder by pressing ``ma''.
+    (setq mu4e-maildir-shortcuts
+          '((:maildir "/Gmail/inbox"           :key ?i)
+            (:maildir "/Gmail/archive"         :key ?a)
+            (:maildir "/Gmail/starred"         :key ?S)
+            (:maildir "/Gmail/draft"           :key ?d)
+            (:maildir "/Gmail/sent"            :key ?s)
+            (:maildir "/Gmail/trash"           :key ?t)
+            (:maildir "/Maildir_AIIT-2021-10-28" :key ?O)
+            ))
+
+    ;; allow for updating mail using 'U' in the main view:
+    (setq mu4e-get-mail-command "mbsync -a")
+
+    ;; something about ourselves
+    (setq
+     user-mail-address "yc@aiit.ac.jp"
+     user-full-name  "中鉢欣秀"
+     mu4e-compose-signature
+     (concat
+      "東京都立産業技術大学院大学（AIIT） 研究科長補佐\n"
+      "情報アーキテクチャコース担当 教授 中鉢欣秀 博士（政策・メディア）\n"))
+
+    ;; sending mail -- replace USERNAME with your gmail username
+    ;; also, make sure the gnutls command line utils are installed
+    ;; package 'gnutls-bin' in Debian/Ubuntu
+
+    (require 'smtpmail)
+    (setq message-send-mail-function 'smtpmail-send-it
+          starttls-use-gnutls t
+          smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+          smtpmail-auth-credentials
+          '(("smtp.gmail.com" 587 "yc@aiit.ac.jp" nil))
+          smtpmail-default-smtp-server "smtp.gmail.com"
+          smtpmail-smtp-server "smtp.gmail.com"
+          smtpmail-smtp-service 587)
+
+    ;; alternatively, for emacs-24 you can use:
+    ;;(setq message-send-mail-function 'smtpmail-send-it
+    ;;     smtpmail-stream-type 'starttls
+    ;;     smtpmail-default-smtp-server "smtp.gmail.com"
+    ;;     smtpmail-smtp-server "smtp.gmail.com"
+    ;;     smtpmail-smtp-service 587)
+    (setq mu4e-headers-results-limit -1)
+    )
 #+end_src
 
 #+RESULTS:
-: ((:human-date . 16) (:flags . 6) (:mailing-list . 6) (:from . 22) (:subject))
+: leaf-convert
