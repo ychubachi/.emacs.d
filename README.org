@@ -1998,7 +1998,7 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
 - Near側のフォルダが作られない
   - バージョンが古いから？
   - UIDVALIDITYが鍵のようだ
-    - ~/.mbsyncに対応表があるので、やりなおすときは
+    - ~/.mbsyncに対応表があるので、やりなおすときは削除する
 
 #+begin_example
   rm -r ~/Maildir
@@ -2047,19 +2047,28 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     ;; additional non-Gmail addresses and want assign them different
     ;; behavior.)
 
+    (setq mu4e-bookmarks
+          '((:name "Unread messages"  :query "flag:unread AND NOT flag:trashed"  :key 117)
+            (:name "Starred messages" :query "flag:flagged AND NOT flag:trashed" :key ?S)
+            (:name "Draft Masseges"   :query "flag:draft AND NOT flag:trashed"   :key ?D)
+            (:name "Trash"            :query "flag:trashed"                      :key ?T)
+            (:name "Today's messages" :query "date:today..now"                 :key 116)
+            (:name "Last 7 days" :query "date:7d..now" :hide-unread t          :key 119)
+            (:name "Messages with images" :query "mime:image/*" :hide-unread t :key 112)
+            ))
+
     ;; setup some handy shortcuts
     ;; you can quickly switch to your Inbox -- press ``ji''
     ;; then, when you want archive some messages, move them to
     ;; the 'All Mail' folder by pressing ``ma''.
     (setq mu4e-maildir-shortcuts
-          '((:maildir "/Gmail/inbox"           :key ?i)
-            (:maildir "/Gmail/archive"         :key ?a)
-            (:maildir "/Gmail/starred"         :key ?S)
-            (:maildir "/Gmail/draft"           :key ?d)
-            (:maildir "/Gmail/sent"            :key ?s)
-            (:maildir "/Gmail/trash"           :key ?t)
-            (:maildir "/Maildir_AIIT-2021-10-28" :key ?O)
-            ))
+          '((:maildir "/Gmail/Inbox"             :key ?i)
+            (:maildir "/Gmail/[Gmail]/&MFkweTBmMG4w4TD8MOs-"           :key ?a)
+            (:maildir "/draft"                   :key ?d)
+            (:maildir "/sent"                    :key ?s)
+            (:maildir "/trash"                   :key ?t)
+            (:maildir "/Maildir_AIIT-2021-10-28" :key ?O)))
+
 
     ;; allow for updating mail using 'U' in the main view:
     (setq mu4e-get-mail-command "mbsync -a")
@@ -2093,7 +2102,16 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     ;;     smtpmail-default-smtp-server "smtp.gmail.com"
     ;;     smtpmail-smtp-server "smtp.gmail.com"
     ;;     smtpmail-smtp-service 587)
+
     (setq mu4e-headers-results-limit -1)
+
+    (setq mu4e-change-filenames-when-moving t) ;; for mbsync
+    )
+#+end_src
+
+#+RESULTS:
+: mu4e
+
 ** multiple-cursors
 + [[https://dev.classmethod.jp/articles/emacs-multiple-cursors/][複数カーソルを操作するパッケージ multiple-cursors.el のご紹介 | DevelopersIO]]
 
