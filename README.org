@@ -383,6 +383,20 @@
 #+RESULTS:
 : *imenu-list
 
+** align - コメントの位置を揃えたりする
+
+#+begin_src emacs-lisp
+  (leaf align
+    :doc "align text to a specific column, by regexp"
+    :tag "builtin"
+    :added "2021-10-30"
+    :bind (("C-c M-a" . align-regexp))
+    )
+#+end_src
+
+#+RESULTS:
+: align
+
 * ミニバッファ補完UI関連の設定
 ** vertico:本体の設定
 
