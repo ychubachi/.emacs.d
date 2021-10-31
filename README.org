@@ -1793,22 +1793,6 @@
 #+RESULTS:
 : my/browser
 
-* おわりに
-** お約束の記述
-
-#+begin_src emacs-lisp
-(provide 'README)
-
-;; Local Variables:
-;; indent-tabs-mode: nil
-;; byte-compile-warnings: (not cl-functions obsolete)
-;; End:
-
-;;; README.el ends here
-#+end_src
-
-** 参考文献
-1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
 * 未整理
 ** w3m - Webブラウザ
 
@@ -2155,3 +2139,19 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
 
 #+RESULTS:
 : region-bindings-mode
+* おわりに
+** お約束の記述
+
+#+begin_src emacs-lisp
+(provide 'README)
+
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; byte-compile-warnings: (not cl-functions obsolete)
+;; End:
+
+;;; README.el ends here
+#+end_src
+
+** 参考文献
+1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
