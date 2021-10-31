@@ -2072,20 +2072,22 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
 + 送信時、パスワードを入力すると、~/.authinfo に自動で追加
 
 #+begin_src emacs-lisp
-  (leaf leaf-convert
+  (leaf mu4e
     :load-path "/usr/local/share/emacs/site-lisp/mu4e/"
-    :require mu4e
+    :require t
     :config
     ;; use mu4e for e-mail in emacs
     (setq mail-user-agent 'mu4e-user-agent)
 
     ;; (setq mu4e-headers-fields '((:human-date . 16) (:flags . 6) (:mailing-list . 6) (:from . 22) (:subject)))
-    (setq mu4e-headers-fields '((:human-date . 12) (:flags . 6) (:from . 22) (:subject)))
+    (setq mu4e-headers-fields '((:date . 12) (:flags . 6) (:from . 22) (:subject)))
 
-    (setq mu4e-drafts-folder "/Gmail/draft")
-    (setq mu4e-sent-folder   "/Gmail/sent")
-    (setq mu4e-trash-folder  "/Gmail/trash")
-    (setq mu4e-refile-folder "/Gmail/archive")
+    ;; Local Maildir for mu4e
+    (setq mu4e-drafts-folder "/draft")
+    (setq mu4e-sent-folder   "/sent")
+    (setq mu4e-trash-folder  "/trash")
+    ;; Remote Maildir (Gmail)
+    (setq mu4e-refile-folder "/Gmail/[Gmail]/&MFkweTBmMG4w4TD8MOs-")
 
     ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
     (setq mu4e-sent-messages-behavior 'delete)
@@ -2119,6 +2121,7 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
 
     ;; allow for updating mail using 'U' in the main view:
     (setq mu4e-get-mail-command "mbsync -a")
+    (setq mu4e-change-filenames-when-moving t) ;; for mbsync
 
     ;; something about ourselves
     (setq
@@ -2131,7 +2134,10 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
 
     (setq mu4e-headers-results-limit -1)
 
-    (setq mu4e-change-filenames-when-moving t) ;; for mbsync
+    (setq mu4e-view-prefer-html t)
+    (setq mu4e-html2text-command "html2text -utf8 -width 72")
+    ;; (setq mu4e-html2text-command 'mu4e-shr2text)
+
     )
 #+end_src
 
