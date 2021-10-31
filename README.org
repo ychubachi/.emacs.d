@@ -2094,8 +2094,25 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     ;;     smtpmail-smtp-server "smtp.gmail.com"
     ;;     smtpmail-smtp-service 587)
     (setq mu4e-headers-results-limit -1)
+** region-bindings-mode
+
++ [[https://tam5917.hatenablog.com/entry/20130129/1359465171][region-bindings-modeの紹介 - 備忘録]]
++ [[https://github.com/magnars/expand-region.el][magnars/expand-region.el: Emacs extension to increase selected region by semantic units.]]
++ [[https://github.com/fgallina/region-bindings-mode][GitHub - fgallina/region-bindings-mode: A minor mode that enables custom bindings when mark is active.]]
+
+#+begin_src emacs-lisp
+  (leaf region-bindings-mode
+    :package t
+    :require t
+    :config
+    (region-bindings-mode-enable)
+    (define-key region-bindings-mode-map "e" 'mc/edit-lines)
+    (define-key region-bindings-mode-map "a" 'mc/mark-all-like-this)
+    (define-key region-bindings-mode-map "p" 'mc/mark-previous-like-this)
+    (define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
+    (define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended)
     )
 #+end_src
 
 #+RESULTS:
-: leaf-convert
+: region-bindings-mode
