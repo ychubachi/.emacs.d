@@ -2094,6 +2094,27 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     ;;     smtpmail-smtp-server "smtp.gmail.com"
     ;;     smtpmail-smtp-service 587)
     (setq mu4e-headers-results-limit -1)
+** multiple-cursors
++ [[https://dev.classmethod.jp/articles/emacs-multiple-cursors/][複数カーソルを操作するパッケージ multiple-cursors.el のご紹介 | DevelopersIO]]
+
++ リージョンを選択してカーソルをあわせる
++ region-bindings-modeとともに使うとよい
+
+#+begin_src emacs-lisp
+    (leaf multiple-cursors
+      :package t
+      :config
+      ;; use region-bindings-mode instead
+      ;; (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+      ;; (global-set-key (kbd "C->")         'mc/mark-next-like-this)
+      ;; (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
+      ;; (global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this))
+      )
+#+end_src
+
+#+RESULTS:
+: multiple-cursors
+
 ** region-bindings-mode
 
 + [[https://tam5917.hatenablog.com/entry/20130129/1359465171][region-bindings-modeの紹介 - 備忘録]]
