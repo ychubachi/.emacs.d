@@ -1984,6 +1984,26 @@
 #+RESULTS:
 : eaf
 ** mu4e
+*** smtpmail - メールの送信
+;; sending mail -- replace USERNAME with your gmail username
+;; also, make sure the gnutls command line utils are installed
+;; package 'gnutls-bin' in Debian/Ubuntu
+
+#+begin_src emacs-lisp
+  (leaf smtpmail
+    :require t
+    :setq ((message-send-mail-function quote smtpmail-send-it)
+           (starttls-use-gnutls . t)
+           (smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil)))
+           (smtpmail-auth-credentials '(("smtp.gmail.com" 587 "yc@aiit.ac.jp" nil)))
+           (smtpmail-default-smtp-server . "smtp.gmail.com")
+           (smtpmail-smtp-server . "smtp.gmail.com")
+           (smtpmail-smtp-service . 587)))
+#+end_src
+
+#+RESULTS:
+: smtpmail
+
 *** mbsync - IMAPサーバとの同期
 + 参考文献
   + [[https://isync.sourceforge.io/][isync: free IMAP and MailDir mailbox synchronizer]]
@@ -2108,27 +2128,6 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
      (concat
       "東京都立産業技術大学院大学（AIIT） 研究科長補佐\n"
       "情報アーキテクチャコース担当 教授 中鉢欣秀 博士（政策・メディア）\n"))
-
-    ;; sending mail -- replace USERNAME with your gmail username
-    ;; also, make sure the gnutls command line utils are installed
-    ;; package 'gnutls-bin' in Debian/Ubuntu
-
-    (require 'smtpmail)
-    (setq message-send-mail-function 'smtpmail-send-it
-          starttls-use-gnutls t
-          smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-          smtpmail-auth-credentials
-          '(("smtp.gmail.com" 587 "yc@aiit.ac.jp" nil))
-          smtpmail-default-smtp-server "smtp.gmail.com"
-          smtpmail-smtp-server "smtp.gmail.com"
-          smtpmail-smtp-service 587)
-
-    ;; alternatively, for emacs-24 you can use:
-    ;;(setq message-send-mail-function 'smtpmail-send-it
-    ;;     smtpmail-stream-type 'starttls
-    ;;     smtpmail-default-smtp-server "smtp.gmail.com"
-    ;;     smtpmail-smtp-server "smtp.gmail.com"
-    ;;     smtpmail-smtp-service 587)
 
     (setq mu4e-headers-results-limit -1)
 
