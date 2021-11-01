@@ -1850,7 +1850,7 @@
 #+RESULTS:
 : w3m
 
-** Wanderlust - Mailクライアント
+** TODO Wanderlust - Mailクライアント
 + 参考
   - [[https://wanderlust.github.io/wl-docs/wl-ja.html#Install][Wanderlust – Yet Another Message Interface On Emacsen –]]
   - [[https://www.emacswiki.org/emacs/WanderLust][[Home] Wander Lust]]
@@ -1878,7 +1878,7 @@
              初期設定は 143。
 #+end_example
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (leaf wanderlust
     :package t
     :config
@@ -1912,12 +1912,12 @@
 
     (require 'mime-w3m)
     )
-     #+end_src
+#+end_src
 
 #+RESULTS:
 : wanderlust
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (autoload 'wl-user-agent-compose "wl-draft" nil t)
   (if (boundp 'mail-user-agent)
       (setq mail-user-agent 'wl-user-agent))
@@ -1935,7 +1935,7 @@
 
 - 表示するヘッダを設定
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (setq wl-message-ignored-field-list '("^.*:")) ; 一旦全て非表示
   (setq wl-message-visible-field-list ; 見たいヘッダだけ表示
         '("^Subject:"
@@ -1950,10 +1950,10 @@
 #+RESULTS:
 | ^Subject: | ^From: | ^To: | ^Cc: | ^Date: | ^Message-ID: |
 
-ｑ- 大きなメールを取得する際、確認しない
+- 大きなメールを取得する際、確認しない
   - [[http://quruli.ivory.ne.jp/document/wl_2.14.0/wl-ja_4.html][Wanderlust – Yet Another Message Interface On Emacsen –: 5. サマリモード]]
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (setq elmo-message-fetch-confirm nil)
 #+end_src
 
