@@ -1985,6 +1985,28 @@
 #+RESULTS:
 : eaf
 
+** eww/shr - Simple HTML Reader
+- デフォルトだと読みにくいプロポーショナルフォントになる
+  - shr-use-fonts tがデフォルト
+- mu4eでshrを使う
+- [[https://www.emacswiki.org/emacs/eww][[Home] eww]]
+
+#+begin_src emacs-lisp
+  (leaf eww
+    :custom
+    ((browse-url-browser-function . 'eww-browse-url)
+     (shr-use-colors    . nil)
+     (shr-use-fonts     . nil)
+     (shr-image-animate . nil)
+     (shr-width         . 72)
+     (eww-search-prefix . "https://www.google.com/search?q=")
+     )
+    )
+#+end_src
+
+#+RESULTS:
+: eww
+
 ** mu4e
 *** smtpmail - メールの送信
 ;; sending mail -- replace USERNAME with your gmail username
@@ -2073,6 +2095,10 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
   - 前半はofflineimap用
 + 送信時、パスワードを入力すると、~/.authinfo に自動で追加
 + [[https://emacs.stackexchange.com/questions/3061/how-to-stop-mu4e-from-inserting-line-breaks][(add-hook 'mu4e-compose-mode-hook 'visual-line-mode)]]
++ htmlメールはewwで表示されているようだ
+  * フォントはMicrosoft Yahei
+    - [[https://qiita.com/styzo/items/28d5d994a293fa704476][emacs 26 のフォントの設定 M-x view-hello-file - Qiita]]
+  * ewwの正体はshr
 
 #+begin_src emacs-lisp
   (leaf mu4e
