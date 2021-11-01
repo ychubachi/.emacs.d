@@ -2070,6 +2070,7 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
 + [[https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html][Gmail configuration (Mu4e 1.6.0 user manual)]]
   - 前半はofflineimap用
 + 送信時、パスワードを入力すると、~/.authinfo に自動で追加
++ [[https://emacs.stackexchange.com/questions/3061/how-to-stop-mu4e-from-inserting-line-breaks][(add-hook 'mu4e-compose-mode-hook 'visual-line-mode)]]
 
 #+begin_src emacs-lisp
   (leaf mu4e
@@ -2137,6 +2138,9 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     (setq mu4e-view-prefer-html t)
     (setq mu4e-html2text-command "html2text -utf8 -width 72")
     ;; (setq mu4e-html2text-command 'mu4e-shr2text)
+
+    (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
+    (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
 
     )
 #+end_src
