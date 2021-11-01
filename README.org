@@ -2159,7 +2159,8 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
       (define-key mu4e-headers-mode-map (kbd "<S-left>")  'mu4e-headers-fold-all)
       (define-key mu4e-headers-mode-map (kbd "<right>")   'mu4e-headers-unfold-at-point)
       (define-key mu4e-headers-mode-map (kbd "<S-right>") 'mu4e-headers-unfold-all)
-      ;; (mu4e-thread-folding-mode)
+
+      (add-hook 'mu4e-headers-found-hook #'mu4e-thread-folding-mode)
       )
     )
 #+end_src
