@@ -2145,6 +2145,22 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
     (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
 
+    (leaf mu4e-thread-folding
+      :el-get rougier/mu4e-thread-folding
+      :require t
+      :config
+      (add-to-list 'mu4e-header-info-custom
+                   '(:empty :name "Empty" :shortname "" :function
+                            (lambda (msg)
+                              "  ")))
+
+      (define-key mu4e-headers-mode-map (kbd "<tab>")     'mu4e-headers-toggle-at-point)
+      (define-key mu4e-headers-mode-map (kbd "<left>")    'mu4e-headers-fold-at-point)
+      (define-key mu4e-headers-mode-map (kbd "<S-left>")  'mu4e-headers-fold-all)
+      (define-key mu4e-headers-mode-map (kbd "<right>")   'mu4e-headers-unfold-at-point)
+      (define-key mu4e-headers-mode-map (kbd "<S-right>") 'mu4e-headers-unfold-all)
+      ;; (mu4e-thread-folding-mode)
+      )
     )
 #+end_src
 
