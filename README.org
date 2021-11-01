@@ -2083,13 +2083,6 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     (setq mail-user-agent 'mu4e-user-agent)
 
     ;; (setq mu4e-headers-fields '((:human-date . 16) (:flags . 6) (:mailing-list . 6) (:from . 22) (:subject)))
-
-    ;; Local Maildir for mu4e
-    (setq mu4e-drafts-folder "/draft")
-    (setq mu4e-sent-folder   "/sent")
-    (setq mu4e-trash-folder  "/trash")
-    ;; Remote Maildir (Gmail)
-    (setq mu4e-refile-folder "/Gmail/[Gmail]/&MFkweTBmMG4w4TD8MOs-")
     (setq mu4e-headers-fields '((:empty . 2) (:date . 12) (:flags . 6) (:mailing-list . 10)(:from . 22) (:subject)))
     ;; :setq ((mu4e-headers-fields
     ;;         '((:empty . 2)
@@ -2099,6 +2092,10 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     ;;           (:from . 22)
     ;;           (:subject))))
 
+    (setq mu4e-drafts-folder "/Gmail/draft")
+    (setq mu4e-sent-folder   "/Gmail/sent")
+    (setq mu4e-trash-folder  "/Gmail/trash")
+    (setq mu4e-refile-folder "/Gmail/archive")
 
     ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
     (setq mu4e-sent-messages-behavior 'delete)
@@ -2122,13 +2119,9 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     ;; then, when you want archive some messages, move them to
     ;; the 'All Mail' folder by pressing ``ma''.
     (setq mu4e-maildir-shortcuts
-          '((:maildir "/Gmail/Inbox"             :key ?i)
-            (:maildir "/Gmail/[Gmail]/&MFkweTBmMG4w4TD8MOs-"           :key ?a)
-            (:maildir "/draft"                   :key ?d)
-            (:maildir "/sent"                    :key ?s)
-            (:maildir "/trash"                   :key ?t)
-            (:maildir "/Maildir_AIIT-2021-10-28" :key ?O)))
-
+          '((:maildir "/Gmail/inbox"             :key ?i)
+            (:maildir "/Gmail/archive"           :key ?a)
+            (:maildir "/Gmail/draft"             :key ?d)))
 
     ;; allow for updating mail using 'U' in the main view:
     (setq mu4e-get-mail-command "mbsync -a")
