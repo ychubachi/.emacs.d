@@ -1862,6 +1862,21 @@
 
 #+RESULTS:
 : eaf
+** visual-fill-column - visual-line-modeでfill-columnを有効にする
++ 参考
+  - [[https://github.com/joostkremers/visual-fill-column][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
+
++ 設定
+
+  #+begin_src emacs-lisp
+    (leaf visual-fill-column
+      :package t
+      :hook ((visual-line-mode-hook . visual-fill-column-mode))
+      )
+  #+end_src
+
+  #+RESULTS:
+  : visual-fill-column
 
 ** eww/shr - Simple HTML Reader
 - デフォルトだと読みにくいプロポーショナルフォントになる
