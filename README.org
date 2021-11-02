@@ -2173,10 +2173,6 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
 
     (setq mu4e-headers-results-limit -1)
 
-    (setq mu4e-view-prefer-html t)
-    (setq mu4e-html2text-command "html2text -utf8 -width 72")
-    ;; (setq mu4e-html2text-command 'mu4e-shr2text)
-
     <<mu4e-compose-mode-hook>>
 
     (leaf mu4e-thread-folding
