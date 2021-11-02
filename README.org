@@ -2023,6 +2023,24 @@
     #+RESULTS: mu4e-compose-mode-hook
     | visual-line-mode | turn-off-auto-fill |
 
++ mu4e-dashboard
+  * 参考
+    - [[https://www.reddit.com/r/emacs/comments/mzgsm0/mu4e_look_and_feel/][Mu4e look and feel : emacs]]
+    - [[https://github.com/rougier/mu4e-dashboard][rougier/mu4e-dashboard: A dashboard for mu4e (mu for emacs)]]
+  * 説明
+    - ソースコードのorgファイルを編集する必要があるようなので、forkしてみる
+    - サンプルに従い、orgファイルを作成すれば、ダッシュボードになる
+
+    #+NAME: mu4e-dashboard
+    #+begin_src emacs-lisp :tangle no
+      ;; (leaf mu4e-dashboard
+      ;;   :el-get ychubachi/mu4e-dashboard
+      ;;   :require t
+
+    #+end_src
+
+    #+RESULTS: mu4e-dashboard
+
 + 全体の設定
 
 #+begin_src emacs-lisp :noweb yes
@@ -2082,6 +2100,7 @@
 
     <<mbsync-settings>>
     <<mu4e-compose-mode-hook>>
+    <<mu4e-dashboard>>
 
     (leaf mu4e-thread-folding
       :el-get rougier/mu4e-thread-folding
