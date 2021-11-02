@@ -1951,12 +1951,12 @@
   * Gmailの設定
     - セキュリティページで有効にする
   * メールパスワードの設定
-    -  ~/.mailpass.gpg
+    - ~/.mailpass.gpg
   * mbsyncの設定
     - 日本語フォルダ名が修正utf-7になる
     - utf-7を変換するツールがあんまりない
       * [[https://kkobayashi-a.hatenablog.com/entry/2019/04/11/111856][imapsyncでモバメをGmailにコピーする その2 - kkobayashi_a’s blog]]
-    -  [[https://arimasou16.com/blog/2021/09/01/00413/][OfflineIMAPとNeoMuttを合わせて使う 後半(成功例)]]
+    - [[https://arimasou16.com/blog/2021/09/01/00413/][OfflineIMAPとNeoMuttを合わせて使う 後半(成功例)]]
     - つくった（ruby）
 
     #+begin_example
