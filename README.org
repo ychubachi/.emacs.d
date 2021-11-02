@@ -2100,7 +2100,23 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     - [[https://qiita.com/styzo/items/28d5d994a293fa704476][emacs 26 のフォントの設定 M-x view-hello-file - Qiita]]
   * ewwの正体はshr
 
++ メールを作成するモードでの文字の折返し
+  * デフォルトではauto-fillがonであるため、長い行には自動的に改行が追加される。
+    （古き良き時代の標準スタイル）
+  * これをoffにし、単語の折返し表示をしないようにvisual-line-modeをonにする。
+
+#+NAME: mu4e-compose-mode-hook
 #+begin_src emacs-lisp
+  (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
+  (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
+#+end_src
+
+#+RESULTS: mu4e-compose-mode-hook
+| visual-line-mode | turn-off-auto-fill |
+
++ 全体の設定
+
+#+begin_src emacs-lisp :noweb yes
   (leaf mu4e
     :load-path "/usr/local/share/emacs/site-lisp/mu4e/"
     :require t
@@ -2161,8 +2177,7 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     (setq mu4e-html2text-command "html2text -utf8 -width 72")
     ;; (setq mu4e-html2text-command 'mu4e-shr2text)
 
-    (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
-    (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
+    <<mu4e-compose-mode-hook>>
 
     (leaf mu4e-thread-folding
       :el-get rougier/mu4e-thread-folding
