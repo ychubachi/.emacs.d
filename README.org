@@ -1970,6 +1970,16 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
   rm -r ~/.mbsync
   mbsync private
 #+end_example
+  * 設定
+    1. メイン画面で'U'キーを押すとmbsyncで更新するよう設定
+    2. メールを移動する際、ファイル名を変更（mbsyncではこれを設定するのが望ましい）
+       設定しないと、UIDが書き換わらないので重複する可能性がある。
+
+    #+NAME: mbsync-settings
+    #+begin_src emacs-lisp
+        (setq mu4e-get-mail-command "mbsync -a")
+        (setq mu4e-change-filenames-when-moving t)
+    #+end_src
 
 *** mu/mu4e - Maildirの読み書き・SMTP送信
 + [[https://www.emacswiki.org/emacs/mu4e][[Home] mu4e]]
@@ -2053,9 +2063,6 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
             (:maildir "/Gmail/archive"           :key ?a)
             (:maildir "/Gmail/draft"             :key ?d)))
 
-    ;; allow for updating mail using 'U' in the main view:
-    (setq mu4e-get-mail-command "mbsync -a")
-    (setq mu4e-change-filenames-when-moving t) ;; for mbsync
 
     ;; something about ourselves
     (setq
@@ -2068,6 +2075,7 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
 
     (setq mu4e-headers-results-limit -1)
 
+    <<mbsync-settings>>
     <<mu4e-compose-mode-hook>>
 
     (leaf mu4e-thread-folding
