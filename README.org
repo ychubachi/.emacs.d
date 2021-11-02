@@ -2035,13 +2035,6 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
     (setq mu4e-trash-folder  "/Gmail/trash")
     (setq mu4e-refile-folder "/Gmail/archive")
 
-    ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-    (setq mu4e-sent-messages-behavior 'delete)
-
-    ;; (See the documentation for `mu4e-sent-messages-behavior' if you have
-    ;; additional non-Gmail addresses and want assign them different
-    ;; behavior.)
-
     (setq mu4e-bookmarks
           '((:name "Unread INBOX"     :query "maildir:/Gmail/inbox/ flag:unread AND NOT flag:trashed"  :key ?i)
             (:name "Unread Archive"   :query "maildir:/Gmail/archive/ flag:unread AND NOT flag:trashed"  :key ?a)
@@ -2063,6 +2056,12 @@ puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
             (:maildir "/Gmail/archive"           :key ?a)
             (:maildir "/Gmail/draft"             :key ?d)))
 
+    ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+    (setq mu4e-sent-messages-behavior 'delete)
+
+    ;; (See the documentation for `mu4e-sent-messages-behavior' if you have
+    ;; additional non-Gmail addresses and want assign them different
+    ;; behavior.)
 
     ;; something about ourselves
     (setq
