@@ -1998,9 +1998,10 @@
        設定しないと、UIDが書き換わらないので重複する可能性がある。
 
     #+NAME: mbsync-settings
-    #+begin_src emacs-lisp
-        (setq mu4e-get-mail-command "mbsync -a")
-        (setq mu4e-change-filenames-when-moving t)
+    #+begin_src emacs-lisp :tangle no
+      (setq mu4e-get-mail-command "mbsync -a")
+      (setq mu4e-change-filenames-when-moving t)
+
     #+end_src
 
     #+RESULTS: mbsync-settings
@@ -2015,9 +2016,10 @@
     2. 単語の途中で折返さないようにvisual-line-modeをonにする。
 
     #+NAME: mu4e-compose-mode-hook
-    #+begin_src emacs-lisp
+    #+begin_src emacs-lisp :tangle no
       (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
       (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
+
     #+end_src
 
     #+RESULTS: mu4e-compose-mode-hook
