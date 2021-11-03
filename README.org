@@ -1882,16 +1882,22 @@
   #+RESULTS:
   : visual-fill-column
 
-** eww/shr - Simple HTML Reader
-- デフォルトだと読みにくいプロポーショナルフォントになる
-  - shr-use-fonts tがデフォルト
-- mu4eでshrを使う
-- [[https://www.emacswiki.org/emacs/eww][[Home] eww]]
+** shr/eww - Simple HTML Reader
++ 説明
+  * EmacsのWebブラウザに関する設定
+  * ewwはデフォルトだと読みにくいプロポーショナルフォントになる
+  * mu4eではメールを読む際にshrを使う
++ 文献
+  * [[https://www.emacswiki.org/emacs/eww][[Home] eww]]
++ 設定
+  * ewwを標準にするにはbrowse-url-browser-functionを設定する
+  * shr-use-fontsをnilに設定することで、固定幅フォントを使うようになる
 
 #+begin_src emacs-lisp
   (leaf eww
     :custom
-    ((browse-url-browser-function . 'eww-browse-url)
+    (
+     ;; (browse-url-browser-function . 'eww-browse-url)
      (shr-use-colors    . nil)
      (shr-use-fonts     . nil)
      (shr-image-animate . nil)
