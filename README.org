@@ -1146,6 +1146,10 @@
           (file "~/Dropbox/Org/Roam/Templates/LaTeXTemplate.org")
           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
           :unnarrowed t)
+         ("w" "ブログ（Wordpress）" plain
+          (file "~/Dropbox/Org/Roam/Templates/Org2blogBufferTemplate.org")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
+          :unnarrowed t)
          ))
     :bind (("C-c n l" . org-roam-buffer-toggle)
            ("C-c n f" . org-roam-node-find)
