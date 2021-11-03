@@ -1546,7 +1546,7 @@
 
 #+begin_src emacs-lisp
   (setq default-frame-alist
-        (append '((width                . 120)   ; フレーム幅
+        (append '((width                . 220)   ; フレーム幅
                   (height               . 40 )   ; フレーム高
                   (left                 . 2000)  ; 配置左位置（左右2画面の場合）
                   (top                  . 50 )   ; 配置上位置
