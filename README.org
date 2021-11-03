@@ -1862,9 +1862,13 @@
 
 #+RESULTS:
 : eaf
-** visual-fill-column - visual-line-modeでfill-columnを有効にする
+** visual-fill-column - visual-line-modeでfill-columnを有効にする  :package:
++ 説明
+  * 長い一文を書くとき、指定位置で折り返してくれる。
+  * mu4eでメールを書くときに利用する。
+
 + 参考
-  - [[https://github.com/joostkremers/visual-fill-column][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
+  * [[https://github.com/joostkremers/visual-fill-column][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
 
 + 設定
 
