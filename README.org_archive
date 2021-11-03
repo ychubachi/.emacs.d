@@ -356,3 +356,29 @@ Archived entries from file /home/yc/.emacs.d/README.org
 
   #+RESULTS:
   : svg-tag-mode
+
+* org-roam-dialiesでジャーナル
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-11-03 Wed 23:45
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: org-mode関連の設定
+  :ARCHIVE_CATEGORY: README
+  :END:
+[[https://www.orgroam.com/manual.html#Org_002droam-Dailies][Org-roam User Manual]]
+
+#+begin_src emacs-lisp
+  (leaf org-roam-dailies
+    :after org-roam
+
+    :config
+    (setq org-roam-dailies-directory "Journals/")
+
+    (setq org-roam-dailies-capture-templates
+          '(("d" "default" entry
+             "* %?\n#+DATE: %T"
+             :target (file+head "%<%Y-%m-%d>.org"
+                                "#+title: %<%Y-%m-%d>\n")))))
+#+end_src
+
+#+RESULTS:
+: org-roam-dailies

@@ -1165,25 +1165,6 @@
 #+RESULTS:
 : org-roam
 
-** org-roam-dialiesでジャーナル
-
-#+begin_src emacs-lisp
-  (leaf org-roam-dailies
-    :after org-roam
-
-    :config
-    (setq org-roam-dailies-directory "Journals/")
-
-    (setq org-roam-dailies-capture-templates
-          '(("d" "default" entry
-             "* %?\n#+DATE: %T"
-             :target (file+head "%<%Y-%m-%d>.org"
-                                "#+title: %<%Y-%m-%d>\n")))))
-#+end_src
-
-#+RESULTS:
-: org-roam-dailies
-
 * 外部パッケージ
 ** undo-tree
    - [[https://elpa.gnu.org/packages/undo-tree.html][GNU ELPA - undo-tree]]
