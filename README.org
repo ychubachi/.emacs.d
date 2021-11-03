@@ -1068,7 +1068,20 @@
 : t
 
 ** org2blog
-- [[https://github.com/org2blog/org2blog#requirements-and-compatibility][org2blog/org2blog: Blog from Org mode to WordPress.]]
++ 説明
+  * orgでWordpressに投稿する
+  * Buffer全体で記事を書く場合
+    | キーn操作 | 関数                         | 説明                 |
+    |-----------+------------------------------+----------------------|
+    | C-c M-p g | org2blog-user-interface      | メニュー表示         |
+    | C-c M-p D | org2blog-buffer-page-save    | ページをWPに保存     |
+    | C-c M-p P | org2blog-buffer-page-publish | ページを公開         |
+    | C-c M-p d | org2blog-buffer-post-save    | ポストをWPに保存     |
+    | C-c M-p p | org2blog-buffer-post-publish | ポストを公開         |
+    | C-c M-p t | org2blog-complete            | カテゴリやタグの補完 |
+
++ 参考
+  * [[https://github.com/org2blog/org2blog#requirements-and-compatibility][org2blog/org2blog: Blog from Org mode to WordPress.]]
 - パスワードは~/.netrcに書く
 
 #+begin_src emacs-lisp
