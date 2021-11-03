@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: o2bbuf
+# key: o2bbuf_
+# --
+#+ORG2BLOG:
+#+DATE: [2021-11-03 Wed 18:43]
+#+OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+#+CATEGORY: Org2Blog, WordPress
+#+TAGS: Emacs, Lisp
+#+DESCRIPTION:
+#+TITLE: Hello, Buffer

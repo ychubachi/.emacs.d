@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: o2bsub
+# key: o2bsub_
+# --
+:PROPERTIES:
+:BLOG: plover
+:DATE: [2021-11-03 Wed 20:07]
+:OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Org2Blog, WordPress
+:POST_TAGS: Emacs, Lisp
+:END:
