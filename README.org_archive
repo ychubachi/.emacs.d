@@ -335,3 +335,24 @@ Archived entries from file /home/yc/.emacs.d/README.org
 #+end_src
 
 #+RESULTS:
+
+* TODO svg-tag-mode - orgのタグを囲み文字などに
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-11-03 Wed 14:21
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: 未整理
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: TODO
+  :END:
++ 参考
+  * [[https://github.com/rougier/svg-tag-mode][rougier/svg-tag-mode: A minor mode for Emacs that replace keywords with nice SVG labels]]
+
++ 設定
+  #+begin_src emacs-lisp
+    (leaf svg-tag-mode
+      :el-get rougier/svg-tag-mode
+      :require t)
+  #+end_src
+
+  #+RESULTS:
+  : svg-tag-mode
