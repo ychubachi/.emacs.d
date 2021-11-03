@@ -708,30 +708,32 @@
                  :empty-lines-after 1
                  :jump-to-captured t
                  :children (
-                   ("ychubachi.github.io"  :keys "g"
-                             :file "~/Dropbox/Org/ychubachi.github.io.org"
+                   ("ploversky.net" :keys "p"
+                             :file "~/Dropbox/Org/blog/ploversky.net/ploversky.net.org"
+                             :headline   "Blog"
+                             :todo-state "TODO"
+                             :template ("* %{todo-state} %^{Description}"
+                                        ":PROPERTIES:"
+                                        ":CREATED: %T"
+                                        ":CATEGORY: Blog"
+                                        ":POST_TAGS: Blog"
+                                        ":BLOG:     plover"
+                                        ":END:"
+                                        "\n** %?"))
+                   ("blog.chubachi.net"  :keys "b"
+                             :file "~/Dropbox/Org/blog/blog.chubachi.net/blog.chubachi.net.org"
                              :headline   "Blog"
                              :todo-state "TODO"
                              :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
                              :template ("* %{todo-state} %^{Description}"
                                         ":PROPERTIES:"
-                                        ":Created: %T"
+                                        ":CREATED: %T"
                                         ":EXPORT_FILE_NAME: %{export_file_name}"
                                         ":EXPORT_DATE: %U"
                                         ":END:"
-                                        "\n%?"))
-                   ("ploversky.net" :keys "p"
-                             :file "~/Dropbox/Org/blog/ploversky.net/ploversky.net.org"
-                             :todo-state "TODO"
-                             :template ("* %{todo-state} %^{Description}"
-                                        ":PROPERTIES:"
-                                        ":Created: %u"
-                                        ":CATEGORY: Blog"
-                                        ":POST_TAGS: Blog"
-                                        ":BLOG:     plover"
-                                        ":END:"
-                                        "%?"))
-                            ))
+                                        "\n** %?"))
+                   )
+                 )
                 ("Parent" :keys "p"
                  :file "~/example.org"
                  :prepend t
