@@ -2131,6 +2131,19 @@
 #+RESULTS:
 : mu4e
 
+** TODO project.el
++ 説明
+  * プロジェクトを扱う
+
++ 設定
+
+  #+begin_src emacs-lisp
+    (leaf project :package t :require t)
+  #+end_src
+
+  #+RESULTS:
+  : project
+
 * おわりに
 ** お約束の記述
 
