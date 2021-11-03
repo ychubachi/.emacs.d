@@ -2124,7 +2124,7 @@
 
 + 設定
 
-  #+begin_src emacs-lisp
+  #+begin_src emacs-lisp :tangle no
     (leaf project :package t :require t)
   #+end_src
 
