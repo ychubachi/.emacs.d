@@ -1430,6 +1430,27 @@
 #+RESULTS:
 : region-bindings-mode
 
+** shell-pop
+*** 説明
+Emacsで作業中に、shellで作業をすることはよくあります。そのような際に便利な設定です。
+
+*** 設定
+私の好みでC-zでポップするようにしました。公式ではC-tになってますので、お好みでどうぞ。
+
+#+begin_src emacs-lisp
+   (leaf shell-pop
+     :package t
+     :require t
+     :custom
+     ((shell-pop-universal-key . "C-z")))
+#+end_src
+
+#+RESULTS:
+: shell-pop
+
+*** 参考
++ [[https://github.com/kyagi/shell-pop-el][kyagi/shell-pop-el: shell-pop.el helps you to use shell easily on Emacs. Only one key action to work.]]
+
 * UI・見た目（Non X）
 ** modus-themes
 - [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
@@ -1595,12 +1616,7 @@
 : all-the-icons
 
 ** doom-modeline - モードラインにアイコン表示
-  :PROPERTIES:
-  :ARCHIVE_TIME: 2021-10-20 Wed 14:06
-  :ARCHIVE_FILE: ~/.emacs.d/README.org
-  :ARCHIVE_OLPATH: UI・見た目
-  :ARCHIVE_CATEGORY: README
-  :END:
+
   #+begin_src emacs-lisp
     (leaf doom-modeline
       :ensure t
