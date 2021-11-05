@@ -1928,6 +1928,7 @@ Emacsで作業中に、shellで作業をすることはよくあります。そ�
 
 ** mu4e
 *** smtpmail - メールの送信
+**** 説明
 + 最初のメールを送信時、パスワードを入力すると、~/.authinfo に自動で追加
 
 ;; sending mail -- replace USERNAME with your gmail username
