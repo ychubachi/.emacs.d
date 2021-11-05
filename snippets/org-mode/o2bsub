@@ -4,7 +4,7 @@
 # --
 :PROPERTIES:
 :BLOG: plover
-:DATE: [2021-11-03 Wed 20:07]
+:DATE: [`(insert (format-time-string "%Y-%m-%d %H:%M:%S"))`]
 :OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
 :CATEGORY: Org2Blog, WordPress
 :POST_TAGS: Emacs, Lisp
