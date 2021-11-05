@@ -1082,7 +1082,12 @@
 
 + 参考
   * [[https://github.com/org2blog/org2blog#requirements-and-compatibility][org2blog/org2blog: Blog from Org mode to WordPress.]]
-- パスワードは~/.netrcに書く
++ パスワードは~/.netrcに書く
+
++ 備考
+  * ソースコードのエキスポートでエラー発生（2021-11-05）
+  * どうやらコードに`(backquote)が2つあるとエラーになるようだ・・・
+  * Wordpressのxmlrpcの問題か？セキュリティ対策？？
 
 #+begin_src emacs-lisp
     (leaf org2blog
