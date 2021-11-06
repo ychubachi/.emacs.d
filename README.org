@@ -708,6 +708,21 @@
                  :empty-lines-after 1
                  :jump-to-captured t
                  :children (
+                   ("ploversky@zenn.dev" :keys "z"
+                             :file "~/git/zenn-content/plaversky@zenn.dev.org"
+                             :headline   "記事"
+                             :todo-state "TODO"
+                             :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
+                             :template ("* %{todo-state} %^{Description}"
+                                        ":PROPERTIES:"
+                                        ":CREATED: %T"
+                                        ":EXPORT_FILE_NAME: articles/%{export_file_name}"
+                                        ":EXPORT_GFM_TAGS: blog"
+                                        ":EXPORT_GFM_CUSTOM_FRONT_MATTER: :emoji 👩‍💻"
+                                        ":EXPORT_GFM_CUSTOM_FRONT_MATTER+: :type tech"
+                                        ":EXPORT_GFM_CUSTOM_FRONT_MATTER+: :published false"
+                                        ":END:"
+                                        "\n** %?"))
                    ("ploversky.net" :keys "p"
                              :file "~/Dropbox/Org/blog/ploversky.net/ploversky.net.org"
                              :headline   "Blog"
@@ -1188,6 +1203,41 @@
 
 #+RESULTS:
 : org-roam
+
+** ox-zenn - zenn.devにブログを書く
+*** 参考
++ [[https://zenn.dev/conao3/articles/ox-zenn-usage][org-modeドキュメントからZenn Flavored Markdownを生成するox-zennの使い方]]
+
+#+begin_src emacs-lisp
+  (leaf ox-zenn
+    :ensure t
+    :after org
+    :require t ox-publish
+  :defun zenn/f-parent org-publish
+  :defvar org-publish-project-alist
+  :preface
+  (defvar zenn/org-dir "~/git/zenn-content")
+
+  (defun zenn/org-publish (arg)
+    "Publish zenn blog files."
+    (interactive "P")
+    (let ((force (or (equal '(4) arg) (equal '(64) arg)))
+          (async (or (equal '(16) arg) (equal '(64) arg))))
+      (org-publish "zenn" arg force async)))
+
+  :config
+  (setf
+   (alist-get "zenn" org-publish-project-alist nil nil #'string=)
+   (list
+    :base-directory (expand-file-name "" zenn/org-dir)
+    :base-extension "org"
+    :publishing-directory (expand-file-name "../" zenn/org-dir)
+    :recursive t
+    :publishing-function 'org-zenn-publish-to-markdown)))
+#+end_src
+
+#+RESULTS:
+: ox-zenn
 
 * 外部パッケージ
 ** undo-tree
