@@ -1490,14 +1490,14 @@
 Emacsで作業中に、shellで作業をすることはよくあります。そのような際に便利な設定です。
 
 *** 設定
-私の好みでC-zでポップするようにしました。公式ではC-tになってますので、お好みでどうぞ。
+公式に従い、C-tでポップするようにしました。
 
 #+begin_src emacs-lisp
    (leaf shell-pop
      :package t
      :require t
      :custom
-     ((shell-pop-universal-key . "C-z")))
+     ((shell-pop-universal-key . "C-t")))
 #+end_src
 
 #+RESULTS:
