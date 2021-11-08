@@ -1,8 +1,11 @@
 #+STARTUP: overview indent num align inlineimages logdone hidestars hideblocks
+
+README.org
+
 * はじめに
 ** この設定について
-   - init.elの実行時、このREADME.orgからREADME.elを生成します。
-   - orgのハッケージは手動で最新版に更新しておきます。
+- init.elの実行時、このREADME.orgからREADME.elを生成します。
+- orgのハッケージは手動で最新版に更新しておきます。
 
 ** 事前にインストールしておくもの
 - 各種フォント
@@ -23,51 +26,51 @@
 - Copyright など。
 
 #+begin_src emacs-lisp
-;;; README.el --- My README.el  -*- lexical-binding: t; -*-
+  ;;; README.el --- My README.el  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020 Yoshihide Chubachi
+  ;; Copyright (C) 2020 Yoshihide Chubachi
 
-;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
+  ;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
 
-;; This program is free software: you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
+  ;; This program is free software: you can redistribute it and/or modify
+  ;; it under the terms of the GNU General Public License as published by
+  ;; the Free Software Foundation, either version 3 of the License, or
+  ;; (at your option) any later version.
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
+  ;; This program is distributed in the hope that it will be useful,
+  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ;; GNU General Public License for more details.
 
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ;; You should have received a copy of the GNU General Public License
+  ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-;;; Commentary:
+  ;;; Commentary:
 
-;;  My README.el.
+  ;;  My README.el.
 
-;;; Code:
+  ;;; Code:
 #+end_src
 
 * パッケージ管理・カスタマイズ変数
 ** パッケージ管理（straight）
 
-   #+begin_src emacs-lisp
-     (defvar bootstrap-version)
-     (let ((bootstrap-file
-            (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-           (bootstrap-version 5))
-       (unless (file-exists-p bootstrap-file)
-         (with-current-buffer
-             (url-retrieve-synchronously
-              "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-              'silent 'inhibit-cookies)
-           (goto-char (point-max))
-           (eval-print-last-sexp)))
-       (load bootstrap-file nil 'nomessage))
+#+begin_src emacs-lisp
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
-     (setq package-enable-at-startup nil)
-   #+end_src
+  (setq package-enable-at-startup nil)
+#+end_src
 
 ** パッケージ管理（Leaf）
 *** leaf
@@ -183,10 +186,10 @@
   - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Backup-Deletion.html][If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
 
 #+begin_src emacs-lisp
-    (leaf *backup
-      :custom ((version-control . t)
-               (backup-directory-alist . '(("." . ".~")))
-               (delete-old-versions . t)))
+  (leaf *backup
+    :custom ((version-control . t)
+             (backup-directory-alist . '(("." . ".~")))
+             (delete-old-versions . t)))
 #+end_src
 
 #+RESULTS:
@@ -246,7 +249,7 @@
 ** 保存時、不要な空白を削除
 
 #+begin_src emacs-lisp
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
 #+RESULTS:
@@ -345,11 +348,11 @@
 - [[https://uwabami.github.io/cc-env/Emacs.html][midnight: 一定期間使用しなかった buffer を自動削除]]
 
 #+begin_src emacs-lisp
-(leaf midnight
-  :custom
-  ((clean-buffer-list-delay-general . 1))
-  :hook
-  (emacs-startup-hook . midnight-mode))
+  (leaf midnight
+    :custom
+    ((clean-buffer-list-delay-general . 1))
+    :hook
+    (emacs-startup-hook . midnight-mode))
 #+end_src
 
 #+RESULTS:
@@ -403,16 +406,16 @@
 - [[https://github.com/minad/vertico/][GitHub - minad/vertico: vertico.el - VERTical Interactive COmpletion]]
 
 #+begin_src emacs-lisp
-(leaf vertico
-  :straight t
-  :custom
-  ;; 最大20件まで表示するように
-  (vertico-count . 20)
-  :config
-  (vertico-mode)
-  (setq vertico-resize t)
-  (setq vertico-cycle t)
-  )
+  (leaf vertico
+    :straight t
+    :custom
+    ;; 最大20件まで表示するように
+    (vertico-count . 20)
+    :config
+    (vertico-mode)
+    (setq vertico-resize t)
+    (setq vertico-cycle t)
+    )
 #+end_src
 
 #+RESULTS:
@@ -438,11 +441,11 @@
 ** savehist
 
 #+begin_src emacs-lisp
-;; Persist history over Emacs restarts. Vertico sorts by history position.
-(leaf savehist
-  :straight t
-  :init
-  (savehist-mode))
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+  (leaf savehist
+    :straight t
+    :init
+    (savehist-mode))
 #+end_src
 
 #+RESULTS:
@@ -474,7 +477,7 @@
     (("C-." . embark-act)         ;; pick some comfortable binding
      ("C-;" . embark-dwim)        ;; good alternative: M-.
      ("C-@ B" . embark-bindings) ;; alternative for `describe-bindings' (C-h->C-@)
-)
+     )
     :init
     ;; Optionally replace the key help with a completing-read interface
     (setq prefix-help-command #'embark-prefix-help-command)
@@ -540,10 +543,10 @@
            ;; Isearch integration
            ("M-s e" . consult-isearch)
            (:isearch-mode-map
-             ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
-             ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
-             ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-             ("M-s L" . consult-line-multi)))           ;; needed by consult-line to detect isearch
+            ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
+            ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
+            ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+            ("M-s L" . consult-line-multi)))           ;; needed by consult-line to detect isearch
 
     ;; Enable automatic preview at point in the *Completions* buffer.
     ;; This is relevant when you use the default completion UI,
@@ -611,7 +614,7 @@
     ;; (setq consult-project-root-function #'vc-root-dir)
     ;;;; 4. locate-dominating-file
     ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
-  )
+    )
 #+end_src
 
 #+RESULTS:
@@ -624,12 +627,12 @@
   (leaf embark-consult
     :straight t
     :after (embark consult)
-;;    :demand t ; only necessary if you have the hook below
+    ;;    :demand t ; only necessary if you have the hook below
     ;; if you want to have consult previews as you move around an
     ;; auto-updating embark collect buffer
-;;    :hook
-;;    (embark-collect-mode . consult-preview-at-point-mode)
-)
+    ;;    :hook
+    ;;    (embark-collect-mode . consult-preview-at-point-mode)
+    )
 #+end_src
 
 #+RESULTS:
