@@ -1938,25 +1938,73 @@ Emacsで作業中に、shellで作業をすることはよくあります。そ�
 #+RESULTS:
 : eaf
 ** visual-fill-column - visual-line-modeでfill-columnを有効にする  :package:
-+ 説明
-  * 長い一文を書くとき、指定位置で折り返してくれる。
-  * mu4eでメールを書くときに利用する。
+:PROPERTIES:
+:BLOG:     plover
+:DATE:     [2021-11-08 22:19:48]
+:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Org2Blog, WordPress
+:POST_TAGS: Emacs, Lisp
+:ID:       o2b:88634903-8b8b-44b8-9b7f-a50fdc58ed5d
+:POST_DATE: [2021-11-08 Mon 22:21]
+:POSTID:   218
+:END:
 
-+ 参考
-  * [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html]]
-  * [[https://github.com/joostkremers/visual-fill-column][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
+*** Emacsで長い行の表示を制御する
+:PROPERTIES:
+:ID:       o2b:9eaa8906-ba38-44be-b037-bc5da1a33f71
+:POST_DATE: [2021-11-08 Mon 23:10]
+:BLOG:     plover
+:POSTID:   224
+:END:
 
-+ 設定
+Emacsでは長い行を折返して表示してくれます。
 
-  #+begin_src emacs-lisp
-    (leaf visual-fill-column
-      :package t
-      :hook ((visual-line-mode-hook . visual-fill-column-mode))
-      )
-  #+end_src
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-default.png
 
-  #+RESULTS:
-  : visual-fill-column
+行が繋がっていることを示す矢印のアイコンが、画面の左右にいっぱい出ていますね。これは少しうるさく感じるかもしれません。よくみると、英語の単語が途中で改行されていますね。
+
+ここで、visual-line-modeをマイナーモードに設定してみます。操作方法は、M-x visual-line-modeです。
+
+https://ploversky.net/wp-content/uploads/2021/11/image.png
+
+単語が途中で改行されないので、だいぶ見やすくなりました。この行は全て繋がっていますが、矢印のアイコンもでなくなりました。
+
+*** visual-fill-columモード
+
+visual-line-modeでは、一つの文は画面の端で折返しになります。
+
+任意の位置（桁）で折返し表示したい場合、visual-fill-columモードを使いましょう。パッケージでインストールできます。hookを利用して、visual-line-modeになったときに、自動的にvisual-fill-column-modeも有効になるようにします。
+
+#+begin_src emacs-lisp
+  (leaf visual-fill-column
+    :doc "fill-column for visual-line-mode"
+    :req "emacs-25.1"
+    :tag "emacs>=25.1"
+    :url "https://github.com/joostkremers/visual-fill-column"
+    :added "2021-11-08"
+    :emacs>= 25.1
+    :ensure t
+    :hook ((visual-line-mode-hook . visual-fill-column-mode)))
+#+end_src
+
+#+RESULTS:
+: visual-fill-column
+
+折返しの桁数は標準設定70文字です。これを変更する場合、例えば50文字で折り返すならば、 C-u 50 C-x f  と打ちます。すぐに画面には反映されませんが、文字を入力することで更新されます。
+
+*** 参考
++ [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html]]
+  * visual-line-modeの説明
++ [[https://github.com/joostkremers/visual-fill-column][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
+  * visual-fill-columnパッケージのサイト
+
+*** COMMENT コメント
+
++ mu4eでメールを書くときに利用する。
++ [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Adaptive-Fill.html][https://www.gnu.org/software/emacs/manual/html_node/elisp/Adaptive-Fill.html]]
+  * Adaptive Fill Modeと組み合わせることも（調査中）
++ [[https://github.com/joostkremers/visual-fill-column#centering-the-text][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
+  * センタリングすることも
 
 ** shr/eww - Simple HTML Reader
 + 説明
