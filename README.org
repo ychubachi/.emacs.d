@@ -297,17 +297,6 @@ README.org
 #+RESULTS:
 : wdired
 
-** autorevert
-- ディスクのファイルが更新されたらバッファも自動で更新する
-
-#+begin_src emacs-lisp
-  (leaf autorevert
-    :doc "revert buffers when files on disk change"
-    :tag "builtin"
-    :added "2021-11-08"
-    :global-minor-mode global-auto-revert-mode)
-#+end_src
-
 ** macrostep
 
 - elispのマクロを展開する
