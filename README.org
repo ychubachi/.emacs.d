@@ -1104,21 +1104,24 @@ README.org
   * ソースコードのエキスポートでエラー発生（2021-11-05）
   * どうやらコードに`(backquote)が2つあるとエラーになるようだ・・・
   * Wordpressのxmlrpcの問題か？セキュリティ対策？？
+    - プロバイダのWAFの設定だった
 
 #+begin_src emacs-lisp
-    (leaf org2blog
-      :ensure t
-      :config
-      (require 'auth-source)
-      (let* ((credentials (auth-source-user-and-password "ploversky.net"))
-             (username (nth 0 credentials))
-             (password (nth 1 credentials))
-             (config `("plover"
-                       :url "https://ploversky.net/xmlrpc.php"
-                       :username ,username
-                       :password ,password)))
-        (setq org2blog/wp-blog-alist `(,config))) ;; FIXED
-  )
+  (leaf org2blog
+    :ensure t
+    :config
+    (require 'auth-source)
+    (let* ((credentials (auth-source-user-and-password "ploversky.net"))
+           (username (nth 0 credentials))
+           (password (nth 1 credentials))
+           (config `("plover"
+                     :url "https://ploversky.net/xmlrpc.php"
+                     :username ,username
+                     :password ,password)))
+      (setq org2blog/wp-blog-alist `(,config)))
+    (setq org2blog/wp-image-upload t)
+    (setq org2blog/wp-show-post-in-browser 'show)
+    )
 #+end_src
 
 #+RESULTS:
