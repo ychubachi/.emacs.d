@@ -643,17 +643,35 @@
   - (org-startup-numerated . t)がうまく反映されない。
 - Androd端末から利用するには [[https://play.google.com/store/apps/details?id=com.orgzly][Orgzly]] が良さそう。
 
+- 設定するアジェンダファイル
+
+  | ファイル          | 内容                           |
+  |-------------------+--------------------------------|
+  | Journal.org       | 思いつき、メモを書きなぐり用   |
+  | Notebook.org      | ある程度きちんとしたメモ書き   |
+  | ブログファイル    | ブログの記事をまとめたファイル |
+  | emacs設定ファイル | orgファイルで書いたEmacsの設定 |
+
+  - TODOはどのファイルに書いて良い
+
+  - org-switchbかconsult-org-agendaをどこかにバインドするといいかも？（C-,）
+
 #+begin_src emacs-lisp
   (leaf org-mode
-    :custom
-    (org-directory . "~/Dropbox/Org/")
-    (org-agenda-files . '("~/Dropbox/Org/" "~/Dropbox/Org/Roam" "~/Dropbox/Org/Roam/Journals"))
-    (org-default-notes-file . "Notes.org")
-    (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
     :bind
     ("C-c l" . org-store-link)
     ("C-c a" . org-agenda)
-    ("C-c c" . org-capture))
+    ("C-c c" . org-capture)
+    ("C-,"   . org-switchb)
+    :custom
+    (org-directory . "~/Dropbox/Org/")
+    (org-agenda-files . '("~/Dropbox/Org/"
+                          "~/git/ploversky-zenn.dev/plaversky@zenn.dev.org"
+                          "~/git/ploversky-ploversky.net/plaversky.net.org"
+                          "~/.emacs.d/README.org"
+                          ))
+    (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
+    (org-refile-targets . '((org-agenda-files :tag . "REFILE"))))
 #+end_src
 
 #+RESULTS:
@@ -688,89 +706,80 @@
   (leaf doct
     :ensure t
     ;;recommended: defer until calling doct
-    ;:commands (doct)
+                                          ;:commands (doct)
     :config
     (setq org-capture-templates
-        (doct '(("Memo" :keys "m"
-                 :prepend t
-                 :empty-lines-after 1
-                 :jump-to-captured t
-                 :file "~/Dropbox/Org/Memo.org"
-                 :datetree t
-                 :todo-state "TODO"
-                 :template ("* %{todo-state} %^{Description}"
-                            ":PROPERTIES:"
-                            ":Created: %U"
-                            ":END:"
-                            "\n%?"))
-                ("Blog" :keys "b"
-                 :prepend t
-                 :empty-lines-after 1
-                 :jump-to-captured t
-                 :children (
-                   ("ploversky@zenn.dev" :keys "z"
-                             :file "~/git/zenn-content/plaversky@zenn.dev.org"
-                             :headline   "記事"
-                             :todo-state "TODO"
-                             :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
-                             :template ("* %{todo-state} %^{Description}"
-                                        ":PROPERTIES:"
-                                        ":CREATED: %T"
-                                        ":EXPORT_FILE_NAME: articles/%{export_file_name}"
-                                        ":EXPORT_GFM_TAGS: blog"
-                                        ":EXPORT_GFM_CUSTOM_FRONT_MATTER: :emoji 👩‍💻"
-                                        ":EXPORT_GFM_CUSTOM_FRONT_MATTER+: :type tech"
-                                        ":EXPORT_GFM_CUSTOM_FRONT_MATTER+: :published false"
-                                        ":END:"
-                                        "\n** %?"))
-                   ("ploversky.net" :keys "p"
-                             :file "~/Dropbox/Org/blog/ploversky.net/ploversky.net.org"
-                             :headline   "Blog"
-                             :todo-state "TODO"
-                             :template ("* %{todo-state} %^{Description}"
-                                        ":PROPERTIES:"
-                                        ":CREATED: %T"
-                                        ":CATEGORY: Blog"
-                                        ":POST_TAGS: Blog"
-                                        ":BLOG:     plover"
-                                        ":END:"
-                                        "\n** %?"))
-                   ("blog.chubachi.net"  :keys "b"
-                             :file "~/Dropbox/Org/blog/blog.chubachi.net/blog.chubachi.net.org"
-                             :headline   "Blog"
-                             :todo-state "TODO"
-                             :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
-                             :template ("* %{todo-state} %^{Description}"
-                                        ":PROPERTIES:"
-                                        ":CREATED: %T"
-                                        ":EXPORT_FILE_NAME: %{export_file_name}"
-                                        ":EXPORT_DATE: %U"
-                                        ":END:"
-                                        "\n** %?"))
+          (doct '(("Memo" :keys "m"
+                   :prepend t
+                   :empty-lines-after 1
+                   :children
+                   (("Journal" :keys "j"
+                     :file "~/Dropbox/Org/Journal.org"
+                     :datetree t
+                     :todo-state "TODO"
+                     :template ("* %{todo-state} %?"
+                                ":PROPERTIES:"
+                                ":CREATED: %T"
+                                ":ANNOTADED: %a"
+                                ":END:"))
+                    ("Notebook" :keys "n"
+                     :file "~/Dropbox/Org/Notebook.org"
+                     :unnarrowed t
+                     :template ("* %^{Description}"
+                                ":PROPERTIES:"
+                                ":CREATED: %T"
+                                ":END:"
+                                "\n%?"))))
+                  ("Blog" :keys "b"
+                   :prepend t
+                   :empty-lines-after 1
+                   :unnarrowed t
+                   :children
+                   (("ploversky@zenn.dev" :keys "z"
+                     :file "~/git/ploversky-zenn.dev/plaversky@zenn.dev.org"
+                     :headline   "記事"
+                     :todo-state "TODO"
+                     :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
+                     :template ("* %{todo-state} %^{Description}"
+                                ":PROPERTIES:"
+                                ":CREATED: %T"
+                                ":EXPORT_FILE_NAME: articles/%{export_file_name}"
+                                ":EXPORT_GFM_TAGS: blog"
+                                ":EXPORT_GFM_CUSTOM_FRONT_MATTER: :emoji 👩‍💻"
+                                ":EXPORT_GFM_CUSTOM_FRONT_MATTER+: :type tech"
+                                ":EXPORT_GFM_CUSTOM_FRONT_MATTER+: :published false"
+                                ":END:"
+                                "\n** %?"))
+                    ("ploversky.net" :keys "w"
+                     :file "~/git/ploversky-ploversky.net/plaversky.net.org"
+                     :headline   "Blog"
+                     :todo-state "TODO"
+                     :template ("* %{todo-state} %^{Description}"
+                                ":PROPERTIES:"
+                                ":CREATED: %T"
+                                ":CATEGORY: Blog"
+                                ":POST_TAGS: Blog"
+                                ":BLOG:     plover"
+                                ":END:"
+                                "\n** %?"))
+                    ("blog.chubachi.net"  :keys "b"
+                     :file "~/Dropbox/Org/blog/blog.chubachi.net/blog.chubachi.net.org"
+                     :headline   "Blog"
+                     :todo-state "TODO"
+                     :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
+                     :template ("* %{todo-state} %^{Description}"
+                                ":PROPERTIES:"
+                                ":CREATED: %T"
+                                ":EXPORT_FILE_NAME: %{export_file_name}"
+                                ":EXPORT_DATE: %U"
+                                ":END:"
+                                "\n** %?"))
+                    )
                    )
-                 )
-                ("Parent" :keys "p"
-                 :file "~/example.org"
-                 :prepend t
-                 :template ("* %{todo-state} %^{Description}"
-                            ":PROPERTIES:"
-                            ":Created: %U"
-                            ":END:"
-                            "%?")
-                 :children (("First Child"  :keys "1"
-                             :headline   "One"
-                             :todo-state "TODO"
-                             :hook (lambda () (message "\"First Child\" selected.")))
-                            ("Second Child" :keys "2"
-                             :headline   "Two"
-                             :todo-state "NEXT")
-                            ("Third Child"  :keys "3"
-                             :headline   "Three"
-                             :todo-state "MAYBE")))
+                  )
                 )
-              )
-        )
-  )
+          )
+    )
 #+end_src
 
 #+RESULTS:
