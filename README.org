@@ -1,4 +1,4 @@
-;; -*- mode: Org; fill-column: 80; -*-
+;; -*- mode: Org; fill-column: 80; visual-fill-column-center-text: t -*-
 #+STARTUP: overview indent num align inlineimages logdone hidestars hideblocks
 
 README.org
@@ -2293,5 +2293,6 @@ visual-line-modeでは、一つの文は画面の端で折返しになります�
 1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
 
 ;; Local Variables:
+;; eval: (visual-fill-column-mode)
 ;; eval: (visual-line-mode)
 ;; End:
