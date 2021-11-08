@@ -382,3 +382,38 @@ Archived entries from file /home/yc/.emacs.d/README.org
 
 #+RESULTS:
 : org-roam-dailies
+
+* autorevert
+  :PROPERTIES:
+  :BLOG:     plover
+  :DATE:     [2021-11-08 21:21:10]
+  :OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+  :CATEGORY: Org2Blog, WordPress
+  :POST_TAGS: Emacs, Lisp
+  :ID:       o2b:34916dbc-df71-47a0-b635-9c031da71472
+  :POST_DATE: [2021-11-08 Mon 21:21]
+  :POSTID:   210
+  :ARCHIVE_TIME: 2021-11-08 Mon 22:13
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: ビルトインパッケージの設定
+  :ARCHIVE_CATEGORY: Org2Blog, WordPress
+  :END:
+
+** 更新されたファイルの自動再読込
+Emacsの外でファイルが更新されたとき、自動で再読込するようにします。標準の設定で5秒に一回、更新を確認します。もし、更新の間隔を調整する場合は
+
+- ディスクのファイルが更新されたらバッファも自動で更新する
+
+** 設定
+
+#+begin_src emacs-lisp
+  (leaf autorevert
+    :doc "revert buffers when files on disk change"
+    :tag "builtin"
+    :added "2021-11-08"
+    :global-minor-mode global-auto-revert-mode)
+#+end_src
+
+** 参考
++ [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html][Visual-Line-Mode.html]]
+  * 本家のマニュアル

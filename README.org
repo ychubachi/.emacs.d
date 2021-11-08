@@ -1940,6 +1940,7 @@ Emacsで作業中に、shellで作業をすることはよくあります。そ�
   * mu4eでメールを書くときに利用する。
 
 + 参考
+  * [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html]]
   * [[https://github.com/joostkremers/visual-fill-column][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
 
 + 設定
