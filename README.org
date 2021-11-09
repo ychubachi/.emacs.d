@@ -1443,6 +1443,9 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+RESULTS:
 : magit
 
+- [[http://tanehp.ec-net.jp/heppoko-lab/prog/resource/magit/magit_memo.html#%E5%A4%89%E6%9B%B4%E3%82%92%E6%88%BB%E3%81%99][Magit の覚え書き]]
+  - Discard
+
 ** migemo
 *** Linux
 - .emacs.d/migemo-dictを用意
