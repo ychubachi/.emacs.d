@@ -177,6 +177,17 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+end_src
 
 ** TODO パッケージ管理（Leaf）
+:PROPERTIES:
+:BLOG:     plover
+:DATE:     [2021-11-10 00:01:40]
+:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Tech
+:POST_TAGS: Emacs, Lisp, Leaf
+:ID:       o2b:046ef621-cfc9-4aa5-9704-861b7710b61d
+:POST_DATE: [2021-11-10 Wed 00:03]
+:POSTID:   293
+:END:
+
 *** leaf
 - leafは美しいパッケージ管理ツールです。
 - lispの世界観を崩さない
@@ -184,7 +195,22 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
 - [[https://qiita.com/conao3/items/dc88bdadb0523ef95878#%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][[正式リリース]leaf.elで雑然としたEmacs設定ファイル「init.el」をクリーンにする - Qiita]]
 
-部分ごとに設定を紹介していきます。最後に、全てまとめたものを掲載します。
+はじめに、全ての設定を紹介します。次に、部分ごとに設定を説明します。
+#+begin_src emacs-lisp :noweb yes
+  (prog1 "prepare leaf"
+    <<setup-package>>
+
+    <<install-leaf>>
+
+    <<install-leaf-keywords>>
+
+    <<install-leaf-optional-packages>>)
+#+end_src
+
+#+RESULTS:
+: prepare leaf
+
+最初に、パッケージを取ってくる場所（＝リポジトリ）を設定します。org、melpa、gnuの3つを使うようにしています。設定が終わったらイニシャライズします。
 
 #+NAME: setup-package
 #+begin_src emacs-lisp :tangle no
@@ -199,51 +225,55 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+RESULTS: setup-package
 : package
 
-最後にここまでの設定を全てまとめて紹介します。
-
-#+begin_src emacs-lisp :noweb yes
-  (prog1 "prepare leaf"
-    <<setup-package>>
-
-    (prog1 "leaf"
-      (unless (package-installed-p 'leaf)
-        (unless (assoc 'leaf package-archive-contents)
-          (package-refresh-contents))
-        (condition-case err
-            (package-install 'leaf)
-          (error
-           (package-refresh-contents)       ; renew local melpa cache if fail
-           (package-install 'leaf))))
-
-      (leaf leaf-keywords
-        :ensure t
-        :config (leaf-keywords-init)))
-
-    (prog1 "optional packages for leaf-keywords"
-      ;; optional packages if you want to use :hydra, :el-get,,,
-      (leaf hydra :ensure t)
-      (leaf el-get :ensure t
-        :custom ((el-get-git-shallow-clone  . t)))))
+Emacs標準のパッケージ機能を使って、leafそのものをインストールします。
+#+NAME: install-leaf
+#+begin_src emacs-lisp :tangle no
+  (prog1 "leaf"
+    (unless (package-installed-p 'leaf)
+      (unless (assoc 'leaf package-archive-contents)
+        (package-refresh-contents))
+      (condition-case err
+          (package-install 'leaf)
+        (error
+         (package-refresh-contents)       ; renew local melpa cache if fail
+         (package-install 'leaf)))))
 #+end_src
 
-#+RESULTS:
-: prepare leaf
+#+RESULTS: install-leaf
+: leaf
 
-*** Leaf tree/leaf-convert
-- [[https://qiita.com/conao3/items/347d7e472afd0c58fbd7#%E4%BE%BF%E5%88%A9%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][Emacs入門から始めるleaf.el入門 - Qiita]]
+leaf-keywordsをインストールします。
+#+NAME: install-leaf-keywords
+#+begin_src emacs-lisp :tangle no
+  (leaf leaf-keywords
+    :ensure t
+    :config (leaf-keywords-init))
+#+end_src
 
-#+begin_src emacs-lisp
-  (leaf leaf
-    :config
-    (leaf leaf-convert :ensure t)
+#+RESULTS: install-leaf-keywords
+: leaf-keywords
+
+leafに追加するパッケージです。
+#+NAME: install-leaf-optional-packages
+#+begin_src emacs-lisp :tangle no
+  (prog1 "optional packages for leaf-keywords"
+    ;; optional packages if you want to use :hydra, :el-get,,,
+    (leaf hydra
+      :ensure t)
+    (leaf el-get
+      :ensure t
+      :custom ((el-get-git-shallow-clone  . t)))
+
+    (leaf leaf-convert
+      :ensure t)
     (leaf leaf-tree
       :ensure t
       :custom ((imenu-list-size . 30)
                (imenu-list-position . 'left))))
 #+end_src
 
-#+RESULTS:
-: leaf
+*** 参考
++ [[https://qiita.com/conao3/items/347d7e472afd0c58fbd7#%E4%BE%BF%E5%88%A9%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][Emacs入門から始めるleaf.el入門 - Qiita]]
 
 ** カスタマイズファイルを分離（cus-edit）
 
