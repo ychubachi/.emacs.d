@@ -417,3 +417,29 @@ Emacsの外でファイルが更新されたとき、自動で再読込するよ
 ** 参考
 + [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html][Visual-Line-Mode.html]]
   * 本家のマニュアル
+
+* DONE フレームサイズ                                                :NOLEAF:
+  CLOSED: [2021-11-09 Tue 19:11]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-11-09 Tue 19:11
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: UI・見た目（X）
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: DONE
+  :END:
+- [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Window-Frame-Parameters.html][https://www.gnu.org/software/emacs/manual/html_node/elisp/Window-Frame-Parameters.html]]
+- [[https://www.grugrut.net/posts/my-emacs-init-el/][My Emacs Config - ぐるっとぐりっど]]
+
+
+#+begin_src emacs-lisp :tangle no
+  (setq default-frame-alist
+        (append '((left-fringe          . 36 )   ; 左フリンジ幅
+                  (right-fringe         . 12 )   ; 右フリンジ幅
+                  (cursor-type          . box)   ; カーソル種別
+                  (alpha                . 100)   ; 透明度
+                  )
+                default-frame-alist))
+  (setq initial-frame-alist default-frame-alist)
+#+end_src
+
+#+RESULTS:
