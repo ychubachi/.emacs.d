@@ -6,6 +6,6 @@
 :BLOG: plover
 :DATE: [`(insert (format-time-string "%Y-%m-%d %H:%M:%S"))`]
 :OPTIONS: toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Org2Blog, WordPress
+:CATEGORY: Tech, Idea
 :POST_TAGS: Emacs, Lisp
 :END:
