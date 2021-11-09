@@ -23,6 +23,108 @@ README.org
 - org-roam
   - sqlite3
 
+** DONE EmacsのX関係の設定を外部化する
+CLOSED: [2021-11-09 Tue 18:57]
+:PROPERTIES:
+:BLOG:     plover
+:DATE:     [2021-11-09 18:32:26]
+:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Tech
+:POST_TAGS: Emacs, X resources
+:ID:       o2b:93247d9c-9742-45f2-9543-eab6ffe14628
+:POST_DATE: [2021-11-09 Tue 18:33]
+:POSTID:   248
+:END:
+
+*** Emacs の X resources 設定
+Emacs をX環境でグラフィカルに起動すると、 Emacs はXクライアントアプリケーションとなりますから、 [[https://wiki.archlinux.jp/index.php/X_resources][X resources ]]を利用した設定を読み込みます。フォントやウインドウの大きさなどを設定できます。
+
+これらの設定は、Emacs lisp で書く init.el でもできますが、 Emacs はコンソール端末でXウインドウを使わず作業をすることも多いです。そのため、 X resources で設定できるものは、init.elではなくX resources の方に設定しておくというのも一つの考え方です。
+
+また、 init.el  でウインドウのサイズを設定すると、一旦標準のサイズで立ち上がってから  改めて設定されたサイズに切り替わるという、ギクシャクした振る舞いになります。resources に設定しておくと、スムーズに起動します（起動時間も多少、早くなるかもしれません）。
+
+設定できるのは、次の例の通り、Xウインドウで動作するEmacsのフォントや、行間（lineSpacing）、ウインドウのサイズ（geometry）などです。設定できる項目の一覧は [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Table-of-Resources.html][Table-of-Resources]] にあります。プログラム名は Emacs にしました[fn:1]。
+
+#+begin_example
+!! ~/.Xresources
+Emacs.font: Noto Sans Mono CJK JP-12
+Emacs.lineSpacing: 0
+Emacs.geometry: 220x38-80+50
+Emacs.cursorBlink: off
+Emacs.coursorColor: dark green
+Emacs.menuBar: on
+Emacs.toolBar: off
+Emacs.tabBar: on
+Emacs.verticalScrollBars: off
+Eamcs.useXIM: off
+#+end_example
+
+この設定を有効にするには、ターミナルで
+#+begin_src bash
+  xrdb ~/.Xresources
+#+end_src
+
+と打ちます。設定されたか確認するには、
+#+begin_src bash
+  xrdb -query
+#+end_src
+
+とします。この設定は logout すると無効になりますから、 Emacs を起動する前に必ず xrdb コマンドを実行しなくてはなりません。通常のXデスクトップ環境でしたら .xinitrc にこの設定をします。WSL では、 .bashrc に書いてしまって良いでしょう。
+
+#+begin_src bash
+  [[ -f ~/.Xresources ]] && xrdb ~/.Xresources
+#+end_src
+
+*** Emacsでの動作確認
+.Xresources に書いた設定が読み込まれるかEmacsで試してみる方法は次のとおりです。
+
+#+begin_src bash
+  emacs -q
+#+end_src
+
+オプションは -Q でなく -q です。 -Q だと Emacs は Xリソースを処理しません[fn:2]。
+
+[fn:1] [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][Emacsでは通常、‘emacs’です。Emacsの実行可能ファイル名の如何にかかわらずに、Emacsのすべてのインスタンスに適用される定義を指定するには、‘Emacs’を使用します。]]
+
+[fn:2]  [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][変数inhibit-x-resourcesを非nil値にセットした場合、EmacsはXリソースを処理しません。コマンドラインオプション‘-Q’ (または‘--quick’)でEmacsを呼び出した場合、inhibit-x-resourcesは自動的にtにセットされます]]
+
+** フォントの確認
+
+Xウインドウで設定したフォントを確認してみましょう。本当は全て等幅になるとよいのですが、なかなか難しい・・・。
+
+- [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]] より
+#+begin_example
+| mmmm |
+| llll |
+| 日本 |
+| 漢字 |
+| ああ |
+| んん |
+| ￥￥ |
+| \\\\ |
+| 　　   |
+|      |
+
+|abcdefghijkl|
+|ABCDEFGHIJKL|
+|'";:-+=/\~`?|
+|∞≤≥∏∑∫|
+|×±≒≡⊆⊇|  ← GUI だと一部半角になる
+|αβγδεζ|  ← GUI だと半角になる
+|ηθικλμ|  ← GUI だと半角になる
+|ΑΒΓΔΕΖ|  ← GUI だと半角になる
+|ΗΘΙΚΛΜ|  ← GUI だと半角になる
+|日本語の美観|
+|あいうえおか|
+|アイウエオカ|
+|ｱｲｳｴｵｶｷｸｹｺｻｼ|
+
+| hoge                 | hogeghoe | age              |
+|----------------------+----------+------------------|
+| 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
+|----------------------+----------+------------------|
+#+end_example
+
 ** Copyright
 - Copyright など。
 
@@ -168,9 +270,6 @@ README.org
               (truncate-lines . nil)
               (use-dialog-box . nil)
               (use-file-dialog . nil)
-              (menu-bar-mode . t)
-              (tool-bar-mode . nil)
-              (scroll-bar-mode . nil)
               (indent-tabs-mode . nil)
               (inhibit-startup-screen . t)
               (vc-follow-symlinks . t) ; VC対象ファイルのシンボリックリンクの場合、本体を辿る
@@ -1510,7 +1609,7 @@ Emacsで作業中に、shellで作業をすることはよくあります。そ�
 *** 参考
 + [[https://github.com/kyagi/shell-pop-el][kyagi/shell-pop-el: shell-pop.el helps you to use shell easily on Emacs. Only one key action to work.]]
 
-* UI・見た目（Non X）
+* UI・見た目
 ** modus-themes
 - [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
 
@@ -1580,87 +1679,6 @@ Emacsで作業中に、shellで作業をすることはよくあります。そ�
 #+RESULTS:
 : t
 
-* UI・見た目（X）
-** フォントの設定                                                   :NOLEAF:
-- Noto Sansの等幅フォントを設定する
-- 表示の確認
-
-- [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]] より
-
-#+begin_example
-| mmmm |
-| llll |
-| 日本 |
-| 漢字 |
-| ああ |
-| んん |
-| ￥￥ |
-| \\\\ |
-| 　　   |
-|      |
-
-|abcdefghijkl|
-|ABCDEFGHIJKL|
-|'";:-+=/\~`?|
-|∞≤≥∏∑∫|
-|×±≒≡⊆⊇|  ← GUI だと一部半角になる
-|αβγδεζ|  ← GUI だと半角になる
-|ηθικλμ|  ← GUI だと半角になる
-|ΑΒΓΔΕΖ|  ← GUI だと半角になる
-|ΗΘΙΚΛΜ|  ← GUI だと半角になる
-|日本語の美観|
-|あいうえおか|
-|アイウエオカ|
-|ｱｲｳｴｵｶｷｸｹｺｻｼ|
-
-| hoge                 | hogeghoe | age              |
-|----------------------+----------+------------------|
-| 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
-|----------------------+----------+------------------|
-#+end_example
-
-#+begin_src emacs-lisp
-(set-frame-font "Noto Sans Mono CJK JP-12" nil t)
-;; ↓漢字がボールド体にならない
-;; (set-frame-font "PlemolJP-12" nil t)
-;; (set-frame-font "HackGen-12" nil t)
-#+end_src
-
-#+RESULTS:
-
-#+begin_src emacs-lisp
-(setq-default line-spacing 0) ; 行間
-#+end_src
-
-#+RESULTS:
-: 0
-
-** フレームサイズ                                                   :NOLEAF:
-- [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Window-Frame-Parameters.html][https://www.gnu.org/software/emacs/manual/html_node/elisp/Window-Frame-Parameters.html]]
-- [[https://www.grugrut.net/posts/my-emacs-init-el/][My Emacs Config - ぐるっとぐりっど]]
-
-#+begin_src emacs-lisp
-  (setq default-frame-alist
-        (append '((width                . 220)   ; フレーム幅
-                  (height               . 40 )   ; フレーム高
-                  (left                 . 2000)  ; 配置左位置（左右2画面の場合）
-                  (top                  . 50 )   ; 配置上位置
-                  (line-spacing         . 0  )   ; 文字間隔
-                  (left-fringe          . 12 )   ; 左フリンジ幅
-                  (right-fringe         . 12 )   ; 右フリンジ幅
-                  (menu-bar-lines       . 1 )    ; メニューバー
-                  (tool-bar-lines       . 0 )    ; ツールバー
-                  (cursor-type          . box)   ; カーソル種別
-                  (alpha                . 100)   ; 透明度
-                  )
-                default-frame-alist))
-  (setq initial-frame-alist default-frame-alist)
-
-  (modify-frame-parameters nil '((sticky . t) (width . 100) (height . 40))) ; Xを使う場合の高速化設定らしい
-#+end_src
-
-#+RESULTS:
-
 ** all-the-icons
 - [[https://github.com/domtronn/all-the-icons.el][GitHub - domtronn/all-the-icons.el: A utility package to collect various Icon Fonts and propertize them within Emacs.]]
 
@@ -1724,9 +1742,6 @@ Emacsで作業中に、shellで作業をすることはよくあります。そ�
 
     ;; Mozc をデフォルトにする
     (setq default-input-method "japanese-mozc-im")
-
-    ;; カーソルの点滅を OFF にする
-    (blink-cursor-mode 0)
 
     ;; popup スタイルを使用する
     ;; (leaf mozc-popup
