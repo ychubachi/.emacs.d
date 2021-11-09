@@ -363,16 +363,6 @@ leafに追加するパッケージです。
 #+RESULTS:
 : *backspace
 
-** UndoをC-zに
-- 指が覚えてしまっている
-
-#+begin_src emacs-lisp
-  (leaf *undo :bind (("C-z" . undo)))
-#+end_src
-
-#+RESULTS:
-: *undo
-
 ** yes/noの選択をy/nに簡略化
 
 #+begin_src emacs-lisp
@@ -405,6 +395,16 @@ leafに追加するパッケージです。
 
 #+RESULTS:
 : *backup
+
+** UndoをC-zに                                                        :leaf:
+- 指が覚えてしまっている
+
+#+begin_src emacs-lisp
+  (leaf *undo :bind (("C-z" . undo)))
+#+end_src
+
+#+RESULTS:
+: *undo
 
 * ビルトインパッケージの設定
 ** paren
