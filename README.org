@@ -2310,5 +2310,4 @@ visual-line-modeでは、一つの文は画面の端で折返しになります�
 
 ;; Local Variables:
 ;; eval: (visual-fill-column-mode)
-;; eval: (visual-line-mode)
 ;; End:
