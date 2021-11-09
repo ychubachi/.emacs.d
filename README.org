@@ -1631,6 +1631,9 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 #+RESULTS:
 : shell-pop
 
+*** 参考
+- [[https://blog.inouetakuya.info/entry/20110627/1309175529][Emacs のシェルモード比較 - shell、ansi-term、multi-term - 彼女からは、おいちゃんと呼ばれています]]
+
 [fn:1] [[https://github.com/kyagi/shell-pop-el][kyagi/shell-pop-el: shell-pop.el helps you to use shell easily on Emacs. Only one key action to work.]]
 
 * UI・見た目
