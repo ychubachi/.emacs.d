@@ -176,18 +176,34 @@ Xウインドウで設定したフォントを確認してみましょう。本�
   (setq package-enable-at-startup nil)
 #+end_src
 
-** パッケージ管理（Leaf）
+** TODO パッケージ管理（Leaf）
 *** leaf
+- leafは美しいパッケージ管理ツールです。
+- lispの世界観を崩さない
+- 設計思想がしっかりしていて、利用者を惑わせない
+
 - [[https://qiita.com/conao3/items/dc88bdadb0523ef95878#%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][[正式リリース]leaf.elで雑然としたEmacs設定ファイル「init.el」をクリーンにする - Qiita]]
 
-#+begin_src emacs-lisp
+部分ごとに設定を紹介していきます。最後に、全てまとめたものを掲載します。
+
+#+NAME: setup-package
+#+begin_src emacs-lisp :tangle no
+  (prog1 "package"
+    (custom-set-variables
+     '(package-archives '(("org"   . "https://orgmode.org/elpa/")
+                          ("melpa" . "https://melpa.org/packages/")
+                          ("gnu"   . "https://elpa.gnu.org/packages/"))))
+    (package-initialize))
+#+end_src
+
+#+RESULTS: setup-package
+: package
+
+最後にここまでの設定を全てまとめて紹介します。
+
+#+begin_src emacs-lisp :noweb yes
   (prog1 "prepare leaf"
-    (prog1 "package"
-      (custom-set-variables
-       '(package-archives '(("org"   . "https://orgmode.org/elpa/")
-                            ("melpa" . "https://melpa.org/packages/")
-                            ("gnu"   . "https://elpa.gnu.org/packages/"))))
-      (package-initialize))
+    <<setup-package>>
 
     (prog1 "leaf"
       (unless (package-installed-p 'leaf)
@@ -246,11 +262,13 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 - 一旦全て設定せず、必要になったら再度設定する
 
 #+begin_src emacs-lisp
-  (leaf cus-start
-    :doc "define customization properties of builtins"
-    :tag "builtin" "internal"
-    :custom
-    (inhibit-startup-screen . t)) ; スタートアップスクリーンを非表示
+    (leaf cus-start
+      :doc "define customization properties of builtins"
+      :tag "builtin" "internal"
+      :custom
+      (inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
+      (ring-bell-function . 'ignore) ; ベルを鳴らさない
+      )
 #+end_src
 
 #+RESULTS:
@@ -276,7 +294,6 @@ Xウインドウで設定したフォントを確認してみましょう。本�
               (scroll-preserve-screen-position . t)
               (scroll-conservatively . 100)
               (mouse-wheel-scroll-amount . '(1 ((control) . 5)))
-              (ring-bell-function . 'ignore)
               (text-quoting-style . 'straight)
               (use-dialog-box . nil)
               (use-file-dialog . nil)
