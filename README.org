@@ -289,21 +289,6 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+RESULTS:
 : cus-start
 
-** バックアップの設定
-- 文献
-  - [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
-  - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Backup-Deletion.html][If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
-
-#+begin_src emacs-lisp
-  (leaf *backup
-    :custom ((version-control . t)
-             (backup-directory-alist . '(("." . ".~")))
-             (delete-old-versions . t)))
-#+end_src
-
-#+RESULTS:
-: *backup
-
 * Emacs本体の設定
 ** (require 'cl)を検査しない
 
@@ -363,6 +348,21 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
 #+RESULTS:
 | delete-trailing-whitespace |
+
+** バックアップの設定
+- 文献
+  - [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
+  - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Backup-Deletion.html][If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
+
+#+begin_src emacs-lisp
+  (leaf *backup
+    :custom ((version-control . t)
+             (backup-directory-alist . '(("." . ".~")))
+             (delete-old-versions . t)))
+#+end_src
+
+#+RESULTS:
+: *backup
 
 * ビルトインパッケージの設定
 ** paren
