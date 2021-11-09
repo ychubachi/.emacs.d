@@ -1,4 +1,4 @@
-;; -*- mode: Org; fill-column: 80; visual-fill-column-center-text: t -*-
+;; -*- mode: Org; fill-column: 80 -*-
 #+STARTUP: overview indent num align inlineimages logdone hidestars hideblocks
 
 README.org
