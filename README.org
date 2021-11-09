@@ -1957,8 +1957,8 @@ Emacsで作業中に、shellで作業をすることはよくあります。そ�
 :BLOG:     plover
 :DATE:     [2021-11-08 22:19:48]
 :OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Org2Blog, WordPress
-:POST_TAGS: Emacs, Lisp
+:CATEGORY: Tech
+:POST_TAGS: Emacs
 :ID:       o2b:88634903-8b8b-44b8-9b7f-a50fdc58ed5d
 :POST_DATE: [2021-11-08 Mon 22:21]
 :POSTID:   218
