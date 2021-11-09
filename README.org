@@ -157,25 +157,6 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+end_src
 
 * パッケージ管理・カスタマイズ変数
-** パッケージ管理（straight）
-
-#+begin_src emacs-lisp
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-          (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-           'silent 'inhibit-cookies)
-        (goto-char (point-max))
-        (eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
-
-  (setq package-enable-at-startup nil)
-#+end_src
-
 ** TODO パッケージ管理（Leaf）
 :PROPERTIES:
 :BLOG:     plover
@@ -269,6 +250,29 @@ leafに追加するパッケージです。
 
 *** 参考
 + [[https://qiita.com/conao3/items/347d7e472afd0c58fbd7#%E4%BE%BF%E5%88%A9%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][Emacs入門から始めるleaf.el入門 - Qiita]]
+
+** パッケージ管理（straight）
+
+#+begin_src emacs-lisp
+  (leaf straight
+    :config
+    (defvar bootstrap-version)
+    (let ((bootstrap-file
+           (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+          (bootstrap-version 5))
+      (unless (file-exists-p bootstrap-file)
+        (with-current-buffer
+            (url-retrieve-synchronously
+             "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+             'silent 'inhibit-cookies)
+          (goto-char (point-max))
+          (eval-print-last-sexp)))
+      (load bootstrap-file nil 'nomessage))
+    (setq package-enable-at-startup nil))
+#+end_src
+
+#+RESULTS:
+: straight
 
 ** カスタマイズファイルを分離（cus-edit）
 
