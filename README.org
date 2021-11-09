@@ -229,7 +229,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+RESULTS:
 : leaf
 
-** カスタマイズファイルの設定（cus-edit）
+** カスタマイズファイルを分離（cus-edit）
 
 #+begin_src emacs-lisp
   (leaf cus-edit
@@ -241,10 +241,22 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+RESULTS:
 : cus-edit
 
-** customize変数の設定（cus-start）
+** TODO customize変数の設定（cus-start）
 - 設定がまぜこぜになっている気が。
+- 一旦全て設定せず、必要になったら再度設定する
 
 #+begin_src emacs-lisp
+  (leaf cus-start
+    :doc "define customization properties of builtins"
+    :tag "builtin" "internal"
+    :custom
+    (inhibit-startup-screen . t)) ; スタートアップスクリーンを非表示
+#+end_src
+
+#+RESULTS:
+: cus-start
+
+#+begin_src emacs-lisp :tangle no
   (leaf cus-start
     :doc "define customization properties of builtins"
     :tag "builtin" "internal"
@@ -266,11 +278,9 @@ Xウインドウで設定したフォントを確認してみましょう。本�
               (mouse-wheel-scroll-amount . '(1 ((control) . 5)))
               (ring-bell-function . 'ignore)
               (text-quoting-style . 'straight)
-              (truncate-lines . nil)
               (use-dialog-box . nil)
               (use-file-dialog . nil)
               (indent-tabs-mode . nil)
-              (inhibit-startup-screen . t)
               (vc-follow-symlinks . t) ; VC対象ファイルのシンボリックリンクの場合、本体を辿る
               (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
               ))
