@@ -211,7 +211,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+end_src
 
 #+RESULTS:
-: leaf-keywords
+: prepare leaf
 
 *** Leaf tree/leaf-convert
 - [[https://qiita.com/conao3/items/347d7e472afd0c58fbd7#%E4%BE%BF%E5%88%A9%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][Emacs入門から始めるleaf.el入門 - Qiita]]
