@@ -1587,26 +1587,41 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+RESULTS:
 : region-bindings-mode
 
-** shell-pop
+** DONE shell-pop - いつでもどこでもshellを出す
+CLOSED: [2021-11-09 Tue 20:23]
+:PROPERTIES:
+:BLOG:     plover
+:DATE:     [2021-11-09 20:16:56]
+:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Tech
+:POST_TAGS: Emacs, Lisp
+:ID:       o2b:dc0f7103-fb58-4bae-96e1-54699516f5b0
+:POST_DATE: [2021-11-09 Tue 20:17]
+:POSTID:   254
+:END:
+
 *** 説明
-Emacsで作業中に、shellで作業をすることはよくあります。そのような際に便利な設定です。
+Emacsで作業中に、shellで作業をしたくなることはよくあります。そのような際に便利な設定です。
 
 *** 設定
-公式に従い、C-tでポップするようにしました。
+公式[fn:1]ではC-tに割り当てていますが、私はC-zにしています。ターミナルでEmacsを立ち上げたとき、ちょっとshellで作業をしたいと思ったらC-zでサスペンドします。そのイメージがあるので、shell使いたいな、と思うと勝手に手が反応します。shellを使い終わったら、もう一度C-zで閉じます。
+
+ターミナルはansi-termにしました。また、常に画面の下部に出すようにしています。
 
 #+begin_src emacs-lisp
-   (leaf shell-pop
-     :package t
-     :require t
-     :custom
-     ((shell-pop-universal-key . "C-t")))
+  (leaf shell-pop
+    :package t
+    :require t
+    :custom
+    ((shell-pop-universal-key . "C-z")
+     (shell-pop-shell-type . (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+     (shell-pop-window-position . "bottom")))
 #+end_src
 
 #+RESULTS:
 : shell-pop
 
-*** 参考
-+ [[https://github.com/kyagi/shell-pop-el][kyagi/shell-pop-el: shell-pop.el helps you to use shell easily on Emacs. Only one key action to work.]]
+[fn:1] [[https://github.com/kyagi/shell-pop-el][kyagi/shell-pop-el: shell-pop.el helps you to use shell easily on Emacs. Only one key action to work.]]
 
 * UI・見た目
 ** modus-themes
