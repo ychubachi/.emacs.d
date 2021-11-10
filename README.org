@@ -24,7 +24,7 @@ README.org
 - org-roam
   - sqlite3
 
-** DONE EmacsのX関係の設定を外部化する
+** DONE EmacsのX関係の設定を外部化する                           :published:
 CLOSED: [2021-11-09 Tue 18:57]
 :PROPERTIES:
 :BLOG:     plover
