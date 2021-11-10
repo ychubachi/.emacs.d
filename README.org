@@ -375,7 +375,7 @@ leafに追加するパッケージです。
 #+RESULTS:
 : *backspace
 
-** yes/noの選択をy/nに簡略化
+** TODO yes/noの選択をy/nに簡略化
 
 #+begin_src emacs-lisp
   (defalias 'yes-or-no-p 'y-or-n-p)
@@ -384,7 +384,7 @@ leafに追加するパッケージです。
 #+RESULTS:
 : yes-or-no-p
 
-** 保存時、不要な空白を削除
+** TODO 保存時、不要な空白を削除
 
 #+begin_src emacs-lisp
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
