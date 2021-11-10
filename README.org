@@ -2121,7 +2121,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 日本語の場合、
 
 1. truncate-linesはnil（標準のまま）
-2. visual-fill-columnパッケージをインストールして利用
+2. visual-fill-columnパッケージをインストールして桁数を設定
 
 すると、自由に好きな位置で折返し表示させて編集できるようになります。
 
