@@ -291,13 +291,14 @@ leafに追加するパッケージです。
 - 一旦全て設定せず、必要になったら再度設定する
 
 #+begin_src emacs-lisp
-    (leaf cus-start
-      :doc "define customization properties of builtins"
-      :tag "builtin" "internal"
-      :custom
-      (inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
-      (ring-bell-function . 'ignore) ; ベルを鳴らさない
-      )
+  (leaf cus-start
+    :doc "define customization properties of builtins"
+    :tag "builtin" "internal"
+    :custom
+    (inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
+    (ring-bell-function . 'ignore) ; ベルを鳴らさない
+    (global-display-line-numbers-mode . t) ; 行番号表示
+    )
 #+end_src
 
 #+RESULTS:
