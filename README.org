@@ -175,6 +175,9 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 - 設計思想がしっかりしていて、利用者を惑わせない。特に、Emacs lispを解する人にとっては。
 
 はじめに、全ての設定を紹介します。次に、部分ごとに設定を説明します。
+
+#+CAPTION: leafの設定（全体）
+#+NAME: leaf
 #+begin_src emacs-lisp :noweb yes
   (prog1 "prepare leaf"
     <<setup-package>>
@@ -184,7 +187,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
     <<install-leaf-optional-packages>>)
 #+end_src
 
-#+RESULTS:
+#+RESULTS: leaf
 : prepare leaf
 
 *** パッケージ機能の初期設定
@@ -1283,6 +1286,7 @@ leafに追加するパッケージです。
       (setq org2blog/wp-blog-alist `(,config)))
     (setq org2blog/wp-image-upload t)
     (setq org2blog/wp-show-post-in-browser 'show)
+    (setq org2blog/wp-use-sourcecode-shortcode t)
     )
 #+end_src
 
