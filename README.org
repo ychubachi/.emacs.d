@@ -299,9 +299,14 @@ leafに追加するパッケージです。
     (inhibit-startup-screen . t)              ; スタートアップスクリーンを非表示
     (ring-bell-function . 'ignore)            ; ベルを鳴らさない
     (global-display-line-numbers-mode . t)    ; 行番号表示
+
     (global-auto-revert-mode . t)             ; ファイルが更新されたら自動的に再読込
     (global-auto-revert-non-file-buffers . t) ; ファイル以外も自動的に再読込
     (auto-revert-verbose . nil)               ; 再読込の際、メッセージを出さない
+
+    (show-paren-mode . t)                     ; 括弧の対応関係を表示する
+    (show-paren-style . 'mixed)               ; 対応関係を表示するときのスタイル
+    ; (show-paren-delay . 0.5)                 ; 対応関係を表示するまでの遅延
     )
 #+end_src
 
@@ -422,17 +427,6 @@ leafに追加するパッケージです。
 : *undo
 
 * ビルトインパッケージの設定
-** paren
-- 対応するカッコの表示
-
-#+begin_src emacs-lisp
-  (leaf paren
-    :doc "highlight matching paren"
-    :tag "builtin"
-    :custom ((show-paren-delay . 0.1))
-    :global-minor-mode show-paren-mode)
-#+end_src
-
 ** isearch
 
 - isearch で漢字入力ができるようにする
