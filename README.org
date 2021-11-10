@@ -347,7 +347,8 @@ leafに追加するパッケージです。
 #+RESULTS:
 : *emacs
 
-** C-hをBSに
+** C-hをBSに・C-@をhelpに
+- 標準で
 - [[https://www.reddit.com/r/spacemacs/comments/l2fjzy/remapping_ch_to_backspace_and_remap_help_menu_to/][Remapping C-h to backspace, and remap "help" menu to anything else? : spacemacs]]
 
 - :init ではなく :config だと機能しない
@@ -357,11 +358,16 @@ leafに追加するパッケージです。
   - ここでは :bind を利用しない
   - :bind を利用しなければ :init と :config
 
+
+#+begin_comment
+    (global-set-key (kbd "C-h") 'delete-backward-char))
+    (global-set-key (kbd "C-@") help-map)
+#+end_comment
+
 #+begin_src emacs-lisp
   (leaf *backspace
-    :config
-    (global-set-key (kbd "C-@") help-map)
-    (global-set-key (kbd "C-h") 'delete-backward-char))
+    :init (global-set-key (kbd "C-@") help-map)
+    :bind (("C-h" . delete-backward-char)))
 #+end_src
 
 #+RESULTS:
