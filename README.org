@@ -1815,7 +1815,7 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
     :req "mozc-0"
     :tag "extentions" "i18n"
     :ensure t
-    :require mozc-im
+    :require t
     :custom
     ((default-input-method . "japanese-mozc-im"))
     :bind (("C-o" . toggle-input-method))
