@@ -1725,8 +1725,9 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 あいうえお　漢字
 
 #+begin_src emacs-lisp
-  (progn
-    (require 'whitespace)
+  (leaf whitespace
+    :require 't
+    :config
     (setq whitespace-style
           '(
             face ; faceで可視化
@@ -1759,7 +1760,7 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 #+end_src
 
 #+RESULTS:
-: t
+: whitespace
 
 ** all-the-icons
 - [[https://github.com/domtronn/all-the-icons.el][GitHub - domtronn/all-the-icons.el: A utility package to collect various Icon Fonts and propertize them within Emacs.]]
