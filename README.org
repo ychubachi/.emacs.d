@@ -1654,7 +1654,7 @@ leafに追加するパッケージです。
 #+RESULTS:
 : region-bindings-mode
 
-** DONE shell-pop - いつでもどこでもshellを出す
+** DONE shell-pop - いつでもどこでもshellを出す                  :published:
 CLOSED: [2021-11-09 Tue 20:23]
 :PROPERTIES:
 :BLOG:     plover
@@ -2034,7 +2034,8 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 
 #+RESULTS:
 : eaf
-** visual-fill-column - 長い行を任意の桁で折り返す
+** DONE visual-fill-column - 長い行を任意の桁で折り返す          :published:
+CLOSED: [2021-11-10 Wed 11:12]
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-08 22:19:48]
