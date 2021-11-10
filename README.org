@@ -920,7 +920,7 @@ leafに追加するパッケージです。
                                 ":END:"
                                 "\n** %?"))
                     ("blog.chubachi.net"  :keys "b"
-                     :file "~/Dropbox/Org/blog/blog.chubachi.net/blog.chubachi.net.org"
+                     :file "~/git/ychubachi.github.io/blog.chubachi.net.org"
                      :headline   "Blog"
                      :todo-state "TODO"
                      :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
