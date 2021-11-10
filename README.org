@@ -157,7 +157,8 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+end_src
 
 * パッケージ管理・カスタマイズ変数
-** TODO パッケージ管理（Leaf）                                       :draft:
+** DONE leaf - パッケージの導入・設定                            :published:
+CLOSED: [2021-11-10 Wed 19:09]
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-10 00:01:40]
@@ -170,11 +171,9 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 :END:
 
 *** leafの設定
-- leafはEmacsの設定を、より美しく記述できるようにするパッケージ管理ツールです。
-- lispの世界観を崩さない
-- 設計思想がしっかりしていて、利用者を惑わせない。特に、Emacs lispを解する人にとっては。
+leafはEmacsの設定を、より美しく記述できるようにするパッケージ管理ツールです。設計思想がしっかりしていて、利用者を惑わせない。特に、Emacs lispを解する人にとっては、lispの世界観を崩さないで記述できるのが魅力でしょう。
 
-はじめに、全ての設定を紹介します。次に、部分ごとに設定を説明します。
+はじめに、leafに関する全ての設定を紹介します。次に、部分ごとに設定を説明します。
 
 #+CAPTION: leafの設定（全体）
 #+NAME: leaf
@@ -233,13 +232,11 @@ leafに追加するパッケージです。
     (leaf leaf-keywords
       :ensure t
       :config (leaf-keywords-init))
-
     (leaf hydra
       :ensure t)
     (leaf el-get
       :ensure t
       :custom ((el-get-git-shallow-clone  . t)))
-
     (leaf leaf-convert
       :ensure t)
     (leaf leaf-tree
