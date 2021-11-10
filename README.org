@@ -1673,7 +1673,6 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 *** 設定
 公式[fn:1]ではC-tに割り当てていますが、私はC-zにしています。ターミナルでEmacsを立ち上げたとき、ちょっとshellで作業をしたいと思ったらC-zでサスペンドします。そのイメージがあるので、shell使いたいな、と思うと勝手に手が反応します。shellを使い終わったら、もう一度C-zで閉じます。
 
-ターミナルはansi-termにしました。また、常に画面の下部に出すようにしています。
 #+begin_src emacs-lisp
   (leaf shell-pop
     :package t
@@ -1687,10 +1686,11 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 #+RESULTS:
 : shell-pop
 
-*** 参考
-- [[https://blog.inouetakuya.info/entry/20110627/1309175529][Emacs のシェルモード比較 - shell、ansi-term、multi-term - 彼女からは、おいちゃんと呼ばれています]]
+ターミナルはansi-termにしました[fn:2]（6行目）。また、常に画面の下部に出すようにしています（7行目）。
 
 [fn:1] [[https://github.com/kyagi/shell-pop-el][kyagi/shell-pop-el: shell-pop.el helps you to use shell easily on Emacs. Only one key action to work.]]
+
+[fn:2] [[https://blog.inouetakuya.info/entry/20110627/1309175529][Emacs のシェルモード比較 - shell、ansi-term、multi-term - 彼女からは、おいちゃんと呼ばれています]]
 
 * UI・見た目
 ** modus-themes
