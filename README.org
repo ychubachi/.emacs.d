@@ -1573,6 +1573,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 - :require なし
   - :init -> NG
 
+- マクロ展開
     #+begin_src
   (prog1 'yasnippet-snippets
     (leaf-handler-leaf-path yasnippet-snippets)
@@ -1608,6 +1609,8 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
     #+end_src
 
   - :config -> OK
+
+[[https://qiita.com/conao3/items/dc88bdadb0523ef95878][「:prefaceは条件分岐キーワードより先に展開したい」などの順序に関する問題を解決するために、 leaf は整形されたplistを「善い順番」に並び替えます。  その「善い順番」は内部変数のleaf-keywordsの並び順で、 *scratch* で (pl (leaf-available-keywords)) を評価することで得ることができます。]]
 
     #+begin_src
 (prog1 'yasnippet-snippets
@@ -2479,3 +2482,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 :END:
 - [[http://emacs.rubikitch.com/backup-each-save/][backup-each-save.el : Emacs式大富豪的バックアップ！保存する度に日時付きファイルでバックアップ]]
 - [[http://emacs.rubikitch.com/real-auto-save/][real-auto-save.el : バッファを自動保存させる超シンプルなマイナーモード]]
+** TODO [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E5%B0%8F%E6%8C%87%E3%82%92%E9%85%B7%E4%BD%BF%E3%81%9B%E3%81%9A%E3%81%8B%E3%81%A4%E3%82%AD%E3%83%BC%E3%83%90%E3%82%A4%E3%83%B3%E3%83%89%E3%81%AE%E3%82%AC%E3%82%A4%E3%83%89%E3%82%92%E5%87%BA%E3%81%99----hydra][Emacsモダン化計画 -かわEmacs編- - Qiita]]
