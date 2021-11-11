@@ -2069,7 +2069,6 @@ CLOSED: [2021-11-10 Wed 11:12]
 :POST_DATE: [2021-11-08 Mon 22:21]
 :POSTID:   218
 :END:
-
 *** 長い行を折り返す？折り返さない？
 Emacsでは長い行を折返して表示してくれます。
 
@@ -2105,6 +2104,8 @@ https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-fill-paragraph.
 https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column.png
 
 一行は一行のまま、72文字で折返してくれています。一行の長さが短くなり、多少は読みやすくなってますね。
+
+*** visula-fill-columnのインストール
 パッケージをインストールするには次の通り設定します。
 
 #+begin_src emacs-lisp
@@ -2115,7 +2116,11 @@ https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-col
     :url "https://github.com/joostkremers/visual-fill-column"
     :added "2021-11-08"
     :emacs>= 25.1
-    :ensure t)
+    :ensure t
+    :bind((:visual-fill-column-mode-map
+           ("C-a" . beginning-of-visual-line)
+           ("C-e" . end-of-visual-line)
+           ("C-k" . kill-visual-line))))
 #+end_src
 
 #+RESULTS:
@@ -2125,7 +2130,15 @@ https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-col
 
 https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column-50.png
 
-折り返す桁を自由に指定できる上に、一行は一行のままで編集できます。
+また、一行を基準に動作する標準のキーを、画面の一行を基準に動作するコマンドに、次の通り置き換えています[fn:1]。
+
+| キー | 説明                          |
+|------+-------------------------------|
+| C-a  | *画面上の* 行の一番先頭に移動 |
+| C-e  | *画面上の* 行の一番末尾に移動 |
+| C-k  | *画面上の* 行を一行削除       |
+
+この設定により、折り返す桁を自由に指定できる上に、画面上の一行を単位として編集できます。
 
 *** 単語の途中で折り返さないようにするには
 さて、日本語で入力するのであればこのままでもよいのですが、英語の場合、単語の途中で折り返されるのは嫌ですね。そんなときは visual-line-mode を使います。このモードは標準装備です。M-x visual-line-modeで設定できます。
@@ -2157,6 +2170,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
   * visual-fill-columnパッケージのサイト
 + [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html]]
   * visual-line-modeの説明
+
+[fn:1] orgモードではC-kにorg-kill-lineが割り当てられます。これを上書きすることで弊害がおきるかもしれませんが、未確認です。
 
 *** COMMENT コメント
 + mu4eでメールを書くときに利用する。
