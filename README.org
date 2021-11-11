@@ -299,6 +299,7 @@ leafに追加するパッケージです。
     (inhibit-startup-screen . t)              ; スタートアップスクリーンを非表示
     (ring-bell-function . 'ignore)            ; ベルを鳴らさない
     (global-display-line-numbers-mode . t)    ; 行番号表示
+    (display-line-numbers-width . 4)          ; 表示する行番号の桁数
 
     (global-auto-revert-mode . t)             ; ファイルが更新されたら自動的に再読込
     (global-auto-revert-non-file-buffers . t) ; ファイル以外も自動的に再読込
