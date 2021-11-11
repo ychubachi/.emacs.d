@@ -1,4 +1,4 @@
-;; -*- mode: Org; fill-column: 80; truncate-lines: nil -*-
+;; -*- mode: Org; fill-column: 90; truncate-lines: nil -*-
 #+STARTUP: overview indent num align inlineimages logdone hidestars hideblocks
 
 README.org
