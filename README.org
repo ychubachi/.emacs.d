@@ -2452,3 +2452,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 ;; Local Variables:
 ;; eval: (visual-fill-column-mode)
 ;; End:
+
+* Emacs設定：やりたいこと                                            :REFILE:
+** TODO リアルオートセーブアップ
+:PROPERTIES:
+:CREATED: <2021-11-10 Wed 09:47>
+:ANNOTADED: [[file:~/.emacs.d/README.org::*leaf][leaf]]
+:END:
+- [[http://emacs.rubikitch.com/backup-each-save/][backup-each-save.el : Emacs式大富豪的バックアップ！保存する度に日時付きファイルでバックアップ]]
+- [[http://emacs.rubikitch.com/real-auto-save/][real-auto-save.el : バッファを自動保存させる超シンプルなマイナーモード]]
