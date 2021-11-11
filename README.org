@@ -473,7 +473,8 @@ leafに追加するパッケージです。
 #+RESULTS:
 : macrostep
 
-** recentf
+** TODO recentf
+- recentf-modeはカスタマイズ変数にできる
 
 #+begin_src emacs-lisp
   (leaf recentf
@@ -491,8 +492,8 @@ leafに追加するパッケージです。
 #+RESULTS:
 : recentf
 
-** midnight - 一定期間使用しなかった buffer を自動削除
-
+** TODO midnight - 一定期間使用しなかった buffer を自動削除
+- 使い方、これでいいのかな？
 - [[https://uwabami.github.io/cc-env/Emacs.html][midnight: 一定期間使用しなかった buffer を自動削除]]
 
 #+begin_src emacs-lisp
