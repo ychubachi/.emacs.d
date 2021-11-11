@@ -298,14 +298,15 @@ leafに追加するパッケージです。
     :custom
     (inhibit-startup-screen . t)              ; スタートアップスクリーンを非表示
     (ring-bell-function . 'ignore)            ; ベルを鳴らさない
+
     (global-display-line-numbers-mode . t)    ; 行番号表示
     (display-line-numbers-width . 4)          ; 表示する行番号の桁数
 
-    (global-auto-revert-mode . t)             ; ファイルが更新されたら自動的に再読込
-    (auto-revert-verbose . nil)               ; 再読込の際、メッセージを出さない
+    (global-auto-revert-mode . t)             ; 更新されたら自動的に再読込
+    (auto-revert-verbose . nil)               ; 再読込の際、メッセージを非表示
 
     (show-paren-mode . t)                     ; 括弧の対応関係を表示する
-    (show-paren-style . 'mixed)               ; 対応関係を表示するときのスタイル
+    (show-paren-style . 'mixed)               ; 対応関係を表示するスタイル
     ; (show-paren-delay . 0.5)                 ; 対応関係を表示するまでの遅延
     )
 #+end_src
