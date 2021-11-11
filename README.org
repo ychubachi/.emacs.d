@@ -302,7 +302,6 @@ leafに追加するパッケージです。
     (display-line-numbers-width . 4)          ; 表示する行番号の桁数
 
     (global-auto-revert-mode . t)             ; ファイルが更新されたら自動的に再読込
-    (global-auto-revert-non-file-buffers . t) ; ファイル以外も自動的に再読込
     (auto-revert-verbose . nil)               ; 再読込の際、メッセージを出さない
 
     (show-paren-mode . t)                     ; 括弧の対応関係を表示する
