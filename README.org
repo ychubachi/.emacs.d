@@ -676,9 +676,9 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
     :bind (;; C-c bindings (mode-specific-map)
            ("C-c h" . consult-history)
            ("C-c m" . consult-mode-command)
-           ("C-c b" . consult-bookmark)
+           ;; ("C-c b" . consult-bookmark)
            ("C-c k" . consult-kmacro)
-           ;; ("C-c r" . consult-recent-file)           ;; added by yc
+           ;; ("C-c r" . consult-recent-file)
            ;; C-x bindings (ctl-x-map)
            ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
            ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
@@ -828,8 +828,8 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
   | emacs設定ファイル | orgファイルで書いたEmacsの設定 |
 
   - TODOはどのファイルに書いて良い
-
   - org-switchbかconsult-org-agendaをどこかにバインドするといいかも？（C-,）
+    - C-c bにバインド
 
 #+begin_src emacs-lisp
   (leaf org-mode
@@ -837,7 +837,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
     ("C-c l" . org-store-link)
     ("C-c a" . org-agenda)
     ("C-c c" . org-capture)
-    ("C-,"   . org-switchb)
+    ("C-c b" . org-switchb)
     :custom
     (org-directory . "~/Dropbox/Org/")
     (org-agenda-files . '("~/Dropbox/Org/"
