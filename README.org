@@ -36,7 +36,6 @@ CLOSED: [2021-11-09 Tue 18:57]
 :POST_DATE: [2021-11-09 Tue 18:33]
 :POSTID:   248
 :END:
-
 *** Emacs の X resources 設定
 Emacs をX環境でグラフィカルに起動すると、 Emacs はXクライアントアプリケーションとなりますから、 [[https://wiki.archlinux.jp/index.php/X_resources][X resources ]]を利用した設定を読み込みます。フォントやウインドウの大きさなどを設定できます。
 
@@ -88,7 +87,6 @@ Eamcs.useXIM: off
 [fn:1] [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][Emacsでは通常、‘emacs’です。Emacsの実行可能ファイル名の如何にかかわらずに、Emacsのすべてのインスタンスに適用される定義を指定するには、‘Emacs’を使用します。]]
 
 [fn:2]  [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][変数inhibit-x-resourcesを非nil値にセットした場合、EmacsはXリソースを処理しません。コマンドラインオプション‘-Q’ (または‘--quick’)でEmacsを呼び出した場合、inhibit-x-resourcesは自動的にtにセットされます]]
-
 ** フォントの確認
 
 Xウインドウで設定したフォントを確認してみましょう。本当は全て等幅になるとよいのですが、なかなか難しい・・・。
