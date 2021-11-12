@@ -408,3 +408,22 @@ Archived entries from file /home/yc/.emacs.d/README.org
 #+end_src
 
 #+RESULTS:
+
+* COMMENT Emacs設定                                                  :REFILE:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2021-11-12 Fri 14:25
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_CATEGORY: README
+  :END:
+** TODO リアルオートセーブアップ
+:PROPERTIES:
+:CREATED: <2021-11-10 Wed 09:47>
+:ANNOTADED: [[file:~/.emacs.d/README.org::*leaf][leaf]]
+:END:
+- [[http://emacs.rubikitch.com/backup-each-save/][backup-each-save.el : Emacs式大富豪的バックアップ！保存する度に日時付きファイルでバックアップ]]
+- [[http://emacs.rubikitch.com/real-auto-save/][real-auto-save.el : バッファを自動保存させる超シンプルなマイナーモード]]
+** TODO [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E5%B0%8F%E6%8C%87%E3%82%92%E9%85%B7%E4%BD%BF%E3%81%9B%E3%81%9A%E3%81%8B%E3%81%A4%E3%82%AD%E3%83%BC%E3%83%90%E3%82%A4%E3%83%B3%E3%83%89%E3%81%AE%E3%82%AC%E3%82%A4%E3%83%89%E3%82%92%E5%87%BA%E3%81%99----hydra][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
+;; Local Variables:
+;; eval: (visual-fill-column-mode)
+;; End:

@@ -2485,7 +2485,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 
 ** 参考文献
 1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
-* Emacs設定：やりたいこと                                            :REFILE:
+* COMMENT Emacs設定のアイデア                                        :REFILE:
 ** TODO リアルオートセーブアップ
 :PROPERTIES:
 :CREATED: <2021-11-10 Wed 09:47>
@@ -2498,3 +2498,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 ;; Local Variables:
 ;; eval: (visual-fill-column-mode)
 ;; End:
+** TODO org-gfmを導入する
+:PROPERTIES:
+:CREATED: <2021-11-12 Fri 10:30>
+:ANNOTADED:
+:END:
