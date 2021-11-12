@@ -2503,3 +2503,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 :CREATED: <2021-11-12 Fri 10:30>
 :ANNOTADED:
 :END:
+** TODO C-c sをシェルに、C-c tをtoggle-truncate-linesに？
+:PROPERTIES:
+:CREATED: <2021-11-12 Fri 13:54>
+:ANNOTADED: [[file:~/Dropbox/Org/Mobile.org::*Emacs M-x toggle-truncate-lines: 長い行の折り返し表示を切り換える][Emacs M-x toggle-truncate-lines: 長い行の折り返し表示を切り換える]]
+:END:
