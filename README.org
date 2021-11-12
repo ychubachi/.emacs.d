@@ -1952,6 +1952,261 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
   #+RESULTS:
   : doom-modeline
 
+* メール/Web
+** smtpmail - メールの送信
+*** 説明
++ 最初のメールを送信時、パスワードを入力すると、~/.authinfo に自動で追加
+
+;; sending mail -- replace USERNAME with your gmail username
+;; also, make sure the gnutls command line utils are installed
+;; package 'gnutls-bin' in Debian/Ubuntu
+
+#+begin_src emacs-lisp
+  (leaf smtpmail
+    :require t
+    :setq ((message-send-mail-function quote smtpmail-send-it)
+           (starttls-use-gnutls . t)
+           (smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil)))
+           (smtpmail-auth-credentials '(("smtp.gmail.com" 587 "yc@aiit.ac.jp" nil)))
+           (smtpmail-default-smtp-server . "smtp.gmail.com")
+           (smtpmail-smtp-server . "smtp.gmail.com")
+           (smtpmail-smtp-service . 587)))
+#+end_src
+
+#+RESULTS:
+: smtpmail
+
+** mu/mu4e - Maildirの読み書き・IMAPサーバとの同期
++ 概要
+  * [[https://www.emacswiki.org/emacs/mu4e][[Home] mu4e]]
+  * [[https://github.com/djcb/mu/tree/master/mu4e][mu/mu4e at master · djcb/mu]]
+  * mu4eはmuに同梱されている
+    - aptで入るものは古い
+  * [[https://www.djcbsoftware.nl/code/mu/mu4e/Installation.html#Installation][Installation (Mu4e 1.6.0 user manual)]]
+    - aptで必要なライブラリを入れる
+  * [[https://github.com/djcb/mu/releases][Releases · djcb/mu]]
+    - 1.6.9のtar ballをとってくる
+    - sudo apt install autoconf automake libtool texinfo
+  * /usr/local/share/emacs/site-lisp/mu4e/
+  * [[https://cheatography.com/ddoherty03/cheat-sheets/mu4e-with-gmail-hints/][mu4e (With GMail Hints) Keyboard Shortcuts by ddoherty03 - Download free from Cheatography - Cheatography.com: Cheat Sheets For Every Occasion]]
+    - cheetsheet
+  * [[https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html][Gmail configuration (Mu4e 1.6.0 user manual)]]
+    - 前半はofflineimap用
+  * htmlメールはewwで表示されているようだ
+    * フォントはMicrosoft Yahei
+      - [[https://qiita.com/styzo/items/28d5d994a293fa704476][emacs 26 のフォントの設定 M-x view-hello-file - Qiita]]
+    * ewwの正体はshr
++ mbsyncについて
+  * 参考文献
+    - [[https://isync.sourceforge.io/][isync: free IMAP and MailDir mailbox synchronizer]]
+    - [[https://sourceforge.net/projects/isync/][Isync download | SourceForge.net]]
+    - [[https://sourceforge.net/p/isync/isync/ci/master/tree/][Isync / isync / [da6567]]]
+  * Gmailの設定
+    - セキュリティページで有効にする
+  * メールパスワードの設定
+    - ~/.mailpass.gpg
+  * mbsyncの設定
+    - 日本語フォルダ名が修正utf-7になる
+    - utf-7を変換するツールがあんまりない
+      * [[https://kkobayashi-a.hatenablog.com/entry/2019/04/11/111856][imapsyncでモバメをGmailにコピーする その2 - kkobayashi_a’s blog]]
+    - [[https://arimasou16.com/blog/2021/09/01/00413/][OfflineIMAPとNeoMuttを合わせて使う 後半(成功例)]]
+    - つくった（ruby）
+
+    #+begin_example
+    require 'net/imap'
+
+    puts Net::IMAP.decode_utf7 '&MFkweTBmMG4w4TD8MOs-'
+    puts Net::IMAP.decode_utf7 '&MLkwvzD8TtgwTQ-'
+    puts Net::IMAP.decode_utf7 '&j,dg0TDhMPww6w-'
+    puts Net::IMAP.decode_utf7 '&kc2JgQ-'
+    puts Net::IMAP.decode_utf7 '&MLQw33ux-'
+    puts Net::IMAP.decode_utf7 '&Tgtm+DBN-'
+    puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
+    #+end_example
+
+    | 修正UTF-7               | 変換結果       |           |
+    |-------------------------+----------------+-----------|
+    | '&MFkweTBmMG4w4TD8MOs-' | すべてのメール | All Mail  |
+    | '&MLkwvzD8TtgwTQ-'      | スター付き     | Starred   |
+    | '&j,dg0TDhMPww6w-'      | 迷惑メール     | Spam      |
+    | '&kc2JgQ-'              | 重要           | Important |
+    | '&MLQw33ux-'            | ゴミ箱         | Trash     |
+    | '&Tgtm+DBN-'            | 下書き         | Draft     |
+    | '&kAFP4W4IMH8w4TD8MOs-' | 送信済みメール | Sent Mail |
+  * Near側のフォルダが作られない
+    - バージョンが古いから？
+    - UIDVALIDITYが鍵のようだ
+      - ~/.mbsyncに対応表があるので、やりなおすときは削除する
+
+        #+begin_example
+          rm -r ~/Maildir
+          mkdir -p Maildir/ploversky.net@gmail.com
+          rm -r ~/.mbsync
+          mbsync private
+        #+end_example
++ mbsyncの設定
+  * 設定
+    1. メイン画面で'U'キーを押すとmbsyncで更新するよう設定
+    2. メールを移動する際、ファイル名を変更（mbsyncではこれを設定するのが望ましい）
+       設定しないと、UIDが書き換わらないので重複する可能性がある。
+
+    #+NAME: mbsync-settings
+    #+begin_src emacs-lisp :tangle no
+      (setq mu4e-get-mail-command "mbsync -a")
+      (setq mu4e-change-filenames-when-moving t)
+
+    #+end_src
+
+    #+RESULTS: mbsync-settings
+    : t
+
++ メールを作成するモードでの文字の折返し
+  * 参考
+    - [[https://emacs.stackexchange.com/questions/3061/how-to-stop-mu4e-from-inserting-line-breaks][(add-hook 'mu4e-compose-mode-hook 'visual-line-mode)]]
+
+  * 設定
+    1. デフォルトではauto-fillがonであるため、長い行には自動的に改行が追加される（古き良き時代の標準スタイル）のでこれをoffにする。
+    2. 単語の途中で折返さないようにvisual-line-modeをonにする。
+
+    #+NAME: mu4e-compose-mode-hook
+    #+begin_src emacs-lisp :tangle no
+      (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
+      (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
+
+    #+end_src
+
+    #+RESULTS: mu4e-compose-mode-hook
+    | visual-line-mode | turn-off-auto-fill |
+
++ mu4e-dashboard
+  * 参考
+    - [[https://www.reddit.com/r/emacs/comments/mzgsm0/mu4e_look_and_feel/][Mu4e look and feel : emacs]]
+    - [[https://github.com/rougier/mu4e-dashboard][rougier/mu4e-dashboard: A dashboard for mu4e (mu for emacs)]]
+  * 説明
+    - ソースコードのorgファイルを編集する必要があるようなので、forkしてみる
+    - サンプルに従い、orgファイルを作成すれば、ダッシュボードになる
+
+    #+NAME: mu4e-dashboard
+    #+begin_src emacs-lisp :tangle no
+      ;; (leaf mu4e-dashboard
+      ;;   :el-get ychubachi/mu4e-dashboard
+      ;;   :require t
+
+    #+end_src
+
+    #+RESULTS: mu4e-dashboard
+
++ 全体の設定
+
+#+begin_src emacs-lisp :noweb yes
+  (leaf mu4e
+    :load-path "/usr/local/share/emacs/site-lisp/mu4e/"
+    :require t
+    :config
+    ;; use mu4e for e-mail in emacs
+    (setq mail-user-agent 'mu4e-user-agent)
+
+    (setq mu4e-headers-fields
+          '((:empty . 0) (:human-date . 8) (:flags . 6) (:mailing-list . 10)(:from . 22) (:subject)))
+
+    (setq mu4e-drafts-folder "/Gmail/draft")
+    (setq mu4e-sent-folder   "/Gmail/sent")
+    (setq mu4e-trash-folder  "/Gmail/trash")
+    (setq mu4e-refile-folder "/Gmail/archive")
+
+    (setq mu4e-bookmarks
+          '((:name "Unread INBOX"     :query "maildir:/Gmail/inbox/ flag:unread AND NOT flag:trashed"  :key ?i)
+            (:name "Unread Archive"   :query "maildir:/Gmail/archive/ flag:unread AND NOT flag:trashed"  :key ?a)
+            (:name "Unread messages"  :query "flag:unread AND NOT flag:trashed"  :key 117)
+            (:name "Starred messages" :query "flag:flagged AND NOT flag:trashed" :key ?S)
+            (:name "Draft Masseges"   :query "flag:draft AND NOT flag:trashed"   :key ?D)
+            (:name "Trash"            :query "flag:trashed"                      :key ?T)
+            (:name "Today's messages" :query "date:today..now"                 :key 116)
+            (:name "Last 7 days" :query "date:7d..now" :hide-unread t          :key 119)
+            (:name "Messages with images" :query "mime:image/*" :hide-unread t :key 112)
+            ))
+
+    ;; setup some handy shortcuts
+    ;; you can quickly switch to your Inbox -- press ``ji''
+    ;; then, when you want archive some messages, move them to
+    ;; the 'All Mail' folder by pressing ``ma''.
+    (setq mu4e-maildir-shortcuts
+          '((:maildir "/Gmail/inbox"             :key ?i)
+            (:maildir "/Gmail/archive"           :key ?a)
+            (:maildir "/Gmail/draft"             :key ?d)))
+
+    ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+    (setq mu4e-sent-messages-behavior 'delete)
+
+    ;; (See the documentation for `mu4e-sent-messages-behavior' if you have
+    ;; additional non-Gmail addresses and want assign them different
+    ;; behavior.)
+
+    ;; something about ourselves
+    (setq
+     user-mail-address "yc@aiit.ac.jp"
+     user-full-name  "中鉢欣秀"
+     mu4e-compose-signature
+     (concat
+      "東京都立産業技術大学院大学（AIIT） 研究科長補佐\n"
+      "情報アーキテクチャコース担当 教授 中鉢欣秀 博士（政策・メディア）\n"))
+
+    (setq mu4e-headers-results-limit -1)
+
+    <<mbsync-settings>>
+    <<mu4e-compose-mode-hook>>
+    <<mu4e-dashboard>>
+
+    (leaf mu4e-thread-folding
+      :el-get rougier/mu4e-thread-folding
+      :require t
+      :config
+      (add-to-list 'mu4e-header-info-custom
+                   '(:empty :name "Empty" :shortname "" :function
+                            (lambda (msg)
+                              "  ")))
+
+      (define-key mu4e-headers-mode-map (kbd "<tab>")     'mu4e-headers-toggle-at-point)
+      (define-key mu4e-headers-mode-map (kbd "<left>")    'mu4e-headers-fold-at-point)
+      (define-key mu4e-headers-mode-map (kbd "<S-left>")  'mu4e-headers-fold-all)
+      (define-key mu4e-headers-mode-map (kbd "<right>")   'mu4e-headers-unfold-at-point)
+      (define-key mu4e-headers-mode-map (kbd "<S-right>") 'mu4e-headers-unfold-all)
+
+      (add-hook 'mu4e-headers-found-hook #'mu4e-thread-folding-mode)
+      )
+    )
+#+end_src
+
+#+RESULTS:
+: mu4e
+
+** shr/eww - Simple HTML Reader
++ 説明
+  * EmacsのWebブラウザに関する設定
+  * ewwはデフォルトだと読みにくいプロポーショナルフォントになる
+  * mu4eではメールを読む際にshrを使う
++ 文献
+  * [[https://www.emacswiki.org/emacs/eww][[Home] eww]]
++ 設定
+  * ewwを標準にするにはbrowse-url-browser-functionを設定する
+  * shr-use-fontsをnilに設定することで、固定幅フォントを使うようになる
+
+#+begin_src emacs-lisp
+  (leaf eww
+    :custom
+    (
+     ;; (browse-url-browser-function . 'eww-browse-url)
+     (shr-use-colors    . nil)
+     (shr-use-fonts     . nil)
+     (shr-image-animate . nil)
+     (shr-width         . 72)
+     (eww-search-prefix . "https://www.google.com/search?q=")
+     )
+    )
+#+end_src
+
+#+RESULTS:
+: eww
 * OS依存の設定
   - OSの判定方法
     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
@@ -2162,262 +2417,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 : my/browser
 
 * 未整理
-** shr/eww - Simple HTML Reader
-+ 説明
-  * EmacsのWebブラウザに関する設定
-  * ewwはデフォルトだと読みにくいプロポーショナルフォントになる
-  * mu4eではメールを読む際にshrを使う
-+ 文献
-  * [[https://www.emacswiki.org/emacs/eww][[Home] eww]]
-+ 設定
-  * ewwを標準にするにはbrowse-url-browser-functionを設定する
-  * shr-use-fontsをnilに設定することで、固定幅フォントを使うようになる
-
-#+begin_src emacs-lisp
-  (leaf eww
-    :custom
-    (
-     ;; (browse-url-browser-function . 'eww-browse-url)
-     (shr-use-colors    . nil)
-     (shr-use-fonts     . nil)
-     (shr-image-animate . nil)
-     (shr-width         . 72)
-     (eww-search-prefix . "https://www.google.com/search?q=")
-     )
-    )
-#+end_src
-
-#+RESULTS:
-: eww
-
-** mu4e
-*** smtpmail - メールの送信
-**** 説明
-+ 最初のメールを送信時、パスワードを入力すると、~/.authinfo に自動で追加
-
-;; sending mail -- replace USERNAME with your gmail username
-;; also, make sure the gnutls command line utils are installed
-;; package 'gnutls-bin' in Debian/Ubuntu
-
-#+begin_src emacs-lisp
-  (leaf smtpmail
-    :require t
-    :setq ((message-send-mail-function quote smtpmail-send-it)
-           (starttls-use-gnutls . t)
-           (smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil)))
-           (smtpmail-auth-credentials '(("smtp.gmail.com" 587 "yc@aiit.ac.jp" nil)))
-           (smtpmail-default-smtp-server . "smtp.gmail.com")
-           (smtpmail-smtp-server . "smtp.gmail.com")
-           (smtpmail-smtp-service . 587)))
-#+end_src
-
-#+RESULTS:
-: smtpmail
-
-*** mu/mu4e - Maildirの読み書き・IMAPサーバとの同期
-+ 概要
-  * [[https://www.emacswiki.org/emacs/mu4e][[Home] mu4e]]
-  * [[https://github.com/djcb/mu/tree/master/mu4e][mu/mu4e at master · djcb/mu]]
-  * mu4eはmuに同梱されている
-    - aptで入るものは古い
-  * [[https://www.djcbsoftware.nl/code/mu/mu4e/Installation.html#Installation][Installation (Mu4e 1.6.0 user manual)]]
-    - aptで必要なライブラリを入れる
-  * [[https://github.com/djcb/mu/releases][Releases · djcb/mu]]
-    - 1.6.9のtar ballをとってくる
-    - sudo apt install autoconf automake libtool texinfo
-  * /usr/local/share/emacs/site-lisp/mu4e/
-  * [[https://cheatography.com/ddoherty03/cheat-sheets/mu4e-with-gmail-hints/][mu4e (With GMail Hints) Keyboard Shortcuts by ddoherty03 - Download free from Cheatography - Cheatography.com: Cheat Sheets For Every Occasion]]
-    - cheetsheet
-  * [[https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html][Gmail configuration (Mu4e 1.6.0 user manual)]]
-    - 前半はofflineimap用
-  * htmlメールはewwで表示されているようだ
-    * フォントはMicrosoft Yahei
-      - [[https://qiita.com/styzo/items/28d5d994a293fa704476][emacs 26 のフォントの設定 M-x view-hello-file - Qiita]]
-    * ewwの正体はshr
-+ mbsyncについて
-  * 参考文献
-    - [[https://isync.sourceforge.io/][isync: free IMAP and MailDir mailbox synchronizer]]
-    - [[https://sourceforge.net/projects/isync/][Isync download | SourceForge.net]]
-    - [[https://sourceforge.net/p/isync/isync/ci/master/tree/][Isync / isync / [da6567]]]
-  * Gmailの設定
-    - セキュリティページで有効にする
-  * メールパスワードの設定
-    - ~/.mailpass.gpg
-  * mbsyncの設定
-    - 日本語フォルダ名が修正utf-7になる
-    - utf-7を変換するツールがあんまりない
-      * [[https://kkobayashi-a.hatenablog.com/entry/2019/04/11/111856][imapsyncでモバメをGmailにコピーする その2 - kkobayashi_a’s blog]]
-    - [[https://arimasou16.com/blog/2021/09/01/00413/][OfflineIMAPとNeoMuttを合わせて使う 後半(成功例)]]
-    - つくった（ruby）
-
-    #+begin_example
-    require 'net/imap'
-
-    puts Net::IMAP.decode_utf7 '&MFkweTBmMG4w4TD8MOs-'
-    puts Net::IMAP.decode_utf7 '&MLkwvzD8TtgwTQ-'
-    puts Net::IMAP.decode_utf7 '&j,dg0TDhMPww6w-'
-    puts Net::IMAP.decode_utf7 '&kc2JgQ-'
-    puts Net::IMAP.decode_utf7 '&MLQw33ux-'
-    puts Net::IMAP.decode_utf7 '&Tgtm+DBN-'
-    puts Net::IMAP.decode_utf7 '&kAFP4W4IMH8w4TD8MOs-'
-    #+end_example
-
-    | 修正UTF-7               | 変換結果       |           |
-    |-------------------------+----------------+-----------|
-    | '&MFkweTBmMG4w4TD8MOs-' | すべてのメール | All Mail  |
-    | '&MLkwvzD8TtgwTQ-'      | スター付き     | Starred   |
-    | '&j,dg0TDhMPww6w-'      | 迷惑メール     | Spam      |
-    | '&kc2JgQ-'              | 重要           | Important |
-    | '&MLQw33ux-'            | ゴミ箱         | Trash     |
-    | '&Tgtm+DBN-'            | 下書き         | Draft     |
-    | '&kAFP4W4IMH8w4TD8MOs-' | 送信済みメール | Sent Mail |
-  * Near側のフォルダが作られない
-    - バージョンが古いから？
-    - UIDVALIDITYが鍵のようだ
-      - ~/.mbsyncに対応表があるので、やりなおすときは削除する
-
-        #+begin_example
-          rm -r ~/Maildir
-          mkdir -p Maildir/ploversky.net@gmail.com
-          rm -r ~/.mbsync
-          mbsync private
-        #+end_example
-+ mbsyncの設定
-  * 設定
-    1. メイン画面で'U'キーを押すとmbsyncで更新するよう設定
-    2. メールを移動する際、ファイル名を変更（mbsyncではこれを設定するのが望ましい）
-       設定しないと、UIDが書き換わらないので重複する可能性がある。
-
-    #+NAME: mbsync-settings
-    #+begin_src emacs-lisp :tangle no
-      (setq mu4e-get-mail-command "mbsync -a")
-      (setq mu4e-change-filenames-when-moving t)
-
-    #+end_src
-
-    #+RESULTS: mbsync-settings
-    : t
-
-+ メールを作成するモードでの文字の折返し
-  * 参考
-    - [[https://emacs.stackexchange.com/questions/3061/how-to-stop-mu4e-from-inserting-line-breaks][(add-hook 'mu4e-compose-mode-hook 'visual-line-mode)]]
-
-  * 設定
-    1. デフォルトではauto-fillがonであるため、長い行には自動的に改行が追加される（古き良き時代の標準スタイル）のでこれをoffにする。
-    2. 単語の途中で折返さないようにvisual-line-modeをonにする。
-
-    #+NAME: mu4e-compose-mode-hook
-    #+begin_src emacs-lisp :tangle no
-      (add-hook 'mu4e-compose-mode-hook 'turn-off-auto-fill)
-      (add-hook 'mu4e-compose-mode-hook 'visual-line-mode)
-
-    #+end_src
-
-    #+RESULTS: mu4e-compose-mode-hook
-    | visual-line-mode | turn-off-auto-fill |
-
-+ mu4e-dashboard
-  * 参考
-    - [[https://www.reddit.com/r/emacs/comments/mzgsm0/mu4e_look_and_feel/][Mu4e look and feel : emacs]]
-    - [[https://github.com/rougier/mu4e-dashboard][rougier/mu4e-dashboard: A dashboard for mu4e (mu for emacs)]]
-  * 説明
-    - ソースコードのorgファイルを編集する必要があるようなので、forkしてみる
-    - サンプルに従い、orgファイルを作成すれば、ダッシュボードになる
-
-    #+NAME: mu4e-dashboard
-    #+begin_src emacs-lisp :tangle no
-      ;; (leaf mu4e-dashboard
-      ;;   :el-get ychubachi/mu4e-dashboard
-      ;;   :require t
-
-    #+end_src
-
-    #+RESULTS: mu4e-dashboard
-
-+ 全体の設定
-
-#+begin_src emacs-lisp :noweb yes
-  (leaf mu4e
-    :load-path "/usr/local/share/emacs/site-lisp/mu4e/"
-    :require t
-    :config
-    ;; use mu4e for e-mail in emacs
-    (setq mail-user-agent 'mu4e-user-agent)
-
-    (setq mu4e-headers-fields
-          '((:empty . 0) (:human-date . 8) (:flags . 6) (:mailing-list . 10)(:from . 22) (:subject)))
-
-    (setq mu4e-drafts-folder "/Gmail/draft")
-    (setq mu4e-sent-folder   "/Gmail/sent")
-    (setq mu4e-trash-folder  "/Gmail/trash")
-    (setq mu4e-refile-folder "/Gmail/archive")
-
-    (setq mu4e-bookmarks
-          '((:name "Unread INBOX"     :query "maildir:/Gmail/inbox/ flag:unread AND NOT flag:trashed"  :key ?i)
-            (:name "Unread Archive"   :query "maildir:/Gmail/archive/ flag:unread AND NOT flag:trashed"  :key ?a)
-            (:name "Unread messages"  :query "flag:unread AND NOT flag:trashed"  :key 117)
-            (:name "Starred messages" :query "flag:flagged AND NOT flag:trashed" :key ?S)
-            (:name "Draft Masseges"   :query "flag:draft AND NOT flag:trashed"   :key ?D)
-            (:name "Trash"            :query "flag:trashed"                      :key ?T)
-            (:name "Today's messages" :query "date:today..now"                 :key 116)
-            (:name "Last 7 days" :query "date:7d..now" :hide-unread t          :key 119)
-            (:name "Messages with images" :query "mime:image/*" :hide-unread t :key 112)
-            ))
-
-    ;; setup some handy shortcuts
-    ;; you can quickly switch to your Inbox -- press ``ji''
-    ;; then, when you want archive some messages, move them to
-    ;; the 'All Mail' folder by pressing ``ma''.
-    (setq mu4e-maildir-shortcuts
-          '((:maildir "/Gmail/inbox"             :key ?i)
-            (:maildir "/Gmail/archive"           :key ?a)
-            (:maildir "/Gmail/draft"             :key ?d)))
-
-    ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-    (setq mu4e-sent-messages-behavior 'delete)
-
-    ;; (See the documentation for `mu4e-sent-messages-behavior' if you have
-    ;; additional non-Gmail addresses and want assign them different
-    ;; behavior.)
-
-    ;; something about ourselves
-    (setq
-     user-mail-address "yc@aiit.ac.jp"
-     user-full-name  "中鉢欣秀"
-     mu4e-compose-signature
-     (concat
-      "東京都立産業技術大学院大学（AIIT） 研究科長補佐\n"
-      "情報アーキテクチャコース担当 教授 中鉢欣秀 博士（政策・メディア）\n"))
-
-    (setq mu4e-headers-results-limit -1)
-
-    <<mbsync-settings>>
-    <<mu4e-compose-mode-hook>>
-    <<mu4e-dashboard>>
-
-    (leaf mu4e-thread-folding
-      :el-get rougier/mu4e-thread-folding
-      :require t
-      :config
-      (add-to-list 'mu4e-header-info-custom
-                   '(:empty :name "Empty" :shortname "" :function
-                            (lambda (msg)
-                              "  ")))
-
-      (define-key mu4e-headers-mode-map (kbd "<tab>")     'mu4e-headers-toggle-at-point)
-      (define-key mu4e-headers-mode-map (kbd "<left>")    'mu4e-headers-fold-at-point)
-      (define-key mu4e-headers-mode-map (kbd "<S-left>")  'mu4e-headers-fold-all)
-      (define-key mu4e-headers-mode-map (kbd "<right>")   'mu4e-headers-unfold-at-point)
-      (define-key mu4e-headers-mode-map (kbd "<S-right>") 'mu4e-headers-unfold-all)
-
-      (add-hook 'mu4e-headers-found-hook #'mu4e-thread-folding-mode)
-      )
-    )
-#+end_src
-
-#+RESULTS:
-: mu4e
-
 ** TODO EAF - Emacs Application Framework
 + .emacs.dをgitで管理しているのでsubmoduleで追加
 + install-eaf.py を実行する前に apt update && apt upgrade
