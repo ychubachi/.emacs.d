@@ -1721,6 +1721,128 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 
 [fn:2] [[https://blog.inouetakuya.info/entry/20110627/1309175529][Emacs のシェルモード比較 - shell、ansi-term、multi-term - 彼女からは、おいちゃんと呼ばれています]]
 
+** DONE visual-fill-column - 長い行を任意の桁で折り返す          :published:
+CLOSED: [2021-11-10 Wed 11:12]
+:PROPERTIES:
+:BLOG:     plover
+:DATE:     [2021-11-08 22:19:48]
+:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Tech
+:POST_TAGS: Emacs
+:ID:       o2b:88634903-8b8b-44b8-9b7f-a50fdc58ed5d
+:POST_DATE: [2021-11-08 Mon 22:21]
+:POSTID:   218
+:END:
+*** 長い行を折り返す？折り返さない？
+Emacsでは長い行を折返して表示してくれます。
+
+[[https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line.png]]
+
+行が繋がっていることを示す矢印のアイコンが、画面の左右にいっぱい出ていますね。
+
+この折返しをしなくするには、変数trancate-linesをtに設定します。
+
+#+begin_example
+M-x set-variable
+truncate-lines
+t
+#+end_example
+そうすると、
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-truncate.png
+
+長い文の前の一部分だけ、表示されるようになりました。カーソルを右に移動すれば、全体を読むことができます。プログラミングするときには便利です。
+
+*** 改行で長い行を分割する
+この長い行でM-qを押します（fill-paragraph）。すると、
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-fill-paragraph.png
+
+長い一つの行に、改行が挿入されて複数の行に分割されました。このとき、一つの行の長さは72文字を超えない長さになります。Emacsのヘルプやマニュアルを見るとこのようなスタイルですね。紙に印刷するときも、このスタイルならはみ出て読めなくなることもありません。昔はメールもこんな感じで書くのが普通でした。
+
+*** 一行を分割しないで折返し位置を自由に設定したい
+さて、時は流れて、いまやメールもHTMLで書く時代です（好むと好まざるにかかわらず）。小さな画面のスマートフォンでメールを読むこともあります。そんなとき、72文字ごとに改行がはいると、非常に読みづらくなります。一行は一行のままで、表示をするときには画面のサイズに応じた位置で改行してほしいですよね。
+
+ただし、デフォルトの設定だとウインドウの端で折り返されているため、少し読みにくいと思いませんか？一行は一行のまま、自動で改行してほしい、そのとき、改行する位置を指定したい。こんなときに利用できるパッケージがvisual-fill-columモードです。
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column.png
+
+一行は一行のまま、72文字で折返してくれています。一行の長さが短くなり、多少は読みやすくなってますね。
+
+*** visula-fill-columnのインストール
+パッケージをインストールするには次の通り設定します。
+
+#+begin_src emacs-lisp
+  (leaf visual-fill-column
+    :doc "fill-column for visual-line-mode"
+    :req "emacs-25.1"
+    :tag "emacs>=25.1"
+    :url "https://github.com/joostkremers/visual-fill-column"
+    :added "2021-11-08"
+    :emacs>= 25.1
+    :ensure t
+    :bind((:visual-fill-column-mode-map
+           ("C-a" . beginning-of-visual-line)
+           ("C-e" . end-of-visual-line)
+           ("C-k" . kill-visual-line))))
+#+end_src
+
+#+RESULTS:
+: visual-fill-column
+
+折り返す位置は指定できます。折り返したい桁にカーソルを合わせ、 C-u C-x f を押すと、その位置で改行するようになります。あるいは C-u 50 C-x f のように、桁数を引数に与えてもよいです。なお、設定しただけでは表示は変わりません。何か文字を入力すると、変わります。
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column-50.png
+
+また、一行を基準に動作する標準のキーを、画面の一行を基準に動作するコマンドに、次の通り置き換えています[fn:1]。
+
+| キー | 説明                          |
+|------+-------------------------------|
+| C-a  | *画面上の* 行の一番先頭に移動 |
+| C-e  | *画面上の* 行の一番末尾に移動 |
+| C-k  | *画面上の* 行を一行削除       |
+
+この設定により、折り返す桁を自由に指定できる上に、画面上の一行を単位として編集できます。
+
+*** 単語の途中で折り返さないようにするには
+さて、日本語で入力するのであればこのままでもよいのですが、英語の場合、単語の途中で折り返されるのは嫌ですね。そんなときは visual-line-mode を使います。このモードは標準装備です。M-x visual-line-modeで設定できます。
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-line-mode.png
+
+単語が途中で改行されないので、見やすくなりました。この行は全て繋がっていますが、矢印のアイコンもでなくなりました。ただし、日本語の文書でこの設定をしてしまうと、逆に見づらいです（日本語には単語の区切り（空白）がないので、逆にどこで改行するか判断しにくい）。
+
+#+begin_comment
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, condimentum vitae blandit porttitor, ultricies in enim. Integer sit amet mi tincidunt, blandit metus id, finibus quam. Donec egestas tortor at metus condimentum, at varius magna venenatis. Nullam auctor ipsum quis massa semper, non eleifend quam accumsan. Etiam sed dui nisl. Nulla ac tempus nulla. Nulla facilisi. Cras ligula elit, rutrum in augue volutpat, pharetra tempus metus. Aliquam nibh est, scelerisque sit amet nisi non, aliquam volutpat nibh. Pellentesque consequat dui eros, sed fermentum augue tincidunt eu. Quisque eget tristique massa, eu gravida nunc.
+#+end_comment
+
+*** まとめ
+日本語の場合、
+
+1. truncate-linesはnil（標準のまま）
+2. visual-fill-columnパッケージをインストールして桁数を設定
+
+すると、自由に好きな位置で折返し表示させて編集できるようになります。
+
+英語の場合、追加で
+
+3. visual-line-modeを利用（標準で利用可）
+
+となります。
+
+*** 参考
++ [[https://github.com/joostkremers/visual-fill-column][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
+  * visual-fill-columnパッケージのサイト
++ [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html]]
+  * visual-line-modeの説明
+
+[fn:1] orgモードではC-kにorg-kill-lineが割り当てられます。これを上書きすることで弊害がおきるかもしれませんが、未確認です。
+
+*** COMMENT コメント
++ mu4eでメールを書くときに利用する。
++ [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Adaptive-Fill.html][https://www.gnu.org/software/emacs/manual/html_node/elisp/Adaptive-Fill.html]]
+  * Adaptive Fill Modeと組み合わせることも（調査中）
++ [[https://github.com/joostkremers/visual-fill-column#centering-the-text][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
+  * センタリングすることも
 * UI・見た目
 ** modus-themes
 - [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
@@ -2065,129 +2187,6 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 
 #+RESULTS:
 : eaf
-** DONE visual-fill-column - 長い行を任意の桁で折り返す          :published:
-CLOSED: [2021-11-10 Wed 11:12]
-:PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-11-08 22:19:48]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech
-:POST_TAGS: Emacs
-:ID:       o2b:88634903-8b8b-44b8-9b7f-a50fdc58ed5d
-:POST_DATE: [2021-11-08 Mon 22:21]
-:POSTID:   218
-:END:
-*** 長い行を折り返す？折り返さない？
-Emacsでは長い行を折返して表示してくれます。
-
-[[https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line.png]]
-
-行が繋がっていることを示す矢印のアイコンが、画面の左右にいっぱい出ていますね。
-
-この折返しをしなくするには、変数trancate-linesをtに設定します。
-
-#+begin_example
-M-x set-variable
-truncate-lines
-t
-#+end_example
-そうすると、
-
-https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-truncate.png
-
-長い文の前の一部分だけ、表示されるようになりました。カーソルを右に移動すれば、全体を読むことができます。プログラミングするときには便利です。
-
-*** 改行で長い行を分割する
-この長い行でM-qを押します（fill-paragraph）。すると、
-
-https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-fill-paragraph.png
-
-長い一つの行に、改行が挿入されて複数の行に分割されました。このとき、一つの行の長さは72文字を超えない長さになります。Emacsのヘルプやマニュアルを見るとこのようなスタイルですね。紙に印刷するときも、このスタイルならはみ出て読めなくなることもありません。昔はメールもこんな感じで書くのが普通でした。
-
-*** 一行を分割しないで折返し位置を自由に設定したい
-さて、時は流れて、いまやメールもHTMLで書く時代です（好むと好まざるにかかわらず）。小さな画面のスマートフォンでメールを読むこともあります。そんなとき、72文字ごとに改行がはいると、非常に読みづらくなります。一行は一行のままで、表示をするときには画面のサイズに応じた位置で改行してほしいですよね。
-
-ただし、デフォルトの設定だとウインドウの端で折り返されているため、少し読みにくいと思いませんか？一行は一行のまま、自動で改行してほしい、そのとき、改行する位置を指定したい。こんなときに利用できるパッケージがvisual-fill-columモードです。
-
-https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column.png
-
-一行は一行のまま、72文字で折返してくれています。一行の長さが短くなり、多少は読みやすくなってますね。
-
-*** visula-fill-columnのインストール
-パッケージをインストールするには次の通り設定します。
-
-#+begin_src emacs-lisp
-  (leaf visual-fill-column
-    :doc "fill-column for visual-line-mode"
-    :req "emacs-25.1"
-    :tag "emacs>=25.1"
-    :url "https://github.com/joostkremers/visual-fill-column"
-    :added "2021-11-08"
-    :emacs>= 25.1
-    :ensure t
-    :bind((:visual-fill-column-mode-map
-           ("C-a" . beginning-of-visual-line)
-           ("C-e" . end-of-visual-line)
-           ("C-k" . kill-visual-line))))
-#+end_src
-
-#+RESULTS:
-: visual-fill-column
-
-折り返す位置は指定できます。折り返したい桁にカーソルを合わせ、 C-u C-x f を押すと、その位置で改行するようになります。あるいは C-u 50 C-x f のように、桁数を引数に与えてもよいです。なお、設定しただけでは表示は変わりません。何か文字を入力すると、変わります。
-
-https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column-50.png
-
-また、一行を基準に動作する標準のキーを、画面の一行を基準に動作するコマンドに、次の通り置き換えています[fn:1]。
-
-| キー | 説明                          |
-|------+-------------------------------|
-| C-a  | *画面上の* 行の一番先頭に移動 |
-| C-e  | *画面上の* 行の一番末尾に移動 |
-| C-k  | *画面上の* 行を一行削除       |
-
-この設定により、折り返す桁を自由に指定できる上に、画面上の一行を単位として編集できます。
-
-*** 単語の途中で折り返さないようにするには
-さて、日本語で入力するのであればこのままでもよいのですが、英語の場合、単語の途中で折り返されるのは嫌ですね。そんなときは visual-line-mode を使います。このモードは標準装備です。M-x visual-line-modeで設定できます。
-
-https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-line-mode.png
-
-単語が途中で改行されないので、見やすくなりました。この行は全て繋がっていますが、矢印のアイコンもでなくなりました。ただし、日本語の文書でこの設定をしてしまうと、逆に見づらいです（日本語には単語の区切り（空白）がないので、逆にどこで改行するか判断しにくい）。
-
-#+begin_comment
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, condimentum vitae blandit porttitor, ultricies in enim. Integer sit amet mi tincidunt, blandit metus id, finibus quam. Donec egestas tortor at metus condimentum, at varius magna venenatis. Nullam auctor ipsum quis massa semper, non eleifend quam accumsan. Etiam sed dui nisl. Nulla ac tempus nulla. Nulla facilisi. Cras ligula elit, rutrum in augue volutpat, pharetra tempus metus. Aliquam nibh est, scelerisque sit amet nisi non, aliquam volutpat nibh. Pellentesque consequat dui eros, sed fermentum augue tincidunt eu. Quisque eget tristique massa, eu gravida nunc.
-#+end_comment
-
-*** まとめ
-日本語の場合、
-
-1. truncate-linesはnil（標準のまま）
-2. visual-fill-columnパッケージをインストールして桁数を設定
-
-すると、自由に好きな位置で折返し表示させて編集できるようになります。
-
-英語の場合、追加で
-
-3. visual-line-modeを利用（標準で利用可）
-
-となります。
-
-*** 参考
-+ [[https://github.com/joostkremers/visual-fill-column][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
-  * visual-fill-columnパッケージのサイト
-+ [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html]]
-  * visual-line-modeの説明
-
-[fn:1] orgモードではC-kにorg-kill-lineが割り当てられます。これを上書きすることで弊害がおきるかもしれませんが、未確認です。
-
-*** COMMENT コメント
-+ mu4eでメールを書くときに利用する。
-+ [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Adaptive-Fill.html][https://www.gnu.org/software/emacs/manual/html_node/elisp/Adaptive-Fill.html]]
-  * Adaptive Fill Modeと組み合わせることも（調査中）
-+ [[https://github.com/joostkremers/visual-fill-column#centering-the-text][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
-  * センタリングすることも
-
 ** shr/eww - Simple HTML Reader
 + 説明
   * EmacsのWebブラウザに関する設定
