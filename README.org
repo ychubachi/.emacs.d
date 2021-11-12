@@ -882,27 +882,27 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
                                           ;:commands (doct)
     :config
     (setq org-capture-templates
-          (doct '(("Memo" :keys "m"
+          (doct '(("Journal" :keys "j"
                    :prepend t
                    :empty-lines-after 1
-                   :children
-                   (("Journal" :keys "j"
-                     :file "~/Dropbox/Org/Journal.org"
-                     :datetree t
-                     :todo-state "TODO"
-                     :template ("* %{todo-state} %?"
-                                ":PROPERTIES:"
-                                ":CREATED: %T"
-                                ":ANNOTADED: %a"
-                                ":END:"))
-                    ("Notebook" :keys "n"
-                     :file "~/Dropbox/Org/Notebook.org"
-                     :unnarrowed t
-                     :template ("* %^{Description}"
-                                ":PROPERTIES:"
-                                ":CREATED: %T"
-                                ":END:"
-                                "\n%?"))))
+                   :file "~/Dropbox/Org/Journal.org"
+                   :datetree t
+                   :todo-state "TODO"
+                   :template ("* %{todo-state} %?"
+                              ":PROPERTIES:"
+                              ":CREATED: %T"
+                              ":ANNOTADED: %a"
+                              ":END:"))
+                  ("Notebook" :keys "n"
+                   :prepend t
+                   :empty-lines-after 1
+                   :file "~/Dropbox/Org/Notebook.org"
+                   :unnarrowed t
+                   :template ("* %^{Description}"
+                              ":PROPERTIES:"
+                              ":CREATED: %T"
+                              ":END:"
+                              "\n%?"))
                   ("Blog" :keys "b"
                    :prepend t
                    :empty-lines-after 1
@@ -958,14 +958,15 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : doct
 
+** TODO olg-capture のショートカット
 #+begin_src emacs-lisp
   (define-key global-map
-    (kbd "C-c m")
-    (lambda () (interactive) (org-capture nil "m")))
+    (kbd "C-c j")
+    (lambda () (interactive) (org-capture nil "j")))
 #+end_src
 
 #+RESULTS:
-| lambda | nil | (interactive) | (org-capture nil m) |
+| lambda | nil | (interactive) | (org-capture nil j) |
 
 ** org-tempo - ソースコードブロック入力の省力化
    - "<el"+<TAB> 等でemacs-lispのソースコードブロックがでるように設定。
