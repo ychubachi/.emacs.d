@@ -2457,19 +2457,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
   #+RESULTS:
   : project
 
-** COMMENT TODO hydra
+** TODO hydra
 
 + [[https://medium.com/@mopemope/hydra-%E3%81%AE%E3%82%B9%E3%82%B9%E3%83%A1-88a4168f945c][Hydra のススメ. みなさん、 Emacs 使ってますか？先日 Emacs 26.1… | by mopemope | Medium]]
-#+begin_src emacs-lisp :tangle no
-  (bind-key
-   "<f3>"
-   (defhydra hydra-zoom (:colorg red :hint nil)
-   “zoom”
-    (“g” text-scale-increase “in”)
-   (“l” text-scale-decrease “out”)))
+
+#+begin_src emacs-lisp
+(defhydra hydra-zoom (global-map "<f2>")
+  "zoom"
+  ("g" text-scale-increase "in")
+  ("l" text-scale-decrease "out"))
 #+end_src
 
 #+RESULTS:
+: hydra-zoom/body
 
 * おわりに
 ** お約束の記述
