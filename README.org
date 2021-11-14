@@ -2498,6 +2498,18 @@ during initialization.
 #+RESULTS:
 : ol-notmuch
 
+*** consult-notmuch
+notmuchのconsultで検索（結果が多いと落ちるようだ）
+
+#+begin_src emacs-lisp
+  (leaf consult-notmuch
+    :el-get emacsmirror/consult-notmuch
+    :after consult notmuch)
+#+end_src
+
+#+RESULTS:
+: consult-notmuch
+
 * OS依存の設定
   - OSの判定方法
     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
