@@ -2001,6 +2001,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
     * フォントはMicrosoft Yahei
       - [[https://qiita.com/styzo/items/28d5d994a293fa704476][emacs 26 のフォントの設定 M-x view-hello-file - Qiita]]
     * ewwの正体はshr
+  * muに~/Maildirを設定しているのはどこだろう？
 + mbsyncについて
   * 参考文献
     - [[https://isync.sourceforge.io/][isync: free IMAP and MailDir mailbox synchronizer]]
@@ -2212,6 +2213,271 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 
 #+RESULTS:
 : eww
+
+** TODO notmuch - 高速Maildir検索ツール用のインタフェイス
+
++ [[https://notmuchmail.org/notmuch-emacs/#index1h1][notmuch-emacs]]
+
++ [[https://notmuchmail.org/notmuch-emacs/#index5h2][After Notmuch is loaded notmuch-init-file (typically ~/.emacs.d/notmuch-config.el) is checked out.]]
+
++ orgのannotationに対応していないかも・・・
++ カスタマイズ変数
+  * '(notmuch-draft-folder "Gmail/drafts")
+    - ドラフトはGmailのdraftsへ
+    - notmuch-fcc-dirs . nil
+  * '(notmuch-fcc-dirs nil)
+    - FCC (file carbon copy) はなしでGmailに任せる
++ inboxかどうかをタグで判断している？+inbox
+  * imapのタグとnotmuchのタグは違う？
++ 新しいメールを受信したら、notmuch newが必要
++ Maildirを移動する方法不明
++ [[https://githubmemory.com/repo/minad/vertico/issues/119][Notmuch.el select tag error: "Tag must be in the form of +'this_tag' or '-that_tag'" - githubmemory]]
+  * Verticoでタグを操作する場合のバグを回避
+
++ [[https://notmuchmail.org/howto/][Index and search emails written in CJK scripts]]
+  + 日本語の場合、XAPIAN_CJK_NGRAM=1
+
++ imapでnewに入ったメールをcurに移すときファイル名に
+  * [[http://cr.yp.to/proto/maildir.html][When you move a file from new to cur, you have to change its name from uniq to uniq:info.]]
+  * P,R,S,T,D,Fのフラグをつける
+  * メーラで開いたとき、Sのフラグがついてnewからcurに移る
++ それとは別に，inboxとunreadのフラグがつく（inboxはnotmuchのスペシャルタグ）
+
+  + たぶんnotmuch newのとき
++ notmuchでInboxを見るには？
+  + search path:/Gmail\/inbox/ <-正規表現
++ notmuchのarchiveとは
+  * inbox tagを削除すること
+  * ファイルの移動は行わない？
++ そもそもGmailのInboxとは？
+  * [[https://www.gmailhelplinenumber.co.uk/gmail-help-desk-number-uk.html][Gmail inbox is that folder in which only the non-archived emails are kept. ]]
+  * Gmail All Mailの一部でアーカイブされていないもの
+  * Gmail上でarchiveにはinboxのメールも表示される
+  * Gmailでinboxをアーカイブしてもローカルのinbox/curにのこり続けるようだ
+    - mbsync で消えそうだけど・・・
+      - mbsnc の設定ぽいなあ
+    - [[https://www.seanh.cc/2021/08/22/backup-fastmail-and-gmail-with-isync/][Expunge Slave        # Expunge deleted messages from the local copy.]]
+    - [[https://www.seanh.cc/2021/08/22/backup-fastmail-and-gmail-with-isync/][The Pipelinedepth 1 slows isync down by preventing it from having multiple IMAP commands in flight at once. This is necessary to prevent isync from hitting Gmail’s bandwidth quotas and triggering this error message:]]
+    - 削除された
+
+*** カスタマイズ
+
+Subgroups:
++ Notmuch Address 		    Address completion.
++ Notmuch Crypto 		    Processing and display of cryptographic MIME parts.
++ Notmuch Draft		     Saving and editing drafts in Notmuch.
++ Notmuch External 		    Running external commands from within Notmuch.
++ Notmuch Faces		     Graphical attributes for displaying text
++ Notmuch Hello		     Overview of saved searches, tags, etc.
++ Notmuch Hooks		     Running custom code on well-defined occasions.
++ Notmuch Reply		     Replying to messages in notmuch.
+  * 返信メールの引用方法
++ Notmuch Search		     Searching and sorting mail.
++ Notmuch Send		     Sending messages from Notmuch.
++ Notmuch Show		     Showing messages and threads.
+  * Notmuch Archive Tags:
+    - -inbox
++ Notmuch Tag		     Tags and tagging in Notmuch.
+  *
++ Notmuch Tree 		    Showing message and thread structure.
++ Notmuch Wash		     Cleaning up messages for display.
+
+*** Notmuch Hello （メニュー）
+
+#+begin_comment
+Major mode for convenient notmuch navigation. This is your entry portal into notmuch.
+
+Saved searches are "bookmarks" for arbitrary queries. Hit RET
+or click on a saved search to view matching threads. Edit saved
+searches with the ‘edit’ button. Type ‘j’
+in any Notmuch screen for quick access to saved searches that
+have shortcut keys.
+
+Type new searches in the search box and hit RET to view matching
+threads. Hit RET in a recent search box to re-submit a previous
+search. Edit it first if you like. Save a recent search to saved
+searches with the ‘save’ button.
+
+Hit ‘s’ or ‘z’ in any Notmuch
+screen to search for messages and view matching threads or
+messages, respectively. Recent searches are available in the
+minibuffer history.
+
+Expand the all tags view with the ‘show’ button (and collapse
+again with the ‘hide’ button). Hit RET or click on a tag name to
+view matching threads.
+
+Hit ‘=’ to refresh the screen and
+‘q’ to quit.
+
+The screen may be customized via ‘M-x customize’.
+
+Complete list of currently available key bindings:
+
+?	Display help for the current notmuch mode.
+v	Display the notmuch version.
+q	Undisplay the current buffer.
+s	Search for messages.
+t	Display threads matching TAG in a notmuch-search buffer.
+z	Display threads matching QUERY in tree view.
+u	Display threads matching QUERY in unthreaded view.
+m	Compose new mail.
+C-u m	... and prompt for sender
+g	Refresh the current buffer.
+=	Refresh the current buffer.
+M-=	Invoke ‘notmuch-refresh-this-buffer’ on all notmuch major-mode buffers.
+G	Invoke ‘notmuch-poll’ to import mail, then refresh the current buffer.
+j	Jump to a saved search by shortcut key.
+TAB	Move point to the next field or button.
+M-TAB	Move point to the previous field or button.
+<S-tab>	Move point to the previous field or button.
+<backtab>	Move point to the previous field or button.
+RET	Invoke button at POS.
+<C-tab>	Move point to the previous field or button.
+
+This mode runs the hook ‘notmuch-hello-mode-hook’, as the final or penultimate step
+during initialization.
+#+end_comment
+
+*** スレッドモード？
+| キー | 説明               |
+|------+--------------------|
+| m    | 新規メッセージ     |
+| n    | 次の行             |
+| SPC  | メールを読み進める |
+| M-n  | 次のスレッド       |
+
+
+#+begin_comment
+Major mode for viewing a thread with notmuch.
+
+This buffer contains the results of the "notmuch show" command
+for displaying a single thread of email from your email archives.
+
+By default, various components of email messages, (citations,
+signatures, already-read messages), are hidden. You can make
+these parts visible by clicking with the mouse button or by
+pressing RET after positioning the cursor on a hidden part, (for
+which TAB and C-M-i are helpful).
+
+Reading the thread sequentially is well-supported by pressing
+SPC. This will scroll the current message (if necessary), advance
+to the next message, or advance to the next thread (if already on
+the last message of a thread).
+
+Other commands are available to read or manipulate the thread
+more selectively, (such as ’N’ and ’P’ to advance to messages
+without removing any tags, and ’M-x notmuch-show-archive-thread’ to archive an entire thread
+without scrolling through with SPC).
+
+You can add or remove arbitrary tags from the current message with
+’+’ or ’-’.
+
+All currently available key bindings:
+
+?	Display help for the current notmuch mode.
+v	Display the notmuch version.
+q	Undisplay the current buffer.
+s	Search for messages.
+z	Display threads matching QUERY in tree view.
+u	Display threads matching QUERY in unthreaded view.
+m	Compose new mail.
+C-u m	... and prompt for sender
+g	Refresh the current buffer.
+=	Refresh the current buffer.
+M-=	Invoke ‘notmuch-refresh-this-buffer’ on all notmuch major-mode buffers.
+G	Invoke ‘notmuch-poll’ to import mail, then refresh the current buffer.
+j	Jump to a saved search by shortcut key.
+Z	Call notmuch tree with the current query.
+U	Call notmuch unthreaded with the current query.
+<C-tab>	Move point to the previous field or button.
+M-TAB	Move point back to the previous button in the buffer.
+M-n	Show the next thread in the search results, if any.
+M-p	Show the previous thread in the search results, if any.
+M-RET	Show all messages.
+C-u M-RET	Hide all messages.
+<backtab>	Move point back to the previous button in the buffer.
+TAB	Advance point to the next button in the buffer.
+f	Forward the current message.
+C-u f	... and prompt for sender
+F	Forward the currently open messages.
+C-u F	... and prompt for sender
+b	Resend the current message.
+l	Filter or LIMIT the current thread based on a new query string.
+r	Reply to the sender of the current message.
+C-u r	... and prompt for sender
+R	Reply to the sender and all recipients of the current message.
+C-u R	... and prompt for sender
+|	Pipe the contents of the current message to a command.
+C-u |	Pipe the thread as an mbox to a command.
+w	Save all attachments from the current message.
+V	View the original source of the current message.
+e	Resume EDITING the current draft message.
+c c	Copy CC field of current message to kill-ring.
+c d	Copy date of current message to kill-ring.
+C-u c d	Copy timestamp of current message to kill-ring.
+c F	Copy filename of current message to kill-ring.
+c f	Copy From address of current message to kill-ring.
+c i	Copy id: query matching the current message to kill-ring.
+C-u c i	Copy thread: query matching current thread to kill-ring.
+c I	Copy message ID of current message (sans ‘id:’ prefix) to kill-ring.
+c s	Copy Subject field of current message to kill-ring.
+c T	Copy tags of current message to kill-ring as a comma separated list.
+c t	Copy To address of current message to kill-ring.
+c l	Copy an ML Archive URI for the current message to the kill-ring.
+c L	Copy an ML Archive URI for the current message to the kill-ring and visit it.
+c G	Copy From/To/Cc/Message-Id of current message to kill-ring.
+C-u c G	Copy From/To/Cc of current message to kill-ring.
+Use a form suitable for pasting to git send-email command line.
+c ?	Show help for a subkeymap.
+h	Toggle the visibility of the current message headers.
+k	Create a jump menu for tagging operations.
+*	Change tags for all messages in the current show buffer.
+-	Change tags for the current message (defaulting to remove).
++	Change tags for the current message (defaulting to add).
+X	Archive all messages in the current buffer, then exit back to search results.
+x	Archive current message, then show next open message in current thread.
+A	Archive all messages in the current buffer, then show next thread from search.
+a	Archive current message, then show next open message in current or next thread.
+N	Show the next message.
+P	Show the previous message or the start of the current message.
+n	Show the next open message.
+p	Show the previous open message.
+DEL	Backup through the thread (reverse scrolling compared to SPC).
+SPC	Advance through thread and archive.
+RET	Toggle the visibility of the current message.
+#	Print the current message.
+!	Toggle the display of non-matching messages.
+$	Toggle the processing of cryptographic MIME parts.
+<	Toggle the indentation of threads.
+t	Toggle truncating of long lines for the current buffer.
+. s	Save the MIME part containing point to a file.
+. v	View the MIME part containing point in an external viewer.
+. o	View the MIME part containing point, prompting for a viewer.
+. |	Pipe the MIME part containing point to an external command.
+. m	Choose the mime type to use for displaying part.
+. ?	Show help for a subkeymap.
+B	Offer to browse any URLs in the current message.
+
+This mode runs the hook ‘notmuch-show-mode-hook’, as the final or penultimate step
+during initialization.
+#+end_comment
+
+
+#+begin_src emacs-lisp
+  (leaf notmuch
+    :el-get (notmuch
+             :url "git://git.notmuchmail.org/git/notmuch")
+    :require t
+    :custom ((notmuch-draft-folder . "Gmail/drafts")
+             (notmuch-fcc-dirs . nil))
+    :config
+    (advice-add #'notmuch-read-tag-changes :filter-return (lambda (x) (mapcar #'string-trim x))))
+#+end_src
+
+#+RESULTS:
+: notmuch
+
 * OS依存の設定
   - OSの判定方法
     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
