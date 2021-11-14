@@ -430,6 +430,15 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 : *undo
 
+** toggle-truncate-linesをC-c tに
+
+#+begin_src emacs-lisp
+  (leaf *toggle-truncate-lines :bind (("C-c t" . toggle-truncate-lines)))
+#+end_src
+
+#+RESULTS:
+: *toggle-truncate-lines
+
 * ビルトインパッケージの設定
 ** isearch
 
