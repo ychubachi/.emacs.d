@@ -154,7 +154,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
   ;;; Code:
 #+end_src
 
-* パッケージ管理・カスタマイズ変数
+* パッケージ管理
 ** DONE leaf - 「パッケージ設定」のためのパッケージ              :published:
 CLOSED: [2021-11-11 Thu 21:16]
 :PROPERTIES:
@@ -276,6 +276,7 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 : straight
 
+* カスタマイズ変数
 ** カスタマイズファイルを分離（cus-edit）
 
 #+begin_src emacs-lisp
@@ -394,7 +395,7 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 : *backup
 
 * キーバインディング
-** C-hをBSに・C-@をhelpに
+** C-hをBSに、C-@をhelpに
 - 標準で
 - [[https://www.reddit.com/r/spacemacs/comments/l2fjzy/remapping_ch_to_backspace_and_remap_help_menu_to/][Remapping C-h to backspace, and remap "help" menu to anything else? : spacemacs]]
 
@@ -404,7 +405,6 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 - help-map は :bind で設定できない
   - ここでは :bind を利用しない
   - :bind を利用しなければ :init と :config
-
 
 #+begin_comment
     (global-set-key (kbd "C-h") 'delete-backward-char))
@@ -419,6 +419,7 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 
 #+RESULTS:
 : *backspace
+
 ** UndoをC-zに                                                        :leaf:
 - 指が覚えてしまっている
 
