@@ -2483,6 +2483,21 @@ during initialization.
 #+RESULTS:
 : notmuch
 
+*** ol-notmuch
+
++ orgのリンクをnotmuchに対応させる
+  - storeはできるけど・・・？
+
+#+begin_src emacs-lisp
+  (leaf ol-notmuch
+    :el-get (ol-notmuch
+             :url "https://git.sr.ht/~tarsius/ol-notmuch")
+    :after notmuch org)
+#+end_src
+
+#+RESULTS:
+: ol-notmuch
+
 * OS依存の設定
   - OSの判定方法
     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
