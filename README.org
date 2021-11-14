@@ -1786,7 +1786,8 @@ https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-col
     :added "2021-11-08"
     :emacs>= 25.1
     :ensure t
-    :bind((:visual-fill-column-mode-map
+    :bind(("C-c q" . visual-fill-column-mode)
+          (:visual-fill-column-mode-map
            ("C-a" . beginning-of-visual-line)
            ("C-e" . end-of-visual-line)
            ("C-k" . kill-visual-line))))
@@ -1798,6 +1799,8 @@ https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-col
 折り返す位置は指定できます。折り返したい桁にカーソルを合わせ、 C-u C-x f を押すと、その位置で改行するようになります。あるいは C-u 50 C-x f のように、桁数を引数に与えてもよいです。なお、設定しただけでは表示は変わりません。何か文字を入力すると、変わります。
 
 https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column-50.png
+
+C-c qにvisual-fill-column-modeにするキーを割り当てました。M-qでfill-paragraphするアナロジーです。
 
 また、一行を基準に動作する標準のキーを、画面の一行を基準に動作するコマンドに、次の通り置き換えています[fn:1]。
 
