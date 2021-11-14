@@ -2466,14 +2466,16 @@ This mode runs the hook ‘notmuch-show-mode-hook’, as the final or penultimat
 during initialization.
 #+end_comment
 
+*** 設定:notmuch
 
 #+begin_src emacs-lisp
   (leaf notmuch
     :el-get (notmuch
              :url "git://git.notmuchmail.org/git/notmuch")
     :require t
-    :custom ((notmuch-draft-folder . "Gmail/drafts")
-             (notmuch-fcc-dirs . nil))
+    :custom
+    ((notmuch-draft-folder . "Gmail/drafts")
+     (notmuch-fcc-dirs . nil))
     :config
     (advice-add #'notmuch-read-tag-changes :filter-return (lambda (x) (mapcar #'string-trim x))))
 #+end_src
