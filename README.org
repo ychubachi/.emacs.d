@@ -1700,7 +1700,7 @@ CLOSED: [2021-11-09 Tue 20:23]
 Emacsで作業中に、shellで作業をしたくなることはよくあります。そのような際に便利な設定です。
 
 *** 設定
-公式[fn:1]ではC-tに割り当てていますが、私は標準のC-tをわりと多用します。なので、C-c tにアサインしました。
+公式[fn:1]ではC-tに割り当てていますが、私は標準のC-tをわりと多用します。なので、C-c sにアサインしました。
 # 私はC-zにしています。ターミナルでEmacsを立ち上げたとき、ちょっとshellで作業をしたいと思ったらC-zでサスペンドします。そのイメージがあるので、shell使いたいな、と思うと勝手に手が反応します。shellを使い終わったら、もう一度C-zで閉じます。
 
 #+begin_src emacs-lisp
@@ -1708,15 +1708,19 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
     :package t
     :require t
     :custom
-    ((shell-pop-universal-key . "C-c t")
-     (shell-pop-shell-type . (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
-     (shell-pop-window-position . "bottom")))
+    ((shell-pop-universal-key . "C-c s")
+     (shell-pop-shell-type . (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
+     (shell-pop-window-position . "bottom")
+     (setq shell-pop-full-span . t)))
 #+end_src
 
 #+RESULTS:
 : shell-pop
 
-ターミナルはansi-termにしました[fn:2]（6行目）。また、常に画面の下部に出すようにしています（7行目）。
+# ターミナルはansi-termにしました[fn:2]（6行目）。
+ターミナルはeshellにしました[fn:2]（6行目）。
+また、常に画面の下部に出すようにしています（7行目）。
+ウインドウの幅いっぱいに表示します（87行目）。
 
 [fn:1] [[https://github.com/kyagi/shell-pop-el][kyagi/shell-pop-el: shell-pop.el helps you to use shell easily on Emacs. Only one key action to work.]]
 
