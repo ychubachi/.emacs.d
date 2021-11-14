@@ -420,7 +420,7 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 : *backspace
 
-** UndoをC-zに                                                        :leaf:
+** UndoをC-zに
 - 指が覚えてしまっている
 
 #+begin_src emacs-lisp
