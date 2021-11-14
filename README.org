@@ -1796,10 +1796,6 @@ https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-col
 #+RESULTS:
 : visual-fill-column
 
-折り返す位置は指定できます。折り返したい桁にカーソルを合わせ、 C-u C-x f を押すと、その位置で改行するようになります。あるいは C-u 50 C-x f のように、桁数を引数に与えてもよいです。なお、設定しただけでは表示は変わりません。何か文字を入力すると、変わります。
-
-https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column-50.png
-
 C-c qにvisual-fill-column-modeにするキーを割り当てました。M-qでfill-paragraphするアナロジーです。
 
 また、一行を基準に動作する標準のキーを、画面の一行を基準に動作するコマンドに、次の通り置き換えています[fn:1]。
@@ -1811,6 +1807,10 @@ C-c qにvisual-fill-column-modeにするキーを割り当てました。M-qでf
 | C-k  | *画面上の* 行を一行削除       |
 
 この設定により、折り返す桁を自由に指定できる上に、画面上の一行を単位として編集できます。
+
+折り返す位置は指定できます。折り返したい桁にカーソルを合わせ、 C-u C-x f を押すと、その位置で改行するようになります。あるいは C-u 50 C-x f のように、桁数を引数に与えてもよいです。なお、設定しただけでは表示は変わりません。何か文字を入力すると、変わります。
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column-50.png
 
 *** 単語の途中で折り返さないようにするには
 さて、日本語で入力するのであればこのままでもよいのですが、英語の場合、単語の途中で折り返されるのは嫌ですね。そんなときは visual-line-mode を使います。このモードは標準装備です。M-x visual-line-modeで設定できます。
