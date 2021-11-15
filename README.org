@@ -1,5 +1,6 @@
 ;; -*- mode: Org; fill-column: 100; truncate-lines: nil -*-
 #+STARTUP: overview indent num align inlineimages logdone hidestars
+#+TAGS: TODO(t) DRAFT(d) PBLISHED(p) SOMEDAY(s)
 
 README.org
 - [[https://github.com/ychubachi/.emacs.d#readme][ychubachi/.emacs.d: emacs setting files created on 2020/11/23]]
@@ -24,8 +25,7 @@ README.org
 - org-roam
   - sqlite3
 
-** DONE EmacsのX関係の設定を外部化する                           :published:
-CLOSED: [2021-11-09 Tue 18:57]
+** EmacsのX関係の設定を外部化する                                 :PBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-09 18:32:26]
@@ -155,8 +155,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+end_src
 
 * パッケージ管理
-** DONE leaf - 「パッケージ設定」のためのパッケージ              :published:
-CLOSED: [2021-11-11 Thu 21:16]
+** leaf - 「パッケージ設定」のためのパッケージ                    :PBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-10 00:01:40]
@@ -289,7 +288,7 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 : cus-edit
 
-** TODO customize変数の設定（cus-start）
+** customize変数の設定（cus-start）
 - 一旦全て設定せず、必要になったら再度設定する
 - グローバルモードの設定がカスタマイズ変数でもできる場合、カスタマイズ変数を使用
 
@@ -361,7 +360,7 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 : *emacs
 
-** TODO yes/noの選択をy/nに簡略化
+** yes/noの選択をy/nに簡略化
 
 #+begin_src emacs-lisp
   (defalias 'yes-or-no-p 'y-or-n-p)
@@ -370,7 +369,7 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 : yes-or-no-p
 
-** TODO 保存時、不要な空白を削除
+** 保存時、不要な空白を削除
 
 #+begin_src emacs-lisp
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -486,7 +485,7 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 : macrostep
 
-** TODO recentf
+** recentf
 - recentf-modeはカスタマイズ変数にできる
 
 #+begin_src emacs-lisp
@@ -505,7 +504,7 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 : recentf
 
-** TODO midnight - 一定期間使用しなかった buffer を自動削除
+** midnight - 一定期間使用しなかった buffer を自動削除
 - 使い方、これでいいのかな？
 - [[https://uwabami.github.io/cc-env/Emacs.html][midnight: 一定期間使用しなかった buffer を自動削除]]
 
@@ -520,7 +519,7 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 : midnight
 
-** TODO which-key - キーバインドのガイド表示                         :draft:
+** which-key - キーバインドのガイド表示                              :draft:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-10 23:59:23]
@@ -971,7 +970,9 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : doct
 
-** TODO olg-capture のショートカット
+** olg-capture のショートカット
+- leafにする
+
 #+begin_src emacs-lisp
   (define-key global-map
     (kbd "C-c j")
@@ -1166,7 +1167,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
   (setq org-beamer-frame-default-options "t") ; フレームの位置をtopにする。
 #+end_src
 
-*** TODO 参考文献 RefTex-Mode
+*** 参考文献 RefTex-Mode
     - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
     - [[https://github.com/jkitchin/org-ref][jkitchin/org-ref: org-mode modules for citations, cross-references, bibliographies in org-mode and useful bibtex tools to go with it.]]
     - [[https://aliquote.org/post/org-and-bibtex/][Org and Bibtex - aliquote]]
@@ -2226,7 +2227,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 #+RESULTS:
 : eww
 
-** TODO notmuch - 高速Maildir検索ツール用のインタフェイス
+** notmuch - 高速Maildir検索ツール用のインタフェイス
 
 + [[https://notmuchmail.org/notmuch-emacs/#index1h1][notmuch-emacs]]
 
@@ -2729,7 +2730,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 : my/browser
 
 * 未整理
-** TODO EAF - Emacs Application Framework
+** EAF - Emacs Application Framework
 + .emacs.dをgitで管理しているのでsubmoduleで追加
 + install-eaf.py を実行する前に apt update && apt upgrade
 
@@ -2754,7 +2755,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 #+RESULTS:
 : eaf
-** TODO project.el
+** project.el
 + 説明
   * プロジェクトを扱う
 
@@ -2767,7 +2768,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
   #+RESULTS:
   : project
 
-** TODO hydra
+** hydra
 
 + [[https://medium.com/@mopemope/hydra-%E3%81%AE%E3%82%B9%E3%82%B9%E3%83%A1-88a4168f945c][Hydra のススメ. みなさん、 Emacs 使ってますか？先日 Emacs 26.1… | by mopemope | Medium]]
 
