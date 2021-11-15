@@ -2507,11 +2507,11 @@ during initialization.
 
 + orgのリンクをnotmuchに対応させる
   - storeはできるけど・・・？
++ [[https://notmuchmail.org/emacstips/][Note the package was renamed from org-notmuch to ol-notmuch in recent versions of org-mode.]]
 
 #+begin_src emacs-lisp
   (leaf ol-notmuch
-    :el-get (ol-notmuch
-             :url "https://git.sr.ht/~tarsius/ol-notmuch")
+    :package t
     :after notmuch org)
 #+end_src
 
