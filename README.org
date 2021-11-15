@@ -2511,6 +2511,29 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+RESULTS:
 : consult-notmuch
 
+** gnus-alias - notmuchでシグネチャ
+
++ [[https://www.emacswiki.org/emacs/gnus-alias.el][http://github.com/hexmode/gnus-alias/]]
++ [[https://notmuchmail.org/emacstips/][gnus-alias allows you to define multiple identities when using message-mode.]]
+
+#+begin_src emacs-lisp
+  (leaf gnus-alias
+    :el-get hexmode/gnus-alias
+    :config
+    (setq gnus-alias-identity-alist
+          '(("work"
+             nil
+             "中鉢欣秀 <yc@aiit.ac.jp>"
+             nil ;; No organization header
+             nil ;; No extra headers
+             nil ;; No extra body text
+             "~/.signature" ;; My signature
+             ))))
+#+end_src
+
+#+RESULTS:
+: gnus-alias
+
 * OS依存の設定
   - OSの判定方法
     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
