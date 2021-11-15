@@ -863,14 +863,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : org-mode
 
-** org-modeでRETURNでリンクを開く
-
-- C-mでも可
-
-#+begin_src emacs-lisp
-  (leaf org-mode
-    :config
-    (setq org-return-follows-link  t))
+    (org-return-follows-link  . t) ; RET/C-mでリンクを開く
 #+end_src
 
 #+RESULTS:
