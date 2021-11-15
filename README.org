@@ -2491,7 +2491,7 @@ during initialization.
                  :key "t" :sort-order newest-first)
           (:name "drafts"   :query "tag:draft AND NOT tag:deleted"
                  :key "d" :sort-order newest-first)
-          (:name "all mail" :query "*"
+          (:name "all mail" :query "NOT tag:deleted"
                  :key "a" :sort-order newest-first)))
      )
     :config
