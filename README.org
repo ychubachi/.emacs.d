@@ -1037,9 +1037,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
   (leaf ox-latex
     :require t
     :setq ((org-latex-default-class . "bxjsarticle")
-           (org-latex-pdf-process . '("latexmk -gg -pdfdvi -pvc- %f"))
-           (org-file-apps . '(("pdf" . "evince %s")))
-           (org-export-in-background . nil))
+           (org-latex-pdf-process . '("latexmk -gg -pdfdvi -pvc- %f")))
     :config
     (add-to-list
      'org-latex-classes
