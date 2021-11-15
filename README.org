@@ -2469,6 +2469,9 @@ during initialization.
 
 *** 設定:notmuch
 
++ [[https://githubmemory.com/repo/minad/vertico/issues/119][Notmuch.el select tag error: "Tag must be in the form of +'this_tag' or '-that_tag'" - githubmemory]]
+  * verticoでタグが入力できない問題を回避する
+
 #+begin_src emacs-lisp
   (leaf notmuch
     :el-get (notmuch
@@ -2492,7 +2495,9 @@ during initialization.
                  :key "a" :sort-order newest-first)))
      )
     :config
-    (advice-add #'notmuch-read-tag-changes :filter-return (lambda (x) (mapcar #'string-trim x))))
+    (advice-add #'notmuch-read-tag-changes
+                :filter-return (lambda (x) (mapcar #'string-trim x))) ; vertico対策
+    )
 #+end_src
 
 #+RESULTS:
