@@ -2758,7 +2758,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
   (defun my/browser (url &rest ignore)
     "Browse URL using wslview."
     (interactive "sURL: ")
-    (shell-command (concat "wslview " url)))
+    (shell-command (concat "wslview " "'" url "'")))
 #+end_src
 
 #+RESULTS:
