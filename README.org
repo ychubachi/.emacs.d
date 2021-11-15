@@ -841,6 +841,9 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
   - TODOはどのファイルに書いて良い
   - org-switchbかconsult-org-agendaをどこかにバインドするといいかも？（C-,）
     - C-c bにバインド
+** org-modeの設定
+
++ TODOをMAYBE NEXT STARED WAITING DLEGATEDなど分けてもよいが、TODOに優先度#A #B #Cをつけるほうがアジェンダが見やすくなる
 
 #+begin_src emacs-lisp
   (leaf org-mode
@@ -857,13 +860,10 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
                           "~/.emacs.d/README.org"
                           ))
     (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
-    (org-refile-targets . '((org-agenda-files :tag . "REFILE"))))
-#+end_src
-
-#+RESULTS:
-: org-mode
-
+    (org-todo-keywords . '((sequence "TODO" "|" "DONE" "DEFERRED" "CANCELLED")))
+    (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
     (org-return-follows-link  . t) ; RET/C-mでリンクを開く
+    )
 #+end_src
 
 #+RESULTS:
