@@ -2742,6 +2742,8 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 - WSLかどうか判断
   - [[https://qiita.com/miy4/items/acf50a9c0a053b878b56#%E7%92%B0%E5%A2%83%E5%A4%89%E6%95%B0%E3%82%92%E6%8E%A2%E3%81%99][EmacsでWSLを使っている/いないを判断する - Qiita]]
 
+[[help:browse-url-browser-function’s]]
+
 #+begin_src emacs-lisp
   (when (and (eq system-type 'gnu/linux)
              (getenv "WSLENV"))
