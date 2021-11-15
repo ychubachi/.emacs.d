@@ -2475,8 +2475,22 @@ during initialization.
              :url "git://git.notmuchmail.org/git/notmuch")
     :require t
     :custom
-    ((notmuch-draft-folder . "Gmail/drafts")
-     (notmuch-fcc-dirs . nil))
+    ((notmuch-draft-folder . "Gmail/drafts") ; ドラフトをGmailのフォルダに
+     (notmuch-fcc-dirs . nil) ; 送信済みメールはローカルに保存せずGmailに任せる
+     (notmuch-saved-searches
+      . '((:name "inbox"    :query "tag:inbox folder:/Gmail\\/inbox/ AND NOT tag:deleted"
+                 :key "i" :sort-order newest-first)
+          (:name "unread"   :query "tag:unread AND NOT tag:deleted"
+                 :key "u" :sort-order newest-first)
+          (:name "flagged"  :query "tag:flagged AND NOT tag:deleted"
+                 :key "f" :sort-order newest-first)
+          (:name "sent"     :query "tag:sent AND NOT tag:deleted"
+                 :key "t" :sort-order newest-first)
+          (:name "drafts"   :query "tag:draft AND NOT tag:deleted"
+                 :key "d" :sort-order newest-first)
+          (:name "all mail" :query "*"
+                 :key "a" :sort-order newest-first)))
+     )
     :config
     (advice-add #'notmuch-read-tag-changes :filter-return (lambda (x) (mapcar #'string-trim x))))
 #+end_src
