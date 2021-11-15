@@ -2264,6 +2264,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
     - [[https://www.seanh.cc/2021/08/22/backup-fastmail-and-gmail-with-isync/][The Pipelinedepth 1 slows isync down by preventing it from having multiple IMAP commands in flight at once. This is necessary to prevent isync from hitting Gmail’s bandwidth quotas and triggering this error message:]]
     - 削除された
 
++ mbsyncを定期的に実行するには
+  - watch -n 180 mbsync -a
+  - [[https://wiki.archlinux.org/title/isync#Calling_mbsync_automatically][With imapnotify]]
+  - WSLではどれがいい？ nohup で
+
 *** カスタマイズ
 
 Subgroups:
