@@ -2287,6 +2287,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
   (leaf notmuch
     :package t
     :require t
+    :hook
+    (notmuch-message-mode-hook . visual-fill-column-mode)
+    (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1))))
     :custom
     ((notmuch-draft-folder . "Gmail/drafts") ; ドラフトをGmailのフォルダに
      (notmuch-fcc-dirs . nil) ; 送信済みメールはローカルに保存せずGmailに任せる
@@ -2307,9 +2310,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
     :config
     (advice-add #'notmuch-read-tag-changes
                 :filter-return (lambda (x) (mapcar #'string-trim x))) ; vertico対策
-    :hook
-    (notmuch-message-mode-hook . visual-fill-column-mode)
-    (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1))))
 #+end_src
 
 #+RESULTS:
