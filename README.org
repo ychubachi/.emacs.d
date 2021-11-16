@@ -2501,7 +2501,9 @@ during initialization.
     :config
     (advice-add #'notmuch-read-tag-changes
                 :filter-return (lambda (x) (mapcar #'string-trim x))) ; vertico対策
-    )
+    :hook
+    (notmuch-message-mode-hook . visual-fill-column-mode)
+    (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1))))
 #+end_src
 
 #+RESULTS:
