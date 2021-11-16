@@ -2479,8 +2479,7 @@ during initialization.
 
 #+begin_src emacs-lisp
   (leaf notmuch
-    :el-get (notmuch
-             :url "git://git.notmuchmail.org/git/notmuch")
+    :package t
     :require t
     :custom
     ((notmuch-draft-folder . "Gmail/drafts") ; ドラフトをGmailのフォルダに
