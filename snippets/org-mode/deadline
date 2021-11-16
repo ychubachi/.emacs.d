@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: deadline
+# key: deadline_
+# --
+:DEADLINE: <`(insert (format-time-string "%Y-%m-%d"))`>

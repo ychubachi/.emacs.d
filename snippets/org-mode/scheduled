@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: scheduled
+# key: scheduled_
+# --
+:SCHEDULED: <`(insert (format-time-string "%Y-%m-%d"))`>
