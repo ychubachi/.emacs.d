@@ -860,7 +860,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
                           "~/.emacs.d/README.org"
                           ))
     (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
-    (org-todo-keywords . '((sequence "TODO" "|" "DONE" "DEFERRED" "CANCELLED")))
+    (org-todo-keywords . '((sequence "TODO" "NEXT" "MAYBE" "|" "DONE" "DEFERRED" "CANCELLED")))
     (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
     (org-return-follows-link  . t) ; RET/C-mでリンクを開く
     )
