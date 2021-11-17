@@ -1445,6 +1445,28 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : ox-zenn
 
+** TODO outshine-mode - org minnor mode のようなもの
+
+#+begin_src emacs-lisp
+  (add-hook 'outline-minor-mode-hook
+            (lambda () (local-set-key "\C-c\C-o"
+                                      outline-mode-prefix-map)))
+#+end_src
+
+#+RESULTS:
+| lambda | nil | (local-set-key o outline-mode-prefix-map)  |
+| lambda | nil | (local-set-key  outline-mode-prefix-map) |
+
+[[https://github.com/alphapapa/outshine][alphapapa/outshine: Org-mode for non-Org buffers]]
+[[https://emacs.stackexchange.com/questions/47003/the-orgstruct-mode-seems-to-be-gone-from-the-org-plus-contrib][The orgstruct-mode seems to be gone from the org-plus-contrib - Emacs Stack Exchange]]
+
+#+begin_src emacs-lisp
+  (leaf outshine :package t)
+#+end_src
+
+#+RESULTS:
+: outshine
+
 * 外部パッケージ
 ** undo-tree
    - [[https://elpa.gnu.org/packages/undo-tree.html][GNU ELPA - undo-tree]]
