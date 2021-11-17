@@ -2689,3 +2689,19 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
   :END:
 
 https://github.com/kawabata/ox-pandoc
+** TODO notmuchでワンタッチStarつける
+:PROPERTIES:
+:CREATED: <2021-11-17 Wed 15:41>
+:ANNOTADED: [[file:~/Dropbox/Org/Journal.org::*見積書の項目を整える][見積書の項目を整える]]
+:END:
+** DONE notmuchでサーチの結果を逆順にする
+CLOSED: [2021-11-17 Wed 19:13]
+:PROPERTIES:
+:CREATED: <2021-11-17 Wed 15:42>
+:ANNOTADED:
+:END:
+** TODO notmuchでメール中のURLがEnterでは開けない
+:PROPERTIES:
+:CREATED: <2021-11-17 Wed 18:07>
+:ANNOTADED: [[notmuch:id:001001d7db84$acfb8610$06f29230$@brain.riken.jp][Email from hkimura@brain.riken.jp: [sys_education:00683] Re: 第２２回SIC人財育成協議会の日程調整]]
+:END:
