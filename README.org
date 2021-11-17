@@ -569,9 +569,10 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : *imenu-list
 
-** saveplase - 最後に編集した位置を記憶する
+** saveplace - 最後に編集した位置を記憶する                           :TODO:
 
 + [[https://www.emacswiki.org/emacs/SavePlace][[Home] Save Place]]
++ save-place-forget-unreadable-filesはデフォルトでtなので、削除されたファイルは終了時に削除される
 
 #+begin_src emacs-lisp
   (leaf saveplace
