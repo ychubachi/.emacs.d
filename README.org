@@ -2293,6 +2293,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
     :custom
     ((notmuch-draft-folder . "Gmail/draft") ; ドラフトをGmailのフォルダに
      (notmuch-fcc-dirs . nil) ; 送信済みメールはローカルに保存せずGmailに任せる
+     (notmuch-search-oldest-first . nil) ; 検索結果を新しい順でソート
      (notmuch-saved-searches
       . '((:name "inbox"    :query "tag:inbox folder:/Gmail\\/inbox/ AND NOT tag:deleted"
                  :key "i" :sort-order newest-first)
