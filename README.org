@@ -569,6 +569,19 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : *imenu-list
 
+** saveplase - 最後に編集した位置を記憶する
+
++ [[https://www.emacswiki.org/emacs/SavePlace][[Home] Save Place]]
+
+#+begin_src emacs-lisp
+  (leaf saveplace
+    :config
+    (save-place-mode 1))
+#+end_src
+
+#+RESULTS:
+: saveplace
+
 ** align - コメントの位置を揃えたりする
 
 #+begin_src emacs-lisp
