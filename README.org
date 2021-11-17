@@ -2670,3 +2670,22 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 :CREATED: <2021-11-12 Fri 13:54>
 :ANNOTADED: [[file:~/Dropbox/Org/Mobile.org::*Emacs M-x toggle-truncate-lines: 長い行の折り返し表示を切り換える][Emacs M-x toggle-truncate-lines: 長い行の折り返し表示を切り換える]]
 :END:
+** TODO org-modeからpandoc経由でWordを生成する
+:PROPERTIES:
+:CREATED: <2021-11-12 Fri 15:14>
+:ANNOTADED: [[file:~/git/ploversky-zenn.dev/plaversky@zenn.dev.org::*ファイルローカル変数][ファイルローカル変数]]
+:END:
+
+- [[https://taipapamotohus.com/post/org-mode_paper_4/][Emacsのorg-modeで論文を書く（その4：pandocを利用してorg-modeからword [docx]を文献付きでexportする） | A perfect autumn day]]
+** TODO flymakeでスペルチェック
+:PROPERTIES:
+:CREATED: <2021-11-13 Sat 11:05>
+:ANNOTADED:
+:END:
+
+** TODO kawabata/ox-pandoc: Another org-mode exporter via pandoc.
+  :PROPERTIES:
+  :CREATED:  [2021-11-12 Fri 18:21]
+  :END:
+
+https://github.com/kawabata/ox-pandoc
