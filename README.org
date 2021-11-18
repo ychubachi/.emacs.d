@@ -322,6 +322,11 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 : cus-start
 
++ 参考
+  * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
+  * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
+
++ 古い設定
 #+begin_src emacs-lisp :tangle no
   (leaf cus-start
     :doc "define customization properties of builtins"
@@ -381,19 +386,6 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 
 #+RESULTS:
 | delete-trailing-whitespace |
-
-** TODO バックアップの設定
-- 文献
-  - [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
-  - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Backup-Deletion.html][If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
-
-#+begin_src emacs-lisp
-  (leaf *backup
-)
-#+end_src
-
-#+RESULTS:
-: *backup
 
 * キーバインディング
 ** C-hをBSに、C-@をhelpに
