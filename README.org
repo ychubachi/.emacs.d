@@ -308,10 +308,11 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 
     (show-paren-mode . t)                     ; 括弧の対応関係を表示する
     (show-paren-style . 'mixed)               ; 対応関係を表示するスタイル
-    ; (show-paren-delay . 0.5)                 ; 対応関係を表示するまでの遅延
 
     (vc-follow-symlinks . t)           ; VC対象ファイルのシンボリックリンクの場合、本体を辿る
     (auto-revert-check-vc-info . t)    ; VCで更新があった場合、自動で更新
+
+    (save-place-mode . t) ;
     )
 #+end_src
 
@@ -568,20 +569,6 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 #+RESULTS:
 : *imenu-list
-
-** saveplace - 最後に編集した位置を記憶する                           :TODO:
-
-+ [[https://www.emacswiki.org/emacs/SavePlace][[Home] Save Place]]
-+ save-place-forget-unreadable-filesはデフォルトでtなので、削除されたファイルは終了時に削除される
-
-#+begin_src emacs-lisp
-  (leaf saveplace
-    :config
-    (save-place-mode 1))
-#+end_src
-
-#+RESULTS:
-: saveplace
 
 ** align - コメントの位置を揃えたりする
 
