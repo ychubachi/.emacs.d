@@ -297,23 +297,26 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
     :doc "define customization properties of builtins"
     :tag "builtin" "internal"
     :custom
-    (inhibit-startup-screen . t)              ; スタートアップスクリーンを非表示
-    (ring-bell-function . 'ignore)            ; ベルを鳴らさない
-
-    (global-display-line-numbers-mode . t)    ; 行番号表示
-    (display-line-numbers-width . 4)          ; 表示する行番号の桁数
-
-    (global-auto-revert-mode . t)             ; 更新されたら自動的に再読込
-    (auto-revert-verbose . nil)               ; 再読込の際、メッセージを非表示
-
-    (show-paren-mode . t)                     ; 括弧の対応関係を表示する
-    (show-paren-style . 'mixed)               ; 対応関係を表示するスタイル
-
-    (vc-follow-symlinks . t)           ; VC対象ファイルのシンボリックリンクの場合、本体を辿る
-    (auto-revert-check-vc-info . t)    ; VCで更新があった場合、自動で更新
-
-    (save-place-mode . t) ;
-    )
+    ((inhibit-startup-screen . t)			; スタートアップスクリーンを非表示
+     (ring-bell-function . 'ignore))		; ベルを鳴らさない
+    :custom
+    ((global-display-line-numbers-mode . t)	; 行番号表示
+     (display-line-numbers-width . 4))		; 表示する行番号の桁数
+    :custom
+    ((global-auto-revert-mode . t)		; 更新されたら自動的に再読込
+     (auto-revert-verbose . nil))			; 再読込の際、メッセージを非表示
+    :custom
+    ((show-paren-mode . t)			; 括弧の対応関係を表示する
+     (show-paren-style . 'mixed))			; 対応関係を表示するスタイル
+    :custom					; VCの設定
+    ((vc-follow-symlinks . t)			; VC対象ファイルのシンボリックリンクの場合、本体を辿る
+     (auto-revert-check-vc-info . t))		; VCで更新があった場合、自動で更新
+    :custom					; 最後に編集した場所を記憶
+    ((save-place-mode . t))
+    :custom					; バックアップファイルの設定
+    ((version-control . t)
+     (backup-directory-alist . '(("." . ".~")))
+     (delete-old-versions . t)))
 #+end_src
 
 #+RESULTS:
@@ -379,16 +382,14 @@ leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行
 #+RESULTS:
 | delete-trailing-whitespace |
 
-** バックアップの設定
+** TODO バックアップの設定
 - 文献
   - [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
   - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Backup-Deletion.html][If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
 
 #+begin_src emacs-lisp
   (leaf *backup
-    :custom ((version-control . t)
-             (backup-directory-alist . '(("." . ".~")))
-             (delete-old-versions . t)))
+)
 #+end_src
 
 #+RESULTS:
