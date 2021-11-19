@@ -2703,12 +2703,14 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 :CREATED: <2021-11-12 Fri 10:30>
 :ANNOTADED:
 :END:
-** TODO C-c sをシェルに、C-c tをtoggle-truncate-linesに？
+** DONE C-c sをシェルに、C-c tをtoggle-truncate-linesに？
+CLOSED: [2021-11-19 Fri 19:09]
 :PROPERTIES:
 :CREATED: <2021-11-12 Fri 13:54>
 :ANNOTADED: [[file:~/Dropbox/Org/Mobile.org::*Emacs M-x toggle-truncate-lines: 長い行の折り返し表示を切り換える][Emacs M-x toggle-truncate-lines: 長い行の折り返し表示を切り換える]]
 :END:
-** TODO org-modeからpandoc経由でWordを生成する
+** DONE org-modeからpandoc経由でWordを生成する
+CLOSED: [2021-11-19 Fri 19:09]
 :PROPERTIES:
 :CREATED: <2021-11-12 Fri 15:14>
 :ANNOTADED: [[file:~/git/ploversky-zenn.dev/plaversky@zenn.dev.org::*ファイルローカル変数][ファイルローカル変数]]
@@ -2721,7 +2723,8 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 :ANNOTADED:
 :END:
 
-** TODO kawabata/ox-pandoc: Another org-mode exporter via pandoc.
+** DONE kawabata/ox-pandoc: Another org-mode exporter via pandoc.
+CLOSED: [2021-11-19 Fri 19:09]
   :PROPERTIES:
   :CREATED:  [2021-11-12 Fri 18:21]
   :END:
@@ -2743,3 +2746,164 @@ CLOSED: [2021-11-17 Wed 19:13]
 :CREATED: <2021-11-17 Wed 18:07>
 :ANNOTADED: [[notmuch:id:001001d7db84$acfb8610$06f29230$@brain.riken.jp][Email from hkimura@brain.riken.jp: [sys_education:00683] Re: 第２２回SIC人財育成協議会の日程調整]]
 :END:
+** TODO Emacs の org-mode でスケジュール管理をしよう！ - Qiita
+  SCHEDULED: [2021-11-18 Thu]
+  :PROPERTIES:
+  :CREATED:  [2021-11-18 Thu 02:19]
+  :END:
+
+https://qiita.com/zonkyy/items/821ea2b1e20f575c222f
+
+** TODO emacs の org-mode と google calendar を連携させる org-gcal - Qiita
+  SCHEDULED: [2021-11-18 Thu]
+  :PROPERTIES:
+  :CREATED:  [2021-11-18 Thu 02:20]
+  :END:
+
+https://qiita.com/clothoid/items/73a937a22eeeb82c3ee7
+
+** TODO org-publishを使ってorgでブログを書く話 - Qiita
+  :PROPERTIES:
+  :CREATED:  [2021-11-18 Thu 03:05]
+  :END:
+
+https://qiita.com/conao3/items/f81cf964198d4da93a05
+
+** TODO fniessen/org-html-themes: How to export Org mode files into awesome HTML in 2 minutes
+  :PROPERTIES:
+  :CREATED:  [2021-11-18 Thu 19:14]
+  :END:
+
+https://github.com/fniessen/org-html-themes
+
+** Emacsの中で動く作図ツールを作る | Misohena Blog
+   :PROPERTIES:
+   :CREATED:  [2021-09-22 Wed 14:54]
+   :END:
+
+ http://misohena.jp/blog/2021-09-21-emacs-easy-draw.html
+
+** ChromebookでEmacsキーバインドを使う｜junkawa@Chromebookで始める開発日記｜note
+   :PROPERTIES:
+   :CREATED:  [2021-09-28 Tue 00:22]
+   :END:
+
+ https://note.com/junkawashima/n/na18827f2231f
+
+** emacs-from-scratch/Emacs-Tips-04.org at master · daviwil/emacs-from-scratch · GitHub
+   :PROPERTIES:
+   :CREATED:  [2021-09-29 Wed 12:24]
+   :END:
+
+ https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Tips-04.org
+
+** Org-roam事始め - Qiita
+   :PROPERTIES:
+   :CREATED:  [2021-10-16 Sat 02:30]
+   :END:
+
+ https://qiita.com/unsignedint/items/749dd5e87bcadf13e3a6
+
+ ** 偉人 アーサー・Ｃ・クラーク　名言集(英訳付)｜心の常備薬
+   :PROPERTIES:
+   :CREATED:  [2021-10-16 Sat 12:45]
+   :END:
+
+ http://medicines.aquaorbis.net/meigen/kaigai/bungaku-e/arthur-c-clarke
+
+** DONE 【Emacs入門】②バージョン28で新たにビルトインされるModus Themesを使おう
+   :PROPERTIES:
+   :CREATED:  [2021-10-16 Sat 18:51]
+   :END:
+
+ https://zenn.dev/lambdagonbei/articles/1b2bce27673078
+
+** Emacs のテーマを変更 | 二代目俺のメモ
+   :PROPERTIES:
+   :CREATED:  [2021-10-16 Sat 18:53]
+   :END:
+
+ https://www.kwonline.org/memo2/2020/06/14/load-themes-on-emacs-24/
+
+** Emacs の設定 | Youhei SASAKI’s official site
+   CLOSED: [2021-11-09 Tue 09:25]
+   :PROPERTIES:
+   :CREATED:  [2021-10-25 Mon 18:37]
+   :END:
+
+ https://uwabami.github.io/cc-env/Emacs.html
+
+** emacs-eaf/emacs-application-framework: A free/libre and open-source extensible framework that revolutionizes the graphical capabilities of Emacs, the key to ultimately Live in Emacs
+   CLOSED: [2021-11-09 Tue 09:25]
+   :PROPERTIES:
+   :CREATED:  [2021-10-26 Tue 10:26]
+   :END:
+
+ https://github.com/emacs-eaf/emacs-application-framework
+
+** emacs-from-scratch/Emacs-Tips-06.org at 82f03806d90eb356b815cf514d10b6d863a2cbdc · daviwil/emacs-from-scratch
+   CLOSED: [2021-11-09 Tue 09:24]
+   :PROPERTIES:
+   :CREATED:  [2021-11-03 Wed 18:03]
+   :END:
+
+ https://github.com/daviwil/emacs-from-scratch/blob/82f03806d90eb356b815cf514d10b6d863a2cbdc/show-notes/Emacs-Tips-06.org
+
+** org-modeドキュメントからZenn Flavored Markdownを生成するox-zennの使い方
+   CLOSED: [2021-11-09 Tue 09:24]
+   :PROPERTIES:
+   :CREATED:  [2021-11-04 Thu 00:46]
+   :END:
+
+ https://zenn.dev/conao3/articles/ox-zenn-usage
+
+** 【Emacs入門】②バージョン28で新たにビルトインされるModus Themesを使おう
+   CLOSED: [2021-11-09 Tue 09:24]
+   :PROPERTIES:
+   :CREATED:  [2021-11-04 Thu 00:52]
+   :END:
+
+ https://zenn.dev/lambdagonbei/articles/1b2bce27673078
+
+** emacs-from-scratch/hallo-theme.el at master · daviwil/emacs-from-scratch
+   CLOSED: [2021-11-09 Tue 09:24]
+   :PROPERTIES:
+   :CREATED:  [2021-11-04 Thu 02:53]
+   :END:
+
+ https://github.com/daviwil/emacs-from-scratch/blob/master/hallo-theme.el
+
+** org-export subtree to filename.pdf with EXPORT_FILE_NAME fails - Emacs Stack Exchange
+   CLOSED: [2021-11-09 Tue 09:24]
+   :PROPERTIES:
+   :CREATED:  [2021-11-07 Sun 14:01]
+   :END:
+
+ https://emacs.stackexchange.com/questions/16517/org-export-subtree-to-filename-pdf-with-export-file-name-fails/16520
+
+** [Home] unbound.el
+   :PROPERTIES:
+   :CREATED:  [2021-11-09 Tue 03:17]
+   :END:
+
+ https://www.emacswiki.org/emacs/unbound.el
+
+** kawabata/ox-pandoc: Another org-mode exporter via pandoc.
+  :PROPERTIES:
+  :CREATED:  [2021-11-12 Fri 18:23]
+  :END:
+
+https://github.com/kawabata/ox-pandoc
+** org-mode をマイナーモードとして使う orgstruct-mode。 - 日々、とんは語る。
+  :PROPERTIES:
+  :CREATED:  [2021-11-17 Wed 21:50]
+  :END:
+
+https://tomoya.hatenadiary.org/entry/20090414/1239697066
+** DONE notmuch thread sort order : r/emacs
+  CLOSED: [2021-11-17 Wed 18:52]
+  :PROPERTIES:
+  :CREATED:  [2021-11-17 Wed 16:26]
+  :END:
+
+https://www.reddit.com/r/emacs/comments/aja2ov/notmuch_thread_sort_order/
