@@ -724,6 +724,9 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : embark
 
+*** 閑話休題
+探せばどこかに必ずあるはずだ、と思って探したものがどうしても見つからないとき、「あるはずだ」と思った自分が間違っているのではないか、と思う。
+
 ** consult
 - [[https://github.com/minad/consult][GitHub - minad/consult: consult.el - Consulting completing-read]]
 
