@@ -2300,6 +2300,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 
 + [[https://githubmemory.com/repo/minad/vertico/issues/119][Notmuch.el select tag error: "Tag must be in the form of +'this_tag' or '-that_tag'" - githubmemory]]
   * verticoでタグが入力できない問題を回避する
++ [[https://notmuchmail.org/emacstips/#index5h2][Add a key binding to add/remove/toggle a tag]]
 
 #+begin_src emacs-lisp
   (leaf notmuch
@@ -2323,10 +2324,32 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
           (:name "Gmal Sent"  :query "folder:/Gmail\\/sent/"           :key "S")
           (:name "all mail"   :query "NOT tag:deleted"                 :key "a")))
      )
+    :bind (("C-c m" . notmuch-hello))
     :config
     (advice-add #'notmuch-read-tag-changes
                 :filter-return (lambda (x) (mapcar #'string-trim x))) ; vertico対策
-    :bind (("C-c m" . notmuch-hello)))
+    :config
+    (define-key notmuch-search-mode-map "f"
+      (lambda ()
+        "toggle flaged tag for message"
+        (interactive)
+        (if (member "flagged" (notmuch-search-get-tags))
+            (notmuch-search-tag (list "-flagged"))
+          (notmuch-search-tag (list "+flagged")))))
+    (define-key notmuch-show-mode-map "f"
+      (lambda ()
+        "toggle flaged tag for message"
+        (interactive)
+        (if (member "flagged" (notmuch-show-get-tags))
+            (notmuch-show-tag (list "-flagged"))
+          (notmuch-show-tag (list "+flagged")))))
+    (define-key notmuch-tree-mode-map "f"
+      (lambda ()
+        "toggle flaged tag for message"
+        (interactive)
+        (if (member "flagged" (notmuch-tree-get-tags))
+            (notmuch-tree-tag (list "-flagged"))
+          (notmuch-tree-tag (list "+flagged"))))))
 #+end_src
 
 #+RESULTS:
