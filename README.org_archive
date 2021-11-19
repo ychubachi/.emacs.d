@@ -567,3 +567,16 @@ https://note.com/junkawashima/n/na18827f2231f
   :END:
 
 https://www.reddit.com/r/emacs/comments/aja2ov/notmuch_thread_sort_order/
+
+* org-export subtree to filename.pdf with EXPORT_FILE_NAME fails - Emacs Stack Exchange
+  CLOSED: [2021-11-09 Tue 09:24]
+  :PROPERTIES:
+  :CREATED:  [2021-11-07 Sun 14:01]
+  :ARCHIVE_TIME: 2021-11-19 Fri 23:28
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: COMMENT Emacs設定のアイデア
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_ITAGS: REFILE
+  :END:
+
+https://emacs.stackexchange.com/questions/16517/org-export-subtree-to-filename-pdf-with-export-file-name-fails/16520

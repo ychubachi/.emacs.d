@@ -2804,14 +2804,6 @@ https://github.com/fniessen/org-html-themes
 
  https://github.com/daviwil/emacs-from-scratch/blob/82f03806d90eb356b815cf514d10b6d863a2cbdc/show-notes/Emacs-Tips-06.org
 
-** org-export subtree to filename.pdf with EXPORT_FILE_NAME fails - Emacs Stack Exchange
-   CLOSED: [2021-11-09 Tue 09:24]
-   :PROPERTIES:
-   :CREATED:  [2021-11-07 Sun 14:01]
-   :END:
-
- https://emacs.stackexchange.com/questions/16517/org-export-subtree-to-filename-pdf-with-export-file-name-fails/16520
-
 ** [Home] unbound.el
    :PROPERTIES:
    :CREATED:  [2021-11-09 Tue 03:17]
