@@ -889,7 +889,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
                    :todo-state "TODO"
                    :template ("* %{todo-state} %?"
                               ":PROPERTIES:"
-                              ":CREATED: %T"
+                              ":CREATED: %t"
                               ":ANNOTADED: %a"
                               ":END:"))
                   ("Notebook" :keys "n"
