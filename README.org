@@ -2831,14 +2831,6 @@ https://github.com/kawabata/ox-pandoc
   :END:
 
 https://tomoya.hatenadiary.org/entry/20090414/1239697066
-** DONE notmuch thread sort order : r/emacs
-  CLOSED: [2021-11-17 Wed 18:52]
-  :PROPERTIES:
-  :CREATED:  [2021-11-17 Wed 16:26]
-  :END:
-
-https://www.reddit.com/r/emacs/comments/aja2ov/notmuch_thread_sort_order/
-
 ** SOMEDAY edraw-org
 
 + [[https://github.com/misohena/el-easydraw][GitHub - misohena/el-easydraw: Embedded drawing tool for Emacs]]
