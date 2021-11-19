@@ -2695,26 +2695,10 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 :END:
 - [[http://emacs.rubikitch.com/backup-each-save/][backup-each-save.el : Emacs式大富豪的バックアップ！保存する度に日時付きファイルでバックアップ]]
 - [[http://emacs.rubikitch.com/real-auto-save/][real-auto-save.el : バッファを自動保存させる超シンプルなマイナーモード]]
-** TODO [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E5%B0%8F%E6%8C%87%E3%82%92%E9%85%B7%E4%BD%BF%E3%81%9B%E3%81%9A%E3%81%8B%E3%81%A4%E3%82%AD%E3%83%BC%E3%83%90%E3%82%A4%E3%83%B3%E3%83%89%E3%81%AE%E3%82%AC%E3%82%A4%E3%83%89%E3%82%92%E5%87%BA%E3%81%99----hydra][Emacsモダン化計画 -かわEmacs編- - Qiita]]
-
-;; Local Variables:
-;; eval: (visual-fill-column-mode)
-;; End:
 ** TODO org-gfmを導入する
 :PROPERTIES:
 :CREATED: <2021-11-12 Fri 10:30>
 :ANNOTADED:
-:END:
-** TODO flymakeでスペルチェック
-:PROPERTIES:
-:CREATED: <2021-11-13 Sat 11:05>
-:ANNOTADED:
-:END:
-
-** TODO notmuchでメール中のURLがEnterでは開けない
-:PROPERTIES:
-:CREATED: <2021-11-17 Wed 18:07>
-:ANNOTADED: [[notmuch:id:001001d7db84$acfb8610$06f29230$@brain.riken.jp][Email from hkimura@brain.riken.jp: [sys_education:00683] Re: 第２２回SIC人財育成協議会の日程調整]]
 :END:
 ** TODO Emacs の org-mode でスケジュール管理をしよう！ - Qiita
   SCHEDULED: [2021-11-18 Thu]
@@ -2732,6 +2716,22 @@ https://qiita.com/zonkyy/items/821ea2b1e20f575c222f
 
 https://qiita.com/clothoid/items/73a937a22eeeb82c3ee7
 
+** TODO flymakeでスペルチェック
+:PROPERTIES:
+:CREATED: <2021-11-13 Sat 11:05>
+:ANNOTADED:
+:END:
+
+** TODO [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E5%B0%8F%E6%8C%87%E3%82%92%E9%85%B7%E4%BD%BF%E3%81%9B%E3%81%9A%E3%81%8B%E3%81%A4%E3%82%AD%E3%83%BC%E3%83%90%E3%82%A4%E3%83%B3%E3%83%89%E3%81%AE%E3%82%AC%E3%82%A4%E3%83%89%E3%82%92%E5%87%BA%E3%81%99----hydra][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
+;; Local Variables:
+;; eval: (visual-fill-column-mode)
+;; End:
+** TODO notmuchでメール中のURLがEnterでは開けない
+:PROPERTIES:
+:CREATED: <2021-11-17 Wed 18:07>
+:ANNOTADED: [[notmuch:id:001001d7db84$acfb8610$06f29230$@brain.riken.jp][Email from hkimura@brain.riken.jp: [sys_education:00683] Re: 第２２回SIC人財育成協議会の日程調整]]
+:END:
 ** TODO org-publishを使ってorgでブログを書く話 - Qiita
   :PROPERTIES:
   :CREATED:  [2021-11-18 Thu 03:05]
@@ -2745,13 +2745,6 @@ https://qiita.com/conao3/items/f81cf964198d4da93a05
   :END:
 
 https://github.com/fniessen/org-html-themes
-
-** Emacsの中で動く作図ツールを作る | Misohena Blog
-   :PROPERTIES:
-   :CREATED:  [2021-09-22 Wed 14:54]
-   :END:
-
- http://misohena.jp/blog/2021-09-21-emacs-easy-draw.html
 
 ** emacs-from-scratch/Emacs-Tips-04.org at master · daviwil/emacs-from-scratch · GitHub
    :PROPERTIES:
@@ -2767,7 +2760,7 @@ https://github.com/fniessen/org-html-themes
 
  https://qiita.com/unsignedint/items/749dd5e87bcadf13e3a6
 
- ** 偉人 アーサー・Ｃ・クラーク　名言集(英訳付)｜心の常備薬
+** 偉人 アーサー・Ｃ・クラーク　名言集(英訳付)｜心の常備薬
    :PROPERTIES:
    :CREATED:  [2021-10-16 Sat 12:45]
    :END:
@@ -2805,10 +2798,11 @@ https://github.com/fniessen/org-html-themes
 
  https://github.com/daviwil/emacs-from-scratch/blob/82f03806d90eb356b815cf514d10b6d863a2cbdc/show-notes/Emacs-Tips-06.org
 
-** [Home] unbound.el
+** SOMEDAY [Home] unbound.el
    :PROPERTIES:
    :CREATED:  [2021-11-09 Tue 03:17]
    :END:
+   キーバインドの空きを探すスクリプトのようだ。
 
  https://www.emacswiki.org/emacs/unbound.el
 
@@ -2824,7 +2818,12 @@ https://github.com/kawabata/ox-pandoc
   :END:
 
 https://tomoya.hatenadiary.org/entry/20090414/1239697066
-** SOMEDAY edraw-org
+** SOMEDAY Emacsの中で動く作図ツールを作る | Misohena Blog
+   :PROPERTIES:
+   :CREATED:  [2021-09-22 Wed 14:54]
+   :END:
+
+ http://misohena.jp/blog/2021-09-21-emacs-easy-draw.html
 
 + [[https://github.com/misohena/el-easydraw][GitHub - misohena/el-easydraw: Embedded drawing tool for Emacs]]
 + バイトコンパイルでエラー
