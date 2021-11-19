@@ -1870,6 +1870,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
   * Adaptive Fill Modeと組み合わせることも（調査中）
 + [[https://github.com/joostkremers/visual-fill-column#centering-the-text][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
   * センタリングすることも
+
 * UI・見た目
 ** modus-themes
 - [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
@@ -2837,3 +2838,20 @@ https://tomoya.hatenadiary.org/entry/20090414/1239697066
   :END:
 
 https://www.reddit.com/r/emacs/comments/aja2ov/notmuch_thread_sort_order/
+
+** SOMEDAY edraw-org
+
++ [[https://github.com/misohena/el-easydraw][GitHub - misohena/el-easydraw: Embedded drawing tool for Emacs]]
++ バイトコンパイルでエラー
+
+#+begin_src emacs-lisp :tangle no
+  (leaf edraw-org
+    :el-get misohena/el-easydraw
+    :require t
+    :after org
+    :config
+    (edraw-org-setup-default))
+#+end_src
+
+#+RESULTS:
+: edraw-org
