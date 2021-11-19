@@ -658,27 +658,67 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : marginalia
 
-** embark
+** embark                                                             :TODO:
+*** これはなに？
 - [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
 
-#+begin_src emacs-lisp
+*** orglinkを辿るアクション
++ とても不思議なことに、orgのリンクを扱うアクションが見当たらなかった
+  ｰ ので作った
+- 関係ないけど正規表現を試すには
+  - [[https://koseki.hatenablog.com/entry/20110710/emacsReBuilder][Emacsの正規表現編集モード re-builder とややこしいバックスラッシュ問題について。 - こせきの技術日記]]
+
+- emberkのアクションはキーマップで定義
+  - embark-url-map
+  - embark-general-map
+
+- 本当はorgをロードしたら実行すべき
+
+#+NAME: my-embark-orglink
+#+begin_src emacs-lisp :tangle no
+  (defun my-embark-orglink ()
+    "Target a link at point of orglink."
+    (save-excursion
+      (let* ((beg (progn (search-backward "[[") (point)))
+             (end (progn (search-forward "]]") (point)))
+             (str (buffer-substring-no-properties beg end)))
+        (save-match-data
+          (when (string-match "\\[\\[\\(.+\\)\\]\\]" str)
+            `(orglink
+              ,(format "%s" (match-string 1 str))
+              ,beg . ,end))))))
+  (add-to-list 'embark-target-finders 'my-embark-orglink)
+  (embark-define-keymap embark-orglink-actions
+    "Orglink keymap"
+    ("RET" org-open-at-point)
+    ("o" org-open-at-point))
+  (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-actions))
+#+end_src
+
+#+RESULTS: my-embark-orglink
+: ((orglink . embark-orglink-actions) (file . embark-file-map) (library . embark-library-map) (environment-variables . embark-file-map) (url . embark-url-map) (email . embark-email-map) (buffer . embark-buffer-map) (expression . embark-expression-map) (identifier . embark-identifier-map) (defun . embark-defun-map) (symbol . embark-symbol-map) (face . embark-face-map) (command . embark-command-map) (variable . embark-variable-map) (function . embark-function-map) (minor-mode . embark-command-map) (unicode-name . embark-unicode-name-map) (package . embark-package-map) (bookmark . embark-bookmark-map) (region . embark-region-map) (sentence . embark-sentence-map) (paragraph . embark-paragraph-map) (t . embark-general-map))
+
+*** 全体の設定
+
+#+begin_src emacs-lisp :noweb yes
   (leaf embark
     :straight t
     :bind
     (("C-." . embark-act)         ;; pick some comfortable binding
-     ("C-;" . embark-dwim)        ;; good alternative: M-.
+     ("M-." . embark-dwim)        ;; good alternative: M-.
      ("C-@ B" . embark-bindings) ;; alternative for `describe-bindings' (C-h->C-@)
      )
     :init
     ;; Optionally replace the key help with a completing-read interface
     (setq prefix-help-command #'embark-prefix-help-command)
     :config
-
     ;; Hide the mode line of the Embark live/completions buffers
     (add-to-list 'display-buffer-alist
                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                    nil
-                   (window-parameters (mode-line-format . none)))))
+                   (window-parameters (mode-line-format . none))))
+    :config
+    <<my-embark-orglink>>)
 #+end_src
 
 #+RESULTS:
@@ -818,11 +858,11 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
   (leaf embark-consult
     :straight t
     :after (embark consult)
-    ;;    :demand t ; only necessary if you have the hook below
+    ;; :demand t ; only necessary if you have the hook below
     ;; if you want to have consult previews as you move around an
     ;; auto-updating embark collect buffer
-    ;;    :hook
-    ;;    (embark-collect-mode . consult-preview-at-point-mode)
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode)
     )
 #+end_src
 
@@ -1263,6 +1303,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 - インラインイメージの自動再描画
   - [[https://emacs.stackexchange.com/questions/3302/live-refresh-of-inline-images-with-org-display-inline-images][org mode - live refresh of inline images with org-display-inline-images - Emacs Stack Exchange]]
+
 #+begin_src emacs-lisp
 (eval-after-load 'org
   (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images))
