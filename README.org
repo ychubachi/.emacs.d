@@ -577,6 +577,20 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : align
 
+** outline-minnor-mode - アウトラインマイナーモードの設定
++ outline-modeのプリフィックスはC-c C-oに変更しました。理由は指が慣れていること。org-open-at-pointとバッティングしますが、そもそもoutline-minnor-modeとorg-modeを併用することはないので気にしないことにしています。
+
+#+begin_src emacs-lisp
+  (leaf outline-minor-mode
+    :config
+    (add-hook 'outline-minor-mode-hook
+              (lambda () (local-set-key "\C-c\C-o"
+                                        outline-mode-prefix-map))))
+#+end_src
+
+#+RESULTS:
+: outline-minor-mode
+
 * ミニバッファ補完UI関連の設定
 ** vertico:本体の設定
 
