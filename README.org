@@ -1447,6 +1447,16 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : outshine
 
+** ox-pandoc - pandocでorgファイルからのエキスポートを拡張する
++ [[https://github.com/kawabata/ox-pandoc][kawabata/ox-pandoc: Another org-mode exporter via pandoc.]]
+
+#+begin_src emacs-lisp
+  (leaf ox-pandoc :package t :require t)
+#+end_src
+
+#+RESULTS:
+: ox-pandoc
+
 * 外部パッケージ
 ** undo-tree
    - [[https://elpa.gnu.org/packages/undo-tree.html][GNU ELPA - undo-tree]]
