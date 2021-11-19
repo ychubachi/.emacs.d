@@ -868,7 +868,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
                           "~/.emacs.d/README.org"
                           ))
     (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
-    (org-todo-keywords . '((sequence "NEXT" "TODO" "SOMEDAY" "|" "DONE")))
+    (org-todo-keywords . '((sequence "TODO" "NEXT" "SOMEDAY" "|" "DONE")))
     (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
     (org-return-follows-link  . t) ; RET/C-mでリンクを開く
     (org-agenda-start-with-follow-mode . t) ; アジェンダで関連するorgファイルを開く
