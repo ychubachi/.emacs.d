@@ -2751,13 +2751,6 @@ https://github.com/fniessen/org-html-themes
 
  http://misohena.jp/blog/2021-09-21-emacs-easy-draw.html
 
-** ChromebookでEmacsキーバインドを使う｜junkawa@Chromebookで始める開発日記｜note
-   :PROPERTIES:
-   :CREATED:  [2021-09-28 Tue 00:22]
-   :END:
-
- https://note.com/junkawashima/n/na18827f2231f
-
 ** emacs-from-scratch/Emacs-Tips-04.org at master · daviwil/emacs-from-scratch · GitHub
    :PROPERTIES:
    :CREATED:  [2021-09-29 Wed 12:24]
