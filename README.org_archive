@@ -447,3 +447,97 @@ Archived entries from file /home/yc/.emacs.d/README.org
 
 #+RESULTS:
 : outshine
+
+* emacs-from-scratch/hallo-theme.el at master · daviwil/emacs-from-scratch
+  CLOSED: [2021-11-09 Tue 09:24]
+  :PROPERTIES:
+  :CREATED:  [2021-11-04 Thu 02:53]
+  :ARCHIVE_TIME: 2021-11-19 Fri 21:20
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: COMMENT Emacs設定のアイデア
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_ITAGS: REFILE
+  :END:
+
+https://github.com/daviwil/emacs-from-scratch/blob/master/hallo-theme.el
+
+* DONE org-modeからpandoc経由でWordを生成する
+  CLOSED: [2021-11-19 Fri 19:09]
+  :PROPERTIES:
+  :CREATED:  <2021-11-12 Fri 15:14>
+  :ANNOTADED: [[file:~/git/ploversky-zenn.dev/plaversky@zenn.dev.org::*ファイルローカル変数][ファイルローカル変数]]
+  :ARCHIVE_TIME: 2021-11-19 Fri 21:30
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: COMMENT Emacs設定のアイデア
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: REFILE
+  :END:
+
+- [[https://taipapamotohus.com/post/org-mode_paper_4/][Emacsのorg-modeで論文を書く（その4：pandocを利用してorg-modeからword [docx]を文献付きでexportする） | A perfect autumn day]]
+
+* DONE kawabata/ox-pandoc: Another org-mode exporter via pandoc.
+  CLOSED: [2021-11-19 Fri 19:09]
+  :PROPERTIES:
+  :CREATED:  [2021-11-12 Fri 18:21]
+  :ARCHIVE_TIME: 2021-11-19 Fri 21:30
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: COMMENT Emacs設定のアイデア
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: REFILE
+  :END:
+
+https://github.com/kawabata/ox-pandoc
+
+* DONE notmuchでサーチの結果を逆順にする
+  CLOSED: [2021-11-17 Wed 19:13]
+  :PROPERTIES:
+  :CREATED:  <2021-11-17 Wed 15:42>
+  :ANNOTADED:
+  :ARCHIVE_TIME: 2021-11-19 Fri 21:30
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: COMMENT Emacs設定のアイデア
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: REFILE
+  :END:
+
+* DONE notmuchでワンタッチStarつける
+  CLOSED: [2021-11-19 Fri 21:30]
+  :PROPERTIES:
+  :CREATED:  <2021-11-17 Wed 15:41>
+  :ANNOTADED: [[file:~/Dropbox/Org/Journal.org::*見積書の項目を整える][見積書の項目を整える]]
+  :ARCHIVE_TIME: 2021-11-19 Fri 21:30
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: COMMENT Emacs設定のアイデア
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: REFILE
+  :END:
+
+* DONE 【Emacs入門】②バージョン28で新たにビルトインされるModus Themesを使おう
+  :PROPERTIES:
+  :CREATED:  [2021-10-16 Sat 18:51]
+  :ARCHIVE_TIME: 2021-11-19 Fri 21:30
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: COMMENT Emacs設定のアイデア
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: REFILE
+  :END:
+
+https://zenn.dev/lambdagonbei/articles/1b2bce27673078
+
+* DONE C-c sをシェルに、C-c tをtoggle-truncate-linesに？
+  CLOSED: [2021-11-19 Fri 21:32]
+  :PROPERTIES:
+  :CREATED:  <2021-11-12 Fri 13:54>
+  :ANNOTADED: [[file:~/Dropbox/Org/Mobile.org::*Emacs M-x toggle-truncate-lines: 長い行の折り返し表示を切り換える][Emacs M-x toggle-truncate-lines: 長い行の折り返し表示を切り換える]]
+  :ARCHIVE_TIME: 2021-11-19 Fri 21:32
+  :ARCHIVE_FILE: ~/.emacs.d/README.org
+  :ARCHIVE_OLPATH: COMMENT Emacs設定のアイデア
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: DONE
+  :ARCHIVE_ITAGS: REFILE
+  :END:

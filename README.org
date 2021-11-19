@@ -2703,44 +2703,12 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 :CREATED: <2021-11-12 Fri 10:30>
 :ANNOTADED:
 :END:
-** DONE C-c sをシェルに、C-c tをtoggle-truncate-linesに？
-CLOSED: [2021-11-19 Fri 19:09]
-:PROPERTIES:
-:CREATED: <2021-11-12 Fri 13:54>
-:ANNOTADED: [[file:~/Dropbox/Org/Mobile.org::*Emacs M-x toggle-truncate-lines: 長い行の折り返し表示を切り換える][Emacs M-x toggle-truncate-lines: 長い行の折り返し表示を切り換える]]
-:END:
-** DONE org-modeからpandoc経由でWordを生成する
-CLOSED: [2021-11-19 Fri 19:09]
-:PROPERTIES:
-:CREATED: <2021-11-12 Fri 15:14>
-:ANNOTADED: [[file:~/git/ploversky-zenn.dev/plaversky@zenn.dev.org::*ファイルローカル変数][ファイルローカル変数]]
-:END:
-
-- [[https://taipapamotohus.com/post/org-mode_paper_4/][Emacsのorg-modeで論文を書く（その4：pandocを利用してorg-modeからword [docx]を文献付きでexportする） | A perfect autumn day]]
 ** TODO flymakeでスペルチェック
 :PROPERTIES:
 :CREATED: <2021-11-13 Sat 11:05>
 :ANNOTADED:
 :END:
 
-** DONE kawabata/ox-pandoc: Another org-mode exporter via pandoc.
-CLOSED: [2021-11-19 Fri 19:09]
-  :PROPERTIES:
-  :CREATED:  [2021-11-12 Fri 18:21]
-  :END:
-
-https://github.com/kawabata/ox-pandoc
-** TODO notmuchでワンタッチStarつける
-:PROPERTIES:
-:CREATED: <2021-11-17 Wed 15:41>
-:ANNOTADED: [[file:~/Dropbox/Org/Journal.org::*見積書の項目を整える][見積書の項目を整える]]
-:END:
-** DONE notmuchでサーチの結果を逆順にする
-CLOSED: [2021-11-17 Wed 19:13]
-:PROPERTIES:
-:CREATED: <2021-11-17 Wed 15:42>
-:ANNOTADED:
-:END:
 ** TODO notmuchでメール中のURLがEnterでは開けない
 :PROPERTIES:
 :CREATED: <2021-11-17 Wed 18:07>
@@ -2811,13 +2779,6 @@ https://github.com/fniessen/org-html-themes
 
  http://medicines.aquaorbis.net/meigen/kaigai/bungaku-e/arthur-c-clarke
 
-** DONE 【Emacs入門】②バージョン28で新たにビルトインされるModus Themesを使おう
-   :PROPERTIES:
-   :CREATED:  [2021-10-16 Sat 18:51]
-   :END:
-
- https://zenn.dev/lambdagonbei/articles/1b2bce27673078
-
 ** Emacs のテーマを変更 | 二代目俺のメモ
    :PROPERTIES:
    :CREATED:  [2021-10-16 Sat 18:53]
@@ -2848,30 +2809,6 @@ https://github.com/fniessen/org-html-themes
    :END:
 
  https://github.com/daviwil/emacs-from-scratch/blob/82f03806d90eb356b815cf514d10b6d863a2cbdc/show-notes/Emacs-Tips-06.org
-
-** org-modeドキュメントからZenn Flavored Markdownを生成するox-zennの使い方
-   CLOSED: [2021-11-09 Tue 09:24]
-   :PROPERTIES:
-   :CREATED:  [2021-11-04 Thu 00:46]
-   :END:
-
- https://zenn.dev/conao3/articles/ox-zenn-usage
-
-** 【Emacs入門】②バージョン28で新たにビルトインされるModus Themesを使おう
-   CLOSED: [2021-11-09 Tue 09:24]
-   :PROPERTIES:
-   :CREATED:  [2021-11-04 Thu 00:52]
-   :END:
-
- https://zenn.dev/lambdagonbei/articles/1b2bce27673078
-
-** emacs-from-scratch/hallo-theme.el at master · daviwil/emacs-from-scratch
-   CLOSED: [2021-11-09 Tue 09:24]
-   :PROPERTIES:
-   :CREATED:  [2021-11-04 Thu 02:53]
-   :END:
-
- https://github.com/daviwil/emacs-from-scratch/blob/master/hallo-theme.el
 
 ** org-export subtree to filename.pdf with EXPORT_FILE_NAME fails - Emacs Stack Exchange
    CLOSED: [2021-11-09 Tue 09:24]
