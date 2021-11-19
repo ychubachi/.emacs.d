@@ -879,8 +879,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 ** doctを利用したorg-captureの設定
 
-- [[https://orgmode.org/manual/Capture.html][Capture (The Org Manual)]]
-- [[https://orgmode.org/manual/Setting-up-capture.html#Setting-up-capture][Setting up capture (The Org Manual)]]
+- [[https://orgmode.org/manual/Capture-templates.html][Capture templates (The Org Manual)]]
 - [[https://www.5ing-myway.com/org-capture/][org-captureをカスタマイズして、すばやくメモを取る方法 | 趣味に生きる。]]
 
 - ファイルは org-directory 以下にある。
@@ -903,7 +902,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
                    :todo-state "TODO"
                    :template ("* %{todo-state} %?"
                               ":PROPERTIES:"
-                              ":CREATED: %t"
+                              ":CREATED: %U"
                               ":ANNOTADED: %a"
                               ":END:"))
                   ("Notebook" :keys "n"
