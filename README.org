@@ -745,7 +745,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 *** 閑話休題
 探せばどこかに必ずあるはずだ、と思って探したものがどうしても見つからないとき、「あるはずだ」と思った自分が間違っているのではないか、とも思ってしまうのは、自分の弱さなのでしょうか。
 
-ところで、embarkとは「Mini-Buffer Actions Rooted in Keymaps」の頭文字を取って名付けたようです。キーマップに基づきミニバッファで行うアクションといった意味になりますが、もともと embark は英語で「乗船する」という単語です。なかなかおしゃれなネーミングなのですね。
+ところで、embarkとは「Emacs Mini-Buffer Actions Rooted in Keymaps」の頭文字を取って名付けたようです。キーマップに基づきミニバッファで行うアクションといった意味になりますが、もともと embark は英語で「乗船する」という単語です。なかなかおしゃれなネーミングなのですね。
 
 [fn:embark] [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
 
