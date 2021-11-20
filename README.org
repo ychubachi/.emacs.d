@@ -684,12 +684,12 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
         "Target a link at point of orglink."
         (save-excursion
           (let* ((cur (point))
-                 (beg (progn (search-backward "[[" nil t) (point)))
-                 (end (progn (search-forward  "]]" nil t) (point)))
+                 (beg (progn (search-backward "[" nil t) (point)))
+                 (end (progn (search-forward  "]" nil t) (point)))
                  (str (buffer-substring-no-properties beg end)))
             (when (and (<= beg cur) (<= cur end))
               (save-match-data
-                (when (string-match "\\(\\[\\[.+\\]\\]\\)" str)
+                (when (string-match "\\(\\[.+\\]\\)" str)
                   `(orglink
                     ,(format "%s" (match-string 1 str))
                     ,beg . ,end)))))))
