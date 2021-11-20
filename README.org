@@ -2464,6 +2464,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 ** Linuxでmozcの設定
 - 参考
   - [[https://w.atwiki.jp/ntemacs/pages/48.html][emacs-mozc を動かすための設定（Emacs 設定編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
+- カラーはM-x list-colors-displayで一覧が表示される
 
 #+begin_src emacs-lisp
   (leaf mozc-im
@@ -2495,7 +2496,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
       :el-get iRi-E/mozc-el-extensions
       :config
       ;; カーソルカラーを設定する
-      (setq mozc-cursor-color-alist '((direct        . "orchid")
+      (setq mozc-cursor-color-alist '((direct        . "gray")
                                       (read-only     . "yellow")
                                       (hiragana      . "green")
                                       (full-katakana . "goldenrod")
