@@ -1539,6 +1539,39 @@ Emacsでもモードによっては同じように動作します（orgモード
 : ox-pandoc
 
 * 外部パッケージ
+** backup-each-save - Emacsで保存するたびに自動でバックアップ     :PBLISHED:
+:PROPERTIES:
+:BLOG:     plover
+:DATE:     [2021-11-20 21:43:40]
+:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Tech
+:POST_TAGS: Emacs, Lisp
+:ID:       o2b:1712bebe-b383-4335-ad81-c10f995c1ee0
+:POST_DATE: [2021-11-20 Sat 21:43]
+:POSTID:   378
+:END:
+
+るびきちさんの[[http://emacs.rubikitch.com/backup-each-save/][こちら]]の記事からです。[[http://emacs.rubikitch.com/real-auto-save/][real-auto-save.el]]はそこまではいらないかな、という感じです。割としょっちゅうC-x C-sを打っている気がするので。
+
+#+begin_src emacs-lisp
+  (leaf backup-each-save
+    :package t
+    :config
+    ;; バックアップ先
+    (setq backup-each-save-mirror-location "~/.emacs.d/backups")
+    ;; バックアップファイルにつけるsuffix
+    (setq backup-each-save-time-format "%y%m%d_%H%M%S")
+    ;; バックアップするファイルサイズの上限
+    (setq backup-each-save-size-limit 5000000)
+    ;; すべてのファイルをバックアップする
+    (setq backup-each-save-filter-function 'identity)
+    ;; 有効化！
+    (add-hook 'after-save-hook 'backup-each-save))
+#+end_src
+
+#+RESULTS:
+: backup-each-save
+
 ** undo-tree
    - [[https://elpa.gnu.org/packages/undo-tree.html][GNU ELPA - undo-tree]]
 
