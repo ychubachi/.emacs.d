@@ -2809,7 +2809,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 ** 参考文献
 1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
-* TODO Emacs設定のアイデア [15/22]                                   :REFILE:
+* TODO [#C] Emacs設定のアイデア [15/22]                              :REFILE:
 - [ ] embarkでGoogle検索
 - [ ] org2blogでソースコードのショートコード、開始側がでない？
 - [ ] リアルオートセーブアップ
