@@ -658,67 +658,79 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : marginalia
 
-** embark                                                             :TODO:
-*** これはなに？
-- [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
+** embark - カーソル位置にあるテキストに対するアクションを実行        :TODO:
+:PROPERTIES:
+:BLOG:     plover
+:DATE:     [2021-11-20 19:03:55]
+:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Tech
+:POST_TAGS: Emacs, Lisp, embark
+:ID:       o2b:ee0b1a39-a8d8-494b-9e7d-02d794982f19
+:POST_DATE: [2021-11-20 Sat 19:03]
+:POSTID:   363
+:END:
 
-*** orglinkを辿るアクション
-+ とても不思議なことに、orgのリンクを扱うアクションが見当たらなかった
-  ｰ ので作った
-- 関係ないけど正規表現を試すには
-  - [[https://koseki.hatenablog.com/entry/20110710/emacsReBuilder][Emacsの正規表現編集モード re-builder とややこしいバックスラッシュ問題について。 - こせきの技術日記]]
+*** 「何か」に対して何かを「実行」するembark
+テキストファイルに書いてあるURLを開きたい、と思ったとき、あなたはどうしますか？
 
-- emberkのアクションはキーマップで定義
-  - embark-url-map
-  - embark-general-map
+今どきのテキストエディタはURLやメールアドレスなどを認識し、リンクとして表示してくれますね。このリンクを開くには、リンクにマウスカーソルをあて、クリックするのが普通です。
 
-- 本当はorgをロードしたら実行すべき
-(org-thing-at-point)が使えない？nilを返してくる
+Emacsでもモードによっては同じように動作します（orgモードなど）。この際、マウスではなくてキーボードでも開くことができます。orgモードですと、テキストカーソルをリンクの上に移動させ、C-c C-oで開けます。org-open-at-pointという関数が呼び出されます。リンクはURLやメールアドレスだけでなく、他のorgファイルへの参照や、脚注があります。
+
+さて、話をより一般的にして「いまカーソルの位置にある何か」に対して「アクション」を行うことをできるようにする、embark[fn:embark]というパッケージがあります。「URLを開く」というアクションだけでなく、ソースコードのシンボルの定義を開く、ヘルプを調べるなど様々なアクションを実行できます。
+
+何かをしたい（ex URLを開く、シンボルの定義を参照する、等）文字列があればそこにカーソルをもっていき、embark-act（私はM-.に設定）を実行しましょう。そうすれば、ミニバッファにメニューが表示され、実行したいアクションを選択できます。
+
+また、 embark-dwim （C-.に設定）を押すとembarkがおすすめのアクションを選んで実行してくれます。なお、dwimとはdo what i meanの略で、「私の意図するところを（察して）行え」といった意味でしょうか。意訳すれば、「適当によろしく」みたいなものかな。
+
+*** org linkを辿るアクションが見当たらない!
+さて、この便利なembark、とても不思議なことに、orgのリンクを扱うアクションが見当たりませんでした。結構、いろいろ検索して見当たらなかったので、「ない理由が分からない自分のほうが変なのかも」とも思った次第です。
+
+まあ、とはいえ、あってもだれも困らないとも思うので、自分で作りました。orgモードと、もちろん、embarkに依存するので、leafで設定をしています。
 
 #+NAME: my-embark-orglink
-#+begin_src emacs-lisp :tangle no
-    (leaf *my-embark-orglink
-      :after org embark
-      :config
-      (defun my-embark-orglink ()
-        "Target a link at point of orglink."
-        (save-excursion
-          (let* ((cur (point))
-                 (beg (progn (search-backward "[" nil t) (point)))
-                 (end (progn (search-forward  "]" nil t) (point)))
-                 (str (buffer-substring-no-properties beg end)))
-            (when (and (<= beg cur) (<= cur end))
-              (save-match-data
-                (when (string-match "\\(\\[.+\\]\\)" str)
-                  `(orglink
-                    ,(format "%s" (match-string 1 str))
-                    ,beg . ,end)))))))
-      (add-to-list 'embark-target-finders 'my-embark-orglink)
-      (embark-define-keymap embark-orglink-map
-        "Orglink keymap"
-        ("RET" org-open-at-point)
-        ("o" org-open-at-point))
-      (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-map)))
+#+begin_src emacs-lisp :syntaxhl :tangle no
+  (leaf *my-embark-orglink
+    :after org embark
+    :config
+    (defun my-embark-orglink-at-point ()
+      "Target a link at point of orglink."
+      (save-excursion
+        (let* ((cur (point))
+               (beg (progn (search-backward "[" nil t) (point)))
+               (end (progn (search-forward  "]" nil t) (point)))
+               (str (buffer-substring-no-properties beg end)))
+          (when (and (<= beg cur) (<= cur end))
+            (save-match-data
+              (when (string-match "\\(\\[.+\\]\\)" str)
+                `(orglink
+                  ,(format "%s" (match-string 1 str))
+                  ,beg . ,end)))))))
+    (add-to-list 'embark-target-finders 'my-embark-orglink-at-point)
+    (embark-define-keymap embark-orglink-map
+      "Orglink keymap"
+      ("RET" org-open-at-point)
+      ("o" org-open-at-point))
+    (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-map)))
 #+end_src
 
 #+RESULTS: my-embark-orglink
 : *my-embark-orglink
 
 *** 全体の設定
+せっかくですので、設定全体も掲載しておきますね。バインディングに使っているC-@ですが、私はC-hをBSにしているので、C-@をヘルプ（もともとのC-hの機能）にしています。
 
-#+begin_src emacs-lisp :noweb yes
+#+begin_src emacs-lisp :syntaxhl :noweb yes
   (leaf embark
     :straight t
     :bind
-    (("C-." . embark-act)         ;; pick some comfortable binding
-     ("M-." . embark-dwim)        ;; good alternative: M-.
-     ("C-@ B" . embark-bindings) ;; alternative for `describe-bindings' (C-h->C-@)
+    (("M-." . embark-act)
+     ("C-." . embark-dwim)
+     ("C-@ B" . embark-bindings) ;; C-h -> C-@ にしています
      )
     :init
-    ;; Optionally replace the key help with a completing-read interface
     (setq prefix-help-command #'embark-prefix-help-command)
     :config
-    ;; Hide the mode line of the Embark live/completions buffers
     (add-to-list 'display-buffer-alist
                  '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                    nil
@@ -731,7 +743,24 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 : embark
 
 *** 閑話休題
-探せばどこかに必ずあるはずだ、と思って探したものがどうしても見つからないとき、「あるはずだ」と思った自分が間違っているのではないか、と思う。
+探せばどこかに必ずあるはずだ、と思って探したものがどうしても見つからないとき、「あるはずだ」と思った自分が間違っているのではないか、とも思ってしまうのは、自分の弱さなのでしょうか。
+
+ところで、embarkとは「Mini-Buffer Actions Rooted in Keymaps」の頭文字を取って名付けたようです。キーマップに基づきミニバッファで行うアクションといった意味になりますが、もともと embark は英語で「乗船する」という単語です。なかなかおしゃれなネーミングなのですね。
+
+[fn:embark] [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
+
+*** COMMENT 備考
+- 関係ないけど正規表現を試すには
+  - [[https://koseki.hatenablog.com/entry/20110710/emacsReBuilder][Emacsの正規表現編集モード re-builder とややこしいバックスラッシュ問題について。 - こせきの技術日記]]
+
+- 本当はorgをロードしたら実行すべき
+(org-thing-at-point)が使えない？nilを返してくる
+
+- emberkのアクションはキーマップで定義
+  - embark-url-map
+  - embark-general-map
+- [[http://blog.syati.info/post/org2blogInsertSourceCode/][org2blog の記事にコードブロックを入れる - Syati.info]]
+  - :syntaxhlをいれる必要あり？
 
 ** consult
 - [[https://github.com/minad/consult][GitHub - minad/consult: consult.el - Consulting completing-read]]
