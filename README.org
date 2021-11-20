@@ -658,7 +658,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : marginalia
 
-** embark - カーソル位置にあるテキストに対するアクションを実行    :PBLISHED:
+** embark - カーソル位置にあるテキストに対するアクションを実行（org link対応） :PBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-20 19:03:55]
@@ -718,7 +718,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 : *my-embark-orglink
 
 *** 全体の設定
-せっかくですので、設定全体も掲載しておきますね。バインディングに使っているC-@ですが、私はC-hをBSにしているので、C-@をヘルプ（もともとのC-hの機能）にしています。
+せっかくですので、設定全体も掲載しておきますね。バインディングに使っているC-@ですがヘルプのプレフィックスです。私はC-hをBSにしているので、C-@をヘルプ（もともとのC-hの機能）にしています。
 
 #+begin_src emacs-lisp :syntaxhl :noweb yes
   (leaf embark
