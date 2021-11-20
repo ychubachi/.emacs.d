@@ -2767,7 +2767,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 ** 参考文献
 1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
-* TODO Emacs設定のアイデア [15/22]                                   :REFILE:
+* TODO Emacs設定のアイデア [1/7]                                     :REFILE:
 - [ ] embarkでGoogle検索
 - [ ] org2blogでソースコードのショートコード、開始側がでない？
 - [ ] リアルオートセーブアップ
@@ -2790,124 +2790,12 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
   :ANNOTADED:
   :END:
 - [ ] [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E5%B0%8F%E6%8C%87%E3%82%92%E9%85%B7%E4%BD%BF%E3%81%9B%E3%81%9A%E3%81%8B%E3%81%A4%E3%82%AD%E3%83%BC%E3%83%90%E3%82%A4%E3%83%B3%E3%83%89%E3%81%AE%E3%82%AC%E3%82%A4%E3%83%89%E3%82%92%E5%87%BA%E3%81%99----hydra][Emacsモダン化計画 -かわEmacs編- - Qiita]]
-- [ ] 偉人 アーサー・Ｃ・クラーク　名言集(英訳付)｜心の常備薬
+- [X] 偉人 アーサー・Ｃ・クラーク　名言集(英訳付)｜心の常備薬
    :PROPERTIES:
    :CREATED:  [2021-10-16 Sat 12:45]
    :END:
 
  http://medicines.aquaorbis.net/meigen/kaigai/bungaku-e/arthur-c-clarke
-- [X] org-publishを使ってorgでブログを書く話 - Qiita
-  :PROPERTIES:
-  :CREATED:  [2021-11-18 Thu 03:05]
-  :END:
-
-  https://qiita.com/conao3/items/f81cf964198d4da93a05
-- [X] org-gfmを導入する
-  :PROPERTIES:
-:CREATED: <2021-11-12 Fri 10:30>
-:ANNOTADED:
-:END:
-  必要になったらやろう
-- [X] Emacs の org-mode でスケジュール管理をしよう！ - Qiita
-  SCHEDULED: [2021-11-18 Thu]
-  :PROPERTIES:
-  :CREATED:  [2021-11-18 Thu 02:19]
-  :END:
-
-  https://qiita.com/zonkyy/items/821ea2b1e20f575c222f
-- [X] notmuchでメール中のURLがEnterでは開けない
-  :PROPERTIES:
-:CREATED:  <2021-11-17 Wed 18:07>
-:ANNOTADED: [[notmuch:id:001001d7db84$acfb8610$06f29230$@brain.riken.jp][Email from hkimura@brain.riken.jp: [sys_education:00683] Re: 第２２回SIC人財育成協議会の日程調整]]
-:END:
-- [X] fniessen/org-html-themes: How to export Org mode files into awesome HTML in 2 minutes
-  :PROPERTIES:
-  :CREATED:  [2021-11-18 Thu 19:14]
-  :END:
-
-  https://github.com/fniessen/org-html-themes
-- [X] org-tree-slideでプレゼン
-   :PROPERTIES:
-   :CREATED:  [2021-09-29 Wed 12:24]
-   :END:
-   対象者がエンジニアだけならよいかも
-   https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Tips-04.org
-- [X] Org-roam事始め - Qiita
-   :PROPERTIES:
-   :CREATED:  [2021-10-16 Sat 02:30]
-   :END:
-    https://qiita.com/unsignedint/items/749dd5e87bcadf13e3a6
-
-   まだいまいち必要性がわからない
-   なるべく少ないファイルにまとめたほうがよいように思う
-- [X] Emacs のテーマを変更 | 二代目俺のメモ
-   :PROPERTIES:
-   :CREATED:  [2021-10-16 Sat 18:53]
-   :END:
-
-   https://www.kwonline.org/memo2/2020/06/14/load-themes-on-emacs-24/
-- [X] Emacs の設定 | Youhei SASAKI’s official site
-   CLOSED: [2021-11-09 Tue 09:25]
-   :PROPERTIES:
-   :CREATED:  [2021-10-25 Mon 18:37]
-   :END:
-  https://uwabami.github.io/cc-env/Emacs.html
-- [X] emacs-eaf/emacs-application-framework: A free/libre and open-source extensible framework that revolutionizes the graphical capabilities of Emacs, the key to ultimately Live in Emacs
-   CLOSED: [2021-11-09 Tue 09:25]
-   :PROPERTIES:
-   :CREATED:  [2021-10-26 Tue 10:26]
-   :END:
-
-    https://github.com/emacs-eaf/emacs-application-framework
-- [X] SOMEDAY [Home] unbound.el
-   :PROPERTIES:
-   :CREATED:  [2021-11-09 Tue 03:17]
-   :END:
-   キーバインドの空きを探すスクリプトのようだ。
-
-   https://www.emacswiki.org/emacs/unbound.el
-- [X] kawabata/ox-pandoc: Another org-mode exporter via pandoc.
-  :PROPERTIES:
-  :CREATED:  [2021-11-12 Fri 18:23]
-  :END:
-
-  https://github.com/kawabata/ox-pandoc
-- [X] SOMEDAY Emacsの中で動く作図ツールを作る | Misohena Blog
-   :PROPERTIES:
-   :CREATED:  [2021-09-22 Wed 14:54]
-   :END:
-   http://misohena.jp/blog/2021-09-21-emacs-easy-draw.html
-
-  - [[https://github.com/misohena/el-easydraw][GitHub - misohena/el-easydraw: Embedded drawing tool for Emacs]]
-  - バイトコンパイルでエラー
-
-  #+begin_src emacs-lisp :tangle no
-  (leaf edraw-org
-    :el-get misohena/el-easydraw
-    :require t
-    :after org
-    :config
-    (edraw-org-setup-default))
-  #+end_src
-
-  #+RESULTS:
-  : edraw-org
-
-   試してみたけど動かなかった
-- [X] org-mode をマイナーモードとして使う orgstruct-mode。 - 日々、とんは語る。
-  :PROPERTIES:
-  :CREATED:  [2021-11-17 Wed 21:50]
-  :END:
-
-  https://tomoya.hatenadiary.org/entry/20090414/1239697066
-  orgstruct-modeは古い
-- [X] TABバー
-   CLOSED: [2021-11-09 Tue 09:24]
-   :PROPERTIES:
-   :CREATED:  [2021-11-03 Wed 18:03]
-   :END:
-
- https://github.com/daviwil/emacs-from-scratch/blob/82f03806d90eb356b815cf514d10b6d863a2cbdc/show-notes/Emacs-Tips-06.org
 
 ;; Local Variables:
 ;; eval: (visual-fill-column-mode)
