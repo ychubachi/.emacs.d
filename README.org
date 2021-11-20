@@ -1396,7 +1396,7 @@ Emacsでもモードによっては同じように動作します（orgモード
       (setq org2blog/wp-blog-alist `(,config)))
     (setq org2blog/wp-image-upload t)
     (setq org2blog/wp-show-post-in-browser 'show)
-    (setq org2blog/wp-use-sourcecode-shortcode t)
+    (setq org2blog/wp-use-sourcecode-shortcode nil)
     )
 #+end_src
 
