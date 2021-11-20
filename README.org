@@ -673,29 +673,32 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
   - embark-general-map
 
 - 本当はorgをロードしたら実行すべき
+(org-thing-at-point)が使えない？nilを返してくる
 
 #+NAME: my-embark-orglink
 #+begin_src emacs-lisp :tangle no
-  (leaf *my-embark-orglink
-    :after org embark
-    :config
-    (defun my-embark-orglink ()
-      "Target a link at point of orglink."
-      (save-excursion
-        (let* ((beg (progn (search-backward "[[") (point)))
-               (end (progn (search-forward "]]") (point)))
-               (str (buffer-substring-no-properties beg end)))
-          (save-match-data
-            (when (string-match "\\[\\[\\(.+\\)\\]\\]" str)
-              `(orglink
-                ,(format "%s" (match-string 1 str))
-                ,beg . ,end))))))
-    (add-to-list 'embark-target-finders 'my-embark-orglink)
-    (embark-define-keymap embark-orglink-actions
-      "Orglink keymap"
-      ("RET" org-open-at-point)
-      ("o" org-open-at-point))
-    (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-actions)))
+    (leaf *my-embark-orglink
+      :after org embark
+      :config
+      (defun my-embark-orglink ()
+        "Target a link at point of orglink."
+        (save-excursion
+          (let* ((cur (point))
+                 (beg (progn (search-backward "[[" nil t) (point)))
+                 (end (progn (search-forward  "]]" nil t) (point)))
+                 (str (buffer-substring-no-properties beg end)))
+            (when (and (<= beg cur) (<= cur end))
+              (save-match-data
+                (when (string-match "\\(\\[\\[.+\\]\\]\\)" str)
+                  `(orglink
+                    ,(format "%s" (match-string 1 str))
+                    ,beg . ,end)))))))
+      (add-to-list 'embark-target-finders 'my-embark-orglink)
+      (embark-define-keymap embark-orglink-map
+        "Orglink keymap"
+        ("RET" org-open-at-point)
+        ("o" org-open-at-point))
+      (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-map)))
 #+end_src
 
 #+RESULTS: my-embark-orglink
