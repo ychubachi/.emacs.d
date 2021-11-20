@@ -1,4 +1,4 @@
-;; -*- mode: Org; fill-column: 100; truncate-lines: nil -*-
+;; -*- mode: Org; fill-column: 80; truncate-lines: nil -*-
 #+STARTUP: overview indent num align inlineimages logdone hidestars
 #+TAGS: TODO(t) DRAFT(d) PBLISHED(p) SOMEDAY(s)
 
