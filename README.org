@@ -658,7 +658,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : marginalia
 
-** embark - カーソル位置にあるテキストに対するアクションを実行        :TODO:
+** embark - カーソル位置にあるテキストに対するアクションを実行    :PBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-20 19:03:55]
