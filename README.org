@@ -759,8 +759,6 @@ Emacsでもモードによっては同じように動作します（orgモード
 - emberkのアクションはキーマップで定義
   - embark-url-map
   - embark-general-map
-- [[http://blog.syati.info/post/org2blogInsertSourceCode/][org2blog の記事にコードブロックを入れる - Syati.info]]
-  - :syntaxhlをいれる必要あり？
 
 ** consult
 - [[https://github.com/minad/consult][GitHub - minad/consult: consult.el - Consulting completing-read]]
@@ -1359,6 +1357,17 @@ Emacsでもモードによっては同じように動作します（orgモード
 : t
 
 ** org2blog
+
+#+begin_comment
+- [[id:o2b:ee0b1a39-a8d8-494b-9e7d-02d794982f19][embark - カーソル位置にあるテキストに対するアクションを実行]]を
+- org2blog-subtree-post-publishする
+- シンタックスハイライトが崩れている
+- 一旦、Wordpressで編集すると、うまくショートコードも入っている
+- 改めて公開するとインデントが乱れる
+- [[https://shop-hi-mall.com/wordpress-blank/][WordPressの文頭スペース（空白）が消える原因と対処法を解説！ - アフィリエイトゼミ]]をみて[[https://wordpress.org/plugins/tinymce-advanced/][Advanced Editor Tools (previously TinyMCE Advanced) – WordPress plugin | WordPress.org]]をインストール
+- 一旦、編集して再度公開するとシンタックスハイライトが動作する
+#+end_comment
+
 + 説明
   * orgでWordpressに投稿する
   * Buffer全体で記事を書く場合
@@ -1396,7 +1405,7 @@ Emacsでもモードによっては同じように動作します（orgモード
       (setq org2blog/wp-blog-alist `(,config)))
     (setq org2blog/wp-image-upload t)
     (setq org2blog/wp-show-post-in-browser 'show)
-    (setq org2blog/wp-use-sourcecode-shortcode nil)
+    (setq org2blog/wp-use-sourcecode-shortcode t)
     )
 #+end_src
 
