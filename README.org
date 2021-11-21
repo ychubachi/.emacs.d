@@ -1831,6 +1831,18 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : region-bindings-mode
 
+** yaml-mode
+
+#+begin_src emacs-lisp
+  (leaf yaml-mode :package t)
+#+end_src
+
+#+RESULTS:
+: yaml-mode
+
++ 参考
+  * [[https://github.com/DarthFennec/highlight-indent-guides][DarthFennec/highlight-indent-guides: Emacs minor mode to highlight indentation]]
+
 ** DONE shell-pop - いつでもどこでもshellを出す                  :published:
 CLOSED: [2021-11-09 Tue 20:23]
 :PROPERTIES:
