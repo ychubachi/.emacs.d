@@ -1843,6 +1843,22 @@ Emacsでもモードによっては同じように動作します（orgモード
 + 参考
   * [[https://github.com/DarthFennec/highlight-indent-guides][DarthFennec/highlight-indent-guides: Emacs minor mode to highlight indentation]]
 
+** rainbow-delimiters
+*** 説明
+
+#+begin_src emacs-lisp
+  (leaf rainbow-delimiters
+    :package t
+    :hook
+    (prog-mode-hook . rainbow-delimiters-mode))
+#+end_src
+
+#+RESULTS:
+: rainbow-delimiters
+
+*** 参考
++ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E6%8B%AC%E5%BC%A7%E3%81%8C%E5%A4%9A%E3%81%84%E3%81%A8%E8%99%B9%E3%81%8C%E3%81%BF%E3%81%88%E3%82%8B----rainbow-delimiters][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
 ** DONE shell-pop - いつでもどこでもshellを出す                  :published:
 CLOSED: [2021-11-09 Tue 20:23]
 :PROPERTIES:
