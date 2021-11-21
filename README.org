@@ -1882,6 +1882,22 @@ Emacsでもモードによっては同じように動作します（orgモード
 *** 参考
 + [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#yaml%E3%81%AE%E9%9A%8E%E5%B1%A4%E6%A7%8B%E9%80%A0%E3%81%AB%E8%B2%A0%E3%81%91%E3%81%AA%E3%81%84----highlight-indent-guides][Emacsモダン化計画 -かわEmacs編- - Qiita]]
 
+** beacon
+*** 設定
+
+#+begin_src emacs-lisp
+  (leaf beacon
+    :package t
+    :custom
+    (beacon-mode . t))
+#+end_src
+
+#+RESULTS:
+: beacon
+
+*** 参考
++ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E3%82%82%E3%81%86%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E8%A6%8B%E5%A4%B1%E3%82%8F%E3%81%AA%E3%81%84----beacon][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
 ** DONE shell-pop - いつでもどこでもshellを出す                  :published:
 CLOSED: [2021-11-09 Tue 20:23]
 :PROPERTIES:
