@@ -70,3 +70,4 @@ org-roam.db
 /.mc-lists.el
 /places
 /backups/
+/eln-cache/
