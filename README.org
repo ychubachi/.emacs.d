@@ -951,7 +951,7 @@ Emacsでもモードによっては同じように動作します（orgモード
                           "~/.emacs.d/README.org"
                           ))
     (org-todo-keyword-faces . '(("NEXT" . (:foreground "blue" :underline t))))
-    (org-todo-keywords . '((sequence "TODO" "NEXT" "SOMEDAY" "|" "DONE")))
+    (org-todo-keywords . '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
     (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
     (org-return-follows-link  . t) ; RET/C-mでリンクを開く
     (org-agenda-start-with-follow-mode . t) ; アジェンダで関連するorgファイルを開く
