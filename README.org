@@ -1544,6 +1544,30 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : ox-pandoc
 
+** org-pomodoro - ポモドーロテクニック
+*** 設定
+
+1. TODOのエントリーを書く
+2. M-x org-pomodoroでタイマースタート
+3. C-c C-x o で一時停止
+4. C-c C-x TAB で再開
+5. 時間が来るとアラーム？
+
+C-c oでタイマーがスタートするよう設定しました。
+
+#+begin_src emacs-lisp
+    (leaf org-pomodoro
+      :package t
+      :require t
+      :bind (("C-c p" . org-pomodoro)))
+#+end_src
+
+#+RESULTS:
+: org-pomodoro
+
+*** 参考
++ [[https://fnwiya.hatenablog.com/entry/2016/01/11/203000][emacsでポモドーロテクニック（org-pomodoro） - fnwiya's quine]]
+
 * 外部パッケージ
 ** backup-each-save - Emacsで保存するたびに自動でバックアップ     :PBLISHED:
 :PROPERTIES:
