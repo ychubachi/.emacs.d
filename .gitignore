@@ -71,3 +71,7 @@ org-roam.db
 /places
 /backups/
 /eln-cache/
+/.org-generic-id-locations
+/org-gcal/
+/persist/
+/request/
