@@ -1590,7 +1590,6 @@ C-c oでタイマーがスタートするよう設定しました。
             '(("yc@aiit.ac.jp" .  "~/Dropbox/Org/gcal/gcal-work.org")
               ("yoshihide.chubachi@gmail.com"
                .  "~/Dropbox/Org/gcal/gcal-private.org")))))
-  )
 #+end_src
 
 #+RESULTS:
