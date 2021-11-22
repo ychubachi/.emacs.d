@@ -950,7 +950,9 @@ Emacsでもモードによっては同じように動作します（orgモード
                           "~/git/ploversky-ploversky.net/plaversky.net.org"
                           "~/.emacs.d/README.org"
                           ))
-    (org-todo-keyword-faces . '(("NEXT" . (:foreground "blue" :underline t))))
+    (org-todo-keyword-faces
+     . '(("NEXT" . (:foreground "blue" :underline t))
+         ("DONE" . (:foreground "pale green"))))
     (org-todo-keywords . '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
     (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
     (org-return-follows-link  . t) ; RET/C-mでリンクを開く
