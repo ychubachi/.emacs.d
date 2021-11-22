@@ -2366,7 +2366,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 
 + 全体の設定
 
-#+begin_src emacs-lisp :noweb yes
+#+begin_src emacs-lisp :noweb yes :tangle no
   (leaf mu4e
     :load-path "/usr/local/share/emacs/site-lisp/mu4e/"
     :require t
