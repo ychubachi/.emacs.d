@@ -2489,10 +2489,12 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
   - OSの判定方法
     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
 
-** Linuxでmozcの設定
+** TODO Linuxでmozcの設定
 - 参考
   - [[https://w.atwiki.jp/ntemacs/pages/48.html][emacs-mozc を動かすための設定（Emacs 設定編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
 - カラーはM-x list-colors-displayで一覧が表示される
+
+- C-jで切る
 
 #+begin_src emacs-lisp
   (leaf mozc-im
