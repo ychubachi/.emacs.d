@@ -941,7 +941,6 @@ Emacsでもモードによっては同じように動作します（orgモード
     ("C-c l" . org-store-link)
     ("C-c a" . org-agenda)
     ("C-c c" . org-capture)
-    ("C-c b" . org-switchb)
     :custom
     (org-directory . "~/Dropbox/Org/")
     (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
@@ -1570,7 +1569,36 @@ C-c oでタイマーがスタートするよう設定しました。
 *** 参考
 + [[https://fnwiya.hatenablog.com/entry/2016/01/11/203000][emacsでポモドーロテクニック（org-pomodoro） - fnwiya's quine]]
 
+** org-gcal - Googleカレンダーとの連携
+
+
+#+begin_src emacs-lisp
+  (leaf org-gcal
+    :el-get (org-gcal :url "https://github.com/kidd/org-gcal.el.git"))
+#+end_src
+
+#+RESULTS:
+: org-gcal
+
 * 外部パッケージ
+** swap-buffers
+*** 設定
+
+#+begin_src emacs-lisp
+  (leaf swap-buffers
+    :package t
+    :bind
+    ("C-c b" . swap-buffers)
+    :custom
+    (swap-buffers-qwerty-shortcuts
+     . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
+#+end_src
+
+#+RESULTS:
+: swap-buffers
+
+*** 参考
++ [[http://emacs.rubikitch.com/swap-buffers/][swap-buffers.el : 【多分割対応】ウィンドウを入れ替える新しいコマンド]]
 ** backup-each-save - Emacsで保存するたびに自動でバックアップ     :PBLISHED:
 :PROPERTIES:
 :BLOG:     plover
