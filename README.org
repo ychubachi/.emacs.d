@@ -1574,7 +1574,7 @@ C-c oでタイマーがスタートするよう設定しました。
 
 #+begin_src emacs-lisp
   (leaf org-gcal
-    :el-get (org-gcal :url "https://github.com/kidd/org-gcal.el.git"))
+    :package t
 #+end_src
 
 #+RESULTS:
