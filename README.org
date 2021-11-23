@@ -942,9 +942,10 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+begin_src emacs-lisp
   (leaf org-mode
     :bind
-    ("C-c l" . org-store-link)
-    ("C-c a" . org-agenda)
-    ("C-c c" . org-capture)
+    (("C-c l" . org-store-link)
+     ("C-c a" . org-agenda)
+     ("C-c c" . org-capture)
+     ("C-c j" . (lambda () (interactive) (org-capture nil "j"))))
     :hook (org-mode-hook . visual-fill-column-mode)
     :custom
     (org-directory . "~/Dropbox/Org/")
@@ -1062,18 +1063,6 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 #+RESULTS:
 : doct
-
-** olg-capture のショートカット
-- leafにする
-
-#+begin_src emacs-lisp
-  (define-key global-map
-    (kbd "C-c j")
-    (lambda () (interactive) (org-capture nil "j")))
-#+end_src
-
-#+RESULTS:
-| lambda | nil | (interactive) | (org-capture nil j) |
 
 ** org-tempo - ソースコードブロック入力の省力化
    - "<el"+<TAB> 等でemacs-lispのソースコードブロックがでるように設定。
