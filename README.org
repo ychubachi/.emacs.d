@@ -2491,6 +2491,17 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 * OS依存の設定
 ** Linuxでmozcを使った日本語入力の設定（2021年版）
+:PROPERTIES:
+:BLOG:     plover
+:DATE:     [2021-11-23 22:10:47]
+:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Tech
+:POST_TAGS: Emacs, Lisp, Mozc, IME
+:ID:       o2b:16b90138-c679-4ad8-b1f2-fab55daf0058
+:POST_DATE: [2021-11-23 Tue 22:11]
+:POSTID:   463
+:END:
+
 *** 説明
 日本語入力周りの設定を見直してみました。
 
@@ -2553,7 +2564,7 @@ WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoog
 標準の入力方式をMozcに設定します。
 C-oで変換モード、C-jで直接入力モードに切り替えます。
 
-なお、org-modeでC-jを使用しているので、leafのbind*でオーバライドします（便利！）。ちなみに、org-modeでの改行はC-mかRETでもできます。C-jの出番がどこにあるのか、わかりません。
+なお、org-modeでC-jを（特殊な？）改行コマンドとして使用しているので、leafのbind*でオーバライドします（便利！）。ちなみに、org-modeでの改行はC-mかRETでもできます。C-jの出番がどこにあるのか、わかりません。
 
 デフォルトでは、IMの状態をトグルするメソッドしかないので、それぞれの状態に遷移するメソッドを用意します。
 
