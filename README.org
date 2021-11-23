@@ -2490,9 +2490,6 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 : gnus-alias
 
 * OS依存の設定
-  - OSの判定方法
-    [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
-
 ** TODO Linuxでmozcの設定
 *** 説明
 日本語入力周りの設定を見直してみました。
