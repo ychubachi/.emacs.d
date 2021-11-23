@@ -951,6 +951,7 @@ Emacsでもモードによっては同じように動作します（orgモード
                           "~/git/ploversky-zenn.dev/plaversky@zenn.dev.org"
                           "~/git/ploversky-ploversky.net/plaversky.net.org"
                           "~/.emacs.d/README.org"
+                          "~/Dropbox/Org/gcal/"
                           ))
     (org-todo-keyword-faces
      . '(("NEXT" . (:foreground "blue" :underline t))
@@ -1575,9 +1576,11 @@ C-c oでタイマーがスタートするよう設定しました。
 
 ** org-gcal - Googleカレンダーとの連携
 
+https://github.com/kidd/org-gcal.el.git
+
 #+begin_src emacs-lisp
   (leaf org-gcal
-    :package t
+    :straight (org-gcal :type git :host github :repo "kidd/org-gcal.el")
     :require t
     :config
     (let* ((json-object-type 'hash-table)
