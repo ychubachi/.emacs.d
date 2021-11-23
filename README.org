@@ -2494,129 +2494,168 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
     [[https://hangstuck.com/emacs-system-type/][Emacsの設定ファイルをOSの判定をして共有する方法｜system-type | ハングスタック]]
 
 ** TODO Linuxでmozcの設定
+*** 説明
+日本語入力周りの設定を見直してみました。
+
 - 参考
   - [[https://w.atwiki.jp/ntemacs/pages/48.html][emacs-mozc を動かすための設定（Emacs 設定編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
-- カラーはM-x list-colors-displayで一覧が表示される
 
-- C-jで切る
+*** 全体の設定
+Mozcに関連する設定の全体です。
 
-#+begin_src emacs-lisp
-  (leaf mozc-im
+#+begin_src emacs-lisp :noweb yes
+  (leaf mozc
     :if (eq system-type 'gnu/linux)
-    :doc "Mozc with input-method-function interface."
-    :req "mozc-0"
-    :tag "extentions" "i18n"
+    :package t
+    :config
+    <<mozc-helper>>
+    <<mozc-im>>
+    <<mozc-im-state-isearch>>
+    <<mozc-cursor-color>>
+    <<mozc-posframe>>)
+#+end_src
+
+#+RESULTS:
+: mozc
+
+*** Mozcサーバと通信するためのヘルパーコマンド
+Mozcとのやり取りをするためのヘルパーを設定します。
+WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoogle IMEが使えるはずです。
+
+
+- [[https://qiita.com/ignorant/items/1c4f729f9147fb878f10][WSL の Emacs で日本語入力 - Qiita]]
+  - Windows側のGoogle IMEを利用する
+  - aptでインストールされたと思われるmozc_emacs_helper（バイナリ）を使ってみる。
+    - 既に設定されていた
+      [[https://github.com/smzht/mozc_emacs_helper][smzht/mozc_emacs_helper: mozc_emacs_helper for Windows]]
+      これはUnix用
+
+- Windows用のmozc_emacs_helper.exeを利用する
+  - [[https://github.com/smzht/mozc_emacs_helper][smzht/mozc_emacs_helper: mozc_emacs_helper for Windows]]
+    ここからmozc_emacs_helper.exeをダウンロードして
+    ~/Dropbox/WSL/以下においておく
+
+  - ~/bin/にmozc_emacs_helper_win.shを作成する
+
+    #+begin_src bash :tangle no
+      #!/bin/sh
+
+      ~/Dropbox/WSL/mozc_emacs_helper.exe "$@" 2> /dev/null
+    #+end_src
+
+#+NAME: mozc-helper
+#+begin_src emacs-lisp :tangle no
+  (if (getenv "WSLENV")
+      ;; (setq mozc-helper-program-name "mozc_emacs_helper_win.sh")
+      (setq mozc-helper-program-name "mozc_emacs_helper")
+    (setq mozc-helper-program-name "mozc_emacs_helper"))
+#+end_src
+
+*** Mozcによる変換操作の設定
+標準の入力方式をMozcに設定します。
+C-oで変換モード、C-jで直接入力モードに切り替えます。
+
+なお、org-modeでC-jを使用しているので、leafのbind*でオーバライドします。ちなみに、org-modeでの改行はC-mかRETでできます。C-jの出番がどこにあるのか、わかりません。
+
+デフォルトでは、IMの状態をトグルするメソッドしかないので、それぞれの状態に遷移するメソッドを用意します。
+
+IMEがoffのとき、isearchに入り、IMEをonにして検索したあと、戻ったときにIMEがoffになって欲しいので、そのための設定をします（migemoを使うのなら、あまり必要ない設定かも。
+
+#+begin_comment
+IME ON  -> isearch -> OFF -> done -> ON
+IME ON  -> isearch -> ON  -> done -> ON
+IME OFF -> isearch -> ON  -> done -> ON*
+IME OFF -> isearch -> OFF -> done -> OFF
+*のところで状態が狂う。
+#+end_comment
+
+#+NAME: mozc-im
+#+begin_src emacs-lisp :tangle no :noweb yes
+  (leaf mozc-im
     :ensure t
     :require t
-    :custom
-    ((default-input-method . "japanese-mozc-im"))
-    :bind (("C-o" . toggle-input-method))
+    :custom ((default-input-method . "japanese-mozc-im"))
+    :bind* (("C-o" . enable-input-method)
+            ("C-j" . disable-input-method))
     :config
-    (require 'mozc-im)
-    (require 'wdired)
+    (defvar-local mozc-im-mode nil)
 
-    ;; Mozc をデフォルトにする
-    (setq default-input-method "japanese-mozc-im")
-
-    ;; popup スタイルを使用する
-    ;; (leaf mozc-popup
-    ;;   :ensure t
-    ;;   :config
-    ;;   (setq mozc-candidate-style 'popup))
-
-    ;; カーソルカラーを設定する
-    (leaf mozc-cursor-color
-      :require t ; el-get を利用するため ensure ではなく require
-      :el-get iRi-E/mozc-el-extensions
-      :config
-      ;; カーソルカラーを設定する
-      (setq mozc-cursor-color-alist '((direct        . "gray")
-                                      (read-only     . "yellow")
-                                      (hiragana      . "green")
-                                      (full-katakana . "goldenrod")
-                                      (half-ascii    . "dark orchid")
-                                      (full-ascii    . "orchid")
-                                      (half-katakana . "dark goldenrod")))
-
-      (defvar-local mozc-im-mode nil)
-      (add-hook 'mozc-im-activate-hook
-                (lambda nil
-                  (setq mozc-im-mode t)))
-      (add-hook 'mozc-im-deactivate-hook
-                (lambda nil
-                  (setq mozc-im-mode nil)))
-      (advice-add 'mozc-cursor-color-update :around
-                  (lambda (orig-fun &rest args)
-                    (let ((mozc-mode mozc-im-mode))
-                      (apply orig-fun args)))))
+    (add-hook 'mozc-im-activate-hook
+              (lambda nil
+                (setq mozc-im-mode t)))
+    (add-hook 'mozc-im-deactivate-hook
+              (lambda nil
+                (setq mozc-im-mode nil)))
 
     (defun enable-input-method (&optional arg interactive)
       (interactive "P\np")
       (if (not current-input-method)
           (toggle-input-method arg interactive)))
-
     (defun disable-input-method (&optional arg interactive)
       (interactive "P\np")
       (if current-input-method
           (toggle-input-method arg interactive)))
 
-    ;; isearch 関連
-    (defun isearch-enable-input-method ()
-      (interactive)
-      (if (not current-input-method)
-          (isearch-toggle-input-method)
-        (cl-letf (((symbol-function 'toggle-input-method)
-                   (symbol-function 'ignore)))
-          (isearch-toggle-input-method))))
-
-    (defun isearch-disable-input-method ()
-      (interactive)
-      (if current-input-method
-          (isearch-toggle-input-method)
-        (cl-letf (((symbol-function 'toggle-input-method)
-                   (symbol-function 'ignore)))
-          (isearch-toggle-input-method))))
-
-    ;; IME をトグルするキー設定
-    (global-set-key (kbd "C-o") 'toggle-input-method)
-    (define-key isearch-mode-map (kbd "C-o") 'isearch-toggle-input-method)
-    (define-key wdired-mode-map (kbd "C-o") 'toggle-input-method)
-
-    ;; IME を無効にするキー設定
-    (global-set-key (kbd "C-<f1>") 'disable-input-method)
-    (define-key isearch-mode-map (kbd "C-<f1>") 'isearch-disable-input-method)
-    (define-key wdired-mode-map (kbd "C-<f1>") 'disable-input-method)
-
-    (global-set-key (kbd "C-j") 'disable-input-method)
-    (define-key isearch-mode-map (kbd "C-j") 'isearch-disable-input-method)
-    (define-key wdired-mode-map (kbd "C-j") 'disable-input-method)
-
-    ;; IME を有効にするキー設定
-    (global-set-key (kbd "C-<f2>") 'enable-input-method)
-    (define-key isearch-mode-map (kbd "C-<f2>") 'isearch-enable-input-method)
-    (define-key wdired-mode-map (kbd "C-<f2>") 'enable-input-method)
-
-    ;; (global-set-key (kbd "C-o") 'enable-input-method)
-    ;; (define-key isearch-mode-map (kbd "C-o") 'isearch-enable-input-method)
-    ;; (define-key wdired-mode-map (kbd "C-o") 'enable-input-method)
-
-    ;; isearch を利用する前後で IME の状態を維持するための対策
-    (add-hook 'isearch-mode-hook (lambda () (setq im-state mozc-im-mode)))
+    (add-hook 'isearch-mode-hook
+              (lambda () (setq im-state mozc-im-mode)))
     (add-hook 'isearch-mode-end-hook
               (lambda ()
                 (unless (eq im-state mozc-im-mode)
                   (if im-state
                       (activate-input-method default-input-method)
-                    (deactivate-input-method)))))
-
-    ;; wdired 終了時に IME を OFF にする
-    (advice-add 'wdired-finish-edit
-                :after (lambda (&rest args)
-                         (deactivate-input-method))))
+                    (deactivate-input-method))))))
 #+end_src
 
-#+RESULTS:
+#+RESULTS: mozc-im
 : mozc-im
+
+*** カーソルカラーを設定する
+現在の状態に合わせて、カーソルの色を設定します。この設定では、直接入力の時はグレイ、変換モードのときは緑にしています。リードオンリーでは黄色になります。それ以外の状態は、私は使いませんが念の為。
+
+なお、Emacsで使えるカラーの一覧は、M-x list-colors-displayで確認できます。
+
+#+NAME: mozc-cursor-color
+#+begin_src emacs-lisp :tangle no
+  (leaf mozc-cursor-color
+    :el-get iRi-E/mozc-el-extensions
+    :require t
+    :config
+    (setq mozc-cursor-color-alist
+          '((direct        . "gray")
+            (read-only     . "yellow")
+            (hiragana      . "green")
+            (full-katakana . "goldenrod")
+            (half-ascii    . "dark orchid")
+            (full-ascii    . "orchid")
+            (half-katakana . "dark goldenrod")))
+    (advice-add 'mozc-cursor-color-update :around
+                (lambda (orig-fun &rest args)
+                  (let ((mozc-mode mozc-im-mode))
+                    (apply orig-fun args)))))
+#+end_src
+
+#+RESULTS: mozc-cursor-color
+: mozc-cursor-color
+
+*** 変換候補をposframeで表示する
+
+Emacs26は3年ほど前にリリースされたようですから、私は長いことposframeを知りませんでした。
+
+「[[https://blog.deltabox.site/post/2019/06/mozc-posframe/][mozcの候補をposframeで表示するEmacs拡張を作った]]」に書いている通り、org-modeでの変換の際の表示崩れは目に余るものがありました。
+
+作者さん、ありがとうございます。
+
+#+NAME: mozc-posframe
+#+begin_src emacs-lisp :tangle no
+  (leaf mozc-posframe
+    :straight (mozc-posframe :type git :host github :repo "derui/mozc-posframe")
+    :config
+    (mozc-posframe-register)
+    (setq mozc-candidate-style 'posframe))
+#+end_src
+
+#+RESULTS: mozc-posframe
+: mozc-posframe
 
 ** Windowsで文字のエンコードをUTF-8に
 #+begin_src emacs-lisp
