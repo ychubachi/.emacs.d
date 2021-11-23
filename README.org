@@ -1,4 +1,4 @@
-;; -*- mode: Org; fill-column: 80; truncate-lines: nil -*-
+;; -*- mode: Org -*-
 #+STARTUP: overview indent num align inlineimages logdone hidestars
 #+TAGS: TODO(t) DRAFT(d) PBLISHED(p) SOMEDAY(s)
 
@@ -303,23 +303,24 @@ leafに追加するパッケージです。
     :doc "define customization properties of builtins"
     :tag "builtin" "internal"
     :custom
-    ((inhibit-startup-screen . t)			; スタートアップスクリーンを非表示
-     (ring-bell-function . 'ignore))		; ベルを鳴らさない
+    ((inhibit-startup-screen . t)               ; スタートアップスクリーンを非表示
+     (ring-bell-function . 'ignore)             ; ベルを鳴らさない
+     (fill-column . 100))                       ; 100桁で改行（モードによる）
     :custom
-    ((global-display-line-numbers-mode . t)	; 行番号表示
-     (display-line-numbers-width . 4))		; 表示する行番号の桁数
+    ((global-display-line-numbers-mode . t)     ; 行番号表示
+     (display-line-numbers-width . 4))          ; 表示する行番号の桁数
     :custom
-    ((global-auto-revert-mode . t)		; 更新されたら自動的に再読込
-     (auto-revert-verbose . nil))			; 再読込の際、メッセージを非表示
+    ((global-auto-revert-mode . t)              ; 更新されたら自動的に再読込
+     (auto-revert-verbose . nil))                       ; 再読込の際、メッセージを非表示
     :custom
-    ((show-paren-mode . t)			; 括弧の対応関係を表示する
-     (show-paren-style . 'mixed))			; 対応関係を表示するスタイル
-    :custom					; VCの設定
-    ((vc-follow-symlinks . t)			; VC対象ファイルのシンボリックリンクの場合、本体を辿る
-     (auto-revert-check-vc-info . t))		; VCで更新があった場合、自動で更新
-    :custom					; 最後に編集した場所を記憶
+    ((show-paren-mode . t)                      ; 括弧の対応関係を表示する
+     (show-paren-style . 'mixed))                       ; 対応関係を表示するスタイル
+    :custom                                     ; VCの設定
+    ((vc-follow-symlinks . t)                   ; VC対象ファイルのシンボリックリンクの場合、本体を辿る
+     (auto-revert-check-vc-info . t))           ; VCで更新があった場合、自動で更新
+    :custom                                     ; 最後に編集した場所を記憶
     ((save-place-mode . t))
-    :custom					; バックアップファイルの設定
+    :custom                                     ; バックアップファイルの設定
     ((version-control . t)
      (backup-directory-alist . '(("." . ".~")))
      (delete-old-versions . t)))
@@ -944,6 +945,7 @@ Emacsでもモードによっては同じように動作します（orgモード
     ("C-c l" . org-store-link)
     ("C-c a" . org-agenda)
     ("C-c c" . org-capture)
+    :hook (org-mode-hook . visual-fill-column-mode)
     :custom
     (org-directory . "~/Dropbox/Org/")
     (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
@@ -958,6 +960,7 @@ Emacsでもモードによっては同じように動作します（orgモード
          ("DONE" . (:foreground "pale green"))))
     (org-todo-keywords . '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
     (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
+    (org-startup-truncated . nil)
     (org-return-follows-link  . t) ; RET/C-mでリンクを開く
     (org-agenda-start-with-follow-mode . t) ; アジェンダで関連するorgファイルを開く
     (org-ellipsis . " ▽") ; …,▼, ↴, ⬎, ⤷, ⋱
@@ -2055,7 +2058,7 @@ Emacsでは長い行を折返して表示してくれます。
 
 行が繋がっていることを示す矢印のアイコンが、画面の左右にいっぱい出ていますね。
 
-この折返しをしなくするには、変数trancate-linesをtに設定します。
+この折返しをしなくするには、変数truncate-linesをtに設定します。
 
 #+begin_example
 M-x set-variable
@@ -2964,7 +2967,3 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
    :END:
 
  https://github.com/daviwil/emacs-from-scratch/blob/82f03806d90eb356b815cf514d10b6d863a2cbdc/show-notes/Emacs-Tips-06.org
-
-;; Local Variables:
-;; eval: (visual-fill-column-mode)
-;; End:
