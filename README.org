@@ -935,6 +935,9 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 + TODOをMAYBE NEXT STARED WAITING DLEGATEDなど分けてもよいが、TODOに優先度#A #B #Cをつけるほうがアジェンダが見やすくなる
 
++ 見出しを折りたたんだときの...を変更
+  * [[https://endlessparentheses.com/changing-the-org-mode-ellipsis.html][Changing the org-mode ellipsis · Endless Parentheses]]
+
 #+begin_src emacs-lisp
   (leaf org-mode
     :bind
@@ -956,6 +959,7 @@ Emacsでもモードによっては同じように動作します（orgモード
     (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
     (org-return-follows-link  . t) ; RET/C-mでリンクを開く
     (org-agenda-start-with-follow-mode . t) ; アジェンダで関連するorgファイルを開く
+    (org-ellipsis . " ▽") ; …,▼, ↴, ⬎, ⤷, ⋱
     )
 #+end_src
 
