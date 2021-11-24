@@ -1564,7 +1564,39 @@ C-c oでタイマーがスタートするよう設定しました。
 
 ** org-gcal - Googleカレンダーとの連携
 
-https://github.com/kidd/org-gcal.el.git
++ https://github.com/kidd/org-gcal.el.git
+  org-gcal-fetchは、数回成功したものの、失敗が続いている。
+  .emacs内のトークンを削除したりしてみたが、どうやら、内部でエラーが発生しているようだ。
+
+  #+begin_example
+Debugger entered--Lisp error: (wrong-type-argument listp menu-bar-open-mouse)
+  #f(compiled-function (key item) #<bytecode 0x13d114dd7e13bf1d>)(mouse-1 menu-bar-open-mouse)
+  map-keymap(#f(compiled-function (key item) #<bytecode 0x13d114dd7e13bf1d>) (keymap ... ... ... ... ... ... ... "menu-bar"))
+  easy-menu-lookup-name((keymap ... ... ... ... ... ... ... "menu-bar") "Org")
+  #f(compiled-function (map) #<bytecode 0x13ddf683daef593b>)((keymap ... ... ... ... ... ... ... "menu-bar"))
+  mapcar(#f(compiled-function (map) #<bytecode 0x13ddf683daef593b>) (... ... ...))
+  easy-menu-get-map(nil ("Org") nil)
+  easy-menu-add-item(nil ("Org") (keymap "File List for Agenda" (Edit\ File\ List menu-item "Edit File List" menu-function-96 :key-sequence nil) (Add/Move\ Current\ File\ to\ Front\ of\ List menu-item "Add/Move Current File to Front of List" org-agenda-file-to-front) (Remove\ Current\ File\ from\ List menu-item "Remove Current File from List" org-remove-file) (Cycle\ through\ agenda\ files menu-item "Cycle through agenda files" org-cycle-agenda-files) (Occur\ in\ all\ agenda\ files menu-item "Occur in all agenda files" org-occur-in-agenda-files) (nil menu-item "--") (/home/yc/Dropbox/Org/Bookmark\.org menu-item "/home/yc/Dropbox/Org/Bookmark.org" menu-function-97 :key-sequence nil) (/home/yc/Dropbox/Org/GcalPrivate\.org menu-item "/home/yc/Dropbox/Org/GcalPrivate.org" menu-function-98 :key-sequence nil) (/home/yc/Dropbox/Org/GcalWork\.org menu-item "/home/yc/Dropbox/Org/GcalWork.org" menu-function-99 :key-sequence nil) (/home/yc/Dropbox/Org/Journal\.org menu-item "/home/yc/Dropbox/Org/Journal.org" menu-function-100 :key-sequence nil) (/home/yc/Dropbox/Org/Mobile\.org menu-item "/home/yc/Dropbox/Org/Mobile.org" menu-function-101 :key-sequence nil) (/home/yc/Dropbox/Org/Notebook\.org menu-item "/home/yc/Dropbox/Org/Notebook.org" menu-function-102 :key-sequence nil) (/home/yc/git/ploversky-zenn\.dev/plaversky@zenn\.dev\.org menu-item "/home/yc/git/ploversky-zenn.dev/plaversky@zenn.dev..." menu-function-103 :key-sequence nil) (/home/yc/git/ploversky-ploversky\.net/plaversky\.net\.org menu-item "/home/yc/git/ploversky-ploversky.net/plaversky.net..." menu-function-104 :key-sequence nil) (/home/yc/\.emacs\.d/README\.org menu-item "/home/yc/.emacs.d/README.org" menu-function-105 :key-sequence nil)) nil)
+  easy-menu-change(("Org") "File List for Agenda" (["Edit File List" (org-edit-agenda-file-list) t] ["Add/Move Current File to Front of List" org-agenda-file-to-front t] ["Remove Current File from List" org-remove-file t] ["Cycle through agenda files" org-cycle-agenda-files t] ["Occur in all agenda files" org-occur-in-agenda-files t] "--" ["/home/yc/Dropbox/Org/Bookmark.org" (find-file "/home/yc/Dropbox/Org/Bookmark.org") t] ["/home/yc/Dropbox/Org/GcalPrivate.org" (find-file "/home/yc/Dropbox/Org/GcalPrivate.org") t] ["/home/yc/Dropbox/Org/GcalWork.org" (find-file "/home/yc/Dropbox/Org/GcalWork.org") t] ["/home/yc/Dropbox/Org/Journal.org" (find-file "/home/yc/Dropbox/Org/Journal.org") t] ["/home/yc/Dropbox/Org/Mobile.org" (find-file "/home/yc/Dropbox/Org/Mobile.org") t] ["/home/yc/Dropbox/Org/Notebook.org" (find-file "/home/yc/Dropbox/Org/Notebook.org") t] ["/home/yc/git/ploversky-zenn.dev/plaversky@zenn.dev..." (find-file "/home/yc/git/ploversky-zenn.dev/plaversky@zenn.dev...") t] ["/home/yc/git/ploversky-ploversky.net/plaversky.net..." (find-file "/home/yc/git/ploversky-ploversky.net/plaversky.net...") t] ["/home/yc/.emacs.d/README.org" (find-file "/home/yc/.emacs.d/README.org") t]))
+  org-install-agenda-files-menu()
+  org-mode()
+  org-generic-id-update-id-locations("entry-id")
+  #f(compiled-function (_) #<bytecode -0x1127077741525000>)(nil)
+  deferred:call-lambda(#f(compiled-function (_) #<bytecode -0x1127077741525000>) nil)
+  deferred:exec-task(#s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) ok nil)
+  deferred:set-next(#s(deferred :callback deferred:default-callback :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) :status nil :value nil) #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil))
+  deferred:exec-task(#s(deferred :callback #f(compiled-function (x) #<bytecode -0x187a1d931a173ce>) :errorback deferred:default-errorback :cancel #f(compiled-function (x) #<bytecode -0x16abd1177d01903>) :next #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) :status nil :value nil) ok nil)
+  deferred:set-next(#s(deferred :callback deferred:default-callback :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode -0x187a1d931a173ce>) :errorback deferred:default-errorback :cancel #f(compiled-function (x) #<bytecode -0x16abd1177d01903>) :next #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) :status nil :value nil) :status nil :value nil) #s(deferred :callback #f(compiled-function (x) #<bytecode -0x187a1d931a173ce>) :errorback deferred:default-errorback :cancel #f(compiled-function (x) #<bytecode -0x16abd1177d01903>) :next #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) :status nil :value nil))
+  deferred:exec-task(#s(deferred :callback #f(compiled-function (x) #<bytecode -0xbd81f2f94a96e54>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode -0x187a1d931a173ce>) :errorback deferred:default-errorback :cancel #f(compiled-function (x) #<bytecode -0x16abd1177d01903>) :next #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) :status nil :value nil) :status nil :value nil) ok nil)
+  deferred:worker()
+  apply(deferred:worker nil)
+  timer-event-handler([t 24989 42834 275344 nil deferred:worker nil nil 300000 nil])
+  #+end_example
+
+  org-modeの一時バッファを作成する際、org-install-agenda-files-menuが呼ばれているようだ。その中で、エラーが発生している。
+
+org-post-at-pint、org-delete-at-pointはうまく動作している。
+
 
 #+begin_src emacs-lisp
   (leaf org-gcal
@@ -1582,9 +1614,9 @@ https://github.com/kidd/org-gcal.el.git
       (setq org-gcal-client-id client-id
             org-gcal-client-secret client-secret
             org-gcal-fetch-file-alist
-            '(("yc@aiit.ac.jp" .  "~/Dropbox/Org/gcal/gcal-work.org")
+            '(("yc@aiit.ac.jp" .  "~/Dropbox/Org/GcalWork.org")
               ("yoshihide.chubachi@gmail.com"
-               .  "~/Dropbox/Org/gcal/gcal-private.org")))))
+               .  "~/Dropbox/Org/GcalPrivate.org")))))
 #+end_src
 
 #+RESULTS:
@@ -2149,6 +2181,24 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
   * Adaptive Fill Modeと組み合わせることも（調査中）
 + [[https://github.com/joostkremers/visual-fill-column#centering-the-text][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
   * センタリングすることも
+
+** scratch-pop - scratchバッファをポップアップする
+
++ [[http://emacs.rubikitch.com/scratch-pop/][scratch-pop.el : 【おまけ付き】自動保存*scratch*バッファをpopwinでサッと開いてメモを取る]]
+
+#+begin_src emacs-lisp
+  (leaf scratch-pop
+    :package t
+    :require t
+    :bind ("C-:" . scratch-pop)
+    :config
+    (setq scratch-pop-backup-directory "~/.emacs.d/scratch_pop/")
+    (add-hook 'kill-emacs-hook 'scratch-pop-backup-directory))
+#+end_src
+
+#+RESULTS:
+: scratch-pop
+
 
 * UI・見た目
 ** modus-themes
