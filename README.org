@@ -395,7 +395,7 @@ leafに追加するパッケージです。
 | delete-trailing-whitespace |
 
 * キーバインディング
-** C-hをBSに、C-@をhelpに
+** C-hをBSに、C-^をhelpに
 - 標準で
 - [[https://www.reddit.com/r/spacemacs/comments/l2fjzy/remapping_ch_to_backspace_and_remap_help_menu_to/][Remapping C-h to backspace, and remap "help" menu to anything else? : spacemacs]]
 
@@ -405,15 +405,11 @@ leafに追加するパッケージです。
 - help-map は :bind で設定できない
   - ここでは :bind を利用しない
   - :bind を利用しなければ :init と :config
-
-#+begin_comment
-    (global-set-key (kbd "C-h") 'delete-backward-char))
-    (global-set-key (kbd "C-@") help-map)
-#+end_comment
+- C-@をヘルプにしていたが、ターミナルだとC-SPCがC-@とみなされるのでC-^に変更してみた。
 
 #+begin_src emacs-lisp
   (leaf *backspace
-    :init (global-set-key (kbd "C-@") help-map)
+    :init (global-set-key (kbd "C-^") help-map)
     :bind (("C-h" . delete-backward-char)))
 #+end_src
 
@@ -564,7 +560,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 #+begin_src emacs-lisp
   (leaf *imenu-list
-    :bind (("C-^" . imenu-list-smart-toggle)))
+    :bind (("C-c i" . imenu-list-smart-toggle)))
 #+end_src
 
 #+RESULTS:
