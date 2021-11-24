@@ -2182,7 +2182,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 + [[https://github.com/joostkremers/visual-fill-column#centering-the-text][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
   * センタリングすることも
 
-** scratch-pop - scratchバッファをポップアップする
+** scratch-pop - scratchバッファをポップアップする [C-:]
 
 + [[http://emacs.rubikitch.com/scratch-pop/][scratch-pop.el : 【おまけ付き】自動保存*scratch*バッファをpopwinでサッと開いてメモを取る]]
 
