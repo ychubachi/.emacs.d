@@ -1538,7 +1538,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : ox-pandoc
 
-** org-pomodoro - ポモドーロテクニック
+** org-pomodoro - ポモドーロテクニック [C-c p]
 *** 設定
 
 1. TODOのエントリーを書く
@@ -1547,7 +1547,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 4. C-c C-x TAB で再開
 5. 時間が来るとアラーム？
 
-C-c oでタイマーがスタートするよう設定しました。
+C-c pでタイマーがスタートするよう設定しました。
 
 #+begin_src emacs-lisp
     (leaf org-pomodoro
