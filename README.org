@@ -2203,6 +2203,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 #+RESULTS:
 : scratch-pop
 
+** open-junk-file - さくっとファイルを作って試す
+
++ [[https://www.emacswiki.org/emacs/open-junk-file.el][[Home] open-junk-file.el]]
+
+#+begin_src emacs-lisp
+  (leaf open-junk-file
+    :package t
+    :custom
+    (open-junk-file-format . "~/Dropbox/Temp/junk/%Y/%m/%d-%H%M%S."))
+#+end_src
+
+#+RESULTS:
+: open-junk-file
 
 * UI・見た目
 ** modus-themes
