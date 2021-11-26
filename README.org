@@ -1444,7 +1444,13 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 ** org-rome
 
-- org-romeを利用するための設定
++ 参考
+  * [[https://github.com/org-roam/org-roam][org-roam/org-roam: Rudimentary Roam replica with Org-mode]]
+  * [[https://www.orgroam.com/manual.html][Org-roam User Manual]]
+
++ org-romeを利用するための設定
+| C-c n c | capture |
+| C-c n i |         |
 
 #+begin_src emacs-lisp
   (leaf org-roam
