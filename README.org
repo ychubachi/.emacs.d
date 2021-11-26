@@ -941,7 +941,8 @@ Emacsでもモードによっては同じように動作します（orgモード
     (("C-c l" . org-store-link)
      ("C-c a" . org-agenda)
      ("C-c c" . org-capture)
-     ("C-c j" . (lambda () (interactive) (org-capture nil "j"))))
+     ("C-c j" . (lambda () (interactive) (org-capture nil "j"))) // Warning!
+     )
     :hook (org-mode-hook . visual-fill-column-mode)
     :custom
     (org-directory . "~/Dropbox/Org/")
