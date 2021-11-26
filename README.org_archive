@@ -791,3 +791,26 @@ https://emacs.stackexchange.com/questions/16517/org-export-subtree-to-filename-p
 
 #+RESULTS:
 : mu4e
+
+* scratch-pop - scratchバッファをポップアップする [C-:]
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-11-26 Fri 19:49
+:ARCHIVE_FILE: ~/.emacs.d/README.org
+:ARCHIVE_OLPATH: 外部パッケージ
+:ARCHIVE_CATEGORY: README
+:END:
+
++ [[http://emacs.rubikitch.com/scratch-pop/][scratch-pop.el : 【おまけ付き】自動保存*scratch*バッファをpopwinでサッと開いてメモを取る]]
+
+#+begin_src emacs-lisp
+  (leaf scratch-pop
+    :package t
+    :require t
+    :bind ("C-:" . scratch-pop)
+    :config
+    (setq scratch-pop-backup-directory "~/.emacs.d/scratch_pop/")
+    (add-hook 'kill-emacs-hook 'scratch-pop-backup-directory))
+#+end_src
+
+#+RESULTS:
+: scratch-pop

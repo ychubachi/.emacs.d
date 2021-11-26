@@ -2193,23 +2193,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 + [[https://github.com/joostkremers/visual-fill-column#centering-the-text][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
   * センタリングすることも
 
-** scratch-pop - scratchバッファをポップアップする [C-:]
-
-+ [[http://emacs.rubikitch.com/scratch-pop/][scratch-pop.el : 【おまけ付き】自動保存*scratch*バッファをpopwinでサッと開いてメモを取る]]
-
-#+begin_src emacs-lisp
-  (leaf scratch-pop
-    :package t
-    :require t
-    :bind ("C-:" . scratch-pop)
-    :config
-    (setq scratch-pop-backup-directory "~/.emacs.d/scratch_pop/")
-    (add-hook 'kill-emacs-hook 'scratch-pop-backup-directory))
-#+end_src
-
-#+RESULTS:
-: scratch-pop
-
 ** open-junk-file - さくっとファイルを作って試す
 
 + [[https://www.emacswiki.org/emacs/open-junk-file.el][[Home] open-junk-file.el]]
