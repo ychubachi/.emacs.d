@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: ppt
+# key: ppt_
+# --
+:PROPERTIES:
+:EXPORT_FILE_NAME: ~/Dropbox/Org/export/$1.pptx
+:EXPORT_AUTHOR:$2
+:EXPORT_DATE: [`(insert (format-time-string "%Y-%m-%d %H:%M:%S"))`]
+:EXPORT_PANDOC_OPTIONS: reference-doc:~/Dropbox/Org/pandoc/reference.pptx
+:END:
