@@ -729,7 +729,7 @@ Emacsでもモードによっては同じように動作します（orgモード
     :bind
     (("M-." . embark-act)
      ("C-." . embark-dwim)
-     ("C-@ B" . embark-bindings) ;; C-h -> C-@ にしています
+     ("C-^ B" . embark-bindings) ;; C-h -> C-^ にしています
      )
     :init
     (setq prefix-help-command #'embark-prefix-help-command)
