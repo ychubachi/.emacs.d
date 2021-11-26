@@ -1458,6 +1458,10 @@ Emacsでもモードによっては同じように動作します（orgモード
           "%?"
           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
           :unnarrowed t)
+         ("p" "PowerPoint" plain
+          (file "~/Dropbox/Org/Roam/Templates/PowerPointTemplate.org")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
+          :unnarrowed t)
          ("m" "備忘録（Memo）" plain
           (file "~/Dropbox/Org/Roam/Templates/MemoTemplate.org")
           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
