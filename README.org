@@ -958,9 +958,10 @@ Emacsでもモードによっては同じように動作します（orgモード
     (org-todo-keywords . '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
     (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
     (org-startup-truncated . nil)
-    (org-return-follows-link  . t) ; RET/C-mでリンクを開く
-    (org-agenda-start-with-follow-mode . t) ; アジェンダで関連するorgファイルを開く
-    (org-ellipsis . " ▽") ; …,▼, ↴, ⬎, ⤷, ⋱
+    (org-return-follows-link  . t)           ; RET/C-mでリンクを開く
+    (org-agenda-start-with-follow-mode . t)  ; アジェンダで関連するorgファイルを開く
+    (org-ellipsis . " ▽")                    ; …,▼, ↴, ⬎, ⤷, ⋱
+    (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
     )
 #+end_src
 
