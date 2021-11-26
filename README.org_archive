@@ -814,3 +814,35 @@ https://emacs.stackexchange.com/questions/16517/org-export-subtree-to-filename-p
 
 #+RESULTS:
 : scratch-pop
+
+* EAF - Emacs Application Framework
+:PROPERTIES:
+:ARCHIVE_TIME: 2021-11-26 Fri 22:09
+:ARCHIVE_FILE: ~/.emacs.d/README.org
+:ARCHIVE_OLPATH: 未整理
+:ARCHIVE_CATEGORY: README
+:END:
++ .emacs.dをgitで管理しているのでsubmoduleで追加
++ install-eaf.py を実行する前に apt update && apt upgrade
+
+#+begin_src emacs-lisp :tangle no
+  (leaf eaf
+    :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+    :require t
+    :custom ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+    (eaf-browser-continue-where-left-off . t)
+    (eaf-browser-enable-adblocker . t)
+    (browse-url-browser-function . 'eaf-open-browser)
+    :config
+    (require 'eaf-browser)
+    (require 'eaf-pdf-viewer)
+
+    (defalias 'browse-web #'eaf-open-browser)
+    (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+    ;; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+    (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+#+end_src
+
+#+RESULTS:
+: eaf

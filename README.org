@@ -2801,31 +2801,6 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
 : my/browser
 
 * 未整理
-** EAF - Emacs Application Framework
-+ .emacs.dをgitで管理しているのでsubmoduleで追加
-+ install-eaf.py を実行する前に apt update && apt upgrade
-
-#+begin_src emacs-lisp :tangle no
-  (leaf eaf
-    :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
-    :require t
-    :custom ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-    (eaf-browser-continue-where-left-off . t)
-    (eaf-browser-enable-adblocker . t)
-    (browse-url-browser-function . 'eaf-open-browser)
-    :config
-    (require 'eaf-browser)
-    (require 'eaf-pdf-viewer)
-
-    (defalias 'browse-web #'eaf-open-browser)
-    (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-    (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-    ;; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
-    (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
-#+end_src
-
-#+RESULTS:
-: eaf
 ** project.el
 + 説明
   * プロジェクトを扱う
