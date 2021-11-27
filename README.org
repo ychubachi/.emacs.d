@@ -1626,7 +1626,8 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
       (setq org-gcal-client-id client-id
             org-gcal-client-secret client-secret
             org-gcal-fetch-file-alist
-            '(("yc@aiit.ac.jp" .  "~/Dropbox/Org/GcalWork.org")
+            '(("yc@aiit.ac.jp"
+               .  "~/Dropbox/Org/GcalWork.org")
               ("yoshihide.chubachi@gmail.com"
                .  "~/Dropbox/Org/GcalPrivate.org")))))
 #+end_src
