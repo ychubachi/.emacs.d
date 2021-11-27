@@ -920,7 +920,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 
   | ファイル          | 内容                           |
   |-------------------+--------------------------------|
-  | Journal.org       | 思いつき、メモを書きなぐり用   |
+  | Memo.org          | 思いつき、メモを書きなぐり用   |
   | Notebook.org      | ある程度きちんとしたメモ書き   |
   | ブログファイル    | ブログの記事をまとめたファイル |
   | emacs設定ファイル | orgファイルで書いたEmacsの設定 |
@@ -941,7 +941,7 @@ Emacsでもモードによっては同じように動作します（orgモード
     (("C-c l" . org-store-link)
      ("C-c a" . org-agenda)
      ("C-c c" . org-capture)
-     ("C-c j" . (lambda () (interactive) (org-capture nil "j"))) ; Warning!
+     ("C-c m" . (lambda () (interactive) (org-capture nil "m"))) ; Warning!
      )
     :hook (org-mode-hook . visual-fill-column-mode)
     :custom
@@ -987,9 +987,9 @@ Emacsでもモードによっては同じように動作します（orgモード
                                           ;:commands (doct)
     :config
     (setq org-capture-templates
-          (doct '(("Journal" :keys "j"
+          (doct '(("Memo" :keys "m"
                    :empty-lines-after 1
-                   :file "~/Dropbox/Org/Journal.org"
+                   :file "~/Dropbox/Org/Memo.org"
                    :datetree t
                    :todo-state "TODO"
                    :template ("* %{todo-state} %?"
