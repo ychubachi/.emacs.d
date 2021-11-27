@@ -2457,7 +2457,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
           (:name "Gmal Sent"  :query "folder:/Gmail\\/sent/"           :key "S")
           (:name "all mail"   :query "NOT tag:deleted"                 :key "a")))
      )
-    :bind (("C-c m" . notmuch-hello))
+    :bind (("C-c r" . notmuch-hello))
     :config
     (advice-add #'notmuch-read-tag-changes
                 :filter-return (lambda (x) (mapcar #'string-trim x))) ; vertico対策
