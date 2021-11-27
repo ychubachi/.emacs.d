@@ -774,7 +774,7 @@ Emacsでもモードによっては同じように動作します（orgモード
     :bind (;; C-c bindings (mode-specific-map)
            ;; ("C-c h" . consult-history)
            ;; ("C-c m" . consult-mode-command)
-           ;; ("C-c b" . consult-bookmark)
+           ("C-x r l" . consult-bookmark)
            ;; ("C-c k" . consult-kmacro)
            ;; ("C-c r" . consult-recent-file)
            ;; C-x bindings (ctl-x-map)
