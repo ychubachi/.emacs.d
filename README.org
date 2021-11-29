@@ -1580,6 +1580,7 @@ C-c pでタイマーがスタートするよう設定しました。
   org-gcal-fetchは、数回成功したものの、失敗が続いている。
   .emacs内のトークンを削除したりしてみたが、どうやら、内部でエラーが発生しているようだ。
 
+
   #+begin_example
 Debugger entered--Lisp error: (wrong-type-argument listp menu-bar-open-mouse)
   #f(compiled-function (key item) #<bytecode 0x13d114dd7e13bf1d>)(mouse-1 menu-bar-open-mouse)
@@ -1609,10 +1610,9 @@ Debugger entered--Lisp error: (wrong-type-argument listp menu-bar-open-mouse)
 
 org-post-at-pint、org-delete-at-pointはうまく動作している。
 
-
 #+begin_src emacs-lisp
   (leaf org-gcal
-    :straight (org-gcal :type git :host github :repo "kidd/org-gcal.el")
+    :straight (org-gcal :type git :host github :repo "emacsmirror/org-gcal")
     :require t
     :config
     (let* ((json-object-type 'hash-table)
@@ -1629,11 +1629,30 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
             '(("yc@aiit.ac.jp"
                .  "~/Dropbox/Org/GcalWork.org")
               ("yoshihide.chubachi@gmail.com"
-               .  "~/Dropbox/Org/GcalPrivate.org")))))
+               .  "~/Dropbox/Org/GcalPrivate.org")))
+      (setq org-gcal-recurring-events-mode 'nested
+            org-gcal-auto-archive nil
+            org-gcal-down-days 120
+            org-gcal-up-days 60
+            org-gcal-debug t)))
 #+end_src
 
 #+RESULTS:
 : org-gcal
+
+新規で入れたカレンダーは取得できる。
+古いイベントを取得するには？
+
+/persist/を削除
+/request/を削除
+/org-gcal/を削除
+
+再起動しないと挙動は変わらない
+
+[[https://github.com/emacsmirror/org-gcal][emacsmirror/org-gcal: Org sync with Google Calendar]]
+こっちkiddさんのをフォークした新本家？
+
+[[https://github.com/emacsmirror/org-gcal][After the initial fetch, running org-gcal-fetch will retrieve *newly-created events* and update *already-fetched events*.]]
 
 * 外部パッケージ
 ** swap-buffers
