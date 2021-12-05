@@ -281,6 +281,15 @@ leafに追加するパッケージです。
 #+RESULTS:
 : straight
 
+* 日本語関係
+** 言語環境を日本語にする
+
++ この設定をすることでフォントが正しく表示されます。
+
+#+begin_src emacs-lisp
+  (set-language-environment "Japanese")
+#+end_src
+
 * カスタマイズ変数
 ** カスタマイズファイルを分離（cus-edit）
 
