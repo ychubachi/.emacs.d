@@ -2581,6 +2581,12 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 :POSTID:   463
 :END:
 
+#+begin_comment
++ Mozcのローマ字配列の変更方法
+  + mozc_toolを利用する
+  + /usr/lib/mozc/mozc_tool --mode=config_dialog
+#+end_comment
+
 *** 説明
 日本語入力周りの設定を見直してみました。
 
