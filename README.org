@@ -1852,6 +1852,30 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 [[https://github.com/emacsmirror/org-gcal][After the initial fetch, running org-gcal-fetch will retrieve *newly-created events* and update *already-fetched events*.]]
 
+** org-gtasks - Google Tasksとの連携
+
+#+begin_src emacs-lisp
+  (leaf org-gtasks
+    :straight (org-gtasks :type git :host github :repo "JulienMasson/org-gtasks")
+    :require t
+    :config
+    (let* ((json-object-type 'hash-table)
+           (json-array-type 'list)
+           (json-key-type 'string)
+           (gcal-json "~/Dropbox/Org/gtasks/client_secret_561086653074-tt3qfq09hj2sjrd13c9vuvpurr54dk37.apps.googleusercontent.com.json")
+           (json (json-read-file gcal-json))
+           (installed (gethash "installed" json))
+           (client-id (gethash "client_id" installed))
+           (client-secret (gethash "client_secret" installed)))
+      (org-gtasks-register-account :name "yc@aiit.ac.jp"
+                                   :directory "~/Dropbox/Org"
+                                   :client-id client-id
+                                   :client-secret client-secret)))
+#+end_src
+
+#+RESULTS:
+: org-gtasks
+
 * 外部パッケージ
 ** swap-buffers
 *** 設定
