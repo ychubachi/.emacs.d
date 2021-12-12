@@ -1753,17 +1753,14 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 1. TODOのエントリーを書く
 2. M-x org-pomodoroでタイマースタート
-3. C-c C-x o で一時停止
+3. C-c C-x C-o で一時停止
 4. C-c C-x TAB で再開
 5. 時間が来るとアラーム？
-
-C-c pでタイマーがスタートするよう設定しました。
 
 #+begin_src emacs-lisp
     (leaf org-pomodoro
       :package t
-      :require t
-      :bind (("C-c p" . org-pomodoro)))
+      :require t)
 #+end_src
 
 #+RESULTS:
