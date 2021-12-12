@@ -520,7 +520,7 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
     ((save-place-mode . t))
     :custom                                     ; バックアップファイルの設定
     ((version-control . t)
-     (backup-directory-alist . '(("." . ".~")))
+     (backup-directory-alist . '(("." . ".backup~")))
      (delete-old-versions . t)))
 #+end_src
 
