@@ -2426,6 +2426,42 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 #+RESULTS:
 : open-junk-file
 
+** dired-launch - diredをランチャにする（WSL対応）
+:PROPERTIES:
+:BLOG:     plover
+:DATE:     [2021-12-12 10:03:35]
+:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Tech,
+:POST_TAGS: Emacs, dired, dred-launch
+:ID:       o2b:bcb13905-ddce-476c-bfd9-273dd58d7395
+:POST_DATE: [2021-12-12 Sun 10:04]
+:POSTID:   475
+:END:
+
+diredでWordやExcelのファイルを開くと、謎のXMLファイルが入ったディレクトリのようなもの現れ、しょぼんとすることがありませんか？拡張子がdocxやxslxのファイルは、実はいくつかのXMLファイルをアーカイブしたものです。初期設定のままだと、EmacsはそれらがWordやExcelのファイルであると認識せず、アーカイブの中身を表示するのです。
+
+そこで、 [[https://melpa.org/#/dired-launch][dired-launch]] を導入して、きちんとWordやExcelが起動するように設定しましょう。WSL環境では、 =wslview= コマンド[fn:wslu]をインストールしておくと、Windows側でOfficeアプリを立ち上げられるようになり、便利です。
+
+dired-launchを導入すると、通常通り =dired= を開いてからWordやExcelのファイルを選択して *=L=* を押すと、アプリケーションが起動します。
+
+設定では、WSL環境かどうかを判断し、WSL環境であれば =wslview= でファイルを開くようにしています。そうでなければデフォルトの =mimeopen= コマンドで開きます（インストールされていれば、LibreOfficeが起動します）。
+
+#+begin_src emacs-lisp
+  (leaf dired-launch
+    :ensure t
+    :hook (dired-mode-hook . dired-launch-mode)
+    :config
+    (when (and (eq system-type 'gnu/linux)
+               (getenv "WSLENV"))
+      (setq dired-launch-default-launcher '("wslview"))))
+#+end_src
+
+#+RESULTS:
+: dired-launch
+
+[fn:wslu] [[https://github.com/wslutilities/wslu][wslutilities/wslu: A collection of utilities for Windows 10 Linux Subsystems]]
+
+
 * UI・見た目
 ** modus-themes
 - [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
