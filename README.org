@@ -2890,19 +2890,30 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 : my/browser
 
 * 未整理
-** project.el
+** projectile
 + 説明
   * プロジェクトを扱う
+  * [[https://docs.projectile.mx/projectile/usage.html#basic-usage][Usage :: Projectile]]
+  * C-c p で起動するように設定
 
 + 設定
 
   #+begin_src emacs-lisp :tangle no
-    (leaf project :package t :require t)
+    (leaf projectile
+      :package t
+      :require t
+      :bind ((projectile-mode-map
+              ("C-c p" . projectile-command-map)))
+      :config
+      (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
+      (projectile-mode 1))
   #+end_src
 
   #+RESULTS:
-  : project
+  : projectile
 
++ 参考
+  * [[https://docs.projectile.mx/projectile/index.html][Projectile :: Projectile]]
 ** hydra
 
 + [[https://medium.com/@mopemope/hydra-%E3%81%AE%E3%82%B9%E3%82%B9%E3%83%A1-88a4168f945c][Hydra のススメ. みなさん、 Emacs 使ってますか？先日 Emacs 26.1… | by mopemope | Medium]]
