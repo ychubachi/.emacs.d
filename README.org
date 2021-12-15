@@ -2897,7 +2897,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 + 設定
 
-  #+begin_src emacs-lisp :tangle no
+  #+begin_src emacs-lisp
     (leaf projectile
       :package t
       :require t
