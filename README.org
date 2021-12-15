@@ -2482,7 +2482,6 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 
 [fn:wslu] [[https://github.com/wslutilities/wslu][wslutilities/wslu: A collection of utilities for Windows 10 Linux Subsystems]]
 
-
 * UI・見た目
 ** modus-themes
 - [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
