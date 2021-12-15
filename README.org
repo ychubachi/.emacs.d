@@ -2914,6 +2914,17 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 + 参考
   * [[https://docs.projectile.mx/projectile/index.html][Projectile :: Projectile]]
+** company - 自動補完
+
+#+begin_src emacs-lisp
+  (leaf company
+    :package t
+    :hook (after-init-hook . global-company-mode))
+#+end_src
+
+#+RESULTS:
+: company
+
 ** hydra
 
 + [[https://medium.com/@mopemope/hydra-%E3%81%AE%E3%82%B9%E3%82%B9%E3%83%A1-88a4168f945c][Hydra のススメ. みなさん、 Emacs 使ってますか？先日 Emacs 26.1… | by mopemope | Medium]]
