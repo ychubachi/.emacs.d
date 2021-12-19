@@ -2944,6 +2944,17 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+RESULTS:
 : hydra-zoom/body
 
+** annotate.el - ファイルを編集せずに注釈をつける
+
+#+begin_src emacs-lisp
+  (leaf annotate
+    :package t
+    :require t)
+#+end_src
+
+#+RESULTS:
+: annotate
+
 * おわりに
 ** お約束の記述
 
