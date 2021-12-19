@@ -2914,11 +2914,17 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 + 参考
   * [[https://docs.projectile.mx/projectile/index.html][Projectile :: Projectile]]
 ** company - 自動補完
++ [[http://misohena.jp/blog/2021-08-08-emacs-company-mode-settings.html][Companyのお節介な補完を抑制する | Misohena Blog]]
 
 #+begin_src emacs-lisp
   (leaf company
     :package t
-    :hook (after-init-hook . global-company-mode))
+    :hook (after-init-hook . global-company-mode)
+    :config
+    (defun my-company-inhibit-idle-begin ()
+      (setq-local company-begin-commands nil))
+    (add-hook 'org-mode-hook #'my-company-inhibit-idle-begin)
+    (add-hook 'text-mode-hook #'my-company-inhibit-idle-begin))
 #+end_src
 
 #+RESULTS:
