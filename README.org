@@ -2946,10 +2946,13 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 ** annotate.el - ファイルを編集せずに注釈をつける
 
++ M-x read-only-modeでも利用できる
+
 #+begin_src emacs-lisp
   (leaf annotate
     :package t
-    :require t)
+    :require t
+    :hook (prog-mode-hook . annotate-mode))
 #+end_src
 
 #+RESULTS:
