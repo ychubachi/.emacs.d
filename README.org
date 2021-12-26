@@ -1853,7 +1853,9 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+begin_src emacs-lisp
   (leaf org-gtasks
-    :straight (org-gtasks :type git :host github :repo "JulienMasson/org-gtasks")
+    :init
+    (add-to-list 'load-path "~/git/org-gtasks/")
+    ; :straight (org-gtasks :type git :host github :repo "JulienMasson/org-gtasks")
     :require t
     :config
     (let* ((json-object-type 'hash-table)
