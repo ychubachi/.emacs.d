@@ -2722,10 +2722,10 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
                                           ; Gmailに任せる
      (notmuch-search-oldest-first . nil)  ; 検索結果を新しい順でソート
      (notmuch-saved-searches
-      . '((:name "inbox"      :query "tag:inbox folder:/Gmail\\/inbox/ AND NOT tag:deleted"
+      . '((:name "flagged"    :query "tag:flagged AND NOT tag:deleted" :key "f")
+          (:name "inbox"      :query "tag:inbox folder:/Gmail\\/inbox/ AND NOT tag:deleted"
                  :key "i")
           (:name "unread"     :query "tag:unread AND NOT tag:deleted"  :key "u")
-          (:name "flagged"    :query "tag:flagged AND NOT tag:deleted" :key "f")
           (:name "sent"       :query "tag:sent AND NOT tag:deleted"    :key "s")
           (:name "drafts"     :query "tag:draft AND NOT tag:deleted"   :key "d")
           (:name "Gmal Inbox" :query "folder:/Gmail\\/inbox/"          :key "I")
