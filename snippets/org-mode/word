@@ -8,3 +8,7 @@
 :EXPORT_DATE: [`(insert (format-time-string "%Y-%m-%d %H:%M:%S"))`]
 :EXPORT_PANDOC_OPTIONS: reference-doc:~/Dropbox/Org/pandoc/reference.docx
 :END:
+
+#+begin_comment
+C-c C-e C-s p X
+#+end_comment
