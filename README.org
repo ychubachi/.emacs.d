@@ -2792,7 +2792,19 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+RESULTS:
 : consult-notmuch
 
-** gnus-alias - notmuchでシグネチャ
+*** mm-decode - mime関連（メール添付保存ディレクトリ）
+
+メールの添付をダウンロードするときのデフォルトディレクトリ。
+
+#+begin_src emacs-lisp
+  (leaf mm-decode
+    :custom (mm-default-directory . "~/Downloads/"))
+#+end_src
+
+#+RESULTS:
+: mm-decode
+
+*** gnus-alias - notmuchでシグネチャ
 
 + [[https://www.emacswiki.org/emacs/gnus-alias.el][http://github.com/hexmode/gnus-alias/]]
 + [[https://notmuchmail.org/emacstips/][gnus-alias allows you to define multiple identities when using message-mode.]]
