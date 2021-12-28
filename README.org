@@ -2465,7 +2465,7 @@ diredでWordやExcelのファイルを開くと、謎のXMLファイルが入っ
 
 そこで、 [[https://melpa.org/#/dired-launch][dired-launch]] を導入して、きちんとWordやExcelが起動するように設定しましょう。WSL環境では、 =wslview= コマンド[fn:wslu]をインストールしておくと、Windows側でOfficeアプリを立ち上げられるようになり、便利です。
 
-dired-launchを導入すると、通常通り =dired= を開いてからWordやExcelのファイルを選択して *=L=* を押すと、アプリケーションが起動します。
+dired-launchを導入すると、通常通り =dired= を開いてからWordやExcelのファイルを選択して *=J=* を押すと、アプリケーションが起動します。
 
 設定では、WSL環境かどうかを判断し、WSL環境であれば =wslview= でファイルを開くようにしています。そうでなければデフォルトの =mimeopen= コマンドで開きます（インストールされていれば、LibreOfficeが起動します）。
 
