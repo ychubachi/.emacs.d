@@ -521,7 +521,9 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
     :custom                                     ; バックアップファイルの設定
     ((version-control . t)
      (backup-directory-alist . '(("." . ".backup~")))
-     (delete-old-versions . t)))
+     (delete-old-versions . t))
+    :custom                                     ; fill-columnを表示する（効かない？）
+    ((global-display-fill-column-indicator-mode . t)))
 #+end_src
 
 #+RESULTS:
