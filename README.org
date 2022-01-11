@@ -187,7 +187,7 @@ leafはEmacsの設定をより美しく記述できるようにする、パッ�
 : prepare leaf
 
 *** パッケージ機能の初期設定
-最初に、パッケージを取ってくる場所（＝リポジトリ）を設定します。melpaとgnuの2つを使うようにしています。
+最初に、パッケージを取ってくる場所（＝リポジトリ）を設定します。melpaとgnuの2つを使うようにしています。nongnuも追加しました（org-contribのため）。
 
 Emacsのバージョンを29.0.50にしたのでorgのリポジトリは削除しました（追加する場合は ~("org"   . "https://orgmode.org/elpa/")~ を記入）。
 
@@ -199,7 +199,8 @@ Emacsのバージョンを29.0.50にしたのでorgのリポジトリは削除�
     (custom-set-variables
      '(package-archives
        '(("melpa" . "https://melpa.org/packages/")
-         ("gnu"   . "https://elpa.gnu.org/packages/"))))
+         ("gnu"   . "https://elpa.gnu.org/packages/")
+         ("nongnu" . "https://elpa.nongnu.org/nongnu/"))))
     (package-initialize))
 #+end_src
 
