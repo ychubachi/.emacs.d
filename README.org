@@ -1878,6 +1878,23 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 #+RESULTS:
 : org-gtasks
 
+** org-contrib - Non GNUのorgパッケージ
+
++ 利用するパッケージ
+  * ox-taskjuggler
+    - [[https://taskjuggler.org/index.html][TaskJuggler - A Free and Open Source Project Management Software - About TaskJuggler]]
+    - [[https://orgmode.org/worg/org-tutorials/org-taskjuggler.html][Creating Gantt charts by Exporting to TaskJuggler]]
+
+#+begin_src emacs-lisp
+  (leaf org-contrib
+    :package t
+    :config
+    (require 'ox-taskjuggler))
+#+end_src
+
+#+RESULTS:
+: org-contrib
+
 * 外部パッケージ
 ** swap-buffers
 *** 設定
