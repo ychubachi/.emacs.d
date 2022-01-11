@@ -1895,6 +1895,31 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 #+RESULTS:
 : org-contrib
 
+** org-publish
+
++ CSS
+  + [[https://github.com/gongzhitaao/orgcss][GitHub - gongzhitaao/orgcss: Simple and clean CSS for Org-exported HTML]]
+  + [[https://qiita.com/sambatriste/items/2dc9f81cbf1e82d7429a][org-modeのHTMLテーマ - Qiita]]
+  + [[https://github.com/fniessen/org-html-themes][GitHub - fniessen/org-html-themes: How to export Org mode files into awesome HTML in 2 minutes]]
++ Upload
+  + [[https://orgmode.org/manual/Complex-example.html][Complex example (The Org Manual)]]
+
+#+begin_src emacs-lisp
+  (leaf org-publish
+    :config
+    (setq org-publish-project-alist
+          '(("org"
+             :base-directory "~/Dropbox/Org/publish/src"
+             :publishing-function org-html-publish-to-html
+             :publishing-directory "~/Dropbox/Org/publish/public_html"
+             :section-numbers nil
+             :with-toc nil
+             :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://gongzhitaao.org/orgcss/org.css\"/>"))))
+#+end_src
+
+#+RESULTS:
+: org-publish
+
 * 外部パッケージ
 ** swap-buffers
 *** 設定
