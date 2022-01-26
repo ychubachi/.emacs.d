@@ -65,21 +65,5 @@
     (load bootstrap-file nil 'nomessage))
   (setq package-enable-at-startup nil))
 
-(leaf org-gcal
-  :straight (org-gcal :type git :host github :repo "kidd/org-gcal.el")
-  :require t
-  :config
-  (let* ((json-object-type 'hash-table)
-         (json-array-type 'list)
-         (json-key-type 'string)
-         (gcal-json "~/Dropbox/Org/gcal/client_secret_357879820522-pnlalhj01143k1946fgp8ashshus9olg.apps.googleusercontent.com.json")
-         (json (json-read-file gcal-json))
-         (installed (gethash "installed" json))
-         (client-id (gethash "client_id" installed))
-         (client-secret (gethash "client_secret" installed)))
-    (setq org-gcal-client-id client-id
-          org-gcal-client-secret client-secret
-          org-gcal-fetch-file-alist
-          '(("yc@aiit.ac.jp" .  "~/Dropbox/Org/GcalWork.org")
-            ("yoshihide.chubachi@gmail.com"
-             .  "~/Dropbox/Org/GcalPrivate.org")))))
+(leaf org
+  :straight (org :repo "https://git.savannah.gnu.org/git/emacs/org-mode.git"))
