@@ -1191,6 +1191,7 @@ Emacsでもモードによっては同じように動作します（orgモード
           (doct '(("Memo" :keys "m"
                    :empty-lines-after 1
                    :file "~/Dropbox/Org/Memo.org"
+                   :unnarrowed t
                    :datetree t
                    :todo-state "TODO"
                    :template ("* %{todo-state} %?"
