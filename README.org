@@ -2769,15 +2769,22 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
                                           ; Gmailに任せる
      (notmuch-search-oldest-first . nil)  ; 検索結果を新しい順でソート
      (notmuch-saved-searches
-      . '((:name "flagged"    :query "tag:flagged AND NOT tag:deleted" :key "f")
+      . '((:name "flagged"    :query "tag:flagged AND NOT tag:deleted"
+                 :key "f" :search-type tree)
           (:name "inbox"      :query "tag:inbox folder:/Gmail\\/inbox/ AND NOT tag:deleted"
-                 :key "i")
-          (:name "unread"     :query "tag:unread AND NOT tag:deleted"  :key "u")
-          (:name "sent"       :query "tag:sent AND NOT tag:deleted"    :key "s")
-          (:name "drafts"     :query "tag:draft AND NOT tag:deleted"   :key "d")
-          (:name "Gmal Inbox" :query "folder:/Gmail\\/inbox/"          :key "I")
-          (:name "Gmal Sent"  :query "folder:/Gmail\\/sent/"           :key "S")
-          (:name "all mail"   :query "NOT tag:deleted"                 :key "a")))
+                 :key "i" :search-type tree)
+          (:name "unread"     :query "tag:unread AND NOT tag:deleted"
+                 :key "u" :search-type tree)
+          (:name "sent"       :query "tag:sent AND NOT tag:deleted"
+                 :key "s" :search-type tree)
+          (:name "drafts"     :query "tag:draft AND NOT tag:deleted"
+                 :key "d" :search-type tree)
+          (:name "Gmal Inbox" :query "folder:/Gmail\\/inbox/"
+                 :key "I" :search-type tree)
+          (:name "Gmal Sent"  :query "folder:/Gmail\\/sent/"
+                 :key "S" :search-type tree)
+          (:name "all mail"   :query "NOT tag:deleted"
+                 :key "a" :search-type tree)))
      )
     :bind (("C-c r" . notmuch-hello))
     :config
