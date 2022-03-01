@@ -340,9 +340,12 @@ Mozcに関連する設定の全体です。個別の説明は[[*Mozcサーバと
 #+RESULTS:
 : mozc
 
-*** Mozcサーバと通信するためのヘルパーコマンド
+*** WSL: Mozcサーバと通信するためのヘルパーコマンド
 Mozcとのやり取りをするためのヘルパーを設定します。
 WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoogle IMEが使えるはずです。
+
++ [[https://w.atwiki.jp/ntemacs/pages/50.html][emacs-mozc を動かすための設定（mozc_emacs_helper コンパイル編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
++ [[https://w.atwiki.jp/ntemacs/pages/61.html][emacs-mozc を動かすための設定（WSL 設定編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
 
 #+begin_comment
 - [[https://qiita.com/ignorant/items/1c4f729f9147fb878f10][WSL の Emacs で日本語入力 - Qiita]]
