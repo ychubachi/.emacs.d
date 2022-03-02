@@ -1,4 +1,4 @@
-#+STARTUP: overview indent num align inlineimages logdone hidestars
+#+STARTUP: show2levels indent num align inlineimages logdone hidestars
 #+TAGS: FIXME(f) TODO(t) DRAFT(d) PBLISHED(p) SOMEDAY(s)
 
 README.org
@@ -335,7 +335,7 @@ leafに追加するパッケージです。
 | delete-trailing-whitespace |
 
 * キーバインディング
-** C-hをBSに、C-^をhelpに
+** C-hをBSに、C-^をhelpに[C-h][C-^]
 - 標準で
 - [[https://www.reddit.com/r/spacemacs/comments/l2fjzy/remapping_ch_to_backspace_and_remap_help_menu_to/][Remapping C-h to backspace, and remap "help" menu to anything else? : spacemacs]]
 
@@ -356,7 +356,7 @@ leafに追加するパッケージです。
 #+RESULTS:
 : *backspace
 
-** UndoをC-zに
+** UndoをC-zに[C-z]
 - 指が覚えてしまっている
 
 #+begin_src emacs-lisp
@@ -366,7 +366,7 @@ leafに追加するパッケージです。
 #+RESULTS:
 : *undo
 
-** toggle-truncate-linesをC-c tに
+** toggle-truncate-linesをC-c tに[C-c t]
 
 #+begin_src emacs-lisp
   (leaf *toggle-truncate-lines :bind (("C-c t" . toggle-truncate-lines)))
@@ -376,22 +376,7 @@ leafに追加するパッケージです。
 : *toggle-truncate-lines
 
 * ビルトインパッケージの設定
-** mule-cmds: 言語環境を日本語にする
-+ 言語環境を日本語にする
-  * この設定をすることでフォントが正しく表示されます。
-+ 文字コードをUTF-8にする
-
-#+begin_src emacs-lisp
-  (leaf mule-cmds
-    :config
-    (set-language-environment "Japanese")
-    (prefer-coding-system 'utf-8))
-#+end_src
-
-#+RESULTS:
-: mule-cmds
-
-** isearch
+** isearch[C-o]                                                      :FIXME:
 
 - isearch で漢字入力ができるようにする
 
@@ -401,7 +386,7 @@ leafに追加するパッケージです。
             ("C-o" . isearch-toggle-input-method))))
 #+end_src
 
-** wdired
+** wdired[C-o]                                                       :FIXME:
 
 - [[https://ohzeki.hatenablog.com/entry/20160115/1452838970][Emacsのdired表示でファイル名編集 - ohzeki’s diary]]
 
@@ -454,7 +439,7 @@ leafに追加するパッケージです。
 #+RESULTS:
 : midnight
 
-** imenu-list
+** imenu-list [C-c i]
 
 #+begin_src emacs-lisp
   (leaf *imenu-list
@@ -464,7 +449,7 @@ leafに追加するパッケージです。
 #+RESULTS:
 : *imenu-list
 
-** align - コメントの位置を揃えたりする
+** align - コメントの位置を揃えたりする[C-c M-a]
 
 #+begin_src emacs-lisp
   (leaf align
@@ -493,6 +478,21 @@ leafに追加するパッケージです。
 : outline-minor-mode
 
 * 日本語関係
+** mule-cmds: 言語環境を日本語にする
++ 言語環境を日本語にする
+  * この設定をすることでフォントが正しく表示されます。
++ 文字コードをUTF-8にする
+
+#+begin_src emacs-lisp
+  (leaf mule-cmds
+    :config
+    (set-language-environment "Japanese")
+    (prefer-coding-system 'utf-8))
+#+end_src
+
+#+RESULTS:
+: mule-cmds
+
 ** Linuxでmozcを使った日本語入力の設定（2021年版）
 :PROPERTIES:
 :BLOG:     plover
@@ -572,7 +572,7 @@ WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoog
     (setq mozc-helper-program-name "mozc_emacs_helper"))
 #+end_src
 
-*** Mozcによる変換操作の設定
+*** Mozcによる変換操作の設定[C-o][C-j]
 標準の入力方式をMozcに設定します。
 C-oで変換モード、C-jで直接入力モードに切り替えます。
 
@@ -732,7 +732,7 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
 #+RESULTS:
 : savehist
 
-** Marginalia
+** Marginalia[M-A]
 - [[https://github.com/minad/marginalia][GitHub - minad/marginalia: marginalia.el - Marginalia in the minibuffer]]
 - Enable richer annotations using the Marginalia package
 
@@ -748,7 +748,7 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
 #+RESULTS:
 : marginalia
 
-** embark - カーソル位置にあるテキストに対するアクションを実行（org link対応） :PBLISHED:
+** embark - カーソル位置にあるテキストに対するアクションを実行（org link対応） [M-.][C-.][C-^ B] :PBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-20 19:03:55]
@@ -850,7 +850,7 @@ Emacsでもモードによっては同じように動作します（orgモード
   - embark-url-map
   - embark-general-map
 
-** consult
+** consult [a lot of..]
 - [[https://github.com/minad/consult][GitHub - minad/consult: consult.el - Consulting completing-read]]
 - 2022-03-02
   - 次のエラーが出るようになった
@@ -1027,7 +1027,7 @@ Emacsでもモードによっては同じように動作します（orgモード
   - TODOはどのファイルに書いて良い
   - org-switchbかconsult-org-agendaをどこかにバインドするといいかも？（C-,）
     - C-c bにバインド
-** org-modeの設定
+** org-modeの設定 [C-c l,a,c,m]
 
 + TODOをMAYBE NEXT STARED WAITING DLEGATEDなど分けてもよいが、TODOに優先度#A #B #Cをつけるほうがアジェンダが見やすくなる
 
@@ -1344,7 +1344,7 @@ Emacsでもモードによっては同じように動作します（orgモード
   (setq org-beamer-frame-default-options "t") ; フレームの位置をtopにする。
 #+end_src
 
-*** 参考文献 RefTex-Mode
+*** 参考文献 RefTex-Mode                                            :FIXME:
     - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
     - [[https://github.com/jkitchin/org-ref][jkitchin/org-ref: org-mode modules for citations, cross-references, bibliographies in org-mode and useful bibtex tools to go with it.]]
     - [[https://aliquote.org/post/org-and-bibtex/][Org and Bibtex - aliquote]]
@@ -1543,7 +1543,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : org-superstar
 
-** org-rome
+** org-rome [...]
 
 + 参考
   * [[https://github.com/org-roam/org-roam][org-roam/org-roam: Rudimentary Roam replica with Org-mode]]
@@ -1858,7 +1858,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 #+RESULTS:
 : which-key
-** macrostep
+** macrostep [C-c e]
 
 - elispのマクロを展開する
 
@@ -1874,7 +1874,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 #+RESULTS:
 : macrostep
-** swap-buffers
+** swap-buffers [C-c b]
 *** 設定
 
 #+begin_src emacs-lisp
@@ -1935,7 +1935,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
        (global-undo-tree-mode))
    #+end_src
 
-** fly-check
+** fly-check [M-n][M-p]
 
 - emacs-lispのドキュメント用のチェック(emacs-lisp-checkdoc)を無効にする。
 
@@ -1981,7 +1981,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
     :after hydra)
 #+end_src
 
-** magit
+** magit [C-x g]
 - EmacsのGit
 #+begin_src emacs-lisp
   (leaf magit
@@ -2355,7 +2355,7 @@ https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-col
 
 一行は一行のまま、72文字で折返してくれています。一行の長さが短くなり、多少は読みやすくなってますね。
 
-*** visula-fill-columnのインストール
+*** visula-fill-columnのインストール [C-c q]
 パッケージをインストールするには次の通り設定します。
 
 #+begin_src emacs-lisp
@@ -2483,7 +2483,7 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 [fn:wslu] [[https://github.com/wslutilities/wslu][wslutilities/wslu: A collection of utilities for Windows 10 Linux Subsystems]]
 
 * UI・見た目
-** modus-themes
+** modus-themes [f5]
 - [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
 
 #+begin_src emacs-lisp
@@ -2703,7 +2703,7 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 | SPC  | メールを読み進める |
 | M-n  | 次のスレッド       |
 
-*** 設定:notmuch
+*** 設定:notmuch [C-c r]
 
 + [[https://githubmemory.com/repo/minad/vertico/issues/119][Notmuch.el select tag error: "Tag must be in the form of +'this_tag' or '-that_tag'" - githubmemory]]
   * verticoでタグが入力できない問題を回避する
@@ -2835,7 +2835,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 : gnus-alias
 
 * OS依存の設定
-** Windows IME設定
+** Windows IME設定 [C-o]                                             :FIXME:
 - [[https://nosubject.io/windows10-emacs-27-w32-ime/][[Emacs] Windows10 で Emacs 27 を使う | ** nosubject.io **]]
 - [[https://qiita.com/tawara_/items/0a7b8c50a48ea86b2d91][あの IBM が作ったオープンソース日本語フォントを使い、プログラミングフォント『PlemolJP』を作ってみた - Qiita]]
 
@@ -2910,7 +2910,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 : my/browser
 
 * 未整理
-** projectile
+** projectile [C-c p]
 + 説明
   * プロジェクトを扱う
   * [[https://docs.projectile.mx/projectile/usage.html#basic-usage][Usage :: Projectile]]
