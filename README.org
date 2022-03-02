@@ -1,6 +1,5 @@
-;; -*- mode: Org -*-
 #+STARTUP: overview indent num align inlineimages logdone hidestars
-#+TAGS: TODO(t) DRAFT(d) PBLISHED(p) SOMEDAY(s)
+#+TAGS: FIXME(f) TODO(t) DRAFT(d) PBLISHED(p) SOMEDAY(s)
 
 README.org
 - [[https://github.com/ychubachi/.emacs.d#readme][ychubachi/.emacs.d: emacs setting files created on 2020/11/23]]
@@ -188,6 +187,9 @@ leafの機能を拡張するleaf-keywordsをインストールします。
     (leaf-keywords-init))
 #+end_src
 
+#+RESULTS:
+: *leaf-keywords
+
 leafに追加するパッケージです。
 
 #+begin_src emacs-lisp
@@ -209,15 +211,172 @@ leafに追加するパッケージです。
 #+end_src
 
 #+RESULTS:
-: leaf
+: *leaf-optional-packages
+
 *** 参考
 + [[https://qiita.com/conao3/items/dc88bdadb0523ef95878#%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][[正式リリース]leaf.elで雑然としたEmacs設定ファイル「init.el」をクリーンにする - Qiita]]
 + [[https://qiita.com/conao3/items/347d7e472afd0c58fbd7#%E4%BE%BF%E5%88%A9%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][Emacs入門から始めるleaf.el入門 - Qiita]]
 + leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行う際に使用します。
 + [[https://qiita.com/tadsan/items/c859c5c04724cbda75fc][指定したマイナーモードを表示しない(diminish篇) - Qiita]]
 
-* 日本語関係
-** 言語環境を日本語にする
+* カスタマイズ変数
+** カスタマイズファイルを分離（cus-edit）
+
+#+begin_src emacs-lisp
+  (leaf cus-edit
+    :doc "tools for customizing Emacs and Lisp packages"
+    :tag "builtin" "faces" "help"
+    :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
+#+end_src
+
+#+RESULTS:
+: cus-edit
+
+** customize変数の設定（cus-start）
+- 一旦全て設定せず、必要になったら再度設定する
+- グローバルモードの設定がカスタマイズ変数でもできる場合、カスタマイズ変数を使用
+
+#+begin_src emacs-lisp
+  (leaf cus-start
+    :doc "define customization properties of builtins"
+    :tag "builtin" "internal"
+    :custom
+    ((inhibit-startup-screen . t)               ; スタートアップスクリーンを非表示
+     (ring-bell-function . 'ignore)             ; ベルを鳴らさない
+     (fill-column . 100))                       ; 100桁で改行（モードによる）
+    :custom
+    ((global-display-line-numbers-mode . t)     ; 行番号表示
+     (display-line-numbers-width . 4))          ; 表示する行番号の桁数
+    :custom
+    ((global-auto-revert-mode . t)              ; 更新されたら自動的に再読込
+     (auto-revert-verbose . nil))                       ; 再読込の際、メッセージを非表示
+    :custom
+    ((show-paren-mode . t)                      ; 括弧の対応関係を表示する
+     (show-paren-style . 'mixed))                       ; 対応関係を表示するスタイル
+    :custom                                     ; VCの設定
+    ((vc-follow-symlinks . t)                   ; VC対象ファイルのシンボリックリンクの場合、本体を辿る
+     (auto-revert-check-vc-info . t))           ; VCで更新があった場合、自動で更新
+    :custom                                     ; 最後に編集した場所を記憶
+    ((save-place-mode . t))
+    :custom                                     ; バックアップファイルの設定
+    ((version-control . t)
+     (backup-directory-alist . '(("." . ".backup~")))
+     (delete-old-versions . t))
+    :custom                                     ; fill-columnを表示する（効かない？）
+    ((global-display-fill-column-indicator-mode . t)))
+#+end_src
+
+#+RESULTS:
+: cus-start
+
++ 参考
+  * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
+  * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
+
++ 古い設定
+#+begin_src emacs-lisp :tangle no
+  (leaf cus-start
+    :doc "define customization properties of builtins"
+    :tag "builtin" "internal"
+    :preface
+    (defun c/redraw-frame nil
+      (interactive)
+      (redraw-frame))
+    :bind (("M-ESC ESC" . c/redraw-frame))
+    :custom '((user-login-name . "yc")
+              (create-lockfiles . nil)
+              (debug-on-error . t)
+              (init-file-debug . t)
+              (frame-resize-pixelwise . t)
+              (enable-recursive-minibuffers . t)
+              (history-length . 1000)
+              (history-delete-duplicates . t)
+              (scroll-preserve-screen-position . t)
+              (scroll-conservatively . 100)
+              (mouse-wheel-scroll-amount . '(1 ((control) . 5)))
+              (text-quoting-style . 'straight)
+              (use-dialog-box . nil)
+              (use-file-dialog . nil)
+              (indent-tabs-mode . nil)
+              ))
+#+end_src
+
+#+RESULTS:
+: cus-start
+
+* Emacs本体の設定
+** (require 'cl)を検査しない
+
+#+begin_src emacs-lisp
+  (leaf *emacs
+    :config
+    (setq byte-compile-warnings '(not cl-functions obsolete)))
+#+end_src
+
+#+RESULTS:
+: *emacs
+
+** yes/noの選択をy/nに簡略化
+
+#+begin_src emacs-lisp
+  (defalias 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+#+RESULTS:
+: yes-or-no-p
+
+** 保存時、不要な空白を削除
+
+#+begin_src emacs-lisp
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
+
+#+RESULTS:
+| delete-trailing-whitespace |
+
+* キーバインディング
+** C-hをBSに、C-^をhelpに
+- 標準で
+- [[https://www.reddit.com/r/spacemacs/comments/l2fjzy/remapping_ch_to_backspace_and_remap_help_menu_to/][Remapping C-h to backspace, and remap "help" menu to anything else? : spacemacs]]
+
+- :init ではなく :config だと機能しない
+  - :config の中身は eval-after-load で実行される
+  - :bindがあるとこうなるようだ
+- help-map は :bind で設定できない
+  - ここでは :bind を利用しない
+  - :bind を利用しなければ :init と :config
+- C-@をヘルプにしていたが、ターミナルだとC-SPCがC-@とみなされるのでC-^に変更してみた。
+
+#+begin_src emacs-lisp
+  (leaf *backspace
+    :init (global-set-key (kbd "C-^") help-map)
+    :bind (("C-h" . delete-backward-char)))
+#+end_src
+
+#+RESULTS:
+: *backspace
+
+** UndoをC-zに
+- 指が覚えてしまっている
+
+#+begin_src emacs-lisp
+  (leaf *undo :bind (("C-z" . undo)))
+#+end_src
+
+#+RESULTS:
+: *undo
+
+** toggle-truncate-linesをC-c tに
+
+#+begin_src emacs-lisp
+  (leaf *toggle-truncate-lines :bind (("C-c t" . toggle-truncate-lines)))
+#+end_src
+
+#+RESULTS:
+: *toggle-truncate-lines
+
+* ビルトインパッケージの設定
+** mule-cmds: 言語環境を日本語にする
 + 言語環境を日本語にする
   * この設定をすることでフォントが正しく表示されます。
 + 文字コードをUTF-8にする
@@ -232,6 +391,108 @@ leafに追加するパッケージです。
 #+RESULTS:
 : mule-cmds
 
+** isearch
+
+- isearch で漢字入力ができるようにする
+
+#+begin_src emacs-lisp
+  (leaf isearch
+    :bind ((isearch-mode-map
+            ("C-o" . isearch-toggle-input-method))))
+#+end_src
+
+** wdired
+
+- [[https://ohzeki.hatenablog.com/entry/20160115/1452838970][Emacsのdired表示でファイル名編集 - ohzeki’s diary]]
+
+#+begin_src emacs-lisp
+  (leaf wdired
+    :doc "Rename files editing their names in dired buffers"
+    :tag "builtin"
+    :added "2020-11-21"
+    :require t
+    :config
+    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
+    :bind ((wdired-mode-map
+            ("C-o" . toggle-input-method))))
+#+end_src
+
+#+RESULTS:
+: wdired
+
+** recentf
+- recentf-modeはカスタマイズ変数にできる
+
+#+begin_src emacs-lisp
+  (leaf recentf
+    :custom
+    (recentf-max-saved-items . 2000)
+    (recentf-auto-cleanup quote never)
+    (recentf-exclude quote
+                     ("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:"))
+    :config
+    (setq recentf-auto-save-timer
+          (run-with-idle-timer 30 t (lambda () (let ((save-silently t)) (recentf-save-list)))))
+    (recentf-mode 1))
+#+end_src
+
+#+RESULTS:
+: recentf
+
+** midnight - 一定期間使用しなかった buffer を自動削除
+- 使い方、これでいいのかな？
+- [[https://uwabami.github.io/cc-env/Emacs.html][midnight: 一定期間使用しなかった buffer を自動削除]]
+
+#+begin_src emacs-lisp
+  (leaf midnight
+    :custom
+    ((clean-buffer-list-delay-general . 1))
+    :hook
+    (emacs-startup-hook . midnight-mode))
+#+end_src
+
+#+RESULTS:
+: midnight
+
+** imenu-list
+
+#+begin_src emacs-lisp
+  (leaf *imenu-list
+    :bind (("C-c i" . imenu-list-smart-toggle)))
+#+end_src
+
+#+RESULTS:
+: *imenu-list
+
+** align - コメントの位置を揃えたりする
+
+#+begin_src emacs-lisp
+  (leaf align
+    :doc "align text to a specific column, by regexp"
+    :tag "builtin"
+    :added "2021-10-30"
+    :bind (("C-c M-a" . align-regexp))
+    )
+#+end_src
+
+#+RESULTS:
+: align
+
+** outline-minnor-mode - アウトラインマイナーモードの設定
++ outline-modeのプリフィックスはC-c C-oに変更しました。理由は指が慣れていること。org-open-at-pointとバッティングしますが、そもそもoutline-minnor-modeとorg-modeを併用することはないので気にしないことにしています。
+
+#+begin_src emacs-lisp
+  (leaf outline-minor-mode
+    :config
+    (add-hook 'outline-minor-mode-hook
+              (lambda () (local-set-key "\C-c\C-o"
+                                        outline-mode-prefix-map))))
+#+end_src
+
+#+RESULTS:
+: outline-minor-mode
+
+* 日本語関係
 ** Linuxでmozcを使った日本語入力の設定（2021年版）
 :PROPERTIES:
 :BLOG:     plover
@@ -418,324 +679,10 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
 #+RESULTS: mozc-posframe
 : mozc-posframe
 
-* カスタマイズ変数
-** カスタマイズファイルを分離（cus-edit）
-
-#+begin_src emacs-lisp
-  (leaf cus-edit
-    :doc "tools for customizing Emacs and Lisp packages"
-    :tag "builtin" "faces" "help"
-    :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
-#+end_src
-
-#+RESULTS:
-: cus-edit
-
-** customize変数の設定（cus-start）
-- 一旦全て設定せず、必要になったら再度設定する
-- グローバルモードの設定がカスタマイズ変数でもできる場合、カスタマイズ変数を使用
-
-#+begin_src emacs-lisp
-  (leaf cus-start
-    :doc "define customization properties of builtins"
-    :tag "builtin" "internal"
-    :custom
-    ((inhibit-startup-screen . t)               ; スタートアップスクリーンを非表示
-     (ring-bell-function . 'ignore)             ; ベルを鳴らさない
-     (fill-column . 100))                       ; 100桁で改行（モードによる）
-    :custom
-    ((global-display-line-numbers-mode . t)     ; 行番号表示
-     (display-line-numbers-width . 4))          ; 表示する行番号の桁数
-    :custom
-    ((global-auto-revert-mode . t)              ; 更新されたら自動的に再読込
-     (auto-revert-verbose . nil))                       ; 再読込の際、メッセージを非表示
-    :custom
-    ((show-paren-mode . t)                      ; 括弧の対応関係を表示する
-     (show-paren-style . 'mixed))                       ; 対応関係を表示するスタイル
-    :custom                                     ; VCの設定
-    ((vc-follow-symlinks . t)                   ; VC対象ファイルのシンボリックリンクの場合、本体を辿る
-     (auto-revert-check-vc-info . t))           ; VCで更新があった場合、自動で更新
-    :custom                                     ; 最後に編集した場所を記憶
-    ((save-place-mode . t))
-    :custom                                     ; バックアップファイルの設定
-    ((version-control . t)
-     (backup-directory-alist . '(("." . ".backup~")))
-     (delete-old-versions . t))
-    :custom                                     ; fill-columnを表示する（効かない？）
-    ((global-display-fill-column-indicator-mode . t)))
-#+end_src
-
-#+RESULTS:
-: cus-start
-
-+ 参考
-  * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
-  * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
-
-+ 古い設定
-#+begin_src emacs-lisp :tangle no
-  (leaf cus-start
-    :doc "define customization properties of builtins"
-    :tag "builtin" "internal"
-    :preface
-    (defun c/redraw-frame nil
-      (interactive)
-      (redraw-frame))
-    :bind (("M-ESC ESC" . c/redraw-frame))
-    :custom '((user-login-name . "yc")
-              (create-lockfiles . nil)
-              (debug-on-error . t)
-              (init-file-debug . t)
-              (frame-resize-pixelwise . t)
-              (enable-recursive-minibuffers . t)
-              (history-length . 1000)
-              (history-delete-duplicates . t)
-              (scroll-preserve-screen-position . t)
-              (scroll-conservatively . 100)
-              (mouse-wheel-scroll-amount . '(1 ((control) . 5)))
-              (text-quoting-style . 'straight)
-              (use-dialog-box . nil)
-              (use-file-dialog . nil)
-              (indent-tabs-mode . nil)
-              ))
-#+end_src
-
-#+RESULTS:
-: cus-start
-
-* Emacs本体の設定
-** (require 'cl)を検査しない
-
-#+begin_src emacs-lisp
-  (leaf *emacs
-    :config
-    (setq byte-compile-warnings '(not cl-functions obsolete)))
-#+end_src
-
-#+RESULTS:
-: *emacs
-
-** yes/noの選択をy/nに簡略化
-
-#+begin_src emacs-lisp
-  (defalias 'yes-or-no-p 'y-or-n-p)
-#+end_src
-
-#+RESULTS:
-: yes-or-no-p
-
-** 保存時、不要な空白を削除
-
-#+begin_src emacs-lisp
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-#+end_src
-
-#+RESULTS:
-| delete-trailing-whitespace |
-
-* キーバインディング
-** C-hをBSに、C-^をhelpに
-- 標準で
-- [[https://www.reddit.com/r/spacemacs/comments/l2fjzy/remapping_ch_to_backspace_and_remap_help_menu_to/][Remapping C-h to backspace, and remap "help" menu to anything else? : spacemacs]]
-
-- :init ではなく :config だと機能しない
-  - :config の中身は eval-after-load で実行される
-  - :bindがあるとこうなるようだ
-- help-map は :bind で設定できない
-  - ここでは :bind を利用しない
-  - :bind を利用しなければ :init と :config
-- C-@をヘルプにしていたが、ターミナルだとC-SPCがC-@とみなされるのでC-^に変更してみた。
-
-#+begin_src emacs-lisp
-  (leaf *backspace
-    :init (global-set-key (kbd "C-^") help-map)
-    :bind (("C-h" . delete-backward-char)))
-#+end_src
-
-#+RESULTS:
-: *backspace
-
-** UndoをC-zに
-- 指が覚えてしまっている
-
-#+begin_src emacs-lisp
-  (leaf *undo :bind (("C-z" . undo)))
-#+end_src
-
-#+RESULTS:
-: *undo
-
-** toggle-truncate-linesをC-c tに
-
-#+begin_src emacs-lisp
-  (leaf *toggle-truncate-lines :bind (("C-c t" . toggle-truncate-lines)))
-#+end_src
-
-#+RESULTS:
-: *toggle-truncate-lines
-
-* ビルトインパッケージの設定
-** isearch
-
-- isearch で漢字入力ができるようにする
-
-#+begin_src emacs-lisp
-  (leaf isearch
-    :bind ((isearch-mode-map
-            ("C-o" . isearch-toggle-input-method))))
-#+end_src
-
-** wdired
-
-- [[https://ohzeki.hatenablog.com/entry/20160115/1452838970][Emacsのdired表示でファイル名編集 - ohzeki’s diary]]
-
-#+begin_src emacs-lisp
-  (leaf wdired
-    :doc "Rename files editing their names in dired buffers"
-    :tag "builtin"
-    :added "2020-11-21"
-    :require t
-    :config
-    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
-    :bind ((wdired-mode-map
-            ("C-o" . toggle-input-method))))
-#+end_src
-
-#+RESULTS:
-: wdired
-
-** macrostep
-
-- elispのマクロを展開する
-
-#+begin_src emacs-lisp
-  (leaf macrostep
-    :doc "interactive macro expander"
-    :req "cl-lib-0.5"
-    :tag "debugging" "macro" "languages" "lisp"
-    :url "https://github.com/joddie/macrostep"
-    :straight t
-    :bind (("C-c e" . macrostep-expand)))
-#+end_src
-
-#+RESULTS:
-: macrostep
-
-** recentf
-- recentf-modeはカスタマイズ変数にできる
-
-#+begin_src emacs-lisp
-  (leaf recentf
-    :custom
-    (recentf-max-saved-items . 2000)
-    (recentf-auto-cleanup quote never)
-    (recentf-exclude quote
-                     ("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:"))
-    :config
-    (setq recentf-auto-save-timer
-          (run-with-idle-timer 30 t (lambda () (let ((save-silently t)) (recentf-save-list)))))
-    (recentf-mode 1))
-#+end_src
-
-#+RESULTS:
-: recentf
-
-** midnight - 一定期間使用しなかった buffer を自動削除
-- 使い方、これでいいのかな？
-- [[https://uwabami.github.io/cc-env/Emacs.html][midnight: 一定期間使用しなかった buffer を自動削除]]
-
-#+begin_src emacs-lisp
-  (leaf midnight
-    :custom
-    ((clean-buffer-list-delay-general . 1))
-    :hook
-    (emacs-startup-hook . midnight-mode))
-#+end_src
-
-#+RESULTS:
-: midnight
-
-** which-key - キーバインドのガイド表示                              :draft:
-:PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-11-10 23:59:23]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech
-:POST_TAGS: Emacs, Lisp
-:ID:       o2b:f8c43d20-c1e2-4009-961f-48178cde8c6b
-:POST_DATE: [2021-11-11 Thu 00:23]
-:POSTID:   344
-:END:
-
-Emacsでは、コントロールやAltキーを押しながら一文字打って、更にもう一文字打つとコマンドが実行される、という操作が基本です。
-
-このキー操作の組み合わせ、慣れれば手が覚えて、自然に操作できるようになるものです。しかしながら、覚えるまでは大変です。特に初心者にとってはいちいち調べるのもやっかいです。
-
-which-keyパッケージはこの負担を幾分、軽減してくれます。例えば、ファイルを保存するコマンドはC-x C-sです。ですがこれを忘れて、「ファイルを保存するときはC-xを打ってから、何を打つんだっけ？」といったとき、このパッケージが有効です。
-
-C-xを打って入力をやめると、画面にその先に打つ文字とそれに対応したコマンドのリストを表示してくれます。
-
-とても便利！・・・と言いたいところですが、結局はメニューに出てくるコマンドの数そのものが多いので、一覧の中から目的のものを見つけるのも一苦労であったりします。もちろん、選択肢が少ない場合は大助かりです。
-
-なかなかEmacsのキー操作が覚えられないよ、という場合は試してみてください。
-
-#+begin_src emacs-lisp
-  (leaf which-key
-    :doc "Display available keybindings in popup"
-    :req "emacs-24.4"
-    :tag "emacs>=24.4"
-    :url "https://github.com/justbur/emacs-which-key"
-    :added "2021-10-20"
-    :emacs>= 24.4
-    :straight t
-    :config
-    (which-key-mode))
-#+end_src
-
-#+RESULTS:
-: which-key
-
-** imenu-list
-
-#+begin_src emacs-lisp
-  (leaf *imenu-list
-    :bind (("C-c i" . imenu-list-smart-toggle)))
-#+end_src
-
-#+RESULTS:
-: *imenu-list
-
-** align - コメントの位置を揃えたりする
-
-#+begin_src emacs-lisp
-  (leaf align
-    :doc "align text to a specific column, by regexp"
-    :tag "builtin"
-    :added "2021-10-30"
-    :bind (("C-c M-a" . align-regexp))
-    )
-#+end_src
-
-#+RESULTS:
-: align
-
-** outline-minnor-mode - アウトラインマイナーモードの設定
-+ outline-modeのプリフィックスはC-c C-oに変更しました。理由は指が慣れていること。org-open-at-pointとバッティングしますが、そもそもoutline-minnor-modeとorg-modeを併用することはないので気にしないことにしています。
-
-#+begin_src emacs-lisp
-  (leaf outline-minor-mode
-    :config
-    (add-hook 'outline-minor-mode-hook
-              (lambda () (local-set-key "\C-c\C-o"
-                                        outline-mode-prefix-map))))
-#+end_src
-
-#+RESULTS:
-: outline-minor-mode
-
 * ミニバッファ補完UI関連の設定
 ** vertico:本体の設定
-
+- VERTical Interactive COmpletion の略
+- Emacsの標準の補完システムを土台とした垂直補完UI
 - [[https://github.com/minad/vertico/][GitHub - minad/vertico: vertico.el - VERTical Interactive COmpletion]]
 
 #+begin_src emacs-lisp
@@ -756,6 +703,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 ** orderless
 - [[https://github.com/oantolin/orderless][GitHub - oantolin/orderless: Emacs completion style that matches multiple regexps in any order]]
+- Verticoで、スペースで区切ったキーワードで検索できるようにする。
 
 #+begin_src emacs-lisp
   (leaf orderless
@@ -902,13 +850,20 @@ Emacsでもモードによっては同じように動作します（orgモード
   - embark-url-map
   - embark-general-map
 
-** consult
+** consult                                                           :FIXME:
 - [[https://github.com/minad/consult][GitHub - minad/consult: consult.el - Consulting completing-read]]
+- 2022-03-02
+  - 次のエラーが出るようになった
+    - user-error: consult--source-file is neither a Consult command nor a Consult source
+  - (emacs-version)
+    "GNU Emacs 27.1 (build 1, x86_64-pc-linux-gnu, GTK+ Version 3.24.20, cairo version 1.16.0)
+     of 2020-09-20"
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   ;; Example configuration for Consult
   (leaf consult
-    :straight t
+    :straight (consult :type git :host github
+                       :repo "minad/consult")
     ;; Replace bindings. Lazily loaded due by `use-package'.
     :bind (;; C-c bindings (mode-specific-map)
            ;; ("C-c h" . consult-history)
@@ -1859,6 +1814,61 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 : org-publish
 
 * 外部パッケージ
+** which-key - キーバインドのガイド表示                              :draft:
+:PROPERTIES:
+:BLOG:     plover
+:DATE:     [2021-11-10 23:59:23]
+:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
+:CATEGORY: Tech
+:POST_TAGS: Emacs, Lisp
+:ID:       o2b:f8c43d20-c1e2-4009-961f-48178cde8c6b
+:POST_DATE: [2021-11-11 Thu 00:23]
+:POSTID:   344
+:END:
+
+Emacsでは、コントロールやAltキーを押しながら一文字打って、更にもう一文字打つとコマンドが実行される、という操作が基本です。
+
+このキー操作の組み合わせ、慣れれば手が覚えて、自然に操作できるようになるものです。しかしながら、覚えるまでは大変です。特に初心者にとってはいちいち調べるのもやっかいです。
+
+which-keyパッケージはこの負担を幾分、軽減してくれます。例えば、ファイルを保存するコマンドはC-x C-sです。ですがこれを忘れて、「ファイルを保存するときはC-xを打ってから、何を打つんだっけ？」といったとき、このパッケージが有効です。
+
+C-xを打って入力をやめると、画面にその先に打つ文字とそれに対応したコマンドのリストを表示してくれます。
+
+とても便利！・・・と言いたいところですが、結局はメニューに出てくるコマンドの数そのものが多いので、一覧の中から目的のものを見つけるのも一苦労であったりします。もちろん、選択肢が少ない場合は大助かりです。
+
+なかなかEmacsのキー操作が覚えられないよ、という場合は試してみてください。
+
+#+begin_src emacs-lisp
+  (leaf which-key
+    :doc "Display available keybindings in popup"
+    :req "emacs-24.4"
+    :tag "emacs>=24.4"
+    :url "https://github.com/justbur/emacs-which-key"
+    :added "2021-10-20"
+    :emacs>= 24.4
+    :straight t
+    :config
+    (which-key-mode))
+#+end_src
+
+#+RESULTS:
+: which-key
+** macrostep
+
+- elispのマクロを展開する
+
+#+begin_src emacs-lisp
+  (leaf macrostep
+    :doc "interactive macro expander"
+    :req "cl-lib-0.5"
+    :tag "debugging" "macro" "languages" "lisp"
+    :url "https://github.com/joddie/macrostep"
+    :straight t
+    :bind (("C-c e" . macrostep-expand)))
+#+end_src
+
+#+RESULTS:
+: macrostep
 ** swap-buffers
 *** 設定
 

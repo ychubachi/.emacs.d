@@ -40,7 +40,7 @@
 ;; Check org version with M-x org-version.
 (straight-use-package 'org)
 
-;; (require 'org-install)
+;; Load my settings
 (org-babel-load-file "~/.emacs.d/README.org")
 
 ;; Local Variables:
