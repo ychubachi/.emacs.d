@@ -259,29 +259,6 @@ leafに追加するパッケージです。
 + leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行う際に使用します。
 + [[https://qiita.com/tadsan/items/c859c5c04724cbda75fc][指定したマイナーモードを表示しない(diminish篇) - Qiita]]
 
-** パッケージ管理（straight）
-
-#+begin_src emacs-lisp
-  (leaf straight
-    :config
-    (defvar bootstrap-version)
-    (let ((bootstrap-file
-           (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-          (bootstrap-version 5))
-      (unless (file-exists-p bootstrap-file)
-        (with-current-buffer
-            (url-retrieve-synchronously
-             "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-             'silent 'inhibit-cookies)
-          (goto-char (point-max))
-          (eval-print-last-sexp)))
-      (load bootstrap-file nil 'nomessage))
-    (setq package-enable-at-startup nil))
-#+end_src
-
-#+RESULTS:
-: straight
-
 * 日本語関係
 ** 言語環境を日本語にする
 + 言語環境を日本語にする
