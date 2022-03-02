@@ -25,7 +25,6 @@
 (require 'org-install)
 (org-babel-load-file "~/.emacs.d/README.org")
 
-(load "~/.emacs.d/my-init.el")
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
