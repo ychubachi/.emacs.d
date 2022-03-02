@@ -167,27 +167,6 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 :POSTID:   293
 :END:
 
-*** COMMENT パッケージ機能の初期設定
-最初に、パッケージを取ってくる場所（＝リポジトリ）を設定します。melpaとgnuの2つを使うようにしています。nongnuも追加しました（org-contribのため）。
-
-Emacsのバージョンを29.0.50にしたのでorgのリポジトリは削除しました（追加する場合は ~("org"   . "https://orgmode.org/elpa/")~ を記入）。
-
-設定が終わったらイニシャライズします。
-
-#+NAME: setup-package
-#+begin_src emacs-lisp :tangle no
-  (prog1 "package"
-    (custom-set-variables
-     '(package-archives
-       '(("melpa" . "https://melpa.org/packages/")
-         ("gnu"   . "https://elpa.gnu.org/packages/")
-         ("nongnu" . "https://elpa.nongnu.org/nongnu/"))))
-    (package-initialize))
-#+end_src
-
-#+RESULTS: setup-package
-: package
-
 *** leafの導入（straight版）
 leafはEmacsの設定をより美しく記述できるようにする、パッケージの設定を記述するツールです。パッケージのインストールための様々なパッケージと組み合わせ利用します。設計思想がしっかりしていて、利用者を惑わせない、特に、Emacs lispを解する人にとっては、lispの世界観を崩さないで記述できるのが魅力でしょう。
 
@@ -237,7 +216,6 @@ leafに追加するパッケージです。
 + leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行う際に使用します。
 + [[https://qiita.com/tadsan/items/c859c5c04724cbda75fc][指定したマイナーモードを表示しない(diminish篇) - Qiita]]
 
-
 * 日本語関係
 ** 言語環境を日本語にする
 + 言語環境を日本語にする
@@ -284,7 +262,7 @@ Mozcに関連する設定の全体です。個別の説明は[[*Mozcサーバと
 #+begin_src emacs-lisp :noweb yes
   (leaf mozc
     :if (eq system-type 'gnu/linux)
-    :package t
+    :straight t
     :config
     <<mozc-helper>>
     <<mozc-im>>
@@ -354,7 +332,7 @@ IME OFF -> isearch -> OFF -> done -> OFF
 #+NAME: mozc-im
 #+begin_src emacs-lisp :tangle no :noweb yes
   (leaf mozc-im
-    :ensure t
+    :straight t
     :require t
     :custom ((default-input-method . "japanese-mozc-im"))
     :bind* (("C-o" . enable-input-method)
@@ -636,7 +614,7 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
     :req "cl-lib-0.5"
     :tag "debugging" "macro" "languages" "lisp"
     :url "https://github.com/joddie/macrostep"
-    :package t
+    :straight t
     :bind (("C-c e" . macrostep-expand)))
 #+end_src
 
@@ -709,7 +687,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
     :url "https://github.com/justbur/emacs-which-key"
     :added "2021-10-20"
     :emacs>= 24.4
-    :ensure t
+    :straight t
     :config
     (which-key-mode))
 #+end_src
@@ -1143,7 +1121,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 #+begin_src emacs-lisp
   (leaf doct
-    :ensure t
+    :straight t
     ;;recommended: defer until calling doct
                                           ;:commands (doct)
     :config
@@ -1414,7 +1392,7 @@ Emacsでもモードによっては同じように動作します（orgモード
     - org-refはHelmに依存しているようだ
 
       ;; (leaf org-ref
-      ;;   :ensure t
+      ;;   :straight t
       ;;   :require t
       ;;   :setq ((reftex-default-bibliography quote
       ;;                                       ("~/git/bibliography/references.bib"))
@@ -1438,7 +1416,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 #+begin_src emacs-lisp
   (leaf org-ref
-    :package t
+    :straight t
     :config
     (setq bibtex-completion-bibliography '("~/git/bibliography/references.bib")
           bibtex-completion-library-path '("~/git/bibliography/bibtex-pdfs/")
@@ -1555,7 +1533,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 #+begin_src emacs-lisp
   (leaf org2blog
-    :ensure t
+    :straight t
     :config
     (require 'auth-source)
     (let* ((credentials (auth-source-user-and-password "ploversky.net"))
@@ -1580,7 +1558,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 #+begin_src emacs-lisp
   (leaf ox-hugo
-    :ensure t
+    :straight t
     :require t
     :after ox)
 #+end_src
@@ -1597,7 +1575,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 #+begin_src emacs-lisp
   (leaf org-superstar
-    :ensure t
+    :straight t
     :config
     (add-hook 'org-mode-hook (lambda nil (org-superstar-mode 1))))
 #+end_src
@@ -1617,7 +1595,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 #+begin_src emacs-lisp
   (leaf org-roam
-    :ensure t
+    :straight t
     :require t
     :custom
     (org-roam-directory . "~/Dropbox/Org/Roam/")
@@ -1672,7 +1650,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 #+begin_src emacs-lisp
   (leaf ox-zenn
-    :ensure t
+    :straight t
     :after org
     :require t ox-publish
   :defun zenn/f-parent org-publish
@@ -1705,7 +1683,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 + [[https://github.com/kawabata/ox-pandoc][kawabata/ox-pandoc: Another org-mode exporter via pandoc.]]
 
 #+begin_src emacs-lisp
-  (leaf ox-pandoc :package t :require t)
+  (leaf ox-pandoc :straight t :require t)
 #+end_src
 
 #+RESULTS:
@@ -1722,7 +1700,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 #+begin_src emacs-lisp
     (leaf org-pomodoro
-      :package t
+      :straight t
       :require t)
 #+end_src
 
@@ -1847,7 +1825,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+begin_src emacs-lisp
   (leaf org-contrib
-    :package t
+    :straight t
     :config
     (require 'ox-taskjuggler))
 #+end_src
@@ -1886,7 +1864,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+begin_src emacs-lisp
   (leaf swap-buffers
-    :package t
+    :straight t
     :bind
     ("C-c b" . swap-buffers)
     :custom
@@ -1915,7 +1893,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+begin_src emacs-lisp
   (leaf backup-each-save
-    :package t
+    :straight t
     :config
     ;; バックアップ先
     (setq backup-each-save-mirror-location "~/.emacs.d/backups")
@@ -1937,7 +1915,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
    #+begin_src emacs-lisp
      (leaf undo-tree
-       :ensure t
+       :straight t
        :config
        (global-undo-tree-mode))
    #+end_src
@@ -1950,7 +1928,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
   (leaf flycheck
     :doc "On-the-fly syntax checking"
     :emacs>= 24.3
-    :ensure t
+    :straight t
     :bind (("M-n" . flycheck-next-error)
            ("M-p" . flycheck-previous-error))
     :custom ((flycheck-emacs-lisp-initialize-packages . t)
@@ -1959,14 +1937,14 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
     :config
     (leaf flycheck-package
       :doc "A Flycheck checker for elisp package authors"
-      :ensure t
+      :straight t
       :config
       (flycheck-package-setup))
 
     (leaf flycheck-elsa
       :doc "Flycheck for Elsa."
       :emacs>= 25
-      :ensure t
+      :straight t
       :config
       (flycheck-elsa-setup))
     )
@@ -1984,7 +1962,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
     :tag "pandoc" "text"
     :added "2020-11-24"
     :url "http://joostkremers.github.io/pandoc-mode/"
-    :ensure t
+    :straight t
     :after hydra)
 #+end_src
 
@@ -1997,7 +1975,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
     :tag "vc" "tools" "git" "emacs>=25.1"
     :added "2020-11-30"
     :emacs>= 25.1
-    :ensure t
+    :straight t
     :after git-commit with-editor
     :bind (("C-x g" . magit-status))
     )
@@ -2018,7 +1996,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 #+begin_src emacs-lisp
   (leaf migemo
     :when (eq system-type 'gnu/linux)
-    :ensure t
+    :straight t
     :require t
     :config
     ;; cmigemo(default)
@@ -2053,7 +2031,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
     :when (and
            (eq system-type 'windows-nt)
            (file-exists-p "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict"))
-    :ensure t
+    :straight t
     :setq
     (migemo-dictionary . "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict")
     :config
@@ -2129,7 +2107,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+begin_src emacs-lisp
   (leaf yasnippet-snippets
-    :package t
+    :straight t
     :require t
     :setq
     (yasnippet-snippets-dir . "~/.emacs.d/snippets")
@@ -2150,7 +2128,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+begin_src emacs-lisp
     (leaf multiple-cursors
-      :package t
+      :straight t
       :config
       ;; use region-bindings-mode instead
       ;; (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
@@ -2170,7 +2148,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+begin_src emacs-lisp
   (leaf region-bindings-mode
-    :package t
+    :straight t
     :require t
     :config
     (region-bindings-mode-enable)
@@ -2188,7 +2166,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 ** yaml-mode
 
 #+begin_src emacs-lisp
-  (leaf yaml-mode :package t)
+  (leaf yaml-mode :straight t)
 #+end_src
 
 #+RESULTS:
@@ -2202,7 +2180,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+begin_src emacs-lisp
   (leaf rainbow-delimiters
-    :package t
+    :straight t
     :hook
     (prog-mode-hook . rainbow-delimiters-mode))
 #+end_src
@@ -2220,7 +2198,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 *** 設定
 #+begin_src emacs-lisp
   (leaf highlight-indent-guides
-    :package t
+    :straight t
     :require t
     :hook
     ((prog-mode-hook yaml-mode-hook) . highlight-indent-guides-mode)
@@ -2241,7 +2219,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+begin_src emacs-lisp
   (leaf beacon
-    :package t
+    :straight t
     :custom
     (beacon-mode . t))
 #+end_src
@@ -2256,7 +2234,7 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+begin_src emacs-lisp
   (leaf git-gutter
-    :package t
+    :straight t
     ;; :custom
     ;; (git-gutter:modified-sign . "~")
     ;; (git-gutter:added-sign    . "+")
@@ -2293,7 +2271,7 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 
 #+begin_src emacs-lisp
   (leaf shell-pop
-    :package t
+    :straight t
     :require t
     :custom
     ((shell-pop-universal-key . "C-c s")
@@ -2373,7 +2351,7 @@ https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-col
     :url "https://github.com/joostkremers/visual-fill-column"
     :added "2021-11-08"
     :emacs>= 25.1
-    :ensure t
+    :straight t
     :bind(("C-c q" . visual-fill-column-mode)
           (:visual-fill-column-mode-map
            ("C-a" . beginning-of-visual-line)
@@ -2446,7 +2424,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 
 #+begin_src emacs-lisp
   (leaf open-junk-file
-    :package t
+    :straight t
     :custom
     (open-junk-file-format . "~/Dropbox/Temp/junk/%Y/%m/%d-%H%M%S."))
 #+end_src
@@ -2476,7 +2454,7 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 
 #+begin_src emacs-lisp
   (leaf dired-launch
-    :ensure t
+    :straight t
     :hook (dired-mode-hook . dired-launch-mode)
     :config
     (when (and (eq system-type 'gnu/linux)
@@ -2495,7 +2473,7 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 
 #+begin_src emacs-lisp
   (leaf modus-themes
-    :ensure t                        ; omit this to use the built-in themes
+    :straight t                        ; omit this to use the built-in themes
     :init
     ;; Add all your customizations prior to loading the themes
     (setq modus-themes-italic-constructs t
@@ -2567,7 +2545,7 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
   インストールする
 
 #+begin_src emacs-lisp
-  (leaf all-the-icons :ensure t)
+  (leaf all-the-icons :straight t)
 #+end_src
 
 #+RESULTS:
@@ -2577,7 +2555,7 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 
   #+begin_src emacs-lisp
     (leaf doom-modeline
-      :ensure t
+      :straight t
       :custom
       ;; (doom-modeline-buffer-file-name-style . 'truncate-with-project)
       ;; (doom-modeline-icon . t)
@@ -2718,7 +2696,7 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 
 #+begin_src emacs-lisp
   (leaf notmuch
-    :package t
+    :straight t
     :require t
     :hook
     (notmuch-message-mode-hook . visual-fill-column-mode)
@@ -2785,7 +2763,7 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 
 #+begin_src emacs-lisp
   (leaf ol-notmuch
-    :package t
+    :straight t
     :after notmuch org)
 #+end_src
 
@@ -2849,7 +2827,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
   #+begin_src emacs-lisp
     (leaf tr-ime
       :when (eq system-type 'windows-nt)
-      :ensure t
+      :straight t
       :setq
       (default-input-method . "W32-IME")
       (w32-ime-mode-line-state-indicator-list . '("[--]" "[あ]" "[--]"))
@@ -2927,7 +2905,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
   #+begin_src emacs-lisp
     (leaf projectile
-      :package t
+      :straight t
       :require t
       :bind ((projectile-mode-map
               ("C-c p" . projectile-command-map)))
@@ -2946,7 +2924,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 #+begin_src emacs-lisp
   (leaf company
-    :package t
+    :straight t
     :hook (after-init-hook . global-company-mode)
     :config
     (defun my-company-inhibit-idle-begin ()
@@ -2978,7 +2956,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 #+begin_src emacs-lisp
   (leaf annotate
-    :package t
+    :straight t
     :require t
     :hook (prog-mode-hook . annotate-mode))
 #+end_src
