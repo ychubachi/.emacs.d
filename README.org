@@ -850,7 +850,7 @@ Emacsでもモードによっては同じように動作します（orgモード
   - embark-url-map
   - embark-general-map
 
-** consult                                                           :FIXME:
+** consult
 - [[https://github.com/minad/consult][GitHub - minad/consult: consult.el - Consulting completing-read]]
 - 2022-03-02
   - 次のエラーが出るようになった
@@ -858,6 +858,13 @@ Emacsでもモードによっては同じように動作します（orgモード
   - (emacs-version)
     "GNU Emacs 27.1 (build 1, x86_64-pc-linux-gnu, GTK+ Version 3.24.20, cairo version 1.16.0)
      of 2020-09-20"
+  - エラーの箇所
+    - [[https://github.com/minad/consult/blob/main/consult.el#L516][consult/consult.el at main · minad/consult]]
+    - "consult--source-file"という値はない？
+      - [[https://github.com/minad/consult/blob/main/consult.el#L205][consult/consult.el at main · minad/consult]]
+    - 設定してた！
+      - [[https://github.com/minad/consult#use-package-example][minad/consult: consult.el - Consulting completing-read]]
+    - 該当箇所削除
 
 #+begin_src emacs-lisp :tangle no
   ;; Example configuration for Consult
@@ -953,7 +960,7 @@ Emacsでもモードによっては同じように動作します（orgモード
      :preview-key '(:debounce 0.2 any)
      consult-ripgrep consult-git-grep consult-grep
      consult-bookmark consult-recent-file consult-xref
-     consult--source-file consult--source-project-file consult--source-bookmark
+     consult--source-project-file consult--source-bookmark
      :preview-key (kbd "M-."))
 
     ;; Optionally configure the narrowing key.
