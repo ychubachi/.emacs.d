@@ -399,7 +399,8 @@ IME OFF -> isearch -> OFF -> done -> OFF
 #+NAME: mozc-cursor-color
 #+begin_src emacs-lisp :tangle no
   (leaf mozc-cursor-color
-    :el-get iRi-E/mozc-el-extensions
+    :straight (mozc-cursor-color :type git :host github
+                                 :repo "iRi-E/mozc-el-extensions")
     :require t
     :config
     (setq mozc-cursor-color-alist
@@ -2796,7 +2797,8 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 #+begin_src emacs-lisp
   (leaf consult-notmuch
-    :el-get emacsmirror/consult-notmuch
+    :straight (consult-notmuch :type git :host github
+                               :repo "emacsmirror/consult-notmuch")
     :after consult notmuch)
 #+end_src
 
@@ -2822,7 +2824,8 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 #+begin_src emacs-lisp
   (leaf gnus-alias
-    :el-get hexmode/gnus-alias
+    :straight (gnus-alias :type git :host github
+                          :repo "hexmode/gnus-alias")
     :config
     (setq gnus-alias-identity-alist
           '(("work"
