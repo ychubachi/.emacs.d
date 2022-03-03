@@ -1217,7 +1217,7 @@ Emacsでもモードによっては同じように動作します（orgモード
   - [[https://texwiki.texjp.org/?Latexmk#g2a2cf08][Latexmk - TeX Wiki]]
   - latexmkの相性のせいか、org-export-in-backgroundをtにするとエラー
 - LaTeXの文字列部分は別ファイルにするのがよいかもしれない
-  - [[http://ergoemacs.org/emacs/elisp_read_file_content.html][Elisp: Read File Content as String or List of Lines]]
+  - [[http://xahlee.info/emacs/emacs/elisp_read_file_content.html][Elisp: Read File Content as String or List of Lines]]
 
 #+begin_src emacs-lisp
   (leaf ox-latex
