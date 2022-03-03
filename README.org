@@ -1451,12 +1451,23 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 ** スピードコマンド
 
+- tにするとヘッドラインの行頭にカーソルがあるとき、1文字でコマンドが打てる。
+  - C-c C-n => n
+
+- 次の設定をすると、*の上にカーソルがあれば、機能する。
+  - [[help:looking-at]]
+  - [[help:org-outline-regexp]]
+  - [[help:looking-back]] (非推奨）
+
 #+begin_src emacs-lisp
-(setq org-use-speed-commands t)
+  (leaf *org-use-speed-commands
+    :config
+    (setq org-use-speed-commands
+      (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**")))))
 #+end_src
 
 #+RESULTS:
-: t
+: *org-use-speed-commands
 
 ** org2blog
 
