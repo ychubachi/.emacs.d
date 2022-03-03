@@ -1806,6 +1806,45 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 : org-contrib
 
 ** org-publish
+*** 設定
+
+#+begin_src emacs-lisp
+  (leaf *org-publish-project-alist
+    :config
+    (setq org-publish-project-alist
+          '(("-orgfiles"
+             :base-directory "~/Dropbox/Org/publish/chubachi.net/"
+             :base-extension "org"
+             :publishing-directory "/scp:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/"
+             :publishing-function org-html-publish-to-html
+             :exclude "PrivatePage.org" ;; regexp
+             :headline-levels 3
+             :section-numbers nil
+             :with-toc nil
+             :html-head "<link rel=\"stylesheet\" type=\"text/css\"
+                    href=\"https://gongzhitaao.org/orgcss/org.css\"/>"
+             :html-preamble t)
+
+            ("-images"
+             :base-directory "~/Dropbox/Org/publish/chubachi.net/images/"
+             :base-extension "jpg\\|gif\\|png"
+             :publishing-directory "/scp:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/images/"
+             :publishing-function org-publish-attachment)
+
+            ("-other"
+             :base-directory "~/Dropbox/Org/publish/chubachi.net/other/"
+             :base-extension "css\\|el"
+             :publishing-directory "/scp:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/other/"
+             :publishing-function org-publish-attachment)
+            ("chubachi.net" :components ("-orgfiles" "-images" "-other")))))
+#+end_src
+
+#+RESULTS:
+: *org-publish-project-alist
+
+*** 参考
+- [[https://orgmode.org/manual/Complex-example.html][Complex example (The Org Manual)]]
+
 
 + CSS
   + [[https://github.com/gongzhitaao/orgcss][GitHub - gongzhitaao/orgcss: Simple and clean CSS for Org-exported HTML]]
@@ -1813,22 +1852,6 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
   + [[https://github.com/fniessen/org-html-themes][GitHub - fniessen/org-html-themes: How to export Org mode files into awesome HTML in 2 minutes]]
 + Upload
   + [[https://orgmode.org/manual/Complex-example.html][Complex example (The Org Manual)]]
-
-#+begin_src emacs-lisp
-  (leaf org-publish
-    :config
-    (setq org-publish-project-alist
-          '(("org"
-             :base-directory "~/Dropbox/Org/publish/src"
-             :publishing-function org-html-publish-to-html
-             :publishing-directory "~/Dropbox/Org/publish/public_html"
-             :section-numbers nil
-             :with-toc nil
-             :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://gongzhitaao.org/orgcss/org.css\"/>"))))
-#+end_src
-
-#+RESULTS:
-: org-publish
 
 * 外部パッケージ
 ** which-key - キーバインドのガイド表示                              :draft:
