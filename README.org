@@ -3074,6 +3074,17 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+RESULTS:
 : bookmark+
 
+** no-littering - .emacs.d/をきれいに保つ
+
+#+begin_src emacs-lisp
+  (leaf no-littering
+    :straight t
+    :require t)
+#+end_src
+
+#+RESULTS:
+: no-littering
+
 * おわりに
 ** お約束の記述
 
