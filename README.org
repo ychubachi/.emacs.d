@@ -3014,6 +3014,52 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+RESULTS:
 : annotate
 
+** Bookmark+ - ブックマークの拡張（多機能すぎ）
+:PROPERTIES:
+:CREATED: [2022-03-05 Sat 20:25]
+:ANNOTADED: [[file:~/Dropbox/Org/Memo.org::*orgの走査][orgの走査]]
+:END:
+*** 説明
+- Bookmark+モード
+  - [[https://www.emacswiki.org/emacs/BookmarkPlus#BookmarkAnnotations][[Home] Bookmark Plus]]
+- Bookmark the file you are editing: ‘C-x x m’
+  - ファイルをブックマークする
+- Jump to a bookmark: ‘C-x j j’
+- Tag a file (creates an autofile bookmark): `C-x x t + a’
+- List/edit your bookmarks: ‘C-x r l’
+  - ブックマークリストで、タグを付けたりできるようだ
+- むちゃくちゃ機能が多い・・・
+
+- やりたいこと
+  - elのコードにアノテーションを付けたいq
+  - [[https://www.emacswiki.org/emacs/BookmarkPlus][Bookmark Annotations]]
+
+- [[https://www.emacswiki.org/emacs/BookmarkPlus][Command ‘bookmark-show-annotation’ shows an annotation in read-only mode. You can use ‘C-x C-q’ in the annotation buffer to switch to edit mode (and back again).]]
+
+1. bookmarkをつける
+   - (リージョンを選択し） C-x x m
+
+- bookmark-show-annotation C-x x a s
+  - アノテーションをread-onlyで開く
+  - C-x C-q で編集できる
+  - C-c C-c で保存、C-c C-kでキャンセル
+
+- 最初にアノテーションをつけるようだ
+  - 行にアノテーションをつけるには？
+
+- いろいろ大変なので、annotate.elにする・・・
+
+*** 設定
+
+#+begin_src emacs-lisp
+  (leaf bookmark+
+    :straight t
+    :require t)
+#+end_src
+
+#+RESULTS:
+: bookmark+
+
 * おわりに
 ** お約束の記述
 
