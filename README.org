@@ -2160,7 +2160,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
     :straight t
     :require t
     :setq
-    (yasnippet-snippets-dir . "~/.emacs.d/snippets")
+    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
     :config
     (custom-set-variables
      '(warning-suppress-types (quote ((yasnippet backquote-change)))))
