@@ -3001,18 +3001,32 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 : hydra-zoom/body
 
 ** annotate.el - ファイルを編集せずに注釈をつける
+- annotate-modeを設定する
+  - prog-mode-hookにannotate-modeを設定
+- 操作方法
+  - C-x C-q (M-x read-only-mode)でも利用できる
+  - C-c C-a でアノテーションがつけられる
+  - C-c C-d でアノテーション削除
+  - C-c [ で前のアノテーション, C-c ] で次のアノテーション
+  - C-c C-s でアノテーションのリスト
+    - 標準ではqueryが聞かれる->nilにしてみた
+- アノテーションのファイルは ~/.emacs.d/annotations
 
-+ M-x read-only-modeでも利用できる
 
 #+begin_src emacs-lisp
   (leaf annotate
     :straight t
     :require t
-    :hook (prog-mode-hook . annotate-mode))
+    :hook (prog-mode-hook . annotate-mode)
+    :custom (annotate-summary-ask-query . nil))
 #+end_src
 
 #+RESULTS:
 : annotate
+
+*** 参考
+- [[https://github.com/bastibe/annotate.el][bastibe/annotate.el: Annotate.el]]
+- [[http://emacs.rubikitch.com/annotate/][annotate.el : 【コードリーディング支援】ファイルを修正することなく行に注釈をつける]]
 
 ** Bookmark+ - ブックマークの拡張（多機能すぎ）
 :PROPERTIES:
