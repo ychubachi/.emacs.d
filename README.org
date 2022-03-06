@@ -1763,6 +1763,10 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 [[https://github.com/emacsmirror/org-gcal][After the initial fetch, running org-gcal-fetch will retrieve *newly-created events* and update *already-fetched events*.]]
 
 ** org-gtasks - Google Tasksとの連携
+- 不満点
+  - pullすると、TODO以外の要素が消されてしまう（destructive）
+  - 要素が全て削除され、更新される
+  - pushすると、通常ノードもTODOとして更新されてしまう。
 
 #+begin_src emacs-lisp
   (leaf org-gtasks
