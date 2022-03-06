@@ -220,7 +220,6 @@ leafに追加するパッケージです。
 + leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行う際に使用します。
 + [[https://qiita.com/tadsan/items/c859c5c04724cbda75fc][指定したマイナーモードを表示しない(diminish篇) - Qiita]]
 
-* カスタマイズ変数
 * Emacs本体の設定
 ** no-littering - .emacs.d/をきれいに保つ
 
@@ -243,7 +242,6 @@ leafに追加するパッケージです。
 
 #+RESULTS:
 : cus-edit
-
 ** customize変数の設定（cus-start）
 - 一旦全て設定せず、必要になったら再度設定する
 - グローバルモードの設定がカスタマイズ変数でもできる場合、カスタマイズ変数を使用
@@ -316,7 +314,6 @@ leafに追加するパッケージです。
 #+RESULTS:
 : cus-start
 
-* Emacs本体の設定
 ** (require 'cl)を検査しない
 
 #+begin_src emacs-lisp
