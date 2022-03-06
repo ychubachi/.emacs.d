@@ -221,6 +221,17 @@ leafに追加するパッケージです。
 + [[https://qiita.com/tadsan/items/c859c5c04724cbda75fc][指定したマイナーモードを表示しない(diminish篇) - Qiita]]
 
 * カスタマイズ変数
+* Emacs本体の設定
+** no-littering - .emacs.d/をきれいに保つ
+
+#+begin_src emacs-lisp
+  (leaf no-littering
+    :straight t
+    :require t)
+#+end_src
+
+#+RESULTS:
+: no-littering
 ** カスタマイズファイルを分離（cus-edit）
 
 #+begin_src emacs-lisp
@@ -3077,17 +3088,6 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 #+RESULTS:
 : bookmark+
-
-** no-littering - .emacs.d/をきれいに保つ
-
-#+begin_src emacs-lisp
-  (leaf no-littering
-    :straight t
-    :require t)
-#+end_src
-
-#+RESULTS:
-: no-littering
 
 * おわりに
 ** お約束の記述
