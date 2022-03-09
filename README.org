@@ -153,6 +153,13 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
   ;;; Code:
 #+end_src
+** デバッグの設定
+
+[[https://flex.phys.tohoku.ac.jp/texi/emacs-jp/emacs-jp_165.html][GNU Emacs Manual - Lisp Debug]]
+
+#+begin_src emacs-lisp
+  (setq debug-on-error t)
+#+end_src
 
 * パッケージ管理
 ** leaf - 「パッケージ設定」のためのパッケージ                    :PBLISHED:
@@ -282,37 +289,6 @@ leafに追加するパッケージです。
 + 参考
   * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
   * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
-
-+ 古い設定
-#+begin_src emacs-lisp :tangle no
-  (leaf cus-start
-    :doc "define customization properties of builtins"
-    :tag "builtin" "internal"
-    :preface
-    (defun c/redraw-frame nil
-      (interactive)
-      (redraw-frame))
-    :bind (("M-ESC ESC" . c/redraw-frame))
-    :custom '((user-login-name . "yc")
-              (create-lockfiles . nil)
-              (debug-on-error . t)
-              (init-file-debug . t)
-              (frame-resize-pixelwise . t)
-              (enable-recursive-minibuffers . t)
-              (history-length . 1000)
-              (history-delete-duplicates . t)
-              (scroll-preserve-screen-position . t)
-              (scroll-conservatively . 100)
-              (mouse-wheel-scroll-amount . '(1 ((control) . 5)))
-              (text-quoting-style . 'straight)
-              (use-dialog-box . nil)
-              (use-file-dialog . nil)
-              (indent-tabs-mode . nil)
-              ))
-#+end_src
-
-#+RESULTS:
-: cus-start
 
 ** (require 'cl)を検査しない
 
