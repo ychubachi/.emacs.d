@@ -2932,6 +2932,34 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+RESULTS:
 : my/browser
 
+* プログラミング
+
+** paredit - emacs lisp用モード
+
+*** 説明
+- 構造化コードエディタ
+
+*** 設定
+
+#+begin_src emacs-lisp
+  (leaf paredit
+    :straight t
+    :commands enable-paredit-mode
+    :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
+           (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
+           (ielm-mode-hook . enable-paredit-mode)
+           (lisp-mode-hook . enable-paredit-mode)
+           (lisp-interaction-mode-hook . enable-paredit-mode)
+           (scheme-mode-hook . enable-paredit-mode)))
+#+end_src
+
+#+RESULTS:
+: paredit
+
+*** 参考
+- [[https://daregada.sakuraweb.com/paredit_tutorial_ja.html][ParEdit チュートリアル]]
+- [[https://www.emacswiki.org/emacs/ParEdit][[Home] Par Edit]]
+
 * 未整理
 ** projectile [C-c p]
 + 説明
