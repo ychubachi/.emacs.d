@@ -351,9 +351,9 @@ leafに追加するパッケージです。
 #+RESULTS:
 : *undo
 
-** toggle-truncate-linesをC-c tに[C-c t]
+** COMMENT toggle-truncate-linesをC-c tに[C-c t]
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (leaf *toggle-truncate-lines :bind (("C-c t" . toggle-truncate-lines)))
 #+end_src
 
