@@ -2960,6 +2960,19 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 - [[https://daregada.sakuraweb.com/paredit_tutorial_ja.html][ParEdit チュートリアル]]
 - [[https://www.emacswiki.org/emacs/ParEdit][[Home] Par Edit]]
 
+** ERTを起動する設定 [C-c t]
+
+#+begin_src emacs-lisp
+  (defun cmd/run-ert ()
+    (interactive)
+    (ert 't))
+
+  (leaf ert :bind (("C-c t" . cmd/run-ert)))
+#+end_src
+
+#+RESULTS:
+: ert
+
 * 未整理
 ** projectile [C-c p]
 + 説明
