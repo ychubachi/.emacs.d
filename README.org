@@ -2971,6 +2971,28 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 - [[https://daregada.sakuraweb.com/paredit_tutorial_ja.html][ParEdit チュートリアル]]
 - [[https://www.emacswiki.org/emacs/ParEdit][[Home] Par Edit]]
 
+** elisp編集時にoutline-minnor-modee
+
+#+begin_src emacs-lisp
+  (leaf *emacs-lisp-mode-hook
+    :config
+    (add-hook
+     'emacs-lisp-mode-hook
+     'outline-minor-mode))
+#+end_src
+
+#+RESULTS:
+: *emacs-lisp-mode-hook
+
+#+begin_src emacs-lisp :tangle no :results value pp
+;after-save-hook
+emacs-lisp-mode-hook
+;(current-buffer)
+#+end_src
+
+#+RESULTS:
+: (ert--activate-font-lock-keywords outline-minor-mode enable-paredit-mode flycheck-mode)
+
 ** ERTを起動する設定 [C-c t]
 
 #+begin_src emacs-lisp
