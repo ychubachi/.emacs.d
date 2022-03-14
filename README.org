@@ -2985,6 +2985,16 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+RESULTS:
 : ert
 
+** el-mock
+
+#+begin_src emacs-lisp
+  (leaf el-mock
+    :straight t)
+#+end_src
+
+#+RESULTS:
+: el-mock2
+
 * 未整理
 ** projectile [C-c p]
 + 説明
