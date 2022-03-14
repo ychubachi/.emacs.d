@@ -462,6 +462,17 @@ leafに追加するパッケージです。
 #+RESULTS:
 : outline-minor-mode
 
+** FFAP - find-file-at-pointなど
+
+#+begin_src emacs-lisp
+  (leaf ffap
+    :config
+    (ffap-bindings))
+#+end_src
+
+#+RESULTS:
+: ffap
+
 * 日本語関係
 ** mule-cmds: 言語環境を日本語にする
 + 言語環境を日本語にする
