@@ -2976,7 +2976,8 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+begin_src emacs-lisp
   (defun cmd/run-ert ()
     (interactive)
-    (ert 't))
+    (eval-buffer)
+    (call-interactively 'ert))
 
   (leaf ert :bind (("C-c t" . cmd/run-ert)))
 #+end_src
