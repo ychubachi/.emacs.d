@@ -1086,11 +1086,12 @@ Emacsでもモードによっては同じように動作します（orgモード
                    :empty-lines-after 1
                    :file "~/Dropbox/Org/Memo.org"
                    :datetree t
-                   :todo-state "TODO"
-                   :template ("* %{todo-state} %?"
+                   :unnarrowed t
+                   :empty-lines-before 1
+                   :template ("* %?"
                               ":PROPERTIES:"
                               ":CREATED: %U"
-                              ":ANNOTADED: %a"
+                              ;; ":ANNOTADED: %a"
                               ":END:"))
                   ("Notebook" :keys "n"
                    :prepend t
