@@ -2516,6 +2516,18 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 
 [fn:wslu] [[https://github.com/wslutilities/wslu][wslutilities/wslu: A collection of utilities for Windows 10 Linux Subsystems]]
 
+** google-this - Google検索 [C-c / g]
+
+#+begin_src emacs-lisp
+  (leaf google-this
+    :straight t
+    :config
+    (google-this-mode 1))
+#+end_src
+
+#+RESULTS:
+: google-this
+
 * UI・見た目
 ** modus-themes [f5]
 - [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
