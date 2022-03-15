@@ -1087,11 +1087,11 @@ Emacsでもモードによっては同じように動作します（orgモード
                    :file "~/Dropbox/Org/Memo.org"
                    :datetree t
                    :unnarrowed t
+                   :jump-to-captured t
                    :empty-lines-before 1
                    :template ("* %?"
                               ":PROPERTIES:"
                               ":CREATED: %U"
-                              ;; ":ANNOTADED: %a"
                               ":END:"))
                   ("Notebook" :keys "n"
                    :prepend t
