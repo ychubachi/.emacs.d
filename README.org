@@ -3030,6 +3030,18 @@ emacs-lisp-mode-hook
 #+RESULTS:
 : el-mock2
 
+** oauth2
+
+- 開発用
+
+#+begin_src emacs-lisp
+  (leaf oauth2
+    :straight t)
+#+end_src
+
+#+RESULTS:
+: oauth2
+
 * 未整理
 ** projectile [C-c p]
 + 説明
