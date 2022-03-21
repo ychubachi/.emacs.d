@@ -3066,6 +3066,8 @@ emacs-lisp-mode-hook
 
 #+begin_src emacs-lisp
   (leaf emacs-refactor
+    :bind ((prog-mode-map
+            ("M-RET" . emr-show-refactor-menu)))
     :straight t)
 #+end_src
 
