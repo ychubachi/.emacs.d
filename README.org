@@ -1893,22 +1893,6 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 #+RESULTS:
 : which-key
-** macrostep [C-c e]
-
-- elispのマクロを展開する
-
-#+begin_src emacs-lisp
-  (leaf macrostep
-    :doc "interactive macro expander"
-    :req "cl-lib-0.5"
-    :tag "debugging" "macro" "languages" "lisp"
-    :url "https://github.com/joddie/macrostep"
-    :straight t
-    :bind (("C-c e" . macrostep-expand)))
-#+end_src
-
-#+RESULTS:
-: macrostep
 ** swap-buffers [C-c b]
 *** 設定
 
@@ -2958,6 +2942,22 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 * プログラミング
 
+** macrostep [C-c e]
+
+- elispのマクロを展開する
+
+#+begin_src emacs-lisp
+  (leaf macrostep
+    :doc "interactive macro expander"
+    :req "cl-lib-0.5"
+    :tag "debugging" "macro" "languages" "lisp"
+    :url "https://github.com/joddie/macrostep"
+    :straight t
+    :bind (("C-c e" . macrostep-expand)))
+#+end_src
+
+#+RESULTS:
+: macrostep
 ** paredit - emacs lisp用モード
 
 *** 説明
@@ -3030,6 +3030,16 @@ emacs-lisp-mode-hook
 #+RESULTS:
 : el-mock2
 
+** ht
+
+#+begin_src emacs-lisp
+  (leaf ht
+    :straight t)
+#+end_src
+
+#+RESULTS:
+: ht
+
 ** oauth2
 
 - 開発用
@@ -3041,6 +3051,26 @@ emacs-lisp-mode-hook
 
 #+RESULTS:
 : oauth2
+
+** indent-tab-mode - インデントの際タブを使わない
+
+#+begin_src emacs-lisp
+    (leaf *indent-tabs-mode
+      :custom ((indent-tabs-mode . nil)))
+#+end_src
+
+#+RESULTS:
+: *indent-tabs-mode
+
+** emr - Emacs Refactor
+
+#+begin_src emacs-lisp
+  (leaf emacs-refactor
+    :straight t)
+#+end_src
+
+#+RESULTS:
+: emacs-refactor
 
 * 未整理
 ** projectile [C-c p]
