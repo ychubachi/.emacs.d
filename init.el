@@ -1,5 +1,5 @@
 ;;; init.el --- My init.el  -*- lexical-binding: t; -*-
-;; Copyright (C) 2020 Yoshihide Chubachi
+;; Copyright (C) 2022 Yoshihide Chubachi
 
 ;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
 
@@ -21,6 +21,13 @@
 ;;  My init.el.
 
 ;;; Code:
+
+;; Initialize packages.
+(customize-set-variable
+ 'package-archives '(("org" . "https://orgmode.org/elpa/")
+                     ("melpa" . "https://melpa.org/packages/")
+                     ("gnu" . "https://elpa.gnu.org/packages/")))
+  (package-initialize)
 
 ;; Install straight.el
 (defvar bootstrap-version)
