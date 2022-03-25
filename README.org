@@ -1093,6 +1093,16 @@ Emacsでもモードによっては同じように動作します（orgモード
                               ":PROPERTIES:"
                               ":CREATED: %U"
                               ":END:"))
+                  ("Todo" :keys "t"
+                   :file "~/Dropbox/Org/Memo.org"
+                   :todo-state "TODO"
+                   :datetree t
+                   :empty-lines-before 1
+                   :template ("* %?"
+                              ":PROPERTIES:"
+                              ":CREATED: %U"
+                              ":LINK: %a"
+                              ":END:"))
                   ("Notebook" :keys "n"
                    :prepend t
                    :empty-lines-after 1
@@ -1146,13 +1156,7 @@ Emacsでもモードによっては同じように動作します（orgモード
                                 ":EXPORT_FILE_NAME: %{export_file_name}"
                                 ":EXPORT_DATE: %U"
                                 ":END:"
-                                "\n** %?"))
-                    )
-                   )
-                  )
-                )
-          )
-    )
+                                "\n** %?"))))))))
 #+end_src
 
 #+RESULTS:
@@ -2810,6 +2814,7 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 #+begin_src emacs-lisp
   (leaf ol-notmuch
     :straight t
+    :require t
     :after notmuch org)
 #+end_src
 
