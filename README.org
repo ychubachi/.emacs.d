@@ -3071,13 +3071,35 @@ emacs-lisp-mode-hook
 
 #+begin_src emacs-lisp
   (leaf emacs-refactor
-    :bind ((prog-mode-map
+    :bind ((emacs-lisp-mode-map
             ("M-RET" . emr-show-refactor-menu)))
-    :straight t)
+    :straight t
+    :config)
 #+end_src
 
 #+RESULTS:
 : emacs-refactor
+
+#+begin_src emacs-lisp
+  (leaf popup :straight t)
+#+end_src
+
+#+RESULTS:
+: popup
+
+#+begin_src emacs-lisp
+  (leaf list-utils :straight t)
+#+end_src
+
+#+RESULTS:
+: list-utils
+
+#+begin_src emacs-lisp
+  (leaf iedit :straight t)
+#+end_src
+
+#+RESULTS:
+: iedit
 
 * 未整理
 ** projectile [C-c p]
