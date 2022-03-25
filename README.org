@@ -1095,10 +1095,9 @@ Emacsでもモードによっては同じように動作します（orgモード
                               ":END:"))
                   ("Todo" :keys "t"
                    :file "~/Dropbox/Org/Memo.org"
-                   :todo-state "TODO"
                    :datetree t
                    :empty-lines-before 1
-                   :template ("* %?"
+                   :template ("* TODO %?"
                               ":PROPERTIES:"
                               ":CREATED: %U"
                               ":LINK: %a"
