@@ -86,7 +86,7 @@ Eamcs.useXIM: off
 [fn:1] [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][Emacsでは通常、‘emacs’です。Emacsの実行可能ファイル名の如何にかかわらずに、Emacsのすべてのインスタンスに適用される定義を指定するには、‘Emacs’を使用します。]]
 
 [fn:2]  [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][変数inhibit-x-resourcesを非nil値にセットした場合、EmacsはXリソースを処理しません。コマンドラインオプション‘-Q’ (または‘--quick’)でEmacsを呼び出した場合、inhibit-x-resourcesは自動的にtにセットされます]]
-** フォントの確認
+*** フォントの確認
 
 Xウインドウで設定したフォントを確認してみましょう。本当は全て等幅になるとよいのですが、なかなか難しい・・・。
 
@@ -124,6 +124,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+end_example
 ** 参考になるサイト
 - [[http://xahlee.info/emacs/emacs/elisp.html][Practical Emacs Lisp]]
+* 必須設定
 ** Copyright
 - Copyright など。
 
@@ -153,15 +154,6 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
   ;;; Code:
 #+end_src
-** デバッグの設定
-
-[[https://flex.phys.tohoku.ac.jp/texi/emacs-jp/emacs-jp_165.html][GNU Emacs Manual - Lisp Debug]]
-
-#+begin_src emacs-lisp
-  (setq debug-on-error t)
-#+end_src
-
-* パッケージ管理
 ** leaf - 「パッケージ設定」のためのパッケージ                    :PBLISHED:
 :PROPERTIES:
 :BLOG:     plover
@@ -227,99 +219,6 @@ leafに追加するパッケージです。
 + leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行う際に使用します。
 + [[https://qiita.com/tadsan/items/c859c5c04724cbda75fc][指定したマイナーモードを表示しない(diminish篇) - Qiita]]
 
-* Emacs本体の設定
-** no-littering - .emacs.d/をきれいに保つ
-
-#+begin_src emacs-lisp
-  (leaf no-littering
-    :straight t
-    :require t)
-#+end_src
-
-#+RESULTS:
-: no-littering
-** カスタマイズファイルを分離（cus-edit）
-
-#+begin_src emacs-lisp
-  (leaf cus-edit
-    :doc "tools for customizing Emacs and Lisp packages"
-    :tag "builtin" "faces" "help"
-    :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
-#+end_src
-
-#+RESULTS:
-: cus-edit
-** customize変数の設定（cus-start）
-- 一旦全て設定せず、必要になったら再度設定する
-- グローバルモードの設定がカスタマイズ変数でもできる場合、カスタマイズ変数を使用
-
-#+begin_src emacs-lisp
-  (leaf cus-start
-    :doc "define customization properties of builtins"
-    :tag "builtin" "internal"
-    :custom
-    ((inhibit-startup-screen . t)               ; スタートアップスクリーンを非表示
-     (ring-bell-function . 'ignore)             ; ベルを鳴らさない
-     (fill-column . 100))                       ; 100桁で改行（モードによる）
-    :custom
-    ((global-display-line-numbers-mode . t)     ; 行番号表示
-     (display-line-numbers-width . 4))          ; 表示する行番号の桁数
-    :custom
-    ((global-auto-revert-mode . t)              ; 更新されたら自動的に再読込
-     (auto-revert-verbose . nil))                       ; 再読込の際、メッセージを非表示
-    :custom
-    ((show-paren-mode . t)                      ; 括弧の対応関係を表示する
-     (show-paren-style . 'mixed))                       ; 対応関係を表示するスタイル
-    :custom                                     ; VCの設定
-    ((vc-follow-symlinks . t)                   ; VC対象ファイルのシンボリックリンクの場合、本体を辿る
-     (auto-revert-check-vc-info . t))           ; VCで更新があった場合、自動で更新
-    :custom                                     ; 最後に編集した場所を記憶
-    ((save-place-mode . t))
-    :custom                                     ; バックアップファイルの設定
-    ((version-control . t)
-     (backup-directory-alist . '(("." . ".backup~")))
-     (delete-old-versions . t))
-    :custom                                     ; fill-columnを表示する（効かない？）
-    ((global-display-fill-column-indicator-mode . t)))
-#+end_src
-
-#+RESULTS:
-: cus-start
-
-+ 参考
-  * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
-  * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
-
-** (require 'cl)を検査しない
-
-#+begin_src emacs-lisp
-  (leaf *emacs
-    :config
-    (setq byte-compile-warnings '(not cl-functions obsolete)))
-#+end_src
-
-#+RESULTS:
-: *emacs
-
-** yes/noの選択をy/nに簡略化
-
-#+begin_src emacs-lisp
-  (defalias 'yes-or-no-p 'y-or-n-p)
-#+end_src
-
-#+RESULTS:
-: yes-or-no-p
-
-** 保存時、不要な空白を削除
-
-#+begin_src emacs-lisp
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-#+end_src
-
-#+RESULTS:
-| delete-trailing-whitespace |
-
-* キーバインディング
 ** C-hをBSに、C-^をhelpに[C-h][C-^]
 - 標準で
 - [[https://www.reddit.com/r/spacemacs/comments/l2fjzy/remapping_ch_to_backspace_and_remap_help_menu_to/][Remapping C-h to backspace, and remap "help" menu to anything else? : spacemacs]]
@@ -350,6 +249,114 @@ leafに追加するパッケージです。
 
 #+RESULTS:
 : *undo
+** カスタマイズファイルを分離
+
+#+begin_src emacs-lisp
+  (leaf cus-edit
+    :doc "tools for customizing Emacs and Lisp packages"
+    :tag "builtin" "faces" "help"
+    :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
+#+end_src
+
+#+RESULTS:
+: cus-edit
+
+** カスタマイズ変数の設定
+- 一旦全て設定せず、必要になったら再度設定する
+- グローバルモードの設定がカスタマイズ変数でもできる場合、カスタマイズ変数を使用
+
+#+begin_src emacs-lisp
+    (leaf cus-start
+      :doc "define customization properties of builtins"
+      :tag "builtin" "internal"
+      :custom
+      (inhibit-startup-screen . t)           ; スタートアップスクリーンを非表示
+      (ring-bell-function . 'ignore)         ; ベルを鳴らさない
+      (fill-column . 80)                     ; 80桁で改行（モードによる）
+      (global-display-line-numbers-mode . t) ; 行番号表示
+      (display-line-numbers-width . 4)       ; 表示する行番号の桁数
+      (global-auto-revert-mode . t)          ; 更新されたら自動的に再読込
+      (auto-revert-verbose . nil)            ; 再読込の際、メッセージを非表示
+      (show-paren-mode . t)                  ; 括弧の対応関係を表示する
+      (show-paren-style . 'mixed)            ; 対応関係を表示するスタイル
+      ;; VCの設定
+      (vc-follow-symlinks . t)               ; シンボリックリンクの場合、本体を辿る
+      (auto-revert-check-vc-info . t)        ; VCで更新があった場合、自動で更新
+      (save-place-mode . t)                  ; 最後に編集した場所を記憶
+      (version-control . t)                  ; バックアップファイルの設定
+      (backup-directory-alist
+       . '(("." . ".backup~")))              ; バックアップファイルの場所
+      (delete-old-versions . t)
+      (global-display-fill-column-indicator-mode
+       . t)                                  ; fill-columnを表示する
+      (indent-tabs-mode . nil)               ; インデントの際タブを使わない
+      (byte-compile-warnings
+       . '(not cl-functions obsolete))       ; (require 'cl)を検査しない
+    )
+#+end_src
+
+#+RESULTS:
+: cus-start
+
++ 参考
+  * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
+  * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
+
+* Emacs本体の設定
+** バッファを表示するウインドウを固定する
+
+- [[https://ayatakesi.github.io/lispref/27.1/html/Buffer-Display-Action-Functions.html][Buffer Display Action Functions (GNU Emacs Lisp Reference Manual)]]
+- [[https://github.com/nex3/perspective-el][nex3/perspective-el: Perspectives for Emacs.]]
+
+#+begin_src emacs-lisp
+  (leaf *display-buffer-base-action
+    :config
+    (customize-set-variable
+     'display-buffer-base-action
+     '((display-buffer-reuse-window display-buffer-same-window)
+       (reusable-frames . t)))
+    (customize-set-variable 'even-window-sizes nil))
+#+end_src
+
+#+RESULTS:
+: *display-buffer-base-action
+
+** COMMENT デバッグの設定
+
+[[https://flex.phys.tohoku.ac.jp/texi/emacs-jp/emacs-jp_165.html][GNU Emacs Manual - Lisp Debug]]
+
+#+begin_src emacs-lisp :tangle no
+  (setq debug-on-error t)
+#+end_src
+
+** no-littering - .emacs.d/をきれいに保つ
+
+#+begin_src emacs-lisp
+  (leaf no-littering
+    :straight t
+    :require t)
+#+end_src
+
+#+RESULTS:
+: no-littering
+** yes/noの選択をy/nに簡略化
+
+#+begin_src emacs-lisp
+  (leaf *emacs
+    (defalias 'yes-or-no-p 'y-or-n-p))
+#+end_src
+
+#+RESULTS:
+: *emacs
+
+** 保存時、不要な空白を削除
+
+#+begin_src emacs-lisp
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
+
+#+RESULTS:
+| delete-trailing-whitespace |
 
 ** COMMENT toggle-truncate-linesをC-c tに[C-c t]
 
@@ -433,20 +440,6 @@ leafに追加するパッケージです。
 
 #+RESULTS:
 : *imenu-list
-
-** align - コメントの位置を揃えたりする[C-c M-a]
-
-#+begin_src emacs-lisp
-  (leaf align
-    :doc "align text to a specific column, by regexp"
-    :tag "builtin"
-    :added "2021-10-30"
-    :bind (("C-c M-a" . align-regexp))
-    )
-#+end_src
-
-#+RESULTS:
-: align
 
 ** outline-minnor-mode - アウトラインマイナーモードの設定
 + outline-modeのプリフィックスはC-c C-oに変更しました。理由は指が慣れていること。org-open-at-pointとバッティングしますが、そもそもoutline-minnor-modeとorg-modeを併用することはないので気にしないことにしています。
@@ -676,7 +669,7 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
 : mozc-posframe
 
 * ミニバッファ補完UI関連の設定
-** vertico:本体の設定
+** vertico - 補完リストをカーソルで選択
 - VERTical Interactive COmpletion の略
 - Emacsの標準の補完システムを土台とした垂直補完UI
 - [[https://github.com/minad/vertico/][GitHub - minad/vertico: vertico.el - VERTical Interactive COmpletion]]
@@ -697,7 +690,7 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
 #+RESULTS:
 : vertico
 
-** orderless
+** orderless - 補完リストをスペース区切りのキーワードで検索
 - [[https://github.com/oantolin/orderless][GitHub - oantolin/orderless: Emacs completion style that matches multiple regexps in any order]]
 - Verticoで、スペースで区切ったキーワードで検索できるようにする。
 
@@ -715,7 +708,7 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
 #+RESULTS:
 : orderless
 
-** savehist
+** savehist - 履歴機能
 
 #+begin_src emacs-lisp
   ;; Persist history over Emacs restarts. Vertico sorts by history position.
@@ -846,7 +839,7 @@ Emacsでもモードによっては同じように動作します（orgモード
   - embark-url-map
   - embark-general-map
 
-** consult [a lot of..]
+** consult - switch-to-bufferなどの補完候補を拡張する
 - [[https://github.com/minad/consult][GitHub - minad/consult: consult.el - Consulting completing-read]]
 - 2022-03-02
   - 次のエラーが出るようになった
@@ -873,49 +866,48 @@ Emacsでもモードによっては同じように動作します（orgモード
            ;; ("C-c m" . consult-mode-command)
            ;; ("C-c k" . consult-kmacro)
            ;; C-x bindings (ctl-x-map)
-           ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-           ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-           ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-           ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-           ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-           ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-           ;; Custom M-# bindings for fast register access
-           ("M-#" . consult-register-load)
-           ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-           ("C-M-#" . consult-register)
-           ;; Other custom bindings
-           ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-           ("<help> a" . consult-apropos)            ;; orig. apropos-command
-           ;; M-g bindings (goto-map)
-           ("M-g e" . consult-compile-error)
-           ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-           ("M-g g" . consult-goto-line)             ;; orig. goto-line
-           ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-           ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-           ("M-g m" . consult-mark)
-           ("M-g k" . consult-global-mark)
-           ("M-g i" . consult-imenu)
-           ("M-g I" . consult-imenu-multi)
+           ("C-x M-:"  . consult-complex-command)     ;; orig. repeat-complex-command
+           ("C-x b"    . consult-buffer)              ;; orig. switch-to-buffer
+           ("C-x 4 b"  . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+           ("C-x 5 b"  . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+           ("C-x r b"  . consult-bookmark)            ;; orig. bookmark-jump
+           ;; ("C-x p b"  . consult-project-buffer)      ;; orig. project-switch-to-buffer
+           ("M-#"      . consult-register-load)       ;; Custom M-# bindings for fast register access
+           ("M-'"      . consult-register-store)      ;; orig. abbrev-prefix-mark (unrelated)
+           ("C-M-#"    . consult-register)
+                                                      ;; Other custom bindings
+           ("M-y"      . consult-yank-pop)            ;; orig. yank-pop
+           ("<help> a" . consult-apropos)             ;; orig. apropos-command
+                                                      ;; M-g bindings (goto-map)
+           ("M-g e"    . consult-compile-error)
+           ("M-g f"    . consult-flymake)             ;; Alternative: consult-flycheck
+           ("M-g g"    . consult-goto-line)           ;; orig. goto-line
+           ("M-g M-g"  . consult-goto-line)           ;; orig. goto-line
+           ("M-g o"    . consult-outline)             ;; Alternative: consult-org-heading
+           ("M-g m"    . consult-mark)
+           ("M-g k"    . consult-global-mark)
+           ("M-g i"    . consult-imenu)
+           ("M-g I"    . consult-imenu-multi)
            ;; M-s bindings (search-map)
-           ("M-s d" . consult-find)
-           ("M-s D" . consult-locate)
-           ("M-s g" . consult-grep)
-           ("M-s G" . consult-git-grep)
-           ("M-s r" . consult-ripgrep)
-           ("M-s l" . consult-line)
-           ("M-s L" . consult-line-multi)
-           ("M-s m" . consult-multi-occur)
-           ("M-s k" . consult-keep-lines)
-           ("M-s u" . consult-focus-lines)
+           ("M-s d"    . consult-find)
+           ("M-s D"    . consult-locate)
+           ("M-s g"    . consult-grep)
+           ("M-s G"    . consult-git-grep)
+           ("M-s r"    . consult-ripgrep)
+           ("M-s l"    . consult-line)
+           ("M-s L"    . consult-line-multi)
+           ("M-s m"    . consult-multi-occur)
+           ("M-s k"    . consult-keep-lines)
+           ("M-s u"    . consult-focus-lines)
            ;; Isearch integration
-           ("M-s e" . consult-isearch-history)
+           ("M-s e"    . consult-isearch-history)
            (:isearch-mode-map
-            ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-            ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-            ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-            ("M-s L" . consult-line-multi)))          ;; needed by consult-line to detect isearch
+            ("M-e"     . consult-isearch-history)     ;; orig. isearch-edit-string
+            ("M-s e"   . consult-isearch-history)     ;; orig. isearch-edit-string
+            ("M-s l"   . consult-line)                ;; needed by consult-line to detect isearch
+            ("M-s L"   . consult-line-multi)))        ;; needed by consult-line to detect isearch
 
-    ;; Enable automatic preview at point in the *Completions* buffer. This is
+    ;; Enable autom  atic preview at point in the *Completions* buffer. This is
     ;; relevant when you use the default completion UI.
     :hook (completion-list-mode . consult-preview-at-point-mode)
 
@@ -973,8 +965,8 @@ Emacsでもモードによっては同じように動作します（orgモード
   ;;;; 1. project.el (the default)
     ;; (setq consult-project-function #'consult--default-project--function)
   ;;;; 2. projectile.el (projectile-project-root)
-    ;; (autoload 'projectile-project-root "projectile")
-    ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
+    (autoload 'projectile-project-root "projectile")
+    (setq consult-project-function (lambda (_) (projectile-project-root)))
   ;;;; 3. vc.el (vc-root-dir)
     ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
   ;;;; 4. locate-dominating-file
@@ -1038,7 +1030,6 @@ Emacsでもモードによっては同じように動作します（orgモード
      ("C-c c" . org-capture)
      ("C-c m" . (lambda () (interactive) (org-capture nil "m"))) ; Warning!
      )
-    :hook (org-mode-hook . visual-fill-column-mode)
     :custom
     (org-directory . "~/Dropbox/Org/")
     (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
@@ -1092,6 +1083,7 @@ Emacsでもモードによっては同じように動作します（orgモード
                    :template ("* %?"
                               ":PROPERTIES:"
                               ":CREATED: %U"
+                              ":LINK: %a"
                               ":END:"))
                   ("Todo" :keys "t"
                    :file "~/Dropbox/Org/Memo.org"
@@ -1681,116 +1673,6 @@ Emacsでもモードによっては同じように動作します（orgモード
 *** 参考
 + [[https://fnwiya.hatenablog.com/entry/2016/01/11/203000][emacsでポモドーロテクニック（org-pomodoro） - fnwiya's quine]]
 
-** org-gcal - Googleカレンダーとの連携
-
-+ https://github.com/kidd/org-gcal.el.git
-  org-gcal-fetchは、数回成功したものの、失敗が続いている。
-  .emacs内のトークンを削除したりしてみたが、どうやら、内部でエラーが発生しているようだ。
-
-
-  #+begin_example
-Debugger entered--Lisp error: (wrong-type-argument listp menu-bar-open-mouse)
-  #f(compiled-function (key item) #<bytecode 0x13d114dd7e13bf1d>)(mouse-1 menu-bar-open-mouse)
-  map-keymap(#f(compiled-function (key item) #<bytecode 0x13d114dd7e13bf1d>) (keymap ... ... ... ... ... ... ... "menu-bar"))
-  easy-menu-lookup-name((keymap ... ... ... ... ... ... ... "menu-bar") "Org")
-  #f(compiled-function (map) #<bytecode 0x13ddf683daef593b>)((keymap ... ... ... ... ... ... ... "menu-bar"))
-  mapcar(#f(compiled-function (map) #<bytecode 0x13ddf683daef593b>) (... ... ...))
-  easy-menu-get-map(nil ("Org") nil)
-  easy-menu-add-item(nil ("Org") (keymap "File List for Agenda" (Edit\ File\ List menu-item "Edit File List" menu-function-96 :key-sequence nil) (Add/Move\ Current\ File\ to\ Front\ of\ List menu-item "Add/Move Current File to Front of List" org-agenda-file-to-front) (Remove\ Current\ File\ from\ List menu-item "Remove Current File from List" org-remove-file) (Cycle\ through\ agenda\ files menu-item "Cycle through agenda files" org-cycle-agenda-files) (Occur\ in\ all\ agenda\ files menu-item "Occur in all agenda files" org-occur-in-agenda-files) (nil menu-item "--") (/home/yc/Dropbox/Org/Bookmark\.org menu-item "/home/yc/Dropbox/Org/Bookmark.org" menu-function-97 :key-sequence nil) (/home/yc/Dropbox/Org/GcalPrivate\.org menu-item "/home/yc/Dropbox/Org/GcalPrivate.org" menu-function-98 :key-sequence nil) (/home/yc/Dropbox/Org/GcalWork\.org menu-item "/home/yc/Dropbox/Org/GcalWork.org" menu-function-99 :key-sequence nil) (/home/yc/Dropbox/Org/Journal\.org menu-item "/home/yc/Dropbox/Org/Journal.org" menu-function-100 :key-sequence nil) (/home/yc/Dropbox/Org/Mobile\.org menu-item "/home/yc/Dropbox/Org/Mobile.org" menu-function-101 :key-sequence nil) (/home/yc/Dropbox/Org/Notebook\.org menu-item "/home/yc/Dropbox/Org/Notebook.org" menu-function-102 :key-sequence nil) (/home/yc/git/ploversky-zenn\.dev/plaversky@zenn\.dev\.org menu-item "/home/yc/git/ploversky-zenn.dev/plaversky@zenn.dev..." menu-function-103 :key-sequence nil) (/home/yc/git/ploversky-ploversky\.net/plaversky\.net\.org menu-item "/home/yc/git/ploversky-ploversky.net/plaversky.net..." menu-function-104 :key-sequence nil) (/home/yc/\.emacs\.d/README\.org menu-item "/home/yc/.emacs.d/README.org" menu-function-105 :key-sequence nil)) nil)
-  easy-menu-change(("Org") "File List for Agenda" (["Edit File List" (org-edit-agenda-file-list) t] ["Add/Move Current File to Front of List" org-agenda-file-to-front t] ["Remove Current File from List" org-remove-file t] ["Cycle through agenda files" org-cycle-agenda-files t] ["Occur in all agenda files" org-occur-in-agenda-files t] "--" ["/home/yc/Dropbox/Org/Bookmark.org" (find-file "/home/yc/Dropbox/Org/Bookmark.org") t] ["/home/yc/Dropbox/Org/GcalPrivate.org" (find-file "/home/yc/Dropbox/Org/GcalPrivate.org") t] ["/home/yc/Dropbox/Org/GcalWork.org" (find-file "/home/yc/Dropbox/Org/GcalWork.org") t] ["/home/yc/Dropbox/Org/Journal.org" (find-file "/home/yc/Dropbox/Org/Journal.org") t] ["/home/yc/Dropbox/Org/Mobile.org" (find-file "/home/yc/Dropbox/Org/Mobile.org") t] ["/home/yc/Dropbox/Org/Notebook.org" (find-file "/home/yc/Dropbox/Org/Notebook.org") t] ["/home/yc/git/ploversky-zenn.dev/plaversky@zenn.dev..." (find-file "/home/yc/git/ploversky-zenn.dev/plaversky@zenn.dev...") t] ["/home/yc/git/ploversky-ploversky.net/plaversky.net..." (find-file "/home/yc/git/ploversky-ploversky.net/plaversky.net...") t] ["/home/yc/.emacs.d/README.org" (find-file "/home/yc/.emacs.d/README.org") t]))
-  org-install-agenda-files-menu()
-  org-mode()
-  org-generic-id-update-id-locations("entry-id")
-  #f(compiled-function (_) #<bytecode -0x1127077741525000>)(nil)
-  deferred:call-lambda(#f(compiled-function (_) #<bytecode -0x1127077741525000>) nil)
-  deferred:exec-task(#s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) ok nil)
-  deferred:set-next(#s(deferred :callback deferred:default-callback :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) :status nil :value nil) #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil))
-  deferred:exec-task(#s(deferred :callback #f(compiled-function (x) #<bytecode -0x187a1d931a173ce>) :errorback deferred:default-errorback :cancel #f(compiled-function (x) #<bytecode -0x16abd1177d01903>) :next #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) :status nil :value nil) ok nil)
-  deferred:set-next(#s(deferred :callback deferred:default-callback :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode -0x187a1d931a173ce>) :errorback deferred:default-errorback :cancel #f(compiled-function (x) #<bytecode -0x16abd1177d01903>) :next #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) :status nil :value nil) :status nil :value nil) #s(deferred :callback #f(compiled-function (x) #<bytecode -0x187a1d931a173ce>) :errorback deferred:default-errorback :cancel #f(compiled-function (x) #<bytecode -0x16abd1177d01903>) :next #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) :status nil :value nil))
-  deferred:exec-task(#s(deferred :callback #f(compiled-function (x) #<bytecode -0xbd81f2f94a96e54>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode -0x187a1d931a173ce>) :errorback deferred:default-errorback :cancel #f(compiled-function (x) #<bytecode -0x16abd1177d01903>) :next #s(deferred :callback #f(compiled-function (_) #<bytecode -0x1127077741525000>) :errorback deferred:default-errorback :cancel deferred:default-cancel :next #s(deferred :callback #f(compiled-function (x) #<bytecode 0xdf1fc632a45f76a>) :errorback #f(compiled-function (e) #<bytecode 0x85863196ddef386>) :cancel deferred:default-cancel :next nil :status nil :value nil) :status nil :value nil) :status nil :value nil) :status nil :value nil) ok nil)
-  deferred:worker()
-  apply(deferred:worker nil)
-  timer-event-handler([t 24989 42834 275344 nil deferred:worker nil nil 300000 nil])
-  #+end_example
-
-  org-modeの一時バッファを作成する際、org-install-agenda-files-menuが呼ばれているようだ。その中で、エラーが発生している。
-
-org-post-at-pint、org-delete-at-pointはうまく動作している。
-
-#+begin_src emacs-lisp
-  (leaf org-gcal
-    :straight (org-gcal :type git :host github :repo "emacsmirror/org-gcal")
-    :require t
-    :config
-    (let* ((json-object-type 'hash-table)
-           (json-array-type 'list)
-           (json-key-type 'string)
-           (gcal-json "~/Dropbox/Org/gcal/client_secret_357879820522-pnlalhj01143k1946fgp8ashshus9olg.apps.googleusercontent.com.json")
-           (json (json-read-file gcal-json))
-           (installed (gethash "installed" json))
-           (client-id (gethash "client_id" installed))
-           (client-secret (gethash "client_secret" installed)))
-      (setq org-gcal-client-id client-id
-            org-gcal-client-secret client-secret
-            org-gcal-fetch-file-alist
-            '(("yc@aiit.ac.jp"
-               .  "~/Dropbox/Org/GcalWork.org")
-              ("yoshihide.chubachi@gmail.com"
-               .  "~/Dropbox/Org/GcalPrivate.org")))
-      (setq org-gcal-recurring-events-mode 'nested
-            org-gcal-auto-archive nil
-            org-gcal-down-days 120
-            org-gcal-up-days 60
-            org-gcal-debug t)))
-#+end_src
-
-#+RESULTS:
-: org-gcal
-
-新規で入れたカレンダーは取得できる。
-古いイベントを取得するには？
-
-/persist/を削除
-/request/を削除
-/org-gcal/を削除
-
-再起動しないと挙動は変わらない
-
-[[https://github.com/emacsmirror/org-gcal][emacsmirror/org-gcal: Org sync with Google Calendar]]
-こっちkiddさんのをフォークした新本家？
-
-[[https://github.com/emacsmirror/org-gcal][After the initial fetch, running org-gcal-fetch will retrieve *newly-created events* and update *already-fetched events*.]]
-
-** org-gtasks - Google Tasksとの連携
-- 不満点
-  - pullすると、TODO以外の要素が消されてしまう（destructive）
-  - 要素が全て削除され、更新される
-  - pushすると、通常ノードもTODOとして更新されてしまう。
-
-#+begin_src emacs-lisp
-  (leaf org-gtasks
-    :init
-    (add-to-list 'load-path "~/git/org-gtasks/")
-    ; :straight (org-gtasks :type git :host github :repo "JulienMasson/org-gtasks")
-    :require t
-    :config
-    (let* ((json-object-type 'hash-table)
-           (json-array-type 'list)
-           (json-key-type 'string)
-           (gcal-json "~/Dropbox/Org/gtasks/client_secret_561086653074-tt3qfq09hj2sjrd13c9vuvpurr54dk37.apps.googleusercontent.com.json")
-           (json (json-read-file gcal-json))
-           (installed (gethash "installed" json))
-           (client-id (gethash "client_id" installed))
-           (client-secret (gethash "client_secret" installed)))
-      (org-gtasks-register-account :name "yc@aiit.ac.jp"
-                                   :directory "~/Dropbox/Org"
-                                   :client-id client-id
-                                   :client-secret client-secret)))
-#+end_src
-
-#+RESULTS:
-: org-gtasks
-
 ** org-contrib - Non GNUのorgパッケージ
 
 + 利用するパッケージ
@@ -1957,36 +1839,6 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
        (global-undo-tree-mode))
    #+end_src
 
-** fly-check [M-n][M-p]
-
-- emacs-lispのドキュメント用のチェック(emacs-lisp-checkdoc)を無効にする。
-
-#+begin_src emacs-lisp
-  (leaf flycheck
-    :doc "On-the-fly syntax checking"
-    :emacs>= 24.3
-    :straight t
-    :bind (("M-n" . flycheck-next-error)
-           ("M-p" . flycheck-previous-error))
-    :custom ((flycheck-emacs-lisp-initialize-packages . t)
-             (flycheck-disabled-checkers . '(emacs-lisp-checkdoc)))
-    :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
-    :config
-    (leaf flycheck-package
-      :doc "A Flycheck checker for elisp package authors"
-      :straight t
-      :config
-      (flycheck-package-setup))
-
-    (leaf flycheck-elsa
-      :doc "Flycheck for Elsa."
-      :emacs>= 25
-      :straight t
-      :config
-      (flycheck-elsa-setup))
-    )
-#+end_src
-
 ** pandoc-mode
 
 - C-c / でメニュー表示
@@ -2023,6 +1875,26 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 - [[http://tanehp.ec-net.jp/heppoko-lab/prog/resource/magit/magit_memo.html#%E5%A4%89%E6%9B%B4%E3%82%92%E6%88%BB%E3%81%99][Magit の覚え書き]]
   - Discard
+
+** git-gutter
+
+#+begin_src emacs-lisp
+  (leaf git-gutter
+    :straight t
+    ;; :custom
+    ;; (git-gutter:modified-sign . "~")
+    ;; (git-gutter:added-sign    . "+")
+    ;; (git-gutter:deleted-sign  . "-")
+    ;; :custom-face
+    ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
+    ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
+    ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
+    :custom
+    (global-git-gutter-mode . t))
+#+end_src
+
+#+RESULTS:
+: git-gutter
 
 ** migemo
 *** Linux
@@ -2157,49 +2029,6 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+RESULTS:
 : yasnippet-snippets
 
-** multiple-cursors
-+ [[https://dev.classmethod.jp/articles/emacs-multiple-cursors/][複数カーソルを操作するパッケージ multiple-cursors.el のご紹介 | DevelopersIO]]
-
-+ リージョンを選択してカーソルをあわせる
-+ region-bindings-modeとともに使うとよい
-
-#+begin_src emacs-lisp
-    (leaf multiple-cursors
-      :straight t
-      :config
-      ;; use region-bindings-mode instead
-      ;; (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-      ;; (global-set-key (kbd "C->")         'mc/mark-next-like-this)
-      ;; (global-set-key (kbd "C-<")         'mc/mark-previous-like-this)
-      ;; (global-set-key (kbd "C-c C-<")     'mc/mark-all-like-this))
-      )
-#+end_src
-
-#+RESULTS:
-: multiple-cursors
-
-** region-bindings-mode
-+ [[https://tam5917.hatenablog.com/entry/20130129/1359465171][region-bindings-modeの紹介 - 備忘録]]
-+ [[https://github.com/magnars/expand-region.el][magnars/expand-region.el: Emacs extension to increase selected region by semantic units.]]
-+ [[https://github.com/fgallina/region-bindings-mode][GitHub - fgallina/region-bindings-mode: A minor mode that enables custom bindings when mark is active.]]
-
-#+begin_src emacs-lisp
-  (leaf region-bindings-mode
-    :straight t
-    :require t
-    :config
-    (region-bindings-mode-enable)
-    (define-key region-bindings-mode-map "e" 'mc/edit-lines)
-    (define-key region-bindings-mode-map "a" 'mc/mark-all-like-this)
-    (define-key region-bindings-mode-map "p" 'mc/mark-previous-like-this)
-    (define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
-    (define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended)
-    )
-#+end_src
-
-#+RESULTS:
-: region-bindings-mode
-
 ** yaml-mode
 
 #+begin_src emacs-lisp
@@ -2211,45 +2040,6 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 + 参考
   * [[https://github.com/DarthFennec/highlight-indent-guides][DarthFennec/highlight-indent-guides: Emacs minor mode to highlight indentation]]
-
-** rainbow-delimiters
-*** 説明
-
-#+begin_src emacs-lisp
-  (leaf rainbow-delimiters
-    :straight t
-    :hook
-    (prog-mode-hook . rainbow-delimiters-mode))
-#+end_src
-
-#+RESULTS:
-: rainbow-delimiters
-
-*** 参考
-+ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E6%8B%AC%E5%BC%A7%E3%81%8C%E5%A4%9A%E3%81%84%E3%81%A8%E8%99%B9%E3%81%8C%E3%81%BF%E3%81%88%E3%82%8B----rainbow-delimiters][Emacsモダン化計画 -かわEmacs編- - Qiita]]
-
-** highlight-indent-guides
-*** 説明
-ソースコードを編集するとき、インデントのガイドを表示する。
-
-*** 設定
-#+begin_src emacs-lisp
-  (leaf highlight-indent-guides
-    :straight t
-    :require t
-    :hook
-    ((prog-mode-hook yaml-mode-hook) . highlight-indent-guides-mode)
-    :custom
-    (highlight-indent-guides-auto-enabled . t)
-    (highlight-indent-guides-responsive . t)
-    (highlight-indent-guides-method . 'character)) ; column
-#+end_src
-
-#+RESULTS:
-: highlight-indent-guides
-
-*** 参考
-+ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#yaml%E3%81%AE%E9%9A%8E%E5%B1%A4%E6%A7%8B%E9%80%A0%E3%81%AB%E8%B2%A0%E3%81%91%E3%81%AA%E3%81%84----highlight-indent-guides][Emacsモダン化計画 -かわEmacs編- - Qiita]]
 
 ** beacon
 *** 設定
@@ -2266,26 +2056,6 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 *** 参考
 + [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E3%82%82%E3%81%86%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E8%A6%8B%E5%A4%B1%E3%82%8F%E3%81%AA%E3%81%84----beacon][Emacsモダン化計画 -かわEmacs編- - Qiita]]
-
-** git-gutter
-
-#+begin_src emacs-lisp
-  (leaf git-gutter
-    :straight t
-    ;; :custom
-    ;; (git-gutter:modified-sign . "~")
-    ;; (git-gutter:added-sign    . "+")
-    ;; (git-gutter:deleted-sign  . "-")
-    ;; :custom-face
-    ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
-    ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
-    ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
-    :custom
-    (global-git-gutter-mode . t))
-#+end_src
-
-#+RESULTS:
-: git-gutter
 
 ** DONE shell-pop - いつでもどこでもshellを出す                  :published:
 CLOSED: [2021-11-09 Tue 20:23]
@@ -2389,6 +2159,8 @@ https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-col
     :added "2021-11-08"
     :emacs>= 25.1
     :straight t
+    :after org-mode
+    :hook (org-mode-hook . visual-fill-column-mode)
     :bind(("C-c q" . visual-fill-column-mode)
           (:visual-fill-column-mode-map
            ("C-a" . beginning-of-visual-line)
@@ -2515,6 +2287,58 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 
 #+RESULTS:
 : google-this
+
+** region-bindings-mode
++ [[https://tam5917.hatenablog.com/entry/20130129/1359465171][region-bindings-modeの紹介 - 備忘録]]
++ [[https://github.com/magnars/expand-region.el][magnars/expand-region.el: Emacs extension to increase selected region by semantic units.]]
++ [[https://github.com/fgallina/region-bindings-mode][GitHub - fgallina/region-bindings-mode: A minor mode that enables custom bindings when mark is active.]]
+
+#+begin_src emacs-lisp
+    (leaf region-bindings-mode
+      :straight t
+      :require t
+      :config
+      (region-bindings-mode-enable))
+#+end_src
+
+#+RESULTS:
+: region-bindings-mode
+
+** multiple-cursors
++ [[https://dev.classmethod.jp/articles/emacs-multiple-cursors/][複数カーソルを操作するパッケージ multiple-cursors.el のご紹介 | DevelopersIO]]
+
++ リージョンを選択してカーソルをあわせる
++ region-bindings-modeとともに使うとよい
+
+#+begin_src emacs-lisp
+  (leaf multiple-cursors
+    :straight t
+    :after region-bindings-mode
+    :config
+    (define-key region-bindings-mode-map "e" 'mc/edit-lines)
+    (define-key region-bindings-mode-map "a" 'mc/mark-all-like-this)
+    (define-key region-bindings-mode-map "p" 'mc/mark-previous-like-this)
+    (define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
+    (define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended))
+#+end_src
+
+#+RESULTS:
+: multiple-cursors
+
+** align - コメントの位置を揃えたりする
+
+#+begin_src emacs-lisp
+  (leaf align
+    :doc "align text to a specific column, by regexp"
+    :tag "builtin"
+    :added "2021-10-30"
+    :after region-bindings-mode
+    :config
+    (define-key region-bindings-mode-map "=" 'align-regexp))
+#+end_src
+
+#+RESULTS:
+: align
 
 * UI・見た目
 ** modus-themes [f5]
@@ -2945,7 +2769,198 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 : my/browser
 
 * プログラミング
+** highlight-indent-guides
+*** 説明
+ソースコードを編集するとき、インデントのガイドを表示する。
 
+*** 設定
+#+begin_src emacs-lisp
+  (leaf highlight-indent-guides
+    :straight t
+    :require t
+    :hook
+    ((prog-mode-hook yaml-mode-hook) . highlight-indent-guides-mode)
+    :custom
+    (highlight-indent-guides-auto-enabled . t)
+    (highlight-indent-guides-responsive . t)
+    (highlight-indent-guides-method . 'column);fill)) ;character)) ; column
+    )
+#+end_src
+
+#+RESULTS:
+: highlight-indent-guides
+
+*** 参考
++ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#yaml%E3%81%AE%E9%9A%8E%E5%B1%A4%E6%A7%8B%E9%80%A0%E3%81%AB%E8%B2%A0%E3%81%91%E3%81%AA%E3%81%84----highlight-indent-guides][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
+** rainbow-delimiters
+*** 説明
+
+#+begin_src emacs-lisp
+  (leaf rainbow-delimiters
+    :straight t
+    :hook
+    (prog-mode-hook . rainbow-delimiters-mode))
+#+end_src
+
+#+RESULTS:
+: rainbow-delimiters
+
+*** 参考
++ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E6%8B%AC%E5%BC%A7%E3%81%8C%E5%A4%9A%E3%81%84%E3%81%A8%E8%99%B9%E3%81%8C%E3%81%BF%E3%81%88%E3%82%8B----rainbow-delimiters][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
+** company - 自動補完
+
++ [[http://misohena.jp/blog/2021-08-08-emacs-company-mode-settings.html][Companyのお節介な補完を抑制する | Misohena Blog]]
+
+#+begin_src emacs-lisp
+  (leaf company
+    :straight t
+    :hook (after-init-hook . global-company-mode)
+    :config
+    (defun my-company-inhibit-idle-begin ()
+      (setq-local company-begin-commands nil))
+    (add-hook 'org-mode-hook #'my-company-inhibit-idle-begin)
+    (add-hook 'text-mode-hook #'my-company-inhibit-idle-begin))
+#+end_src
+
+#+RESULTS:
+: company
+
+** fly-check [M-n][M-p]
+
+- emacs-lispのドキュメント用のチェック(emacs-lisp-checkdoc)を無効にする。
+
+#+begin_src emacs-lisp
+  (leaf flycheck
+    :doc "On-the-fly syntax checking"
+    :emacs>= 24.3
+    :straight t
+    :bind (("M-n" . flycheck-next-error)
+           ("M-p" . flycheck-previous-error))
+    :custom ((flycheck-emacs-lisp-initialize-packages . t)
+             (flycheck-disabled-checkers . '(emacs-lisp-checkdoc)))
+    :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
+    :config
+    (leaf flycheck-package
+      :doc "A Flycheck checker for elisp package authors"
+      :straight t
+      :config
+      (flycheck-package-setup))
+
+    (leaf flycheck-elsa
+      :doc "Flycheck for Elsa."
+      :emacs>= 25
+      :straight t
+      :config
+      (flycheck-elsa-setup))
+    )
+#+end_src
+
+** projectile [C-x p]
++ 説明
+  * プロジェクトを扱う
+  * [[https://docs.projectile.mx/projectile/usage.html#basic-usage][Usage :: Projectile]]
+  * C-x p で起動するように設定
+
++ 設定
+
+  #+begin_src emacs-lisp
+    (leaf projectile
+      :straight t
+      :require t
+      :bind ((projectile-mode-map
+              ("C-x p" . projectile-command-map))
+             (projectile-command-map
+              ("b" . consult-project-buffer)))
+      :config
+      (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
+      (projectile-mode 1))
+  #+end_src
+
+  #+RESULTS:
+  : projectile
+
++ 参考
+  * [[https://docs.projectile.mx/projectile/index.html][Projectile :: Projectile]]
+
+** perspective [C-x C-b] - パースペクティブ
+
+- プリフィックスがBookmark+とかぶっている
+  - C-x x ..
+(defcustom persp-mode-prefix-key (kbd "C-x x")
+  "Prefix key to activate perspective-map."
+
+#+begin_src emacs-lisp
+  (leaf perspective
+    :straight t
+    :custom
+    (persp-mode-prefix-key . "p")
+    :bind (;; (persp-mode-map
+           ;;  ("C-c p" . perspective-map))
+           ("C-x C-b" . persp-list-buffers))
+    :config
+    (persp-mode)
+    (leaf consult
+      :straight t
+      :require t
+      :config
+      (consult-customize consult--source-buffer :hidden t :default nil)
+      (add-to-list 'consult-buffer-sources persp-consult-source)))
+#+end_src
+
+#+RESULTS:
+: perspective
+
+** Bookmark+ - ブックマークの拡張（多機能すぎ）
+:PROPERTIES:
+:CREATED: [2022-03-05 Sat 20:25]
+:ANNOTADED: [[file:~/Dropbox/Org/Memo.org::*orgの走査][orgの走査]]
+:END:
+*** 説明
+- Bookmark+モード
+  - [[https://www.emacswiki.org/emacs/BookmarkPlus#BookmarkAnnotations][[Home] Bookmark Plus]]
+- Bookmark the file you are editing: ‘C-x x m’
+  - ファイルをブックマークする
+- Jump to a bookmark: ‘C-x j j’
+- Tag a file (creates an autofile bookmark): `C-x x t + a’
+- List/edit your bookmarks: ‘C-x r l’
+  - ブックマークリストで、タグを付けたりできるようだ
+- むちゃくちゃ機能が多い・・・
+
+- やりたいこと
+  - elのコードにアノテーションを付けたいq
+  - [[https://www.emacswiki.org/emacs/BookmarkPlus][Bookmark Annotations]]
+
+- [[https://www.emacswiki.org/emacs/BookmarkPlus][Command ‘bookmark-show-annotation’ shows an annotation in read-only mode. You can use ‘C-x C-q’ in the annotation buffer to switch to edit mode (and back again).]]
+
+1. bookmarkをつける
+   - (リージョンを選択し） C-x x m
+
+- bookmark-show-annotation C-x x a s
+  - アノテーションをread-onlyで開く
+  - C-x C-q で編集できる
+  - C-c C-c で保存、C-c C-kでキャンセル
+
+- 最初にアノテーションをつけるようだ
+  - 行にアノテーションをつけるには？
+
+- いろいろ大変なので、annotate.elにする・・・
+
+*** 設定
+
+- (defcustom bmkp-bookmark-map-prefix-keys (list (kbd "C-x x"))
+
+#+begin_src emacs-lisp
+  (leaf bookmark+
+    :straight t
+    :require t)
+#+end_src
+
+#+RESULTS:
+: bookmark+
+
+* Emacs Lispプログラミング
 ** macrostep [C-c e]
 
 - elispのマクロを展開する
@@ -3024,56 +3039,13 @@ emacs-lisp-mode-hook
 #+RESULTS:
 : ert
 
-** el-mock
-
-#+begin_src emacs-lisp
-  (leaf el-mock
-    :straight t)
-#+end_src
-
-#+RESULTS:
-: el-mock2
-
-** ht
-
-#+begin_src emacs-lisp
-  (leaf ht
-    :straight t)
-#+end_src
-
-#+RESULTS:
-: ht
-
-** oauth2
-
-- 開発用
-
-#+begin_src emacs-lisp
-  (leaf oauth2
-    :straight t)
-#+end_src
-
-#+RESULTS:
-: oauth2
-
-** indent-tab-mode - インデントの際タブを使わない
-
-#+begin_src emacs-lisp
-    (leaf *indent-tabs-mode
-      :custom ((indent-tabs-mode . nil)))
-#+end_src
-
-#+RESULTS:
-: *indent-tabs-mode
-
 ** emr - Emacs Refactor
 
 #+begin_src emacs-lisp
   (leaf emacs-refactor
-    :bind ((emacs-lisp-mode-map
-            ("M-RET" . emr-show-refactor-menu)))
     :straight t
-    :config)
+    :bind ((emacs-lisp-mode-map
+            ("M-RET" . emr-show-refactor-menu))))
 #+end_src
 
 #+RESULTS:
@@ -3101,47 +3073,6 @@ emacs-lisp-mode-hook
 : iedit
 
 * 未整理
-** projectile [C-c p]
-+ 説明
-  * プロジェクトを扱う
-  * [[https://docs.projectile.mx/projectile/usage.html#basic-usage][Usage :: Projectile]]
-  * C-c p で起動するように設定
-
-+ 設定
-
-  #+begin_src emacs-lisp
-    (leaf projectile
-      :straight t
-      :require t
-      :bind ((projectile-mode-map
-              ("C-c p" . projectile-command-map)))
-      :config
-      (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
-      (projectile-mode 1))
-  #+end_src
-
-  #+RESULTS:
-  : projectile
-
-+ 参考
-  * [[https://docs.projectile.mx/projectile/index.html][Projectile :: Projectile]]
-** company - 自動補完
-+ [[http://misohena.jp/blog/2021-08-08-emacs-company-mode-settings.html][Companyのお節介な補完を抑制する | Misohena Blog]]
-
-#+begin_src emacs-lisp
-  (leaf company
-    :straight t
-    :hook (after-init-hook . global-company-mode)
-    :config
-    (defun my-company-inhibit-idle-begin ()
-      (setq-local company-begin-commands nil))
-    (add-hook 'org-mode-hook #'my-company-inhibit-idle-begin)
-    (add-hook 'text-mode-hook #'my-company-inhibit-idle-begin))
-#+end_src
-
-#+RESULTS:
-: company
-
 ** hydra
 
 + [[https://medium.com/@mopemope/hydra-%E3%81%AE%E3%82%B9%E3%82%B9%E3%83%A1-88a4168f945c][Hydra のススメ. みなさん、 Emacs 使ってますか？先日 Emacs 26.1… | by mopemope | Medium]]
@@ -3156,7 +3087,7 @@ emacs-lisp-mode-hook
 #+RESULTS:
 : hydra-zoom/body
 
-** annotate.el - ファイルを編集せずに注釈をつける
+** TODO annotate.el - ファイルを編集せずに注釈をつける
 - annotate-modeを設定する
   - prog-mode-hookにannotate-modeを設定
 - 操作方法
@@ -3168,8 +3099,9 @@ emacs-lisp-mode-hook
     - 標準ではqueryが聞かれる->nilにしてみた
 - アノテーションのファイルは ~/.emacs.d/annotations
 
+- companyとの相性が悪いようだ
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (leaf annotate
     :straight t
     :require t
@@ -3183,52 +3115,6 @@ emacs-lisp-mode-hook
 *** 参考
 - [[https://github.com/bastibe/annotate.el][bastibe/annotate.el: Annotate.el]]
 - [[http://emacs.rubikitch.com/annotate/][annotate.el : 【コードリーディング支援】ファイルを修正することなく行に注釈をつける]]
-
-** Bookmark+ - ブックマークの拡張（多機能すぎ）
-:PROPERTIES:
-:CREATED: [2022-03-05 Sat 20:25]
-:ANNOTADED: [[file:~/Dropbox/Org/Memo.org::*orgの走査][orgの走査]]
-:END:
-*** 説明
-- Bookmark+モード
-  - [[https://www.emacswiki.org/emacs/BookmarkPlus#BookmarkAnnotations][[Home] Bookmark Plus]]
-- Bookmark the file you are editing: ‘C-x x m’
-  - ファイルをブックマークする
-- Jump to a bookmark: ‘C-x j j’
-- Tag a file (creates an autofile bookmark): `C-x x t + a’
-- List/edit your bookmarks: ‘C-x r l’
-  - ブックマークリストで、タグを付けたりできるようだ
-- むちゃくちゃ機能が多い・・・
-
-- やりたいこと
-  - elのコードにアノテーションを付けたいq
-  - [[https://www.emacswiki.org/emacs/BookmarkPlus][Bookmark Annotations]]
-
-- [[https://www.emacswiki.org/emacs/BookmarkPlus][Command ‘bookmark-show-annotation’ shows an annotation in read-only mode. You can use ‘C-x C-q’ in the annotation buffer to switch to edit mode (and back again).]]
-
-1. bookmarkをつける
-   - (リージョンを選択し） C-x x m
-
-- bookmark-show-annotation C-x x a s
-  - アノテーションをread-onlyで開く
-  - C-x C-q で編集できる
-  - C-c C-c で保存、C-c C-kでキャンセル
-
-- 最初にアノテーションをつけるようだ
-  - 行にアノテーションをつけるには？
-
-- いろいろ大変なので、annotate.elにする・・・
-
-*** 設定
-
-#+begin_src emacs-lisp
-  (leaf bookmark+
-    :straight t
-    :require t)
-#+end_src
-
-#+RESULTS:
-: bookmark+
 
 * おわりに
 ** お約束の記述
