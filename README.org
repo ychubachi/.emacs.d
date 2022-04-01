@@ -2960,6 +2960,15 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+RESULTS:
 : bookmark+
 
+** coverage - テストのカバレッジ
+
+#+begin_src emacs-lisp
+ (leaf coverage :straight t)
+#+end_src
+
+#+RESULTS:
+: coverage
+
 * Emacs Lispプログラミング
 ** macrostep [C-c e]
 
