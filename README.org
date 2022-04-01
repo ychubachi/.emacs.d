@@ -2769,6 +2769,21 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 : my/browser
 
 * プログラミング
+
+** 保存時にeval-bufferの自動実行
+
+#+begin_src emacs-lisp
+  (defun cmd/emacs-lisp-mode-before-save-hook ()
+     (add-hook 'before-save-hook 'eval-buffer nil t)
+     (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))
+
+    (leaf cmd/eval-buffer-on-before-save
+       :hook (emacs-lisp-mode-hook . cmd/emacs-lisp-mode-before-save-hook))
+#+end_src
+
+#+RESULTS:
+: cmd/eval-buffer-on-before-save
+
 ** highlight-indent-guides
 *** 説明
 ソースコードを編集するとき、インデントのガイドを表示する。
@@ -3124,6 +3139,18 @@ emacs-lisp-mode-hook
 *** 参考
 - [[https://github.com/bastibe/annotate.el][bastibe/annotate.el: Annotate.el]]
 - [[http://emacs.rubikitch.com/annotate/][annotate.el : 【コードリーディング支援】ファイルを修正することなく行に注釈をつける]]
+
+* 自作パッケージ
+** org-sync-gtasks
+
+#+begin_src emacs-lisp
+  (leaf org-sync-gtasks
+    :straight (org-sync-gtasks :type git :host github
+                          :repo "ychubachi/org-sync-gtasks"))
+#+end_src
+
+#+RESULTS:
+: org-sync-gtasks
 
 * おわりに
 ** お約束の記述
