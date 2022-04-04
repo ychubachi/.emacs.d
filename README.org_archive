@@ -1116,3 +1116,39 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+RESULTS:
 : org-gtasks
+
+* TODO annotate.el - ファイルを編集せずに注釈をつける
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-04-02 Sat 21:12
+:ARCHIVE_FILE: ~/.emacs.d/README.org
+:ARCHIVE_OLPATH: 未整理
+:ARCHIVE_CATEGORY: README
+:ARCHIVE_TODO: TODO
+:END:
+- annotate-modeを設定する
+  - prog-mode-hookにannotate-modeを設定
+- 操作方法
+  - C-x C-q (M-x read-only-mode)でも利用できる
+  - C-c C-a でアノテーションがつけられる
+  - C-c C-d でアノテーション削除
+  - C-c [ で前のアノテーション, C-c ] で次のアノテーション
+  - C-c C-s でアノテーションのリスト
+    - 標準ではqueryが聞かれる->nilにしてみた
+- アノテーションのファイルは ~/.emacs.d/annotations
+
+- companyとの相性が悪いようだ
+
+#+begin_src emacs-lisp :tangle no
+  (leaf annotate
+    :straight t
+    :require t
+    :hook (prog-mode-hook . annotate-mode)
+    :custom (annotate-summary-ask-query . nil))
+#+end_src
+
+#+RESULTS:
+: annotate
+
+** 参考
+- [[https://github.com/bastibe/annotate.el][bastibe/annotate.el: Annotate.el]]
+- [[http://emacs.rubikitch.com/annotate/][annotate.el : 【コードリーディング支援】ファイルを修正することなく行に注釈をつける]]

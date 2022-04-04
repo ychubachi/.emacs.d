@@ -2909,6 +2909,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+begin_src emacs-lisp
   (leaf perspective
     :straight t
+    :require t
     :custom
     (persp-mode-prefix-key . "p")
     :bind (;; (persp-mode-map
@@ -3111,42 +3112,15 @@ emacs-lisp-mode-hook
 #+RESULTS:
 : hydra-zoom/body
 
-** TODO annotate.el - ファイルを編集せずに注釈をつける
-- annotate-modeを設定する
-  - prog-mode-hookにannotate-modeを設定
-- 操作方法
-  - C-x C-q (M-x read-only-mode)でも利用できる
-  - C-c C-a でアノテーションがつけられる
-  - C-c C-d でアノテーション削除
-  - C-c [ で前のアノテーション, C-c ] で次のアノテーション
-  - C-c C-s でアノテーションのリスト
-    - 標準ではqueryが聞かれる->nilにしてみた
-- アノテーションのファイルは ~/.emacs.d/annotations
-
-- companyとの相性が悪いようだ
-
-#+begin_src emacs-lisp :tangle no
-  (leaf annotate
-    :straight t
-    :require t
-    :hook (prog-mode-hook . annotate-mode)
-    :custom (annotate-summary-ask-query . nil))
-#+end_src
-
-#+RESULTS:
-: annotate
-
-*** 参考
-- [[https://github.com/bastibe/annotate.el][bastibe/annotate.el: Annotate.el]]
-- [[http://emacs.rubikitch.com/annotate/][annotate.el : 【コードリーディング支援】ファイルを修正することなく行に注釈をつける]]
-
 * 自作パッケージ
 ** org-sync-gtasks
 
 #+begin_src emacs-lisp
   (leaf org-sync-gtasks
-    :straight (org-sync-gtasks :type git :host github
-                          :repo "ychubachi/org-sync-gtasks"))
+    ;; :straight (org-sync-gtasks :type git :host github
+    ;;                            :repo "ychubachi/org-sync-gtasks")
+    :init
+    (add-to-list 'load-path "~/git/org-sync-gtasks/"))
 #+end_src
 
 #+RESULTS:
