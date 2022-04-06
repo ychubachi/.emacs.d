@@ -1440,6 +1440,25 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 #+RESULTS:
 
+** babel - Java/Ruby/Python
+
+#+begin_src emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((java . t) (ruby . t) (python . t) (C . t)))
+#+end_src
+
+#+RESULTS:
+
+#+begin_src emacs-lisp
+  (nconc org-babel-default-header-args:java
+         '((:dir . nil)
+           (:results . "value")))
+#+end_src
+
+#+RESULTS:
+: ((:results . output) (:dir . .) (:dir) (:results . value) (:dir) (:results . value))
+
 ** スピードコマンド
 
 - tにするとヘッドラインの行頭にカーソルがあるとき、1文字でコマンドが打てる。
