@@ -3136,10 +3136,9 @@ emacs-lisp-mode-hook
 
 #+begin_src emacs-lisp
   (leaf org-sync-gtasks
-    ;; :straight (org-sync-gtasks :type git :host github
-    ;;                            :repo "ychubachi/org-sync-gtasks")
-    :init
-    (add-to-list 'load-path "~/git/org-sync-gtasks/"))
+    :straight (org-sync-gtasks :type git :host github
+                               :repo "ychubachi/org-sync-gtasks"
+                               :branch "develop"))
 #+end_src
 
 #+RESULTS:
