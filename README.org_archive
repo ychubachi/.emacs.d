@@ -1094,16 +1094,25 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
   - pushすると、通常ノードもTODOとして更新されてしまう。
 
 #+begin_src emacs-lisp
+  (leaf deferred :straight t)
+  (leaf request-deferred :straight t)
+#+end_src
+
+#+RESULTS:
+: request-deferred
+
+#+begin_src emacs-lisp
   (leaf org-gtasks
     :init
-    (add-to-list 'load-path "~/git/org-gtasks/")
-    ; :straight (org-gtasks :type git :host github :repo "JulienMasson/org-gtasks")
+    ;; (add-to-list 'load-path "~/git/org-gtasks/")
+    :straight (org-gtasks :type git :host github :repo "JulienMasson/org-gtasks")
     :require t
     :config
     (let* ((json-object-type 'hash-table)
            (json-array-type 'list)
            (json-key-type 'string)
-           (gcal-json "~/Dropbox/Org/gtasks/client_secret_561086653074-tt3qfq09hj2sjrd13c9vuvpurr54dk37.apps.googleusercontent.com.json")
+           ;; (gcal-json "~/Dropbox/Org/gtasks/client_secret_561086653074-tt3qfq09hj2sjrd13c9vuvpurr54dk37.apps.googleusercontent.com.json")
+           (gcal-json "~/.client_secret.json")
            (json (json-read-file gcal-json))
            (installed (gethash "installed" json))
            (client-id (gethash "client_id" installed))
