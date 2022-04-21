@@ -1033,9 +1033,7 @@ Emacsでもモードによっては同じように動作します（orgモード
     :custom
     (org-directory . "~/Dropbox/Org/")
     (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
-    (org-agenda-files . '("~/Dropbox/Org/"
-                          "~/.emacs.d/README.org"
-                          ))
+    (org-agenda-files . '("~/Dropbox/Org/"))
     (org-todo-keyword-faces
      . '(("NEXT" . (:foreground "blue" :underline t))
          ("DONE" . (:foreground "pale green"))))
@@ -1160,7 +1158,9 @@ Emacsでもモードによっては同じように動作します（orgモード
     (add-to-list 'org-structure-template-alist
                  '("el" . "src emacs-lisp"))
     (add-to-list 'org-structure-template-alist
-                 '("bash" . "src bash"))
+                 '("sh" . "src bash"))
+    (add-to-list 'org-structure-template-alist
+                 '("rb" . "src ruby"))
     )
 #+end_src
 
@@ -3133,9 +3133,14 @@ emacs-lisp-mode-hook
 
 #+begin_src emacs-lisp
   (leaf org-sync-gtasks
-    :straight (org-sync-gtasks :type git :host github
-                               :repo "ychubachi/org-sync-gtasks"
-                               :branch "develop"))
+    ;; :straight (org-sync-gtasks :type git :host github
+    ;;                            :repo "ychubachi/org-sync-gtasks"
+    ;;                            :branch "develop")
+    :init
+    (leaf oauth2 :straight t)
+    :config
+    (setq load-path (cons "~/git/org-sync-gtasks" load-path))
+    (require 'org-sync-gtasks))
 #+end_src
 
 #+RESULTS:
