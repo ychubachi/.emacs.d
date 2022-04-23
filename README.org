@@ -303,12 +303,12 @@ leafに追加するパッケージです。
   * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
 
 * Emacs本体の設定
-** バッファを表示するウインドウを固定する
+** COMMENT バッファを表示するウインドウを固定する
 
 - [[https://ayatakesi.github.io/lispref/27.1/html/Buffer-Display-Action-Functions.html][Buffer Display Action Functions (GNU Emacs Lisp Reference Manual)]]
 - [[https://github.com/nex3/perspective-el][nex3/perspective-el: Perspectives for Emacs.]]
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (leaf *display-buffer-base-action
     :config
     (customize-set-variable
