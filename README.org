@@ -367,6 +367,16 @@ leafに追加するパッケージです。
 #+RESULTS:
 : *toggle-truncate-lines
 
+** cycle-spacing [M-SPC]
+
+;; cycle through amounts of spacing
+#+begin_src emacs-lisp
+  (global-set-key (kbd "M-SPC") 'cycle-spacing)
+#+end_src
+
+#+RESULTS:
+: cycle-spacing
+
 * ビルトインパッケージの設定
 ** isearch[C-o]                                                      :FIXME:
 
