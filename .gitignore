@@ -82,3 +82,4 @@ org-roam.db
 /var/
 /oauth2.plstore
 *.plstore
+/org-persist/

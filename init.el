@@ -24,9 +24,9 @@
 
 ;; Initialize packages.
 (customize-set-variable
- 'package-archives '(("org" . "https://orgmode.org/elpa/")
+ 'package-archives '(("org"   . "https://orgmode.org/elpa/")
                      ("melpa" . "https://melpa.org/packages/")
-                     ("gnu" . "https://elpa.gnu.org/packages/")))
+                     ("gnu"   . "https://elpa.gnu.org/packages/")))
   (package-initialize)
 
 ;; Install straight.el
