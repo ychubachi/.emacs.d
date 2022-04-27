@@ -1054,6 +1054,7 @@ Emacsでもモードによっては同じように動作します（orgモード
     (org-agenda-start-with-follow-mode . t)  ; アジェンダで関連するorgファイルを開く
     (org-ellipsis . " ▽")                    ; …,▼, ↴, ⬎, ⤷, ⋱
     (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
+    (org-agenda-remove-tags . t) ; アジェンダにタグを表示しない
     )
 #+end_src
 
