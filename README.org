@@ -3157,6 +3157,24 @@ emacs-lisp-mode-hook
 #+RESULTS:
 : org-sync-gtasks
 
+** org-sync-qiita
+
+#+begin_src emacs-lisp
+  (leaf org-sync-qiita
+    ;; :straight (org-sync-gtasks :type git :host github
+    ;;                            :repo "ychubachi/org-sync-gtasks"
+    ;;                            :branch "develop")
+    :init
+    (leaf request-deferred :straight t)
+    (leaf ox-qmd :straight t)
+    :config
+    (setq load-path (cons "~/git/org-sync-qiita" load-path))
+    (require 'org-sync-qiita))
+#+end_src
+
+#+RESULTS:
+: org-sync-qiita
+
 * おわりに
 ** お約束の記述
 
