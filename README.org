@@ -292,7 +292,8 @@ leafに追加するパッケージです。
       (indent-tabs-mode . nil)               ; インデントの際タブを使わない
       (byte-compile-warnings
        . '(not cl-functions obsolete))       ; (require 'cl)を検査しない
-    )
+      (epg-pinentry-mode . 'loopback)        ; GnuPGのパスフレーズをミニバッファで
+      (plstore-cache-passphrase-for-symmetric-encryption . t))
 #+end_src
 
 #+RESULTS:
