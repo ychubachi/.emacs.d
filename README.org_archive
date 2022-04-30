@@ -1161,3 +1161,70 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 ** 参考
 - [[https://github.com/bastibe/annotate.el][bastibe/annotate.el: Annotate.el]]
 - [[http://emacs.rubikitch.com/annotate/][annotate.el : 【コードリーディング支援】ファイルを修正することなく行に注釈をつける]]
+
+* org-rome [...]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-05-01 Sun 01:05
+:ARCHIVE_FILE: ~/.emacs.d/README.org
+:ARCHIVE_OLPATH: org-mode関連の設定
+:ARCHIVE_CATEGORY: README
+:END:
+
++ 参考
+  * [[https://github.com/org-roam/org-roam][org-roam/org-roam: Rudimentary Roam replica with Org-mode]]
+  * [[https://www.orgroam.com/manual.html][Org-roam User Manual]]
+
++ org-romeを利用するための設定
+| C-c n c | capture |
+| C-c n i |         |
+
+#+begin_src emacs-lisp
+  (leaf org-roam
+    :straight t
+    :require t
+    :custom
+    (org-roam-directory . "~/Dropbox/Org/Roam/")
+    (org-roam-completion-everywhere . t)
+    (org-roam-capture-templates
+     . '(("d" "default" plain
+          "%?"
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
+          :unnarrowed t)
+         ("p" "PowerPoint" plain
+          (file "~/Dropbox/Org/Roam/Templates/PowerPointTemplate.org")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
+          :unnarrowed t)
+         ("m" "備忘録（Memo）" plain
+          (file "~/Dropbox/Org/Roam/Templates/MemoTemplate.org")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
+          :unnarrowed t)
+         ("k" "会議録（Meeting）" plain
+          (file "~/Dropbox/Org/Roam/Templates/MeetingTemplate.org")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
+          :unnarrowed t)
+         ("t" "文書（LaTeX）" plain
+          (file "~/Dropbox/Org/Roam/Templates/LaTeXTemplate.org")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+          :unnarrowed t)
+         ("w" "ブログ（Wordpress）" plain
+          (file "~/Dropbox/Org/Roam/Templates/Org2blogBufferTemplate.org")
+          :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+TITLE: ${title}\n")
+          :unnarrowed t)
+         ))
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n g" . org-roam-graph)
+           ("C-c n i" . org-roam-node-insert)
+           ("C-c n c" . org-roam-capture)
+           ;; Dailies
+           ("C-c n j" . org-roam-dailies-capture-today))
+    :init
+    (setq org-roam-v2-ack t)
+    :config
+    (org-roam-db-autosync-mode)
+    ;; If using org-roam-protocol
+    (require 'org-roam-protocol))
+#+end_src
+
+#+RESULTS:
+: org-roam
