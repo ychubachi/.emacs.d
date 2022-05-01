@@ -22,6 +22,9 @@
 
 ;;; Code:
 
+(set-language-environment "Japanese")
+(prefer-coding-system 'utf-8)
+
 ;; Initialize packages.
 (customize-set-variable
  'package-archives '(("org"   . "https://orgmode.org/elpa/")

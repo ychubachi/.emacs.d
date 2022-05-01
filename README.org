@@ -478,10 +478,11 @@ leafに追加するパッケージです。
 : ffap
 
 * 日本語関係
-** mule-cmds: 言語環境を日本語にする
+** COMMENT mule-cmds: 言語環境を日本語にする
 + 言語環境を日本語にする
   * この設定をすることでフォントが正しく表示されます。
 + 文字コードをUTF-8にする
++ init.elに移動
 
 #+begin_src emacs-lisp
   (leaf mule-cmds
