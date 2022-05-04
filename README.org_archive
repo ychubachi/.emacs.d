@@ -1228,3 +1228,25 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+RESULTS:
 : org-roam
+
+* COMMENT mule-cmds: 言語環境を日本語にする
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-05-04 Wed 20:59
+:ARCHIVE_FILE: ~/.emacs.d/README.org
+:ARCHIVE_OLPATH: 日本語関係
+:ARCHIVE_CATEGORY: README
+:END:
++ 言語環境を日本語にする
+  * この設定をすることでフォントが正しく表示されます。
++ 文字コードをUTF-8にする
++ init.elに移動
+
+#+begin_src emacs-lisp
+  (leaf mule-cmds
+    :config
+    (set-language-environment "Japanese")
+    (prefer-coding-system 'utf-8))
+#+end_src
+
+#+RESULTS:
+: mule-cmds

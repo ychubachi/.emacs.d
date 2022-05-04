@@ -486,22 +486,6 @@ Warning (leaf): Error in `no-littering' block.  Error msg: Could not find packag
 : ffap
 
 * 日本語関係
-** COMMENT mule-cmds: 言語環境を日本語にする
-+ 言語環境を日本語にする
-  * この設定をすることでフォントが正しく表示されます。
-+ 文字コードをUTF-8にする
-+ init.elに移動
-
-#+begin_src emacs-lisp
-  (leaf mule-cmds
-    :config
-    (set-language-environment "Japanese")
-    (prefer-coding-system 'utf-8))
-#+end_src
-
-#+RESULTS:
-: mule-cmds
-
 ** Linuxでmozcを使った日本語入力の設定（2021年版）
 :PROPERTIES:
 :BLOG:     plover
@@ -693,6 +677,53 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
 
 #+RESULTS: mozc-posframe
 : mozc-posframe
+
+** COMMENT Windows IME設定 [C-o]                                     :FIXME:
+- [[https://nosubject.io/windows10-emacs-27-w32-ime/][[Emacs] Windows10 で Emacs 27 を使う | ** nosubject.io **]]
+- [[https://qiita.com/tawara_/items/0a7b8c50a48ea86b2d91][あの IBM が作ったオープンソース日本語フォントを使い、プログラミングフォント『PlemolJP』を作ってみた - Qiita]]
+- tr-emacs-ime-module
+  - [[https://github.com/trueroad/tr-emacs-ime-module][trueroad/tr-emacs-ime-module: Emulator of GNU Emacs IME patch for Windows (tr-ime)]]
+- advancedに変更
+
+#+begin_src emacs-lisp :tangle no
+  (leaf tr-ime
+    :when (eq system-type 'windows-nt)
+    :straight t
+    :config
+    (tr-ime-standard-install)
+
+    ;; IM のデフォルトを IME に設定
+    (setq default-input-method "W32-IME")
+    ;; IME のモードライン表示設定
+    (setq-default w32-ime-mode-line-state-indicator "[--]")
+    (setq w32-ime-mode-line-state-indicator-list '("[--]" "[あ]" "[--]"))
+
+    ;; IME 初期化
+    (w32-ime-initialize)
+
+    ;; IME 制御（yes/no などの入力の時に IME を off にする）
+    (wrap-function-to-control-ime 'universal-argument t nil)
+    (wrap-function-to-control-ime 'read-string nil nil)
+    (wrap-function-to-control-ime 'read-char nil nil)
+    (wrap-function-to-control-ime 'read-from-minibuffer nil nil)
+    (wrap-function-to-control-ime 'y-or-n-p nil nil)
+    (wrap-function-to-control-ime 'yes-or-no-p nil nil)
+    (wrap-function-to-control-ime 'map-y-or-n-p nil nil)
+    (wrap-function-to-control-ime 'register-read-with-preview nil nil)
+
+    ;; ;; 通常使用するフォント
+    ;; (set-frame-font "PlemolJP-12" nil t)
+    ;; (setq-default line-spacing 0) ; 行間
+
+    ;; ;; IME未確定時のフォント設定
+    ;; (modify-all-frames-parameters '((ime-font . "PlemolJP-12")))
+
+    :bind
+    ("C-o" . toggle-input-method))
+#+end_src
+
+#+RESULTS:
+: tr-ime
 
 * ミニバッファ補完UI関連の設定
 ** vertico - 補完リストをカーソルで選択
@@ -2687,53 +2718,6 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 : gnus-alias
 
 * OS依存の設定
-** COMMENT Windows IME設定 [C-o]                                     :FIXME:
-- [[https://nosubject.io/windows10-emacs-27-w32-ime/][[Emacs] Windows10 で Emacs 27 を使う | ** nosubject.io **]]
-- [[https://qiita.com/tawara_/items/0a7b8c50a48ea86b2d91][あの IBM が作ったオープンソース日本語フォントを使い、プログラミングフォント『PlemolJP』を作ってみた - Qiita]]
-- tr-emacs-ime-module
-  - [[https://github.com/trueroad/tr-emacs-ime-module][trueroad/tr-emacs-ime-module: Emulator of GNU Emacs IME patch for Windows (tr-ime)]]
-- advancedに変更
-
-#+begin_src emacs-lisp :tangle no
-  (leaf tr-ime
-    :when (eq system-type 'windows-nt)
-    :straight t
-    :config
-    (tr-ime-standard-install)
-
-    ;; IM のデフォルトを IME に設定
-    (setq default-input-method "W32-IME")
-    ;; IME のモードライン表示設定
-    (setq-default w32-ime-mode-line-state-indicator "[--]")
-    (setq w32-ime-mode-line-state-indicator-list '("[--]" "[あ]" "[--]"))
-
-    ;; IME 初期化
-    (w32-ime-initialize)
-
-    ;; IME 制御（yes/no などの入力の時に IME を off にする）
-    (wrap-function-to-control-ime 'universal-argument t nil)
-    (wrap-function-to-control-ime 'read-string nil nil)
-    (wrap-function-to-control-ime 'read-char nil nil)
-    (wrap-function-to-control-ime 'read-from-minibuffer nil nil)
-    (wrap-function-to-control-ime 'y-or-n-p nil nil)
-    (wrap-function-to-control-ime 'yes-or-no-p nil nil)
-    (wrap-function-to-control-ime 'map-y-or-n-p nil nil)
-    (wrap-function-to-control-ime 'register-read-with-preview nil nil)
-
-    ;; ;; 通常使用するフォント
-    ;; (set-frame-font "PlemolJP-12" nil t)
-    ;; (setq-default line-spacing 0) ; 行間
-
-    ;; ;; IME未確定時のフォント設定
-    ;; (modify-all-frames-parameters '((ime-font . "PlemolJP-12")))
-
-    :bind
-    ("C-o" . toggle-input-method))
-#+end_src
-
-#+RESULTS:
-: tr-ime
-
 ** WSLでWindows側のブラウザを立ち上げる
 
 - WSL側からWindowsを制御するユーテリティ
