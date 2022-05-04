@@ -304,6 +304,53 @@ leafに追加するパッケージです。
   * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
 
 * Emacs本体の設定
+** no-littering - .emacs.d/をきれいに保つ
+
+- straightだとエラーが出るのでpackageを使用
+
+#+begin_src emacs-lisp
+  (leaf no-littering
+    :package t)
+#+end_src
+
+#+RESULTS:
+: no-littering
+
+- 警告の内容
+
+#+begin_example
+Warning (leaf): Error in `no-littering' block.  Error msg: Could not find package compat. Updating recipe repositories: (org-elpa melpa gnu-elpa-mirror el-get emacsmirror-mirror) with ‘straight-pull-recipe-repositories’ may fix this Disable showing Disable logging
+#+end_example
+
+** yes/noの選択をy/nに簡略化
+
+#+begin_src emacs-lisp
+  (leaf *emacs
+    (defalias 'yes-or-no-p 'y-or-n-p))
+#+end_src
+
+#+RESULTS:
+: *emacs
+
+** 保存時、不要な空白を削除
+
+#+begin_src emacs-lisp
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
+
+#+RESULTS:
+| delete-trailing-whitespace |
+
+** cycle-spacing [M-SPC]
+
+;; cycle through amounts of spacing
+#+begin_src emacs-lisp
+  (global-set-key (kbd "M-SPC") 'cycle-spacing)
+#+end_src
+
+#+RESULTS:
+: cycle-spacing
+
 ** COMMENT バッファを表示するウインドウを固定する
 
 - [[https://ayatakesi.github.io/lispref/27.1/html/Buffer-Display-Action-Functions.html][Buffer Display Action Functions (GNU Emacs Lisp Reference Manual)]]
@@ -330,35 +377,6 @@ leafに追加するパッケージです。
   (setq debug-on-error t)
 #+end_src
 
-** no-littering - .emacs.d/をきれいに保つ
-
-#+begin_src emacs-lisp
-  (leaf no-littering
-    :straight t
-    :require t)
-#+end_src
-
-#+RESULTS:
-: no-littering
-** yes/noの選択をy/nに簡略化
-
-#+begin_src emacs-lisp
-  (leaf *emacs
-    (defalias 'yes-or-no-p 'y-or-n-p))
-#+end_src
-
-#+RESULTS:
-: *emacs
-
-** 保存時、不要な空白を削除
-
-#+begin_src emacs-lisp
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-#+end_src
-
-#+RESULTS:
-| delete-trailing-whitespace |
-
 ** COMMENT toggle-truncate-linesをC-c tに[C-c t]
 
 #+begin_src emacs-lisp :tangle no
@@ -367,16 +385,6 @@ leafに追加するパッケージです。
 
 #+RESULTS:
 : *toggle-truncate-lines
-
-** cycle-spacing [M-SPC]
-
-;; cycle through amounts of spacing
-#+begin_src emacs-lisp
-  (global-set-key (kbd "M-SPC") 'cycle-spacing)
-#+end_src
-
-#+RESULTS:
-: cycle-spacing
 
 * ビルトインパッケージの設定
 ** isearch[C-o]                                                      :FIXME:
@@ -1780,6 +1788,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 #+begin_src emacs-lisp
   (leaf backup-each-save
+    :when (not (eq system-type 'windows-nt))
     :straight t
     :config
     ;; バックアップ先
@@ -1825,6 +1834,11 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 ** magit [C-x g]
 - EmacsのGit
+- Emacs 28 Windowsではstraight.elでインストールするとエラー
+  #+begin_example
+  Warning (leaf): Error in `magit' block.  Error msg: Could not find package compat. Updating recipe repositories: (org-elpa melpa gnu-elpa-mirror el-get emacsmirror-mirror) with ‘straight-pull-recipe-repositories’ may fix this Disable showing Disable logging
+  #+end_example
+
 #+begin_src emacs-lisp
   (leaf magit
     :doc "A Git porcelain inside Emacs."
@@ -1832,7 +1846,8 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
     :tag "vc" "tools" "git" "emacs>=25.1"
     :added "2020-11-30"
     :emacs>= 25.1
-    :straight t
+    ;; :straight t
+    :package t
     :after git-commit with-editor
     :bind (("C-x g" . magit-status))
     )
@@ -2535,9 +2550,12 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
   * verticoでタグが入力できない問題を回避する
 + [[https://notmuchmail.org/emacstips/#index5h2][Add a key binding to add/remove/toggle a tag]]
 
++ straight.elだとエラー
+
 #+begin_src emacs-lisp
   (leaf notmuch
-    :straight t
+    ;; :straight t
+    :package t
     :require t
     :hook
     (notmuch-message-mode-hook . visual-fill-column-mode)
@@ -2617,8 +2635,9 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 #+begin_src emacs-lisp
   (leaf consult-notmuch
-    :straight (consult-notmuch :type git :host github
-                               :repo "emacsmirror/consult-notmuch")
+    ;; :straight (consult-notmuch :type git :host github
+    ;;                            :repo "emacsmirror/consult-notmuch")
+    :package t
     :after consult notmuch)
 #+end_src
 
