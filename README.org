@@ -1218,12 +1218,22 @@ Emacsでもモードによっては同じように動作します（orgモード
     (add-to-list 'org-structure-template-alist
                  '("sh" . "src bash"))
     (add-to-list 'org-structure-template-alist
-                 '("rb" . "src ruby"))
+                 '("rb" . "src ruby :results output"))
+    (add-to-list 'org-structure-template-alist
+                 '("j" . "src java -n :results output"))
     )
 #+end_src
 
 #+RESULTS:
 : org-tempo
+
+#+begin_src emacs-lisp
+(add-to-list 'org-structure-template-alist
+                 '("py" . "src python :results output"))
+#+end_src
+
+#+RESULTS:
+: ((py . src python :results output) (j . src java -n :results output) (rb . src ruby) (sh . src bash) (el . src emacs-lisp) (a . export ascii) (c . center) (C . comment) (e . example) (E . export) (h . export html) (l . export latex) (q . quote) (s . src) (v . verse))
 
 ** latex関連
 *** orgでlatexの設定例

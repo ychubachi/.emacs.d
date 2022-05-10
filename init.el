@@ -51,6 +51,7 @@
 (straight-use-package 'org)
 
 ;; Load my settings
+(org-babel-load-file "~/.emacs.d/minimum.org")
 (org-babel-load-file "~/.emacs.d/README.org")
 
 ;; Local Variables:
