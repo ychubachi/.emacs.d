@@ -33,7 +33,7 @@
   :straight t
   :config
   (if (eq system-type 'windows-nt)
-      (setq mozc-helper-program-name "~/bin/mozc_emacs_helper.exe")
+      (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe")
     (setq mozc-helper-program-name "mozc_emacs_helper"))
   ;; (if (getenv "WSLENV")
   ;;     ;; (setq mozc-helper-program-name "mozc_emacs_helper_win.sh")
@@ -107,6 +107,6 @@
   ;; 通常使用するフォント
   (set-frame-font "PlemolJP-12" nil t)
   ;; 行間
-  (setq-default line-spacing 0) 
+  (setq-default line-spacing 0)
   ;; IME未確定時のフォント設定
   (modify-all-frames-parameters '((ime-font . "PlemolJP-12"))))

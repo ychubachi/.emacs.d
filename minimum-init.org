@@ -6,21 +6,18 @@
 - [ ] IME
 
 * 基本設定
-** C-hをBSに、C-^をhelpに[C-h][C-^]
+** C-hをBSにする[C-h]
 
 - [[https://www.emacswiki.org/emacs/BackspaceKey][[Home] Backspace Key]]
   - 記述が間違っている
 - [[http://malkalech.com/emacs_c-h_backspace][EmacsのC-hでBackspaceするのに紆余曲折したことのメモ | Jenemal Notes]]
-  感じ変換
 
 #+begin_src emacs-lisp
-  ;; map backspace [delete-backward-char] to C-h
   (define-key key-translation-map [?\C-h] [?\C-?])
 #+end_src
 
 #+RESULTS:
-: [8]
-
+: [127]
 
 - 次の方法だとpereditでうまくいかない
 
@@ -30,13 +27,13 @@
     :bind (("C-h" . delete-backward-char)))
 #+end_src
 
-** C-^をヘルプにする
+** C-^をヘルプにする[C-^]
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-^") help-map)
 #+end_src
 
-** UndoをC-zに[C-z]
+** UndoをC-zにする[C-z]
 - 指が覚えてしまっている
 
 #+begin_src emacs-lisp
@@ -112,7 +109,7 @@ leafに追加するパッケージです。
 + [[https://qiita.com/tadsan/items/c859c5c04724cbda75fc][指定したマイナーモードを表示しない(diminish篇) - Qiita]]
 
 * 日本語関係
-** Linuxでmozcを使った日本語入力の設定（2021年版）
+** Linuxでmozcを使った日本語入力の設定（2022年版）
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-23 22:10:47]
@@ -157,7 +154,7 @@ Mozcに関連する設定の全体です。個別の説明は[[*Mozcサーバと
 
 *** Mozcサーバと通信するためのヘルパーコマンドの設定
 Mozcとのやり取りをするためのヘルパーを設定します。
-WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoogle IMEが使えるはずです。
+WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoogle IMEが使えます（後述のWindows用設定が必要）。
 
 + [[https://w.atwiki.jp/ntemacs/pages/50.html][emacs-mozc を動かすための設定（mozc_emacs_helper コンパイル編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
 + [[https://w.atwiki.jp/ntemacs/pages/61.html][emacs-mozc を動かすための設定（WSL 設定編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
@@ -173,22 +170,22 @@ WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoog
 - Windows用のmozc_emacs_helper.exeを利用する
   - [[https://github.com/smzht/mozc_emacs_helper][smzht/mozc_emacs_helper: mozc_emacs_helper for Windows]]
     ここからmozc_emacs_helper.exeをダウンロードして
-    ~/Dropbox/WSL/以下においておく
+    ~/Dropbox/bin/以下においておく
 
   - ~/bin/にmozc_emacs_helper_win.shを作成する
 
     #+begin_src bash :tangle no
       #!/bin/sh
 
-      ~/Dropbox/WSL/mozc_emacs_helper.exe "$@" 2> /dev/null
+      ~/Dropbox/bin/mozc_emacs_helper.exe "$@" 2> /dev/null
     #+end_src
 #+end_comment
 
 #+NAME: mozc-helper
 #+begin_src emacs-lisp :tangle no
-  (if (eq system-type 'windows-nt)
-      (setq mozc-helper-program-name "~/bin/mozc_emacs_helper.exe")
-    (setq mozc-helper-program-name "mozc_emacs_helper"))
+  (cond ((eq system-type 'windows-nt)
+      (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
+      (t (setq mozc-helper-program-name "mozc_emacs_helper")))
   ;; (if (getenv "WSLENV")
   ;;     ;; (setq mozc-helper-program-name "mozc_emacs_helper_win.sh")
   ;;     (setq mozc-helper-program-name "mozc_emacs_helper")
@@ -196,7 +193,7 @@ WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoog
 #+end_src
 
 #+RESULTS: mozc-helper
-: ~/bin/mozc_emacs_helper.exe
+: ~/Dropbox/bin/mozc_emacs_helper.exe
 
 *** Mozcによる変換操作の設定[C-o][C-j]
 標準の入力方式をMozcに設定します。
@@ -309,7 +306,7 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
 
 - https://w.atwiki.jp/ntemacs/pages/48.html
   - 5) （「mozc_emacs_helper コンパイル編」利用の場合）init.el 等に以下の elisp の設定を追加する。
-    
+
 #+NAME: mozc-windows-advice
 #+begin_src emacs-lisp :tangle no
   (leaf *mozc-win
@@ -328,8 +325,7 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
     ;; 通常使用するフォント
     (set-frame-font "PlemolJP-12" nil t)
     ;; 行間
-    (setq-default line-spacing 0) 
+    (setq-default line-spacing 0)
     ;; IME未確定時のフォント設定
     (modify-all-frames-parameters '((ime-font . "PlemolJP-12"))))
 #+end_src
-
