@@ -1250,3 +1250,45 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+RESULTS:
 : mule-cmds
+
+* C-hをBSに、C-^をhelpに[C-h][C-^]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-05-11 水 19:37
+:ARCHIVE_FILE: ~/.emacs.d/README.org
+:ARCHIVE_OLPATH: 必須設定
+:ARCHIVE_CATEGORY: README
+:END:
+- 標準で
+- [[https://www.reddit.com/r/spacemacs/comments/l2fjzy/remapping_ch_to_backspace_and_remap_help_menu_to/][Remapping C-h to backspace, and remap "help" menu to anything else? : spacemacs]]
+
+- :init ではなく :config だと機能しない
+  - :config の中身は eval-after-load で実行される
+  - :bindがあるとこうなるようだ
+- help-map は :bind で設定できない
+  - ここでは :bind を利用しない
+  - :bind を利用しなければ :init と :config
+- C-@をヘルプにしていたが、ターミナルだとC-SPCがC-@とみなされるのでC-^に変更してみた。
+
+#+begin_src emacs-lisp
+  (leaf *backspace
+    :init (global-set-key (kbd "C-^") help-map)
+    :bind (("C-h" . delete-backward-char)))
+#+end_src
+
+#+RESULTS:
+: *backspace
+
+* COMMENT toggle-truncate-linesをC-c tに[C-c t]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-05-12 木 08:57
+:ARCHIVE_FILE: ~/.emacs.d/README.org
+:ARCHIVE_OLPATH: Emacs本体の設定
+:ARCHIVE_CATEGORY: README
+:END:
+
+#+begin_src emacs-lisp :tangle no
+  (leaf *toggle-truncate-lines :bind (("C-c t" . toggle-truncate-lines)))
+#+end_src
+
+#+RESULTS:
+: *toggle-truncate-lines

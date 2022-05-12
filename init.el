@@ -46,12 +46,12 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; Install org with straight.el
-;; Check org version with M-x org-version.
+;; Install Org with straight.el
+;; Check Org version with M-x org-version.
 (straight-use-package 'org)
 
 ;; Load my settings
-(org-babel-load-file "~/.emacs.d/minimum.org")
+(org-babel-load-file "~/.emacs.d/minimum-init.org")
 (org-babel-load-file "~/.emacs.d/README.org")
 
 ;; Local Variables:

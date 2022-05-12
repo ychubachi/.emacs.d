@@ -1,0 +1,59 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file c:/Users/yc/.emacs.d/minimum-init.org
+
+
+* COMMENT Windows IME設定 [C-o]                                       :FIXME:
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-05-12 木 08:35
+:ARCHIVE_FILE: ~/.emacs.d/minimum-init.org
+:ARCHIVE_OLPATH: 日本語関係
+:ARCHIVE_CATEGORY: minimum-init
+:END:
+- [[https://nosubject.io/windows10-emacs-27-w32-ime/][[Emacs] Windows10 で Emacs 27 を使う | ** nosubject.io **]]
+- [[https://qiita.com/tawara_/items/0a7b8c50a48ea86b2d91][あの IBM が作ったオープンソース日本語フォントを使い、プログラミングフォント『PlemolJP』を作ってみた - Qiita]]
+- tr-emacs-ime-module
+  - [[https://github.com/trueroad/tr-emacs-ime-module][trueroad/tr-emacs-ime-module: Emulator of GNU Emacs IME patch for Windows (tr-ime)]]
+- advancedに変更
+
+#+begin_src emacs-lisp :tangle no
+  (leaf tr-ime
+    :when (eq system-type 'windows-nt)
+    :straight t
+    :config
+    (tr-ime-standard-install)
+
+    ;; IM のデフォルトを IME に設定
+    (setq default-input-method "W32-IME")
+    ;; IME のモードライン表示設定
+    (setq-default w32-ime-mode-line-state-indicator "[--]")
+    (setq w32-ime-mode-line-state-indicator-list '("[--]" "[あ]" "[--]"))
+
+    ;; IME 初期化
+    (w32-ime-initialize)
+
+    ;; IME 制御（yes/no などの入力の時に IME を off にする）
+    (wrap-function-to-control-ime 'universal-argument t nil)
+    (wrap-function-to-control-ime 'read-string nil nil)
+    (wrap-function-to-control-ime 'read-char nil nil)
+    (wrap-function-to-control-ime 'read-from-minibuffer nil nil)
+    (wrap-function-to-control-ime 'y-or-n-p nil nil)
+    (wrap-function-to-control-ime 'yes-or-no-p nil nil)
+    (wrap-function-to-control-ime 'map-y-or-n-p nil nil)
+    (wrap-function-to-control-ime 'register-read-with-preview nil nil)
+
+    ;; ;; 通常使用するフォント
+    ;; (set-frame-font "PlemolJP-12" nil t)
+    ;; (setq-default line-spacing 0) ; 行間
+
+    ;; ;; IME未確定時のフォント設定
+    ;; (modify-all-frames-parameters '((ime-font . "PlemolJP-12")))
+
+    :bind
+    ("C-o" . toggle-input-method))
+#+end_src
+
+#+RESULTS:
+: tr-ime
+
