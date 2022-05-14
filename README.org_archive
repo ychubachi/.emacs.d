@@ -1292,3 +1292,23 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+RESULTS:
 : *toggle-truncate-lines
+
+* open-junk-file - さくっとファイルを作って試す
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-05-12 木 23:42
+:ARCHIVE_FILE: ~/.emacs.d/README.org
+:ARCHIVE_OLPATH: 外部パッケージ
+:ARCHIVE_CATEGORY: README
+:END:
+
++ [[https://www.emacswiki.org/emacs/open-junk-file.el][[Home] open-junk-file.el]]
+
+#+begin_src emacs-lisp
+  (leaf open-junk-file
+    :straight t
+    :custom
+    (open-junk-file-format . "~/Dropbox/Temp/junk/%Y/%m/%d-%H%M%S."))
+#+end_src
+
+#+RESULTS:
+: open-junk-file

@@ -1,5 +1,5 @@
 #+STARTUP: show2levels indent num align inlineimages logdone hidestars
-#+TAGS: FIXME(f) TODO(t) DRAFT(d) PBLISHED(p) SOMEDAY(s)
+#+TAGS: FIXME(f) TODO(t) DRAFT(d) PUBLISHED(p) SOMEDAY(s)
 
 README.org
 - [[https://github.com/ychubachi/.emacs.d#readme][ychubachi/.emacs.d: emacs setting files created on 2020/11/23]]
@@ -24,7 +24,7 @@ README.org
 - org-roam
   - sqlite3
 
-** EmacsのX関係の設定を外部化する                                 :PBLISHED:
+** EmacsのX関係の設定を外部化する
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-09 18:32:26]
@@ -207,6 +207,15 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 + 参考
   * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
   * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
+
+** 警告の非表示
+
+#+begin_src emacs-lisp
+  (custom-set-variables
+   '(warning-suppress-types (quote ((yasnippet backquote-change org-element-cache)))))
+#+end_src
+
+#+RESULTS:
 
 * Emacs本体の設定
 ** no-littering - .emacs.d/をきれいに保つ
@@ -450,7 +459,7 @@ Warning (leaf): Error in `no-littering' block.  Error msg: Could not find packag
 #+RESULTS:
 : marginalia
 
-** embark - カーソル位置にあるテキストに対するアクションを実行（org link対応） [M-.][C-.][C-^ B] :PBLISHED:
+** embark - カーソル位置にあるテキストに対するアクションを実行（org link対応） [M-.][C-.][C-^ B] :PUBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-20 19:03:55]
@@ -1475,7 +1484,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 *** 参考
 + [[http://emacs.rubikitch.com/swap-buffers/][swap-buffers.el : 【多分割対応】ウィンドウを入れ替える新しいコマンド]]
-** backup-each-save - Emacsで保存するたびに自動でバックアップ     :PBLISHED:
+** backup-each-save - Emacsで保存するたびに自動でバックアップ     :PUBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-20 21:43:40]
@@ -1512,12 +1521,19 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 ** undo-tree
    - [[https://elpa.gnu.org/packages/undo-tree.html][GNU ELPA - undo-tree]]
 
+   - オートセーブがうざいのでnilにした
+
    #+begin_src emacs-lisp
      (leaf undo-tree
        :straight t
+       :custom
+       ((undo-tree-auto-save-history . nil))
        :config
        (global-undo-tree-mode))
    #+end_src
+
+   #+RESULTS:
+   : undo-tree
 
 ** pandoc-mode
 
@@ -1707,8 +1723,6 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
     :setq
     (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
     :config
-    (custom-set-variables
-     '(warning-suppress-types (quote ((yasnippet backquote-change)))))
     (yas-global-mode 1))
 #+end_src
 
@@ -1743,8 +1757,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 *** 参考
 + [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E3%82%82%E3%81%86%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E8%A6%8B%E5%A4%B1%E3%82%8F%E3%81%AA%E3%81%84----beacon][Emacsモダン化計画 -かわEmacs編- - Qiita]]
 
-** DONE shell-pop - いつでもどこでもshellを出す                  :published:
-CLOSED: [2021-11-09 Tue 20:23]
+** shell-pop - いつでもどこでもshellを出す                       :PUBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-09 20:16:56]
@@ -1785,8 +1798,7 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 
 [fn:2] [[https://blog.inouetakuya.info/entry/20110627/1309175529][Emacs のシェルモード比較 - shell、ansi-term、multi-term - 彼女からは、おいちゃんと呼ばれています]]
 
-** DONE visual-fill-column - 長い行を任意の桁で折り返す          :published:
-CLOSED: [2021-11-10 Wed 11:12]
+** visual-fill-column - 長い行を任意の桁で折り返す               :PUBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-08 22:19:48]
@@ -1913,21 +1925,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 + [[https://github.com/joostkremers/visual-fill-column#centering-the-text][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
   * センタリングすることも
 
-** open-junk-file - さくっとファイルを作って試す
-
-+ [[https://www.emacswiki.org/emacs/open-junk-file.el][[Home] open-junk-file.el]]
-
-#+begin_src emacs-lisp
-  (leaf open-junk-file
-    :straight t
-    :custom
-    (open-junk-file-format . "~/Dropbox/Temp/junk/%Y/%m/%d-%H%M%S."))
-#+end_src
-
-#+RESULTS:
-: open-junk-file
-
-** dired-launch - diredをランチャにする（WSL対応）
+** dired-launch - diredをランチャにする（WSL対応）                :PUBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-12-12 10:03:35]
@@ -2138,7 +2136,12 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 * メール/Web
 ** smtpmail - メールの送信
 *** 説明
-+ 最初のメールを送信時、パスワードを入力すると、~/.authinfo に自動で追加
+- マニュアル
+  - [[https://www.gnu.org/software/emacs/manual/html_mono/smtpmail.html][https://www.gnu.org/software/emacs/manual/html_mono/smtpmail.html]]
+- メールを送信するには
+  - C-x m で「Message」モードに入る
+  - C-c c で送信
+- 最初のメールを送信時、パスワードを入力すると、~/.authinfo に自動で追加
 
 ;; sending mail -- replace USERNAME with your gmail username
 ;; also, make sure the gnutls command line utils are installed
@@ -2750,12 +2753,104 @@ emacs-lisp-mode-hook
 #+begin_src emacs-lisp
 (defhydra hydra-zoom (global-map "<f2>")
   "zoom"
-  ("g" text-scale-increase "in")
-  ("l" text-scale-decrease "out"))
+  ("i" text-scale-increase "in")
+  ("o" text-scale-decrease "out"))
 #+end_src
 
 #+RESULTS:
 : hydra-zoom/body
+** Wanderlustでgmailを読む
+*** 説明
+- imapでの受信する
+- Wanderlust <=> elmo <=> GMail
+
+- Mewより更新されている
+- 調査
+  - [[%url][[Home] Wander Lust]]
+    - 2010年で止まっている
+  - [[%url][wanderlust - MELPA]]
+  - [[%url][GitHub - wanderlust/wanderlust: Wanderlust Development Repository]]
+    - ここが最新ぽい
+
+  - ~/Mail/queueディレクトリを作ったら動いた
+  - 設定はここを参照
+    - [[https://github.com/wanderlust/wanderlust/blob/master/samples/ja/dot.wl][wanderlust/dot.wl at master · wanderlust/wanderlust]]
+  - 参考資料
+    - [[https://geolog.mydns.jp/www.geocities.co.jp/maple4estry/wanderlust.html][適当メモ - maple4estry - >> Fedora CORE (2) + emacs + Wanderlust で IMAPを読む]]
+
+*** 設定
+
+#+begin_src emacs-lisp
+    (leaf wanderlust :straight t
+      :config
+      ;; For non ascii-characters in folder-names
+      (setq elmo-imap4-use-modified-utf7 t)
+
+      ;; SMTP
+      (setq
+       wl-smtp-connection-type   'starttls         ; Use TLS
+       wl-smtp-posting-port      587               ; The SMTP port
+       wl-smtp-authenticate-type "login"           ; Authentication type
+       wl-smtp-posting-user      "yc@aiit.ac.jp"   ; Username
+       wl-smtp-posting-server    "smtp.gmail.com"  ; SMTP server
+       wl-local-domain           "aiit.ac.jp"       ; The SMTP server again
+       wl-message-id-domain      "aiit.ac.jp") ; And... Again?
+
+      (setq
+       ;; All system folders (draft, trash, spam, etc) are placed in the
+       ;; [Gmail]-folder, except inbox. "%" means it's an IMAP-folder
+       wl-default-folder "%inbox"
+       wl-draft-folder   "%[Gmail]/Drafts"
+       wl-trash-folder   "%[Gmail]/Trash"
+
+       ;; The below is not necessary when you send mail through Gmail's SMTP server,
+       ;; see https://support.google.com/mail/answer/78892?hl=en&rd=1
+       ;; wl-fcc            "%[Gmail]/Sent"
+
+       wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>"  ; Our From: header field
+       wl-fcc-force-as-read t           ; Mark sent mail (in the wl-fcc folder) as read
+       wl-default-spec "%")             ; For auto-completion
+
+      ;; 隠したいヘッダの設定
+      (setq wl-message-ignored-field-list
+            '("ARC-.*:" "X-.*:" ".*Received.*:"
+              "Authentication-Results:" "MIME-Version:"
+              "List-.*:"
+              ".*Path:" ".*Id:" "^References:"
+              "^Replied:" "^Errors-To:"
+              "^Lines:" "^Sender:" ".*Host:" "^Xref:"
+              "^Content-Type:" "^Precedence:"
+              "^Status:" "^X-VM-.*:"))
+
+      ;; 表示するヘッダの設定
+      ;; 'wl-message-ignored-field-list' より優先される
+      (setq wl-message-visible-field-list '("^Message-Id:"))
+
+      ;; オフライン(unplugged)操作を無効にする(現在はIMAPフォルダのみ)
+      (setq elmo-enable-disconnected-operation nil)
+      ;; オンライン操作を有効にする
+      (setq wl-plugged t)
+
+      ;; 大きいメッセージを送信時に分割しない
+      (setq mime-edit-split-message nil)    )
+#+end_src
+
+#+RESULTS:
+: wanderlust
+*** アドレス帳
+
+- アドレスマネージャを起動する
+  - =C-c C-a=
+- [[https://wanderlust.github.io/wl-docs/wl-ja.html#kibaindo-6][Wanderlust – Yet Another Message Interface On Emacsen –]]
+  - xを押すとドラフトが出るはずなのに、出ない・・・
+
+*** クイックサーチ
+
+- GMailを設定してみる
+
+*** Tasks
+- 受信するとき、メッセージ分割をしない
+
 
 * 自作パッケージ
 ** org-sync-gtasks

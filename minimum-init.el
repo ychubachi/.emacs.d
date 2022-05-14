@@ -1,4 +1,3 @@
-;; map backspace [delete-backward-char] to C-h
 (define-key key-translation-map [?\C-h] [?\C-?])
 
 (global-set-key (kbd "C-^") help-map)
@@ -32,9 +31,9 @@
   ;; :if (eq system-type 'gnu/linux)
   :straight t
   :config
-  (if (eq system-type 'windows-nt)
-      (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe")
-    (setq mozc-helper-program-name "mozc_emacs_helper"))
+  (cond ((eq system-type 'windows-nt)
+      (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
+      (t (setq mozc-helper-program-name "mozc_emacs_helper")))
   ;; (if (getenv "WSLENV")
   ;;     ;; (setq mozc-helper-program-name "mozc_emacs_helper_win.sh")
   ;;     (setq mozc-helper-program-name "mozc_emacs_helper")
@@ -46,26 +45,31 @@
     :bind* (("C-o" . enable-input-method)
             ("C-j" . disable-input-method))
     :config
-    (defvar-local mozc-im-mode nil)
-  
-    (add-hook 'mozc-im-activate-hook
-              (lambda nil
-                (setq mozc-im-mode t)))
-    (add-hook 'mozc-im-deactivate-hook
-              (lambda nil
-                (setq mozc-im-mode nil)))
-  
     (defun enable-input-method (&optional arg interactive)
       (interactive "P\np")
       (if (not current-input-method)
           (toggle-input-method arg interactive)))
+  
     (defun disable-input-method (&optional arg interactive)
       (interactive "P\np")
       (if current-input-method
           (toggle-input-method arg interactive)))
   
+    (defvar-local mozc-im-mode nil)
+  
+    (add-hook 'mozc-im-activate-hook
+              (lambda nil
+                (setq mozc-im-mode t)))
+  
+    (add-hook 'mozc-im-deactivate-hook
+              (lambda nil
+                (setq mozc-im-mode nil)))
+  
+    (defvar-local im-state nil)
+  
     (add-hook 'isearch-mode-hook
               (lambda () (setq im-state mozc-im-mode)))
+  
     (add-hook 'isearch-mode-end-hook
               (lambda ()
                 (unless (eq im-state mozc-im-mode)

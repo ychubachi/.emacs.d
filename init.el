@@ -52,7 +52,8 @@
 
 ;; Load my settings
 (org-babel-load-file "~/.emacs.d/minimum-init.org")
-(org-babel-load-file "~/.emacs.d/README.org")
+;; (org-babel-load-file "~/.emacs.d/README.org")
+
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil

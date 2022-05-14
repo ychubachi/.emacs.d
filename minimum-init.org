@@ -1,49 +1,9 @@
 #+STARTUP: show2levels
 
-* Tasklist
-- [X] C-h BS
-- [ ] C-z
-- [ ] IME
+これだけは絶対に必要！と思える設定。
 
-* 基本設定
-** C-hをBSにする[C-h]
-
-- [[https://www.emacswiki.org/emacs/BackspaceKey][[Home] Backspace Key]]
-  - 記述が間違っている
-- [[http://malkalech.com/emacs_c-h_backspace][EmacsのC-hでBackspaceするのに紆余曲折したことのメモ | Jenemal Notes]]
-
-#+begin_src emacs-lisp
-  (define-key key-translation-map [?\C-h] [?\C-?])
-#+end_src
-
-#+RESULTS:
-: [127]
-
-- 次の方法だとpereditでうまくいかない
-
-#+begin_example
-  (leaf *backspace
-    :init (global-set-key (kbd "C-^") help-map)
-    :bind (("C-h" . delete-backward-char)))
-#+end_src
-
-** C-^をヘルプにする[C-^]
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-^") help-map)
-#+end_src
-
-** UndoをC-zにする[C-z]
-- 指が覚えてしまっている
-
-#+begin_src emacs-lisp
-  (leaf *undo :bind (("C-z" . undo)))
-#+end_src
-
-#+RESULTS:
-: *undo
-
-* leaf - 「パッケージ設定」のためのパッケージ                      :PBLISHED:
+* パッケージ
+** leaf - 「パッケージ設定」のためのパッケージ                     :PBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-10 00:01:40]
@@ -55,7 +15,7 @@
 :POSTID:   293
 :END:
 
-** leafの導入（straight版）
+*** leafの導入（straight版）
 leafはEmacsの設定をより美しく記述できるようにする、パッケージの設定を記述するツールです。パッケージのインストールための様々なパッケージと組み合わせ利用します。設計思想がしっかりしていて、利用者を惑わせない、特に、Emacs lispを解する人にとっては、lispの世界観を崩さないで記述できるのが魅力でしょう。
 
 はしめに、leaf本体をstraight.elでインストールします。
@@ -102,14 +62,52 @@ leafに追加するパッケージです。
 #+RESULTS:
 : *leaf-optional-packages
 
-** 参考
+*** 参考
 + [[https://qiita.com/conao3/items/dc88bdadb0523ef95878#%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][[正式リリース]leaf.elで雑然としたEmacs設定ファイル「init.el」をクリーンにする - Qiita]]
 + [[https://qiita.com/conao3/items/347d7e472afd0c58fbd7#%E4%BE%BF%E5%88%A9%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB][Emacs入門から始めるleaf.el入門 - Qiita]]
 + leaf-hydraは[[https://github.com/abo-abo/hydra][hydra]]でキーの設定を行う際に使用します。
 + [[https://qiita.com/tadsan/items/c859c5c04724cbda75fc][指定したマイナーモードを表示しない(diminish篇) - Qiita]]
 
+* キーボードバインディング
+** C-hをBSにする[C-h]
+
+- [[https://www.emacswiki.org/emacs/BackspaceKey][[Home] Backspace Key]]
+  - 記述が間違っている
+- [[http://malkalech.com/emacs_c-h_backspace][EmacsのC-hでBackspaceするのに紆余曲折したことのメモ | Jenemal Notes]]
+
+#+begin_src emacs-lisp
+  (define-key key-translation-map [?\C-h] [?\C-?])
+#+end_src
+
+#+RESULTS:
+: [127]
+
+- 次の方法だとpereditでうまくいかない
+
+#+begin_example
+  (leaf *backspace
+    :init (global-set-key (kbd "C-^") help-map)
+    :bind (("C-h" . delete-backward-char)))
+#+end_src
+
+** C-^をヘルプにする[C-^]
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-^") help-map)
+#+end_src
+
+** UndoをC-zにする[C-z]
+- 指が覚えてしまっている
+
+#+begin_src emacs-lisp
+  (leaf *undo :bind (("C-z" . undo)))
+#+end_src
+
+#+RESULTS:
+: *undo
+
 * 日本語関係
-** Linuxでmozcを使った日本語入力の設定（2022年版）
+** Linuxでmozcを使った日本語入力の設定（2022年版）                 :PBLISHED:
 :PROPERTIES:
 :BLOG:     plover
 :DATE:     [2021-11-23 22:10:47]
@@ -159,28 +157,6 @@ WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoog
 + [[https://w.atwiki.jp/ntemacs/pages/50.html][emacs-mozc を動かすための設定（mozc_emacs_helper コンパイル編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
 + [[https://w.atwiki.jp/ntemacs/pages/61.html][emacs-mozc を動かすための設定（WSL 設定編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
 
-#+begin_comment
-- [[https://qiita.com/ignorant/items/1c4f729f9147fb878f10][WSL の Emacs で日本語入力 - Qiita]]
-  - Windows側のGoogle IMEを利用する
-  - aptでインストールされたと思われるmozc_emacs_helper（バイナリ）を使ってみる。
-    - 既に設定されていた
-      [[https://github.com/smzht/mozc_emacs_helper][smzht/mozc_emacs_helper: mozc_emacs_helper for Windows]]
-      これはUnix用
-
-- Windows用のmozc_emacs_helper.exeを利用する
-  - [[https://github.com/smzht/mozc_emacs_helper][smzht/mozc_emacs_helper: mozc_emacs_helper for Windows]]
-    ここからmozc_emacs_helper.exeをダウンロードして
-    ~/Dropbox/bin/以下においておく
-
-  - ~/bin/にmozc_emacs_helper_win.shを作成する
-
-    #+begin_src bash :tangle no
-      #!/bin/sh
-
-      ~/Dropbox/bin/mozc_emacs_helper.exe "$@" 2> /dev/null
-    #+end_src
-#+end_comment
-
 #+NAME: mozc-helper
 #+begin_src emacs-lisp :tangle no
   (cond ((eq system-type 'windows-nt)
@@ -205,14 +181,6 @@ C-oで変換モード、C-jで直接入力モードに切り替えます。
 
 IMEがoffのとき、isearchに入り、IMEをonにして検索したあと、戻ったときにIMEがoffになって欲しいので、そのための設定をします（migemoを使うのなら、あまり必要ない設定かも）。
 
-#+begin_comment
-IME ON  -> isearch -> OFF -> done -> ON
-IME ON  -> isearch -> ON  -> done -> ON
-IME OFF -> isearch -> ON  -> done -> ON*
-IME OFF -> isearch -> OFF -> done -> OFF
-*のところで状態が狂う。
-#+end_comment
-
 #+NAME: mozc-im
 #+begin_src emacs-lisp :tangle no :noweb yes
   (leaf mozc-im
@@ -222,26 +190,31 @@ IME OFF -> isearch -> OFF -> done -> OFF
     :bind* (("C-o" . enable-input-method)
             ("C-j" . disable-input-method))
     :config
-    (defvar-local mozc-im-mode nil)
-
-    (add-hook 'mozc-im-activate-hook
-              (lambda nil
-                (setq mozc-im-mode t)))
-    (add-hook 'mozc-im-deactivate-hook
-              (lambda nil
-                (setq mozc-im-mode nil)))
-
     (defun enable-input-method (&optional arg interactive)
       (interactive "P\np")
       (if (not current-input-method)
           (toggle-input-method arg interactive)))
+
     (defun disable-input-method (&optional arg interactive)
       (interactive "P\np")
       (if current-input-method
           (toggle-input-method arg interactive)))
 
+    (defvar-local mozc-im-mode nil)
+
+    (add-hook 'mozc-im-activate-hook
+              (lambda nil
+                (setq mozc-im-mode t)))
+
+    (add-hook 'mozc-im-deactivate-hook
+              (lambda nil
+                (setq mozc-im-mode nil)))
+
+    (defvar-local im-state nil)
+
     (add-hook 'isearch-mode-hook
               (lambda () (setq im-state mozc-im-mode)))
+
     (add-hook 'isearch-mode-end-hook
               (lambda ()
                 (unless (eq im-state mozc-im-mode)
@@ -318,7 +291,44 @@ posframeはEmacs26から追加された機能です。Emacs26は3年ほど前に
 		       (mozc-session-sendkey '(Hankaku/Zenkaku))))))
 #+end_src
 
+*** COMMENT メモ
+
+#+begin_comment
+- [[https://qiita.com/ignorant/items/1c4f729f9147fb878f10][WSL の Emacs で日本語入力 - Qiita]]
+  - Windows側のGoogle IMEを利用する
+  - aptでインストールされたと思われるmozc_emacs_helper（バイナリ）を使ってみる。
+    - 既に設定されていた
+      [[https://github.com/smzht/mozc_emacs_helper][smzht/mozc_emacs_helper: mozc_emacs_helper for Windows]]
+      これはUnix用
+
+- Windows用のmozc_emacs_helper.exeを利用する
+  - [[https://github.com/smzht/mozc_emacs_helper][smzht/mozc_emacs_helper: mozc_emacs_helper for Windows]]
+    ここからmozc_emacs_helper.exeをダウンロードして
+    ~/Dropbox/bin/以下においておく
+
+  - ~/bin/にmozc_emacs_helper_win.shを作成する
+
+    #+begin_src bash :tangle no
+      #!/bin/sh
+
+      ~/Dropbox/bin/mozc_emacs_helper.exe "$@" 2> /dev/null
+    #+end_src
+#+end_comment
+
+#+begin_comment
+IME ON  -> isearch -> OFF -> done -> ON
+IME ON  -> isearch -> ON  -> done -> ON
+IME OFF -> isearch -> ON  -> done -> ON*
+IME OFF -> isearch -> OFF -> done -> OFF
+*のところで状態が狂う。
+#+end_comment
+
 ** フォントの設定（Windows）
+
+|mmmmmmmmmm|
+|llllllllll|
+|あいうえお|
+|1,2,3,4,5|
 
 #+begin_src emacs-lisp
   (when (eq system-type 'windows-nt)
