@@ -2135,7 +2135,7 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 
 * メール/Web
 ** メール送信機能
-*** 説明
+*** TODO 説明
 Emacs標準のメール送信機能を利用するための設定です[fn:sending-mail]。
 
 日本語メールを送信するには、[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Language-Environments.html][Language Environments]]が正しく設定されている必要があります。
@@ -2171,23 +2171,37 @@ Emacs標準のメール送信機能を利用するための設定です[fn:sendi
 #+RESULTS:
 : message-user-agent
 
-送信にはsmtpmailを用い、そのための設定をします。
+Messageモードからの送信にsmtpmailを用うように設定します[fn:smtp]。
 - [[https://www.maketecheasier.com/use-email-within-emacs/#setting-up-emacs-to-send-email][How to Use Email within Emacs - Make Tech Easier]]
 
 #+begin_src emacs-lisp
-  (setq message-send-mail-function 'smtpmail-send-it
-        smtpmail-stream-type 'starttls
+  (setq message-send-mail-function 'smtpmail-send-it)
+#+end_src
+
+#+RESULTS:
+: smtpmail-send-it
+
+smtpmailの設定をします。
+
+#+begin_src emacs-lisp
+  (setq smtpmail-stream-type 'starttls
         smtpmail-smtp-server "smtp.gmail.com"
         smtpmail-smtp-service 587)
 #+end_src
 
+#+RESULTS:
+: 587
+
+SMTPのパスワードは~/.authinfoで設定します。
+
+なお、Googleで二段階認証を設定している場合、アプリパスワードを生成して設定する必要があります[fn:google-app-password]。
+
 [fn:sending-mail] [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Sending-Mail.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Sending-Mail.html]]
-
 [fn:signature] mail-signatureがtのとき（ディフォルトでt）、mail-signature-file（標準では~/.singature）が挿入されます
-
 [fn:authinfo] .authinfoがない場合、初回送信時に自動で作成されます。
-
 [fn:mime] [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Mail-Misc.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Mail-Misc.html]]
+[fn:smtp] [[https://www.gnu.org/software/emacs/manual/html_mono/smtpmail.html#How-Mail-Works][https://www.gnu.org/software/emacs/manual/html_mono/smtpmail.html#How-Mail-Works]]
+[fn:google-app-password] [[https://kyopc.at.webry.info/202112/article_1.html][Googleの二段階認証開始後にGoogleメールにPOP3/SMTPアクセスする（mewなど）: kyoはパソコンMaster or Slave?]]
 
 ** shr/eww - Simple HTML Reader
 + 説明
