@@ -2134,33 +2134,60 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
   : doom-modeline
 
 * メール/Web
-** smtpmail - メールの送信
+** メール送信機能
 *** 説明
-- マニュアル
-  - [[https://www.gnu.org/software/emacs/manual/html_mono/smtpmail.html][https://www.gnu.org/software/emacs/manual/html_mono/smtpmail.html]]
-- メールを送信するには
-  - C-x m で「Message」モードに入る
-  - C-c c で送信
-- 最初のメールを送信時、パスワードを入力すると、~/.authinfo に自動で追加
+Emacs標準のメール送信機能を利用するための設定です[fn:sending-mail]。
 
-;; sending mail -- replace USERNAME with your gmail username
-;; also, make sure the gnutls command line utils are installed
-;; package 'gnutls-bin' in Debian/Ubuntu
+日本語メールを送信するには、[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Language-Environments.html][Language Environments]]が正しく設定されている必要があります。
+
+メールを編集して送信するコマンドは次の通りです。
+
+| C-x m   | メール編集（Messageモード） |
+| C-c C-c | メール送信                  |
+| C-c C-a | ファイルの添付[fn:mime]     |
+
+関連する設定ファイルです。
+
+| ~/.signature | メール署名[fn:signature]            |
+| ~/.authinfo  | smtpサーバ・パスワード[fn:authinfo] |
+| ~/.netrc     | エイリアス                          |
+
+ユーザ名とアカウントを設定します。
 
 #+begin_src emacs-lisp
-  (leaf smtpmail
-    :require t
-    :setq ((message-send-mail-function quote smtpmail-send-it)
-           (starttls-use-gnutls . t)
-           (smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil)))
-           (smtpmail-auth-credentials '(("smtp.gmail.com" 587 "yc@aiit.ac.jp" nil)))
-           (smtpmail-default-smtp-server . "smtp.gmail.com")
-           (smtpmail-smtp-server . "smtp.gmail.com")
-           (smtpmail-smtp-service . 587)))
+  (setq user-full-name "Yoshihide Chubachi")
+  (setq user-mail-address "yc@aiit.ac.jp")
 #+end_src
 
 #+RESULTS:
-: smtpmail
+: yc@aiit.ac.jp
+
+メールユーザエージェント（mua）をMessageモードにします。
+
+#+begin_src emacs-lisp
+  (setq mail-user-agent 'message-user-agent)
+#+end_src
+
+#+RESULTS:
+: message-user-agent
+
+送信にはsmtpmailを用い、そのための設定をします。
+- [[https://www.maketecheasier.com/use-email-within-emacs/#setting-up-emacs-to-send-email][How to Use Email within Emacs - Make Tech Easier]]
+
+#+begin_src emacs-lisp
+  (setq message-send-mail-function 'smtpmail-send-it
+        smtpmail-stream-type 'starttls
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587)
+#+end_src
+
+[fn:sending-mail] [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Sending-Mail.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Sending-Mail.html]]
+
+[fn:signature] mail-signatureがtのとき（ディフォルトでt）、mail-signature-file（標準では~/.singature）が挿入されます
+
+[fn:authinfo] .authinfoがない場合、初回送信時に自動で作成されます。
+
+[fn:mime] [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Mail-Misc.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Mail-Misc.html]]
 
 ** shr/eww - Simple HTML Reader
 + 説明
