@@ -50,10 +50,14 @@
 ;; Check Org version with M-x org-version.
 (straight-use-package 'org)
 
+;; Install leaf.el
+(straight-use-package 'leaf)
+(straight-use-package 'leaf-keywords)
+(leaf-keywords-init)
+
 ;; Load my settings
 (org-babel-load-file "~/.emacs.d/minimum-init.org")
-;; (org-babel-load-file "~/.emacs.d/README.org")
-
+(org-babel-load-file "~/.emacs.d/README.org")
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil

@@ -1,16 +1,3 @@
-(define-key key-translation-map [?\C-h] [?\C-?])
-
-(global-set-key (kbd "C-^") help-map)
-
-(leaf *undo :bind (("C-z" . undo)))
-
-(straight-use-package 'leaf)
-
-(leaf *leaf-keywords
-  :config
-  (straight-use-package 'leaf-keywords)
-  (leaf-keywords-init))
-
 (leaf *leaf-optional-packages
     :config
     (leaf leaf-convert
@@ -26,6 +13,12 @@
 ;;      :custom ((el-get-git-shallow-clone  . t)))
     (leaf diminish
       :straight t))
+
+(define-key key-translation-map [?\C-h] [?\C-?])
+
+(global-set-key (kbd "C-^") help-map)
+
+(leaf *undo :bind (("C-z" . undo)))
 
 (leaf mozc
   ;; :if (eq system-type 'gnu/linux)
