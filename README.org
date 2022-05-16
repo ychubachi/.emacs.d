@@ -2308,6 +2308,8 @@ SMTPのパスワードは~/.authinfoで設定します。
     (notmuch-message-mode-hook . visual-fill-column-mode)
     (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1)))
     :custom
+    ;; (if (eq system-type 'windows-nt)
+    ;;     (setq notmuch-command "notmuch.bat"))
     ((notmuch-draft-folder . "/drafts")   ; 編集中のドラフトはローカルのフォルダに
      (notmuch-fcc-dirs . nil)             ; 送信済みメールはローカルに保存せず
                                           ; Gmailに任せる
@@ -2802,8 +2804,27 @@ emacs-lisp-mode-hook
 : hydra-zoom/body
 ** Wanderlustでgmailを読む
 *** 説明
+- 気合の入った設定
+  - [[https://uwabami.github.io/cc-env/Emacs.html#org2c2abb9b][Emacs の設定 | Youhei SASAKI’s official site]]
+
+Wanderlustが依存するライブラリ
+
+| SEMI | MIMEサポート                                 |
+| APEL | 基礎的な多種の関数群（charactor-encoding等） |
+| FLIM | MIME用符号化（base64エンコーディング等）     |
+
+Wanderlustの内部ライブラリ
+
+| ELMO | IMAP等様々な形式を読むライブラリ |
+
+(defcustom
+  "Fetch threshold."
+  :type '(choice (integer :tag "Threshold (bytes)")
+		 (const :tag "No limitation" nil))
+  :group 'elmo)
+
 - imapでの受信する
-- Wanderlust <=> elmo <=> GMail
+- Wanderlust <=> ELMO <=> GMail
 
 - Mewより更新されている
 - 調査
@@ -2819,65 +2840,105 @@ emacs-lisp-mode-hook
   - 参考資料
     - [[https://geolog.mydns.jp/www.geocities.co.jp/maple4estry/wanderlust.html][適当メモ - maple4estry - >> Fedora CORE (2) + emacs + Wanderlust で IMAPを読む]]
 
+- [[https://wanderlust.github.io/wl-docs/wl-ja.html#IMAP-Folder][3.1 IMAP フォルダ]]
+  -
+
+- Cannot open: elmo-network-initialize-session
+  - .elmoを削除してやり直したら消えた
+
 *** 設定
 
 #+begin_src emacs-lisp
-    (leaf wanderlust :straight t
-      :config
-      ;; For non ascii-characters in folder-names
-      (setq elmo-imap4-use-modified-utf7 t)
+  (leaf wanderlust :straight t
+    :config
+    ;; IMAP
+    (setq elmo-imap4-default-user "yc@aiit.ac.jp"
+          elmo-imap4-default-authenticate-type 'clear
+          elmo-imap4-default-server "imap.gmail.com"
+          elmo-imap4-default-port 993
+          elmo-imap4-default-stream-type 'ssl
+          )
+    ;; For non ascii-characters in folder-names
+    (setq elmo-imap4-use-modified-utf7 t)
 
-      ;; SMTP
-      (setq
-       wl-smtp-connection-type   'starttls         ; Use TLS
-       wl-smtp-posting-port      587               ; The SMTP port
-       wl-smtp-authenticate-type "login"           ; Authentication type
-       wl-smtp-posting-user      "yc@aiit.ac.jp"   ; Username
-       wl-smtp-posting-server    "smtp.gmail.com"  ; SMTP server
-       wl-local-domain           "aiit.ac.jp"       ; The SMTP server again
-       wl-message-id-domain      "aiit.ac.jp") ; And... Again?
+    ;; (setq elmo-plugged t)
+    ;; (setq elmo-plugged-condition 'independent)
 
-      (setq
-       ;; All system folders (draft, trash, spam, etc) are placed in the
-       ;; [Gmail]-folder, except inbox. "%" means it's an IMAP-folder
-       wl-default-folder "%inbox"
-       wl-draft-folder   "%[Gmail]/Drafts"
-       wl-trash-folder   "%[Gmail]/Trash"
+    ;; メッセージ受信の上限を無限にする
+    (setq elmo-message-fetch-threshold nil)
 
-       ;; The below is not necessary when you send mail through Gmail's SMTP server,
-       ;; see https://support.google.com/mail/answer/78892?hl=en&rd=1
-       ;; wl-fcc            "%[Gmail]/Sent"
+    ;; SMTP
+    (setq
+     wl-smtp-connection-type   'starttls         ; Use TLS
+     wl-smtp-authenticate-type "login"           ; Authentication type
+     wl-smtp-posting-user      "yc@aiit.ac.jp"   ; Username
+     wl-smtp-posting-server    "smtp.gmail.com"  ; SMTP server
+     wl-smtp-posting-port      587               ; The SMTP port
 
-       wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>"  ; Our From: header field
-       wl-fcc-force-as-read t           ; Mark sent mail (in the wl-fcc folder) as read
-       wl-default-spec "%")             ; For auto-completion
+     wl-local-domain           "aiit.ac.jp"       ; The SMTP server again
+     wl-message-id-domain      "aiit.ac.jp") ; And... Again?
 
-      ;; 隠したいヘッダの設定
-      (setq wl-message-ignored-field-list
-            '("ARC-.*:" "X-.*:" ".*Received.*:"
-              "Authentication-Results:" "MIME-Version:"
-              "List-.*:"
-              ".*Path:" ".*Id:" "^References:"
-              "^Replied:" "^Errors-To:"
-              "^Lines:" "^Sender:" ".*Host:" "^Xref:"
-              "^Content-Type:" "^Precedence:"
-              "^Status:" "^X-VM-.*:"))
+    (setq
+     wl-default-folder "%INBOX"
+     wl-draft-folder   "%[Gmail]/下書き"
+     wl-trash-folder   "%[Gmail]/ゴミ箱"
 
-      ;; 表示するヘッダの設定
-      ;; 'wl-message-ignored-field-list' より優先される
-      (setq wl-message-visible-field-list '("^Message-Id:"))
+     wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>"  ; Our From: header field
+     wl-fcc-force-as-read t           ; Mark sent mail (in the wl-fcc folder) as read
+     wl-default-spec "%")             ; For auto-completion
 
-      ;; オフライン(unplugged)操作を無効にする(現在はIMAPフォルダのみ)
-      (setq elmo-enable-disconnected-operation nil)
-      ;; オンライン操作を有効にする
-      (setq wl-plugged t)
+    ;; 隠したいヘッダの設定
+    (setq wl-message-ignored-field-list
+          '("ARC-.*:" "X-.*:" ".*Received.*:"
+            "Authentication-Results:" "MIME-Version:"
+            "List-.*:" "DKIM-.*:"
+            ".*Path:" ".*Id:" "^References:"
+            "^Replied:" "^Errors-To:"
+            "^Lines:" "^Sender:" ".*Host:" "^Xref:"
+            "^Content-Type:" "^Precedence:"
+            "^Status:" "^X-VM-.*:"))
 
-      ;; 大きいメッセージを送信時に分割しない
-      (setq mime-edit-split-message nil)    )
+    ;; 表示するヘッダの設定
+    ;; 'wl-message-ignored-field-list' より優先される
+    (setq wl-message-visible-field-list '("^Message-Id:"))
+
+    ;; 大きいメッセージを送信時に分割しない
+    (setq mime-edit-split-message nil)
+
+    (require 'wl-qs)
+    (setq wl-quicksearch-folder "%[Gmail]/すべてのメール")
+
+    (add-to-list 'wl-dispose-folder-alist
+                 '("^%INBOX" . remove))
+    (add-to-list 'wl-dispose-folder-alist
+                 '(".*Junk$" . remove))
+
+    (require 'elmo nil 'noerror)
+    (defun my:wl-summary-jump-to-referer-message ()
+      (interactive)
+      (when (wl-summary-message-number)
+        (if (eq (elmo-folder-type-internal wl-summary-buffer-elmo-folder) 'flag)
+            (progn
+              (let* ((referer (elmo-flag-folder-referrer
+                               wl-summary-buffer-elmo-folder
+                               (wl-summary-message-number)))
+                     (folder (if (> (length referer) 1)
+                                 (completing-read
+                                  (format "Jump to (%s): " (car (car referer)))
+                                  referer
+                                  nil t nil nil (car (car referer)))
+                               (car (car referer)))))
+                (wl-summary-goto-folder-subr folder 'no-sync nil nil t)
+                (wl-summary-jump-to-msg (cdr (assoc folder referer)))))
+          (when (eq (elmo-folder-type wl-summary-last-visited-folder) 'internal)
+            (wl-summary-goto-last-visited-folder)))))
+    (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)
+    )
 #+end_src
 
 #+RESULTS:
 : wanderlust
+
 *** アドレス帳
 
 - アドレスマネージャを起動する
