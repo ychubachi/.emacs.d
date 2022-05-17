@@ -2308,8 +2308,6 @@ SMTPのパスワードは~/.authinfoで設定します。
     (notmuch-message-mode-hook . visual-fill-column-mode)
     (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1)))
     :custom
-    ;; (if (eq system-type 'windows-nt)
-    ;;     (setq notmuch-command "notmuch.bat"))
     ((notmuch-draft-folder . "/drafts")   ; 編集中のドラフトはローカルのフォルダに
      (notmuch-fcc-dirs . nil)             ; 送信済みメールはローカルに保存せず
                                           ; Gmailに任せる
@@ -2362,6 +2360,24 @@ SMTPのパスワードは~/.authinfoで設定します。
 
 #+RESULTS:
 : notmuch
+
+*** WindowsからWSL経由で呼び出す場合
+
+Windowsの場合、notmuch.batという名前でバッチを用意する。
+
+#+begin_example :tangle no
+@echo off
+wsl XAPIAN_CJK_NGRAM=1 notmuch %*
+#+end_example
+
+その際、プロセスのコーディングをcp932にする設定が必要。
+
+#+begin_src emacs-lisp :tangle no
+(set-language-environment "Japanese")
+(prefer-coding-system 'utf-8)
+(if (eq system-type 'windows-nt)
+    (setq default-process-coding-system (cons 'utf-8 'cp932)))
+#+end_src
 
 *** ol-notmuch
 
