@@ -900,7 +900,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : ((py . src python :results output) (j . src java -n :results output) (rb . src ruby) (sh . src bash) (el . src emacs-lisp) (a . export ascii) (c . center) (C . comment) (e . example) (E . export) (h . export html) (l . export latex) (q . quote) (s . src) (v . verse))
 
-** latex関連
+** org-latex関連
 *** orgでlatexの設定例
     - 表題・筆者・日付の書き方
 
@@ -2370,7 +2370,8 @@ Windowsの場合、notmuch.batという名前でバッチを用意する。
 wsl XAPIAN_CJK_NGRAM=1 notmuch %*
 #+end_example
 
-その際、プロセスのコーディングをcp932にする設定が必要。
+その際、引数に日本語を引き渡せるようにするために、
+プロセスのコーディングをcp932にする設定が必要。
 
 #+begin_src emacs-lisp :tangle no
 (set-language-environment "Japanese")
