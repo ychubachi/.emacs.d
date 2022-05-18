@@ -25,7 +25,7 @@
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
 (cond ((eq system-type 'windows-nt)
-       (setq default-process-coding-system (cons 'utf-8 'cp932))))
+       (setq default-process-coding-system (cons 'utf-8 'cp932-unix))))
 
 ;; Initialize packages.
 (customize-set-variable
@@ -60,7 +60,6 @@
 ;; Load my settings
 (org-babel-load-file "~/.emacs.d/minimum-init.org")
 (org-babel-load-file "~/.emacs.d/README.org")
-
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
