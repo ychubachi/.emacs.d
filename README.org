@@ -124,6 +124,11 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+end_example
 ** 参考になるサイト
 - [[http://xahlee.info/emacs/emacs/elisp.html][Practical Emacs Lisp]]
+** no-littering - .emacs.d/をきれいに保つ
+
+- すべてのパッケージの前に実行するために、init.elに設定
+  - [[https://github.com/emacscollective/no-littering][emacscollective/no-littering: Help keeping ~/.emacs.d clean]]
+
 * 必須設定
 ** Copyright
 - Copyright など。
@@ -153,14 +158,18 @@ Xウインドウで設定したフォントを確認してみましょう。本�
   ;;  My README.el.
 
   ;;; Code:
+  (my-tick-init-time "loading README.el")
 #+end_src
-** カスタマイズファイルを分離
+
+** カスタマイズファイルの指定
 
 #+begin_src emacs-lisp
   (leaf cus-edit
     :doc "tools for customizing Emacs and Lisp packages"
     :tag "builtin" "faces" "help"
-    :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
+    :config
+    (custom-set-variables '(custom-file
+                            (no-littering-expand-etc-file-name "custom.el"))))
 #+end_src
 
 #+RESULTS:
@@ -171,34 +180,20 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 - グローバルモードの設定がカスタマイズ変数でもできる場合、カスタマイズ変数を使用
 
 #+begin_src emacs-lisp
-    (leaf cus-start
-      :doc "define customization properties of builtins"
-      :tag "builtin" "internal"
-      :custom
-      (inhibit-startup-screen . t)           ; スタートアップスクリーンを非表示
-      (ring-bell-function . 'ignore)         ; ベルを鳴らさない
-      (fill-column . 80)                     ; 80桁で改行（モードによる）
-      (global-display-line-numbers-mode . t) ; 行番号表示
-      (display-line-numbers-width . 4)       ; 表示する行番号の桁数
-      (global-auto-revert-mode . t)          ; 更新されたら自動的に再読込
-      (auto-revert-verbose . nil)            ; 再読込の際、メッセージを非表示
-      (show-paren-mode . t)                  ; 括弧の対応関係を表示する
-      (show-paren-style . 'mixed)            ; 対応関係を表示するスタイル
-      ;; VCの設定
-      (vc-follow-symlinks . t)               ; シンボリックリンクの場合、本体を辿る
-      (auto-revert-check-vc-info . t)        ; VCで更新があった場合、自動で更新
-      (save-place-mode . t)                  ; 最後に編集した場所を記憶
-      (version-control . t)                  ; バックアップファイルの設定
-      (backup-directory-alist
-       . '(("." . ".backup~")))              ; バックアップファイルの場所
-      (delete-old-versions . t)
-      (global-display-fill-column-indicator-mode
-       . t)                                  ; fill-columnを表示する
-      (indent-tabs-mode . nil)               ; インデントの際タブを使わない
-      (byte-compile-warnings
-       . '(not cl-functions obsolete))       ; (require 'cl)を検査しない
-      (epg-pinentry-mode . 'loopback)        ; GnuPGのパスフレーズをミニバッファで
-      (plstore-cache-passphrase-for-symmetric-encryption . t))
+  (leaf cus-start
+    :doc "define customization properties of builtins"
+    :tag "builtin" "internal"
+    :custom
+    (inhibit-startup-screen . t)           ; スタートアップスクリーンを非表示
+    (ring-bell-function . 'ignore)         ; ベルを鳴らさない
+    (fill-column . 80)                     ; 80桁で改行（モードによる）
+    ;; VCの設定
+    (vc-follow-symlinks . t)               ; シンボリックリンクの場合、本体を辿る
+    (indent-tabs-mode . nil)               ; インデントの際タブを使わない
+    (byte-compile-warnings
+     . '(not cl-functions obsolete))       ; (require 'cl)を検査しない
+    (epg-pinentry-mode . 'loopback)        ; GnuPGのパスフレーズをミニバッファで
+    (plstore-cache-passphrase-for-symmetric-encryption . t))
 #+end_src
 
 #+RESULTS:
@@ -218,24 +213,6 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+RESULTS:
 
 * Emacs本体の設定
-** no-littering - .emacs.d/をきれいに保つ
-
-- straightだとエラーが出るのでpackageを使用
-
-#+begin_src emacs-lisp
-  (leaf no-littering
-    :package t)
-#+end_src
-
-#+RESULTS:
-: no-littering
-
-- 警告の内容
-
-#+begin_example
-Warning (leaf): Error in `no-littering' block.  Error msg: Could not find package compat. Updating recipe repositories: (org-elpa melpa gnu-elpa-mirror el-get emacsmirror-mirror) with ‘straight-pull-recipe-repositories’ may fix this Disable showing Disable logging
-#+end_example
-
 ** yes/noの選択をy/nに簡略化
 
 #+begin_src emacs-lisp
@@ -292,7 +269,85 @@ Warning (leaf): Error in `no-littering' block.  Error msg: Could not find packag
 #+end_src
 
 * ビルトインパッケージの設定
-** isearch[C-o]                                                      :FIXME:
+** files (auto-save/backup)
+
+#+begin_src emacs-lisp
+  (leaf files
+    :custom
+    (backup-directory-alist . '(("." . ".backup~")))
+    (delete-old-versions . t)
+    (version-control . t)
+    (auto-save-file-name-transforms
+     . `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+#+end_src
+
+#+RESULTS:
+: files
+
+** display-fill-column-indicator
+
+#+begin_src emacs-lisp
+  (leaf display-fill-column-indicator
+    :hook
+    (emacs-startup-hook . global-display-fill-column-indicator-mode))
+#+end_src
+
+#+RESULTS:
+: display-fill-column-indicator
+
+** display-line-numbers
+
+#+begin_src emacs-lisp
+  (leaf display-line-numbers
+    :custom
+    (display-line-numbers-width . 5)       ; 表示する行番号の桁数
+    :hook
+    (emacs-startup-hook . global-display-line-numbers-mode))
+#+end_src
+
+#+RESULTS:
+: display-line-numbers
+
+** save-places
+
+#+begin_src emacs-lisp
+  (leaf save-place
+    :custom
+    (save-place . t)
+    :hook
+    (emacs-startup-hook . save-place-mode))
+#+end_src
+
+** auto-revert
+更新されたら自動的に再読込
+
+#+begin_src emacs-lisp
+  (leaf auto-revert
+    :custom
+    (auto-revert-interval . 1)           ; 再読み込みの間隔
+    (auto-revert-verbose . nil)          ; 再読込の際、メッセージを非表示
+    (auto-revert-check-vc-info . t)      ; VCで更新があった場合、自動で更新
+    :hook
+    (emacs-startup-hook . global-auto-revert-mode))
+#+end_src
+
+#+RESULTS:
+: auto-revert
+
+** paren
+
+#+begin_src emacs-lisp
+  (leaf paren
+    :custom
+    (show-paren-style . 'mixed)
+    :hook
+    (emacs-startup-hook . show-paren-mode))
+#+end_src
+
+#+RESULTS:
+: paren
+
+** isearch [C-o]                                                     :FIXME:
 
 - isearch で漢字入力ができるようにする
 
@@ -302,7 +357,7 @@ Warning (leaf): Error in `no-littering' block.  Error msg: Could not find packag
             ("C-o" . isearch-toggle-input-method))))
 #+end_src
 
-** wdired[C-o]                                                       :FIXME:
+** wdired [C-o]                                                      :FIXME:
 
 - [[https://ohzeki.hatenablog.com/entry/20160115/1452838970][Emacsのdired表示でファイル名編集 - ohzeki’s diary]]
 
@@ -322,19 +377,26 @@ Warning (leaf): Error in `no-littering' block.  Error msg: Could not find packag
 : wdired
 
 ** recentf
-- recentf-modeはカスタマイズ変数にできる
 
 #+begin_src emacs-lisp
-  (leaf recentf
-    :custom
-    (recentf-max-saved-items . 2000)
-    (recentf-auto-cleanup quote never)
-    (recentf-exclude quote
-                     ("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:"))
-    :config
-    (setq recentf-auto-save-timer
-          (run-with-idle-timer 30 t (lambda () (let ((save-silently t)) (recentf-save-list)))))
-    (recentf-mode 1))
+    (leaf recentf
+      :custom
+      (recentf-max-menu-items  . 25)
+      (recentf-max-saved-items . 2000)
+      (recentf-auto-cleanup    . 'never)
+      (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:"))
+      :hook
+      (emacs-startup-hook . recentf-mode)
+      :config
+      (run-at-time nil (* 5 60)
+               (lambda ()
+                 (let ((save-silently t)) ; FIXME
+                   (recentf-save-list))))
+      (leaf no-littering
+        :after no-littering
+        :config
+        (add-to-list 'recentf-exclude no-littering-var-directory)
+        (add-to-list 'recentf-exclude no-littering-etc-directory)))
 #+end_src
 
 #+RESULTS:
@@ -389,6 +451,16 @@ Warning (leaf): Error in `no-littering' block.  Error msg: Could not find packag
 
 #+RESULTS:
 : ffap
+
+** frame [<f11>]
+
+#+begin_src emacs-lisp
+  (leaf frame
+    :bind ("<f11>" . toggle-frame-maximized))
+#+end_src
+
+#+RESULTS:
+: frame
 
 * ミニバッファ補完UI関連の設定
 ** vertico - 補完リストをカーソルで選択
@@ -684,14 +756,14 @@ Emacsでもモードによっては同じように動作します（orgモード
     ;; By default `consult-project-function' uses `project-root' from project.el.
     ;; Optionally configure a different project root function.
     ;; There are multiple reasonable alternatives to chose from.
-  ;;;; 1. project.el (the default)
+    ;; 1. project.el (the default)
     ;; (setq consult-project-function #'consult--default-project--function)
-  ;;;; 2. projectile.el (projectile-project-root)
+    ;; 2. projectile.el (projectile-project-root)
     (autoload 'projectile-project-root "projectile")
     (setq consult-project-function (lambda (_) (projectile-project-root)))
-  ;;;; 3. vc.el (vc-root-dir)
+    ;; 3. vc.el (vc-root-dir)
     ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-  ;;;; 4. locate-dominating-file
+    ;; 4. locate-dominating-file
     ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
     )
 #+end_src
@@ -885,20 +957,18 @@ Emacsでもモードによっては同じように動作します（orgモード
     (add-to-list 'org-structure-template-alist
                  '("rb" . "src ruby :results output"))
     (add-to-list 'org-structure-template-alist
-                 '("j" . "src java -n :results output"))
+                 '("j"  . "src java -n :results output"))
+    (add-to-list 'org-structure-template-alist
+                 '("py" . "src python :results output"))
+    (add-to-list 'org-structure-template-alist
+                 '("n" . "note"))
+    (add-to-list 'org-structure-template-alist
+                 '("w" . "warning"))
     )
 #+end_src
 
 #+RESULTS:
 : org-tempo
-
-#+begin_src emacs-lisp
-(add-to-list 'org-structure-template-alist
-                 '("py" . "src python :results output"))
-#+end_src
-
-#+RESULTS:
-: ((py . src python :results output) (j . src java -n :results output) (rb . src ruby) (sh . src bash) (el . src emacs-lisp) (a . export ascii) (c . center) (C . comment) (e . example) (E . export) (h . export html) (l . export latex) (q . quote) (s . src) (v . verse))
 
 ** org-latex関連                                                     :Qiita:
 :PROPERTIES:
@@ -1022,51 +1092,30 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 - [[https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:org:latex:start][Org-LaTeX [QumaWiki]]]
 - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
 
-
-** babel - Grophviz (dot)
-
-- dotコードの評価を行うようにする
-#+begin_src emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((dot . t))) ; this line activates dot
-#+end_src
+** babel - Java/Ruby/Python/Grophviz (dot)
 
 - babelで評価するときに確認を出さない
   - [[https://emacs.stackexchange.com/questions/23946/how-can-i-stop-the-confirmation-to-evaluate-source-code-when-exporting-to-html][org mode - How can I stop the confirmation to evaluate source code when exporting to html? - Emacs Stack Exchange]]
-
-#+begin_src emacs-lisp
-  (setq org-confirm-babel-evaluate nil)
-#+end_src
 
 - インラインイメージの自動再描画
   - [[https://emacs.stackexchange.com/questions/3302/live-refresh-of-inline-images-with-org-display-inline-images][org mode - live refresh of inline images with org-display-inline-images - Emacs Stack Exchange]]
 
 #+begin_src emacs-lisp
-(eval-after-load 'org
-  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images))
+  (leaf *org-babel
+    :config
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((java . t) (ruby . t) (python . t) (C . t) (dot . t)))
+    (setq org-confirm-babel-evaluate nil)
+    (eval-after-load 'org
+      (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images))
+    (nconc org-babel-default-header-args:java
+           '((:dir . nil)
+             (:results . "value"))))
 #+end_src
 
 #+RESULTS:
-
-** babel - Java/Ruby/Python
-
-#+begin_src emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((java . t) (ruby . t) (python . t) (C . t)))
-#+end_src
-
-#+RESULTS:
-
-#+begin_src emacs-lisp
-  (nconc org-babel-default-header-args:java
-         '((:dir . nil)
-           (:results . "value")))
-#+end_src
-
-#+RESULTS:
-: ((:results . output) (:dir . .) (:dir) (:results . value) (:dir) (:results . value))
+: *babel
 
 ** スピードコマンド
 
@@ -1183,27 +1232,27 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :straight t
     :after org
     :require t ox-publish
-  :defun zenn/f-parent org-publish
-  :defvar org-publish-project-alist
-  :preface
-  (defvar zenn/org-dir "~/git/zenn-content")
+    :defun zenn/f-parent org-publish
+    :defvar org-publish-project-alist
+    :preface
+    (defvar zenn/org-dir "~/git/zenn-content")
 
-  (defun zenn/org-publish (arg)
-    "Publish zenn blog files."
-    (interactive "P")
-    (let ((force (or (equal '(4) arg) (equal '(64) arg)))
-          (async (or (equal '(16) arg) (equal '(64) arg))))
-      (org-publish "zenn" arg force async)))
+    (defun zenn/org-publish (arg)
+      "Publish zenn blog files."
+      (interactive "P")
+      (let ((force (or (equal '(4) arg) (equal '(64) arg)))
+            (async (or (equal '(16) arg) (equal '(64) arg))))
+        (org-publish "zenn" arg force async)))
 
-  :config
-  (setf
-   (alist-get "zenn" org-publish-project-alist nil nil #'string=)
-   (list
-    :base-directory (expand-file-name "" zenn/org-dir)
-    :base-extension "org"
-    :publishing-directory (expand-file-name "../" zenn/org-dir)
-    :recursive t
-    :publishing-function 'org-zenn-publish-to-markdown)))
+    :config
+    (setf
+     (alist-get "zenn" org-publish-project-alist nil nil #'string=)
+     (list
+      :base-directory (expand-file-name "" zenn/org-dir)
+      :base-extension "org"
+      :publishing-directory (expand-file-name "../" zenn/org-dir)
+      :recursive t
+      :publishing-function 'org-zenn-publish-to-markdown)))
 #+end_src
 
 #+RESULTS:
@@ -1470,8 +1519,8 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
     ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
     ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
     ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
-    :custom
-    (global-git-gutter-mode . t))
+    :hook
+    (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
 
 #+RESULTS:
@@ -1537,6 +1586,19 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 - サンプルは次の場所にあるので必要なものは ~/.emacs.d/snippets にコピー
   - ~/.emacs.d/elpa/yasnippet-snippets-20210910.1959/snippets/
 
+#+begin_src emacs-lisp
+  (leaf yasnippet-snippets
+    :straight t
+    :custom
+    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
+    :hook
+    (emacs-startup-hook . yas-global-mode))
+#+end_src
+
+#+RESULTS:
+: yasnippet-snippets
+
+#+begin_comment
 - :setq を使う場合の注意
   - :init だと :init -> :setq の順番でNG
   - :config なら :setq -> :init
@@ -1594,19 +1656,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
     (setq yasnippet-snippets-dir "~/.emacs.d/snippets")
     (yas-global-mode 1)))
     #+end_src
-
-#+begin_src emacs-lisp
-  (leaf yasnippet-snippets
-    :straight t
-    :require t
-    :setq
-    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
-    :config
-    (yas-global-mode 1))
-#+end_src
-
-#+RESULTS:
-: yasnippet-snippets
+#+end_comment
 
 ** yaml-mode
 
@@ -1626,8 +1676,8 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 #+begin_src emacs-lisp
   (leaf beacon
     :straight t
-    :custom
-    (beacon-mode . t))
+    :hook
+    (emacs-startup-hook . beacon-mode))
 #+end_src
 
 #+RESULTS:
@@ -1657,12 +1707,12 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 #+begin_src emacs-lisp
   (leaf shell-pop
     :straight t
-    :require t
+    :bind
+    ("C-c s" . shell-pop)
     :custom
-    ((shell-pop-universal-key . "C-c s")
-     (shell-pop-shell-type . (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
-     (shell-pop-window-position . "bottom")
-     (setq shell-pop-full-span . t)))
+    (shell-pop-shell-type . (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
+    (shell-pop-window-position . "bottom")
+    (setq shell-pop-full-span . t))
 #+end_src
 
 #+RESULTS:
@@ -2341,19 +2391,21 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 [[help:browse-url-browser-function’s]]
 
 #+begin_src emacs-lisp
-  (when (and (eq system-type 'gnu/linux)
-             (getenv "WSLENV"))
-    (setq browse-url-browser-function 'my/browser)
-    (setq browse-url-generic-program "web-browser"))
+  (leaf *cmd/browser
+    :config
+    (defun cmd/wsl-browser (url &rest ignore)
+      "Browse URL using wslview."
+      (interactive "sURL: ")
+      (shell-command (concat "wslview " "'" url "'")))
 
-  (defun my/browser (url &rest ignore)
-    "Browse URL using wslview."
-    (interactive "sURL: ")
-    (shell-command (concat "wslview " "'" url "'")))
+    (when (and (eq system-type 'gnu/linux)
+               (getenv "WSLENV"))
+      (setq browse-url-browser-function 'cmd/wsl-browser)
+      (setq browse-url-generic-program "web-browser")))
 #+end_src
 
 #+RESULTS:
-: my/browser
+: *cmd/browser
 
 * プログラミング
 
@@ -2515,7 +2567,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 #+RESULTS:
 : perspective
 
-** Bookmark+ - ブックマークの拡張（多機能すぎ）
+** COMMENT Bookmark+ - ブックマークの拡張（多機能すぎ）
 :PROPERTIES:
 :CREATED: [2022-03-05 Sat 20:25]
 :ANNOTADED: [[file:~/Dropbox/Org/Memo.org::*orgの走査][orgの走査]]
@@ -2554,7 +2606,7 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 - (defcustom bmkp-bookmark-map-prefix-keys (list (kbd "C-x x"))
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (leaf bookmark+
     :straight t
     :require t)
@@ -2640,12 +2692,13 @@ emacs-lisp-mode-hook
 ** ERTを起動する設定 [C-c t]
 
 #+begin_src emacs-lisp
-  (defun cmd/run-ert ()
-    (interactive)
-    (eval-buffer)
-    (call-interactively 'ert))
-
-  (leaf ert :bind (("C-c t" . cmd/run-ert)))
+  (leaf ert
+    :bind (("C-c t" . cmd/run-ert))
+    :config
+    (defun cmd/run-ert ()
+      (interactive)
+      (eval-buffer)
+      (call-interactively 'ert)))
 #+end_src
 
 #+RESULTS:
@@ -2848,7 +2901,6 @@ Wanderlustの内部ライブラリ
 
 *** Tasks
 - 受信するとき、メッセージ分割をしない
-
 
 * 自作パッケージ
 ** org-sync-gtasks

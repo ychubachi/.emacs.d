@@ -22,8 +22,17 @@
 
 ;;; Code:
 
-(require 'profiler)
-(profiler-start 'cpu)
+(defvar my-tick-previous-time (current-time))
+(defun my-tick-init-time (msg)
+  "Tick boot sequence."
+  (let ((ctime (current-time)))
+    (message "--- %5.2f[ms] %s"
+             (* 1000 (float-time
+                      (time-subtract ctime my-tick-previous-time)))
+             msg)
+    (setq my-tick-previous-time ctime)))
+
+(my-tick-init-time "start")
 
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
@@ -51,22 +60,28 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; Install Org with straight.el
-;; Check Org version with M-x org-version.
-(straight-use-package 'org)
-
 ;; Install leaf.el
 (straight-use-package 'leaf)
 (straight-use-package 'leaf-keywords)
 (leaf-keywords-init)
 
+(leaf no-littering
+  :package t
+  :require t)
+
+;; Install Org with straight.el
+;; Check Org version with M-x org-version.
+(leaf org
+  :straight t)
+
 ;; Load my settings
+(my-tick-init-time "loading minimum-init.org")
 (org-babel-load-file "~/.emacs.d/minimum-init.org")
-;; (org-babel-load-file "~/.emacs.d/README.org")
 
+(my-tick-init-time "loading README.org")
+(org-babel-load-file "~/.emacs.d/README.org")
 
-(profiler-report)
-(profiler-stop)
+(my-tick-init-time "end")
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
