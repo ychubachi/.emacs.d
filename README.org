@@ -201,21 +201,17 @@ Xウインドウで設定したフォントを確認してみましょう。本�
   * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
   * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
 
-** TODO 警告の非表示
+** 警告の非表示
 
 #+begin_src emacs-lisp :tangle no
-  (custom-set-variables
-   '(custom-file (no-littering-expand-etc-file-name "custom.el"))
-   '(warning-suppress-types
-     '((org-element-cache)
-     yasnippet backquote-change org-element-cache)))
+  (leaf warnings
+    :custom
+    (warning-suppress-types . '(((yasnippet backquote-change))
+                                (org-element-cache))))
 #+end_src
 
 #+RESULTS:
-
-  (custom-set-variables
-   '(warning-suppress-types
-     '(yasnippet backquote-change org-element-cache)))
+: warnings
 
 * Emacs本体の設定
 ** yes/noの選択をy/nに簡略化
