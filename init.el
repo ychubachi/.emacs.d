@@ -62,7 +62,8 @@
 
 ;; Load my settings
 (org-babel-load-file "~/.emacs.d/minimum-init.org")
-(org-babel-load-file "~/.emacs.d/README.org")
+;; (org-babel-load-file "~/.emacs.d/README.org")
+
 
 (profiler-report)
 (profiler-stop)

@@ -1,0 +1,11 @@
+;;; public entries -*- mode: plstore -*-
+(("qiita" :secret-access-token t))
+;;; secret entries
+"-----BEGIN PGP MESSAGE-----
+
+jA0ECQMCMK63gwk6sQD/0noBMnfNpT80Q7xXV9Nfvfdl9zW5f5VW0vlTc87juj27
+nUQ1a+WLekldk0NUbkRnx6dgv0B3UFiooc50ALl7yhLwxSC8BT2q6CULFGTnYpKl
+CKqVnyywHkFOGd6PY/gFv4XhBfKwaNDJiR0agjm1TzZEh9YTYHIAiraJpA==
+=6K+a
+-----END PGP MESSAGE-----
+"
