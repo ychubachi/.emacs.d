@@ -902,19 +902,23 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 ** org-latex関連
 *** orgでlatexの設定例
-    - 表題・筆者・日付の書き方
+表題・筆者・日付の書き方
 
-    #+begin_comment
-    #+TITLE: とても素晴らしい研究の発表
-    #+AUTHOR: 中鉢 欣秀, CHUBACHI Yoshihide
-    #+DATE: 2021-08-06
-    #+end_comment
+#+begin_example
+:PROPERTIES:
+:EXPORT_FILE_NAME: ~/tmp/test.tex
+:EXPORT_TITLE: 文章の表題
+:EXPORT_AUTHOR: 筆者の名前
+:EXPORT_DATE: 令和4年5月20日
+:EXPORT_LATEX_CLASS: jlreq
+:END:
+#+end_example
 
-    - 目次を出力しない
+- 目次を出力しない
 
-    #+begin_comment
-    #+OPTIONS: toc:nil # hoge
-    #+end_comment
+#+begin_example
+:EXPORT_OPTIONS: toc:nil
+#+end_example
 
     - 参考
       - [[https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:org:latex:start][Org-LaTeX [QumaWiki]]]
@@ -931,218 +935,109 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+OPTIONS:   H:4 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
 #+OPTIONS: date:nil
       #+end_comment
+*** 設定
+Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版です。
 
-*** latex本体
+LaTeXエンジンにはlualatexを使います。
+Orgがエクスポートする際に標準で利用するLaTeXパッケージとの相性がよく、日本語を扱うために追加する設定も少なくて済みます。upLaTeXを利用するときのようにdvipdfmxやpxjahyper関連の設定は要りません。漢字コードもはなからUTF-8です。
+
+PDFの生成のためにlatexmkを利用しています。
+その設定ファイル、.latexrcを[[https://gist.github.com/ychubachi/b4d08afa295e213f9508e883ec563fb0][Gist]]で公開しています。[[https://texwiki.texjp.org/?Latexmk#ke005cd5][Latexmk - TeX Wiki]]を参考にしました。ホームディレクトリに設置しておいてください。Windowsの場合、環境変数HOMEを設定しておくとよいです。
+
+クラスファイルはjlreq（横書き、縦書き）とbxjsarticle、beamerに対応しています。
+bxjsarticleはjlreqを使うならば不要な気もしますが、一応。
+
+
+
+- pretty print
+  - Windowsの場合scoopでpygmentをインストールしておく
 - [[https://texwiki.texjp.org/?Emacs%2FOrg%20mode#h20d131a][Emacs/Org mode - TeX Wiki]]
-  - org-latex-pdf-process は記載の通りだと%S等をorg側で置換しようとしてエラー
 - latexmkの設定は~/.latexmkrcに記述
   - [[https://texwiki.texjp.org/?Latexmk#g2a2cf08][Latexmk - TeX Wiki]]
   - latexmkの相性のせいか、org-export-in-backgroundをtにするとエラー
 - LaTeXの文字列部分は別ファイルにするのがよいかもしれない
   - [[http://xahlee.info/emacs/emacs/elisp_read_file_content.html][Elisp: Read File Content as String or List of Lines]]
 
-#+begin_src emacs-lisp
-  (leaf ox-latex
-    :require t
-    :setq ((org-latex-default-class . "bxjsarticle")
-           (org-latex-pdf-process . '("latexmk -gg -pdfdvi -pvc- %f")))
-    :config
-    (add-to-list
-     'org-latex-classes
-     '("bxjsarticle"
-       "% begin org-latex-class bxjsarticle
-    \\documentclass[autodetect-engine,dvi=dvipdfmx,11pt,a4paper,ja=standard]{bxjsarticle}
-    [NO-DEFAULT-PACKAGES]
-    \\usepackage{amsmath}
-    \\usepackage{newtxtext,newtxmath}
-    \\usepackage{graphicx}
-    \\usepackage{hyperref}
-    \\ifdefined\\kanjiskip
-      \\usepackage{pxjahyper}
-      \\hypersetup{colorlinks=true}
-    \\else
-      \\ifdefined\\XeTeXversion
-          \\hypersetup{colorlinks=true}
-      \\else
-        \\ifdefined\\directlua
-          \\hypersetup{pdfencoding=auto,colorlinks=true}
-        \\else
-          \\hypersetup{unicode,colorlinks=true}
-        \\fi
-      \\fi
-    \\fi
-    % end org-latex-class bxjsarticle"
-       ("\\section{%s}" . "\\section*{%s}")
-       ("\\subsection{%s}" . "\\subsection*{%s}")
-       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-    (add-to-list
-     'org-latex-classes
-     '("jlreq"
-       "% begin org-latex-class jlreq
-  \\documentclass[11pt,paper=a4]{jlreq}
-  [NO-DEFAULT-PACKAGES]
-  \\usepackage{amsmath}
-  \\usepackage{newtxtext,newtxmath}
-  \\ifdefined\\kanjiskip
-    \\usepackage[dvipdfmx]{graphicx}
-    \\usepackage[dvipdfmx]{hyperref}
-    \\usepackage{pxjahyper}
-    \\hypersetup{colorlinks=true}
-  \\else
-    \\usepackage{graphicx}
-    \\usepackage{hyperref}
-    \\hypersetup{pdfencoding=auto,colorlinks=true}
-  \\fi
-  % end org-latex-class jlreq"
-       ("\\section{%s}" . "\\section*{%s}")
-       ("\\subsection{%s}" . "\\subsection*{%s}")
-       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-    (add-to-list
-     'org-latex-classes
-     '("jlreq-tate"
-       "% begin org-latex-class jlreq-tate
-  \\documentclass[tate,11pt,paper=a4]{jlreq}
-  [NO-DEFAULT-PACKAGES]
-  \\usepackage{amsmath}
-  \\usepackage{newtxtext,newtxmath}
-  \\ifdefined\\kanjiskip
-    \\usepackage[dvipdfmx]{graphicx}
-    \\usepackage[dvipdfmx]{hyperref}
-    \\usepackage{pxjahyper}
-    \\hypersetup{colorlinks=true}
-  \\else
-    \\usepackage{graphicx}
-    \\usepackage{hyperref}
-    \\hypersetup{pdfencoding=auto,colorlinks=true}
-  \\fi
-  % end org-latex-class jlreq-tate"
-       ("\\section{%s}" . "\\section*{%s}")
-       ("\\subsection{%s}" . "\\subsection*{%s}")
-       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-       ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+begin_src emacs-lisp :noweb yes
+    (leaf ox-latex
+      :require t
+      :custom
+      (org-latex-compiler      . "lualatex")
+      (org-latex-pdf-process   . '("latexmk -f -gg -pvc- -%latex %f"))
+      (org-latex-default-class . "jlreq")
+      (org-latex-hyperref-template
+       . "\\hypersetup{\n pdfauthor={%a},\n pdftitle={%t},\n pdfkeywords={%k},pdfsubject={%d},\n pdfcreator={%c},\n pdflang={Japanese},\n colorlinks={true},linkcolor={blue}\n}\n")
+      (org-latex-listings . 'minted)
+      (org-latex-minted-options
+       . '(("frame" "lines")
+           ("framesep=2mm")
+           ("linenos=true")
+           ("baselinestretch=1.2")
+           ("fontsize=\\footnotesize")
+           ("breaklines")))
+      :config
+      (add-to-list
+       'org-latex-classes
+       '("jlreq"
+         "\\documentclass{jlreq}"
+         ("\\section{%s}"       . "\\section*{%s}")
+         ("\\subsection{%s}"    . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+         ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+         ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+      (add-to-list
+       'org-latex-classes
+       '("jlreq-tate"
+         "\\documentclass[tate]{jlreq}"
+         ("\\section{%s}"       . "\\section*{%s}")
+         ("\\subsection{%s}"    . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+         ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+         ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+      (add-to-list
+       'org-latex-classes
+       '("bxjsarticle"
+         "\\documentclass{bxjsarticle}\n\\usepackage{luatexja}"
+         ("\\section{%s}"       . "\\section*{%s}")
+         ("\\subsection{%s}"    . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+         ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+         ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+      (add-to-list
+       'org-latex-classes
+       '("beamer"
+         "\\documentclass[presentation]{beamer}\n\\usepackage{luatexja}\n\\renewcommand\\kanjifamilydefault{\\gtdefault}"
+         ("\\section{%s}"       . "\\section*{%s}")
+         ("\\subsection{%s}"    . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+      (add-to-list 'org-latex-packages-alist
+                   "\\usepackage{minted}" t)
+
+      (leaf ox-beamer
+        :require t
+        :custom
+        (org-beamer-outline-frame-title . "目次")
+        (org-beamer-frame-default-options . "t")))
 #+end_src
 
 #+RESULTS:
 : ox-latex
 
-*** ソースコードの pretty print
-- Windowsの場合
-  - scoopでpygmentをインストールしておく
-  - python インストールして pip install pygments
-  - PATHの登録
-    - C:\Users\yc\scoop\apps\python\current\Scripts
+jlreqを使う場合、次の通りヘッドラインにプロパティを付けて、
 
-  #+begin_src emacs-lisp
-    (setq org-export-latex-listings t)
-
-    (setq org-latex-listings 'minted)
-    (setq org-latex-minted-options
-          '(("frame" "lines")
-            ("framesep=2mm")
-            ("linenos=true")
-            ("baselinestretch=1.2")
-            ("fontsize=\\footnotesize")
-            ("breaklines")
-            ))
-
-    (add-to-list 'org-latex-packages-alist "\\usepackage{minted}" t)
-  #+end_src
-
-  #+RESULTS:
-  | \usepackage{minted} |
-
-*** Beamer
-
-- beamerの作成は C-c C-e l P
-
-#+begin_src emacs-lisp
-  (require 'ox-beamer)
-  (setq org-beamer-outline-frame-title "目次")
-  (setq org-beamer-frame-default-options "t") ; フレームの位置をtopにする。
-#+end_src
-
-*** 参考文献 RefTex-Mode                                            :FIXME:
-    - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
-    - [[https://github.com/jkitchin/org-ref][jkitchin/org-ref: org-mode modules for citations, cross-references, bibliographies in org-mode and useful bibtex tools to go with it.]]
-    - [[https://aliquote.org/post/org-and-bibtex/][Org and Bibtex - aliquote]]
-
-    - org-refはHelmに依存しているようだ
-
-      ;; (leaf org-ref
-      ;;   :straight t
-      ;;   :require t
-      ;;   :setq ((reftex-default-bibliography quote
-      ;;                                       ("~/git/bibliography/references.bib"))
-
-      ;;          (org-ref-bibliography-notes . "~/git/bibliography/notes.org")
-      ;;          (org-ref-default-bibliography quote
-      ;;                                        ("~/git/bibliography/references.bib"))
-      ;;          (org-ref-pdf-directory . "~/git/bibliography/bibtex-pdfs/")
-
-      ;;          (bibtex-completion-bibliography . "~/git/bibliography/references.bib")
-      ;;          (bibtex-completion-library-path . "~/git/bibliography/bibtex-pdfs")
-      ;;          (bibtex-completion-notes-path . "~/git/bibliography/helm-bibtex-notes")
-      ;;          )
-      ;;   :config
-      ;;   (push '(migemo) helm-source-bibtex)
-
-      ;;   ;; (define-key org-mode-map (kbd "C-c b c") `org-ref-helm-insert-cite-link)
-      ;;   ;; (define-key org-mode-map (kbd "C-c b l") `org-ref-helm-insert-label-link)
-      ;;   ;; (define-key org-mode-map (kbd "C-c b r") `org-ref-helm-insert-ref-link)
-      ;;   )
-
-#+begin_src emacs-lisp
-  (leaf org-ref
-    :straight t
-    :config
-    (setq bibtex-completion-bibliography '("~/git/bibliography/references.bib")
-          bibtex-completion-library-path '("~/git/bibliography/bibtex-pdfs/")
-          bibtex-completion-notes-path "~/git/bibliography/notes/"
-          bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
-
-          bibtex-completion-additional-search-fields '(keywords)
-          bibtex-completion-display-formats
-          '((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
-            (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
-            (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-            (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-            (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
-          bibtex-completion-pdf-open-function
-          (lambda (fpath)
-            (call-process "open" nil 0 nil fpath))))
-#+end_src
-
-#+RESULTS:
-: org-ref
-
-#+begin_src emacs-lisp
-  (leaf bibtex
-    :require t
-    :config
-    (setq bibtex-autokey-year-length 4
-            bibtex-autokey-name-year-separator "-"
-            bibtex-autokey-year-title-separator "-"
-            bibtex-autokey-titleword-separator "-"
-            bibtex-autokey-titlewords 2
-            bibtex-autokey-titlewords-stretch 1
-            bibtex-autokey-titleword-length 5
-            org-ref-bibtex-hydra-key-binding (kbd "H-b"))
-
-    (define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body))
-#+end_src
-
-#+RESULTS:
-: bibtex
+#+begin_src org
+  ,* エキスポートする文書
+  :PROPERTIES:
+  :EXPORT_FILE_NAME: ~/tmp/test.tex
+  :EXPORT_TITLE: 文書の表題
+  :EXPORT_AUTHOR: 筆者の名前
+  :EXPORT_DATE: 令和4年5月20日
+  :EXPORT_LATEX_CLASS: jlreq
+  :END:
+#+end_src org
 
 
-- org-ref-insert-cite-function = nil
-- org-ref-insert-label-function = nil
-- org-ref-insert-ref-function = nil
 
 ** babel - Grophviz (dot)
 

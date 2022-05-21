@@ -22,6 +22,9 @@
 
 ;;; Code:
 
+(require 'profiler)
+(profiler-start 'cpu)
+
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
 (cond ((eq system-type 'windows-nt)
@@ -60,6 +63,9 @@
 ;; Load my settings
 (org-babel-load-file "~/.emacs.d/minimum-init.org")
 (org-babel-load-file "~/.emacs.d/README.org")
+
+(profiler-report)
+(profiler-stop)
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
