@@ -80,6 +80,4 @@ org-roam.db
 /projectile-bookmarks.eld
 /annotations
 /var/
-/oauth2.plstore
-*.plstore
 /org-persist/
