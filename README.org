@@ -203,7 +203,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
 ** 警告の非表示
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (leaf warnings
     :custom
     (warning-suppress-types . '(((yasnippet backquote-change))
@@ -852,6 +852,7 @@ Emacsでもモードによっては同じように動作します（orgモード
     (org-ellipsis . " ▽")                    ; …,▼, ↴, ⬎, ⤷, ⋱
     (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
     (org-agenda-remove-tags . t) ; アジェンダにタグを表示しない
+    (org-id-link-to-org-use-id . 'create-if-interactive-and-no-custom-id)
     )
 #+end_src
 
