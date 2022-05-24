@@ -276,11 +276,27 @@ Xウインドウで設定したフォントを確認してみましょう。本�
   (leaf vc-hooks
     :custom
     (vc-follow-symlinks . t)               ; シンボリックリンクの場合、本体を辿る
-    (vc-handled-backends . '(Git)))
+    (vc-handled-backends . '(Git)))        ; Gitのみ使用
 #+end_src
 
 #+RESULTS:
 : vc-hooks
+** tramp
+
+- リモートでvc-registeredをチェックしないようにする
+- 参考
+  - https://holidays-l.hatenadiary.org/entry/20101020/p1
+  - tramp-sh-handle-vc-registered に変更
+
+#+begin_src emacs-lisp
+  (leaf tramp
+    :config
+    (defadvice tramp-sh-handle-vc-registered (around tramp-sh-handle-vc-registered activate)
+      (let ((vc-handled-backends nil)) ad-do-it)))
+#+end_src
+
+#+RESULTS:
+: tramp
 
 ** files (auto-save/backup)
 
