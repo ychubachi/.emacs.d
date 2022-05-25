@@ -2,37 +2,61 @@
 # name: beamer
 # key: beamer_
 # --
-#+STARTUP: overview indent num inlineimage hidestars
-#+FILETAGS: :LaTeX:Beamer:
+:PROPERTIES:
+:EXPORT_TITLE: とても素晴らしい研究発表
+:EXPORT_AUTHOR: 中鉢 欣秀
+:EXPORT_DATE: 令和4年5月20日
+:EXPORT_BEAMER_THEME: Madrid
+:EXPORT_OPTIONS: H:2 toc:nil num:t
+:END:
 
-#+LaTeX_CLASS: beamer
-#+LaTeX_CLASS_OPTIONS: [presentation,smaller]
-# #+BEAMER_THEME: Copenhagen
-# #+BEAMER_THEME: Rochester
-#+BEAMER_THEME: metropolis [progressbar=frametitle]
-#+OPTIONS:   H:2 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
-#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+begin_comment
+- エキスポートの方法
+  - C-c C-e C-s l b
+- マニュアル
+  - [[https://orgmode.org/manual/Beamer-Export.html][Beamer Export (The Org Manual)]]
+- Beamerのテーマ
+  - [[https://hartwork.org/beamer-theme-matrix/][Beamer Theme Matrix]]
+- 参考
+  - [[https://eikaiwa.online/reading/english-dissertation-guidelines/#sub3.4][英語の研究論文の書き方 ― 研究デザインとルールと構成について]]
+  - [[https://www.editage.jp/insights/tips-for-writing-the-perfect-imrad-manuscript][IMRAD形式の論文とは？ | エディテージ・インサイト]]
+#+end_comment
 
-#+TITLE: ${1:title}
-# #+SUBTITLE:
-#+AUTHOR: ${2:author}
-# #+email:
-#+DATE: ${3:date}
-# #+institute:
-
-* はじめに
-** 1ページ
-  - uasoetnh
-  - suoenhtastnheu
-  - ausotnetns
-
-** 2ページ
-   - uasoetnh
-   - suoenhtastnheu
-   - ausotnetns
-
-* つぎに
-** 3ページ
-   - aoeutnstsnh
-     tsahouthns
-    - aouesnhtth
+**** はじめに
+***** 研究の背景
+#+TOC: headlines [currentsection]
+***** 研究の背景
+- Introduction
+  - 問題が何なのか、背景、新規性、重要性、社会との関係性（学問的な理解とともに）
+  - データや先行研究の論説
+***** 研究課題
+- Research Qustion リサーチクエスチョン（研究課題）
+  - 「誰が, 何を, いつ, どこで, なぜ, どのように」を明らかにした上で答えを導き出せるか
+  - 「問い」に独創性があるか
+  - 「問い」に対する答えは、重要性を持っているか
+***** 先行事例
+- Literature Review 文献レビュー
+  - 他者の論説やデータ、他者の論説と論説に対する自分の評価
+**** 研究の方法
+***** 研究の方法
+#+TOC: headlines [currentsection]
+***** 研究の方法
+- Method/Design メソッド・デザイン
+  - 研究タイプ、検証方法、結果分析の方法論（定量分析と定性的研究）
+**** 結果と考察
+***** 結果と考察
+#+TOC: headlines [currentsection]
+***** 結果
+- 定量分析を用いて集めた数値的なデータ（グラフなど）
+- 定性的研究を用いて集めた、インタビューや観察などのデータ
+***** 考察
+- 方法論を用いた分析
+- 新しい所見が得られた場合は、所見 (Findings) の段落を作る
+**** おわりに
+***** おわりに
+#+TOC: headlines [currentsection]
+***** まとめ
+- 内容の重要な部分をまとめ、自分がこの研究論文で最終的に言いたいこと (自分の理論) を書く
+- 新しい情報は述べない
+***** 文献
+参考文献
