@@ -387,6 +387,9 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+end_src
 
 ** wdired [C-o]                                                      :FIXME:
+- 関連する設定
+  - [[id:o2b:bcb13905-ddce-476c-bfd9-273dd58d7395][dired-launch - diredをランチャにする（WSL対応）]]
+- [[https://www.emacswiki.org/emacs/DiredPlus][[Home] Dired Plus]]
 
 - [[https://ohzeki.hatenablog.com/entry/20160115/1452838970][Emacsのdired表示でファイル名編集 - ohzeki’s diary]]
 
@@ -1383,6 +1386,30 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
   + [[https://github.com/fniessen/org-html-themes][GitHub - fniessen/org-html-themes: How to export Org mode files into awesome HTML in 2 minutes]]
 + Upload
   + [[https://orgmode.org/manual/Complex-example.html][Complex example (The Org Manual)]]
+
+** PlantUML
+- 参考
+   - [[https://qiita.com/sambatriste/items/2e01d5aa91903ae72b24][org-modeでUMLを埋め込み(PlantUML) - Qiita]]
+
+#+begin_src emacs-lisp
+;; plantuml.jarへのパスを設定
+(setq org-plantuml-jar-path "~/.emacs.d/lib/plantuml-1.2022.5.jar")
+
+;; org-babelで使用する言語を登録
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((plantuml . t)))
+#+end_src
+
+#+RESULTS:
+
+#+BEGIN_SRC plantuml :file animal.png
+動物 <|-- 犬
+動物 <|-- 猫
+#+END_SRC
+
+#+RESULTS:
+[[file:animal.png]]
 
 * 外部パッケージ
 ** which-key - キーバインドのガイド表示                              :draft:
