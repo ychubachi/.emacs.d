@@ -1,4 +1,4 @@
-#+STARTUP: show2levels indent num align inlineimages logdone hidestars
+`#+STARTUP: show2levels indent num align inlineimages logdone hidestars
 #+TAGS: FIXME(f) TODO(t) DRAFT(d) PUBLISHED(p) SOMEDAY(s)
 
 README.org
@@ -270,6 +270,20 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+end_src
 
 * ビルトインパッケージの設定
+** dired
+
+- driedを2つ開いたとき、もう一方をターゲットにする
+  - [[https://qiita.com/mtmtcode/items/8665122e01f6f5ef502f][Emacs標準のファイラdiredの基本的な使い方と便利なTipsいくつか - Qiita]]
+
+#+begin_src emacs-lisp
+  (leaf dired
+    :custom
+    (dired-dwim-target . t))
+#+end_src
+
+#+RESULTS:
+: dired
+
 ** vc-hooks
 
 #+begin_src emacs-lisp
@@ -281,6 +295,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
 #+RESULTS:
 : vc-hooks
+
 ** tramp
 
 - リモートでvc-registeredをチェックしないようにする
@@ -900,7 +915,7 @@ Emacsでもモードによっては同じように動作します（orgモード
                    :empty-lines-after 1
                    :file "~/Dropbox/Org/Memo.org"
                    :datetree t
-                   :unnarrowed t
+                   :unnarrowed nil ; t
                    :jump-to-captured t
                    :empty-lines-before 1
                    :template ("* %?"
@@ -2367,6 +2382,9 @@ wsl XAPIAN_CJK_NGRAM=1 notmuch %*
 #+end_src
 
 *** ol-notmuch
+:PROPERTIES:
+:ID:       b5355eb7-98ab-4386-86af-1d4fb44baeef
+:END:
 
 + orgのリンクをnotmuchに対応させる
   - storeはできるけど・・・？
@@ -2374,7 +2392,7 @@ wsl XAPIAN_CJK_NGRAM=1 notmuch %*
 
 #+begin_src emacs-lisp
   (leaf ol-notmuch
-    :straight t
+    :package t
     :require t
     :after notmuch org)
 #+end_src
@@ -2958,6 +2976,62 @@ Wanderlustの内部ライブラリ
 
 *** Tasks
 - 受信するとき、メッセージ分割をしない
+
+** Dired Plus
+*** files+
+
+- [[https://www.emacswiki.org/emacs/DiredPlus][If You Use Emacs on MS Windows]]
+
+#+begin_src emacs-lisp
+  (leaf files+
+    :straight t)
+#+end_src
+
+#+RESULTS:
+: files+
+
+*** ls-lisp+
+
+#+begin_src emacs-lisp
+  (leaf ls-lisp+
+    :straight t)
+#+end_src
+
+#+RESULTS:
+: ls-lisp+
+
+*** w32-browser                                                     :FIXME:
+
+- ファイルに関連付けられたWindowsアプリケーションを起動します。
+- dired+と連携する
+- 参照
+  - [[https://www.emacswiki.org/emacs/w32-browser.el][[Home] w32-browser.el]]
+
+#+begin_src emacs-lisp
+  (leaf w32-browser
+    :straight t)
+#+end_src
+
+#+RESULTS:
+: w32-browser
+
+*** Dired Plus
+
+- 参照
+  - [[https://www.emacswiki.org/emacs/DiredPlus][[Home] Dired Plus]]
+  - [[https://taipapamotohus.com/post/dired/#dired-plus][Dired reinforcement | A perfect autumn day]]
+
+#+begin_src emacs-lisp
+  (leaf dired+
+    :straight (dired+ :type git :host github
+                      :repo "emacsmirror/dired-plus"))
+#+end_src
+
+#+RESULTS:
+: dired+
+
+- [[https://www.emacswiki.org/emacs/files%2b.el][[Home] files+.el]]
+- Bookmark+がセットぽい
 
 * 自作パッケージ
 ** org-sync-gtasks
