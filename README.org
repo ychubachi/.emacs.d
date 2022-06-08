@@ -1,4 +1,4 @@
-`#+STARTUP: show2levels indent num align inlineimages logdone hidestars
+#+STARTUP: show2levels indent num align inlineimages logdone hidestars
 #+TAGS: FIXME(f) TODO(t) DRAFT(d) PUBLISHED(p) SOMEDAY(s)
 
 README.org
