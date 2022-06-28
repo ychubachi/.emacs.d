@@ -846,10 +846,10 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 - 設定するアジェンダファイル
 
-  | ファイル          | 内容                           |
-  |-------------------+--------------------------------|
-  | Memo.org          | 思いつき、メモを書きなぐり用   |
-  | Notebook.org      | ある程度きちんとしたメモ書き   |
+  | ファイル          | 内容                          |
+  |------------------+------------------------------|
+  | Memo.org         | 思いつき、メモを書きなぐり用   |
+  | Notebook.org     | ある程度きちんとしたメモ書き   |
   | ブログファイル    | ブログの記事をまとめたファイル |
   | emacs設定ファイル | orgファイルで書いたEmacsの設定 |
 
@@ -1200,8 +1200,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 + 説明
   * orgでWordpressに投稿する
   * Buffer全体で記事を書く場合
-    | キーn操作 | 関数                         | 説明                 |
-    |-----------+------------------------------+----------------------|
+    | キーn操作  | 関数                          | 説明                 |
+    |-----------+------------------------------+---------------------|
     | C-c M-p g | org2blog-user-interface      | メニュー表示         |
     | C-c M-p D | org2blog-buffer-page-save    | ページをWPに保存     |
     | C-c M-p P | org2blog-buffer-page-publish | ページを公開         |
@@ -1390,7 +1390,7 @@ https://chubachi.net/publish
                     href=\"https://gongzhitaao.org/orgcss/org.css\"/>"
              :html-preamble t)
 
-            ("chubachi.net-other"
+            ("chubachi.net-others"
              :publishing-function org-publish-attachment
              :base-directory "~/Dropbox/Org/publish/chubachi.net/"
              :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish/"
@@ -1884,11 +1884,11 @@ C-c qにvisual-fill-column-modeにするキーを割り当てました。M-qでf
 
 また、一行を基準に動作する標準のキーを、画面の一行を基準に動作するコマンドに、次の通り置き換えています[fn:1]。
 
-| キー | 説明                          |
-|------+-------------------------------|
-| C-a  | *画面上の* 行の一番先頭に移動 |
-| C-e  | *画面上の* 行の一番末尾に移動 |
-| C-k  | *画面上の* 行を一行削除       |
+| キー | 説明                         |
+|-----+-----------------------------|
+| C-a | *画面上の* 行の一番先頭に移動 |
+| C-e | *画面上の* 行の一番末尾に移動 |
+| C-k | *画面上の* 行を一行削除      |
 
 この設定により、折り返す桁を自由に指定できる上に、画面上の一行を単位として編集できます。
 
@@ -2296,11 +2296,11 @@ SMTPのパスワードは~/.authinfoで設定します。
 + スレッドモードの操作
 
 | キー | 説明               |
-|------+--------------------|
-| m    | 新規メッセージ     |
-| n    | 次の行             |
-| SPC  | メールを読み進める |
-| M-n  | 次のスレッド       |
+|-----+-------------------|
+| m   | 新規メッセージ     |
+| n   | 次の行             |
+| SPC | メールを読み進める |
+| M-n | 次のスレッド       |
 
 *** 設定:notmuch [C-c r]
 
@@ -2843,7 +2843,7 @@ emacs-lisp-mode-hook
 
 Wanderlustが依存するライブラリ
 
-| SEMI | MIMEサポート                                 |
+| SEMI | MIMEサポート                                |
 | APEL | 基礎的な多種の関数群（charactor-encoding等） |
 | FLIM | MIME用符号化（base64エンコーディング等）     |
 
