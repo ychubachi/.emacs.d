@@ -1355,17 +1355,33 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 : org-contrib
 
 ** org-publish
+
+*** 説明
+
+https://chubachi.net/publish
+  index.html
+  project1/
+    index.html
+    image/
+      fig1.jpg
+
+
 *** 設定
 
 #+begin_src emacs-lisp
   (leaf *org-publish-project-alist
     :config
     (setq org-publish-project-alist
-          '(("-orgfiles"
-             :base-directory "~/Dropbox/Org/publish/chubachi.net/"
-             :base-extension "org"
-             :publishing-directory "/scp:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/"
+          '(("chubachi.net"
+             :components ("chubachi.net-orgfiles" "chubachi.net-others"))
+
+            ("chubachi.net-orgfiles"
              :publishing-function org-html-publish-to-html
+             :base-directory "~/Dropbox/Org/publish/chubachi.net/"
+             :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish"
+             :base-extension "org"
+             :recursive t
+             ;; options for html files
              :exclude "PrivatePage.org" ;; regexp
              :headline-levels 3
              :section-numbers nil
@@ -1374,18 +1390,12 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                     href=\"https://gongzhitaao.org/orgcss/org.css\"/>"
              :html-preamble t)
 
-            ("-images"
-             :base-directory "~/Dropbox/Org/publish/chubachi.net/images/"
-             :base-extension "jpg\\|gif\\|png"
-             :publishing-directory "/scp:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/images/"
-             :publishing-function org-publish-attachment)
-
-            ("-other"
-             :base-directory "~/Dropbox/Org/publish/chubachi.net/other/"
-             :base-extension "css\\|el"
-             :publishing-directory "/scp:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/other/"
-             :publishing-function org-publish-attachment)
-            ("chubachi.net" :components ("-orgfiles" "-images" "-other")))))
+            ("chubachi.net-other"
+             :publishing-function org-publish-attachment
+             :base-directory "~/Dropbox/Org/publish/chubachi.net/"
+             :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish/"
+             :base-extension "jpg\\|gif\\|png|css\\|el"
+             :recursive t))))
 #+end_src
 
 #+RESULTS:
