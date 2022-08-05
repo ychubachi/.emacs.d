@@ -2716,9 +2716,22 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 ** Dockerfileモード
 
+- C-c C-b でbuildを実行する
+- ファイル変数でイメージ名が設定できる
+
+;; ## -*- dockerfile-image-name: "your-image-name-here" -*-
+
+- 通常は警告がでるのでdockerfile-image-nameをsafeに設定する
+
 #+begin_src emacs-lisp
-  (leaf dockerfile-mode :straight t)
+  (leaf dockerfile-mode :straight t
+    :config
+    ;; Set dockerfile-image-name as safe variable.
+    (put 'dockerfile-image-name 'safe-local-variable #'stringp))
 #+end_src
+
+#+RESULTS:
+: dockerfile-mode
 
 * Emacs Lispプログラミング
 ** macrostep [C-c e]
