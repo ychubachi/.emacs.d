@@ -93,14 +93,11 @@ Mozcに関連する設定の全体です。個別の説明は[[*Mozcサーバと
 
 #+begin_src emacs-lisp :noweb yes
   (leaf mozc
-    ;; :if (eq system-type 'gnu/linux)
     :straight t
     :config
     <<mozc-helper>>
     <<mozc-im>>
-    <<mozc-im-state-isearch>>
     <<mozc-cursor-color>>
-    <<mozc-posframe>>
     <<mozc-windows-advice>>)
 #+end_src
 
@@ -128,15 +125,11 @@ WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoog
 #+RESULTS: mozc-helper
 : ~/Dropbox/bin/mozc_emacs_helper.exe
 
-*** Mozcによる変換操作の設定[C-o][C-j]
-標準の入力方式をMozcに設定します。
-C-oで変換モード、C-jで直接入力モードに切り替えます。
+*** Mozcによる変換操作の設定[C-o]
 
-なお、org-modeでC-jを（特殊な？）改行コマンドとして使用しているので、leafのbind*でオーバライドします（便利！）。ちなみに、org-modeでの改行はC-mかRETでもできます。C-jの出番がどこにあるのか、わかりません。
-
-デフォルトでは、IMの状態をトグルするメソッドしかないので、それぞれの状態に遷移するメソッドを用意します。
-
-IMEがoffのとき、isearchに入り、IMEをonにして検索したあと、戻ったときにIMEがoffになって欲しいので、そのための設定をします（migemoを使うのなら、あまり必要ない設定かも）。
+- 2022-09-10
+  - C-oでトグルするようにした
+  - postframeはX11をSSHでフォワードすると遅いので、エコーエリアにした
 
 #+NAME: mozc-im
 #+begin_src emacs-lisp :tangle no :noweb yes
@@ -144,40 +137,9 @@ IMEがoffのとき、isearchに入り、IMEをonにして検索したあと、�
     :straight t
     :require t
     :custom ((default-input-method . "japanese-mozc-im"))
-    :bind* (("C-o" . enable-input-method)
-            ("C-j" . disable-input-method))
+    :bind* (("C-o" . toggle-input-method))
     :config
-    (defun enable-input-method (&optional arg interactive)
-      (interactive "P\np")
-      (if (not current-input-method)
-          (toggle-input-method arg interactive)))
-
-    (defun disable-input-method (&optional arg interactive)
-      (interactive "P\np")
-      (if current-input-method
-          (toggle-input-method arg interactive)))
-
-    (defvar-local mozc-im-mode nil)
-
-    (add-hook 'mozc-im-activate-hook
-              (lambda nil
-                (setq mozc-im-mode t)))
-
-    (add-hook 'mozc-im-deactivate-hook
-              (lambda nil
-                (setq mozc-im-mode nil)))
-
-    (defvar-local im-state nil)
-
-    (add-hook 'isearch-mode-hook
-              (lambda () (setq im-state mozc-im-mode)))
-
-    (add-hook 'isearch-mode-end-hook
-              (lambda ()
-                (unless (eq im-state mozc-im-mode)
-                  (if im-state
-                      (activate-input-method default-input-method)
-                    (deactivate-input-method))))))
+    (setq mozc-candidate-style 'echo-area))
 #+end_src
 
 #+RESULTS: mozc-im
@@ -203,34 +165,18 @@ IMEがoffのとき、isearchに入り、IMEをonにして検索したあと、�
             (half-ascii    . "dark orchid")
             (full-ascii    . "orchid")
             (half-katakana . "dark goldenrod")))
-    (advice-add 'mozc-cursor-color-update :around
-                (lambda (orig-fun &rest args)
-                  (let ((mozc-mode mozc-im-mode))
-                    (apply orig-fun args)))))
+    ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
+    (defvar-local mozc-im-mode nil)
+    (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
+    (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
+    (advice-add 'mozc-cursor-color-update
+                :around (lambda (orig-fun &rest args)
+                          (let ((mozc-mode mozc-im-mode))
+                            (apply orig-fun args)))))
 #+end_src
 
 #+RESULTS: mozc-cursor-color
 : mozc-cursor-color
-
-*** 変換候補をposframeで表示する
-
-posframeはEmacs26から追加された機能です。Emacs26は3年ほど前にリリースされたようですから、私は長いことposframeを知らなかったことになります。
-
-今回の設定変更の目玉商品です。「[[https://blog.deltabox.site/post/2019/06/mozc-posframe/][mozcの候補をposframeで表示するEmacs拡張を作った]]」に書いている通り、org-modeでの変換の際の表示崩れは目に余るものがありました。
-
-作者さん、ありがとうございます。
-
-#+NAME: mozc-posframe
-#+begin_src emacs-lisp :tangle no
-  (leaf mozc-posframe
-    :straight (mozc-posframe :type git :host github :repo "derui/mozc-posframe")
-    :config
-    (mozc-posframe-register)
-    (setq mozc-candidate-style 'posframe))
-#+end_src
-
-#+RESULTS: mozc-posframe
-: mozc-posframe
 
 *** Windows用adviceの設定
 
@@ -285,7 +231,12 @@ IME OFF -> isearch -> OFF -> done -> OFF
 |mmmmmmmmmm|
 |llllllllll|
 |あいうえお|
-|1,2,3,4,5|
+|1,2,3,4,5,|
+
+|mm|
+|ll|
+|♥|
+|💑|
 
 #+begin_src emacs-lisp
   (when (eq system-type 'windows-nt)

@@ -21,7 +21,6 @@
 (leaf *undo :bind (("C-z" . undo)))
 
 (leaf mozc
-  ;; :if (eq system-type 'gnu/linux)
   :straight t
   :config
   (cond ((eq system-type 'windows-nt)
@@ -35,41 +34,9 @@
     :straight t
     :require t
     :custom ((default-input-method . "japanese-mozc-im"))
-    :bind* (("C-o" . enable-input-method)
-            ("C-j" . disable-input-method))
+    :bind* (("C-o" . toggle-input-method))
     :config
-    (defun enable-input-method (&optional arg interactive)
-      (interactive "P\np")
-      (if (not current-input-method)
-          (toggle-input-method arg interactive)))
-  
-    (defun disable-input-method (&optional arg interactive)
-      (interactive "P\np")
-      (if current-input-method
-          (toggle-input-method arg interactive)))
-  
-    (defvar-local mozc-im-mode nil)
-  
-    (add-hook 'mozc-im-activate-hook
-              (lambda nil
-                (setq mozc-im-mode t)))
-  
-    (add-hook 'mozc-im-deactivate-hook
-              (lambda nil
-                (setq mozc-im-mode nil)))
-  
-    (defvar-local im-state nil)
-  
-    (add-hook 'isearch-mode-hook
-              (lambda () (setq im-state mozc-im-mode)))
-  
-    (add-hook 'isearch-mode-end-hook
-              (lambda ()
-                (unless (eq im-state mozc-im-mode)
-                  (if im-state
-                      (activate-input-method default-input-method)
-                    (deactivate-input-method))))))
-  
+    (setq mozc-candidate-style 'echo-area))
   (leaf mozc-cursor-color
     :straight (mozc-cursor-color :type git :host github
                                  :repo "iRi-E/mozc-el-extensions")
@@ -83,15 +50,14 @@
             (half-ascii    . "dark orchid")
             (full-ascii    . "orchid")
             (half-katakana . "dark goldenrod")))
-    (advice-add 'mozc-cursor-color-update :around
-                (lambda (orig-fun &rest args)
-                  (let ((mozc-mode mozc-im-mode))
-                    (apply orig-fun args)))))
-  (leaf mozc-posframe
-    :straight (mozc-posframe :type git :host github :repo "derui/mozc-posframe")
-    :config
-    (mozc-posframe-register)
-    (setq mozc-candidate-style 'posframe))
+    ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
+    (defvar-local mozc-im-mode nil)
+    (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
+    (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
+    (advice-add 'mozc-cursor-color-update
+                :around (lambda (orig-fun &rest args)
+                          (let ((mozc-mode mozc-im-mode))
+                            (apply orig-fun args)))))
   (leaf *mozc-win
     :if (eq system-type 'windows-nt)
     :config
