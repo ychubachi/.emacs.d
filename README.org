@@ -184,14 +184,17 @@ Xウインドウで設定したフォントを確認してみましょう。本�
     :doc "define customization properties of builtins"
     :tag "builtin" "internal"
     :custom
-    (inhibit-startup-screen . t)           ; スタートアップスクリーンを非表示
-    (ring-bell-function . 'ignore)         ; ベルを鳴らさない
-    (fill-column . 80)                     ; 80桁で改行（モードによる）
-    (indent-tabs-mode . nil)               ; インデントの際タブを使わない
+    (inhibit-startup-screen . t)          ; スタートアップスクリーンを非表示
+    (ring-bell-function . 'ignore)        ; ベルを鳴らさない
+    (fill-column . 80)                    ; 80桁で改行（モードによる）
+    (indent-tabs-mode . nil)              ; インデントの際タブを使わない
     (byte-compile-warnings
-     . '(not cl-functions obsolete))       ; (require 'cl)を検査しない
-    (epg-pinentry-mode . 'loopback)        ; GnuPGのパスフレーズをミニバッファで
-    (plstore-cache-passphrase-for-symmetric-encryption . t))
+     . '(not cl-functions obsolete))      ; (require 'cl)を検査しない
+    (epg-pinentry-mode . 'loopback)       ; GnuPGのパスフレーズをミニバッファで
+    (plstore-cache-passphrase-for-symmetric-encryption . t)
+                                          ; パスフレーズをキャッシュ
+    (select-active-regions . 'only)       ; リージョン選択時の移動を早くする
+    )
 #+end_src
 
 #+RESULTS:
