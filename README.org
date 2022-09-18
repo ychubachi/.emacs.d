@@ -2502,20 +2502,6 @@ notmuchのconsultで検索（結果が多いと落ちるようだ）
 
 * プログラミング
 
-** 保存時にeval-bufferの自動実行
-
-#+begin_src emacs-lisp
-  (defun cmd/emacs-lisp-mode-before-save-hook ()
-     (add-hook 'before-save-hook 'eval-buffer nil t)
-     (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))
-
-    (leaf cmd/eval-buffer-on-before-save
-       :hook (emacs-lisp-mode-hook . cmd/emacs-lisp-mode-before-save-hook))
-#+end_src
-
-#+RESULTS:
-: cmd/eval-buffer-on-before-save
-
 ** highlight-indent-guides
 *** 説明
 ソースコードを編集するとき、インデントのガイドを表示する。

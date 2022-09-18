@@ -1312,3 +1312,23 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+RESULTS:
 : open-junk-file
+
+* 保存時にeval-bufferの自動実行
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-09-18 日 17:42
+:ARCHIVE_FILE: ~/.emacs.d/README.org
+:ARCHIVE_OLPATH: プログラミング
+:ARCHIVE_CATEGORY: README
+:END:
+
+#+begin_src emacs-lisp :tangle no
+  (defun cmd/emacs-lisp-mode-before-save-hook ()
+     (add-hook 'before-save-hook 'eval-buffer nil t)
+     (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))
+
+    (leaf cmd/eval-buffer-on-before-save
+       :hook (emacs-lisp-mode-hook . cmd/emacs-lisp-mode-before-save-hook))
+#+end_src
+
+#+RESULTS:
+: cmd/eval-buffer-on-before-save
