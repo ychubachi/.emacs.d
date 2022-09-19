@@ -216,6 +216,155 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+RESULTS:
 : warnings
 
+* UI・見た目
+** modus-themes - 標準のテーマ設定（[f5]で切り替え）
+- [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
+
+#+begin_src emacs-lisp
+  (leaf modus-themes
+    :straight t                        ; omit this to use the built-in themes
+    :init
+    ;; Add all your customizations prior to loading the themes
+    (setq modus-themes-italic-constructs t
+          modus-themes-bold-constructs nil
+          modus-themes-region '(bg-only no-extend))
+
+    ;; Load the theme files before enabling a theme (else you get an error).
+    (modus-themes-load-themes)
+    :config
+    ;; Load the theme of your choice:
+    (modus-themes-load-vivendi) ;; OR (modus-themes-load-operandi)
+    :bind ("<f5>" . modus-themes-toggle))
+#+end_src
+
+#+RESULTS:
+: modus-themes
+
+** moody - モードラインにタブとリボンを表示
+
+- [[https://github.com/tarsius/moody][tarsius/moody: Tabs and ribbons for the mode-line]]
+
+#+begin_src emacs-lisp
+  (leaf moody
+    :straight t
+    :config
+    (setq x-underline-at-descent-line t)
+    (moody-replace-mode-line-buffer-identification)
+    (moody-replace-vc-mode)
+    (moody-replace-eldoc-minibuffer-message-function))
+#+end_src
+
+#+RESULTS:
+: moody
+
+** minions - マイナーモードの表示をコンパクトにする
+
+- [[https://github.com/tarsius/minions][tarsius/minions: A minor-mode menu for the mode line]]
+
+#+begin_src emacs-lisp
+  (leaf minions
+    :straight t
+    :require t
+    :config
+    (minions-mode 1)
+    (setq minions-mode-line-lighter "[+]")
+    (global-set-key [S-down-mouse-3] 'minions-minor-modes-menu))
+#+end_src
+
+#+RESULTS:
+: minions
+
+** ruler-mode - ルラーを表示する
+
+#+begin_src emacs-lisp
+  (leaf ruler-mode
+    :config
+    (ruler-mode 1))
+#+end_src
+
+#+RESULTS:
+: ruler-mode
+
+** beacon - バッファを切り替えたときビーコンを表示する
+*** 設定
+
+#+begin_src emacs-lisp
+  (leaf beacon
+    :straight t
+    :custom
+    (beacon-blink-when-focused . t)
+    :config
+    (beacon-mode 1)
+    )
+#+end_src
+
+#+RESULTS:
+: beacon
+
+*** 参考
++ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E3%82%82%E3%81%86%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E8%A6%8B%E5%A4%B1%E3%82%8F%E3%81%AA%E3%81%84----beacon][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
+** whitespace - 空白文字の可視化
+- [[https://yanqirenshi.hatenablog.com/entry/2016/07/03/Emacs%3A_whitespace_%E3%81%A7%E4%BD%99%E5%88%86%E3%81%AA%E7%A9%BA%E7%99%BD/%E3%82%BF%E3%83%96%E3%81%AB%E8%89%B2%E3%81%A5%E3%81%91][Emacs: whitespace で余分な空白/タブに色づけ - ほんとのこと知りたいだけなのに。]]
+  - M-x list-faces-display で設定する色の種類と色を確認できます。
+  - 設定する色は M-x list-colors-display で確認する感じ。
+- 色はテーマのデフォルトのままにしておく。
+
+　　　ああ全角　　　　　←全角　あいうえお
+あいうえお　漢字
+
+#+begin_src emacs-lisp
+  (leaf whitespace
+    :require 't
+    :config
+    (setq whitespace-style
+          '(
+            face ; faceで可視化
+            trailing ; 行末
+            tabs ; タブ
+            spaces ; スペース
+            space-mark ; 表示のマッピング
+            tab-mark
+            ))
+    (setq whitespace-display-mappings
+          '(
+            (space-mark ?\u3000 [?□])
+            (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+            ))
+    (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+    (setq whitespace-space-regexp "\\(\u3000+\\)")
+    ;; (set-face-attribute 'whitespace-trailing nil
+    ;;                     :foreground nil
+    ;;                     :background "DarkOrange1"
+    ;;                     :underline nil)
+    ;; (set-face-attribute 'whitespace-tab nil
+    ;;                     :foreground "DarkOrange1"
+    ;;                     :background nil
+    ;;                     :underline nil)
+    ;; (set-face-attribute 'whitespace-space nil
+    ;;                     :foreground "DarkOrange1"
+    ;;                     :background nil
+    ;;                     :underline nil)
+    (global-whitespace-mode t))
+#+end_src
+
+#+RESULTS:
+: whitespace
+
+** all-the-icons - 各種アイコンを利用できるようにする
+
+- [[https://github.com/domtronn/all-the-icons.el][GitHub - domtronn/all-the-icons.el: A utility package to collect various Icon Fonts and propertize them within Emacs.]]
+
+- パッケージ導入後、 M-x all-the-icons-install-fonts でOSにフォントを
+  インストールする
+
+#+begin_src emacs-lisp
+  (leaf all-the-icons :straight t)
+#+end_src
+
+#+RESULTS:
+: all-the-icons
+
 * Emacs本体の設定
 ** yes/noの選択をy/nに簡略化
 
@@ -1760,22 +1909,6 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 + 参考
   * [[https://github.com/DarthFennec/highlight-indent-guides][DarthFennec/highlight-indent-guides: Emacs minor mode to highlight indentation]]
 
-** beacon
-*** 設定
-
-#+begin_src emacs-lisp
-  (leaf beacon
-    :straight t
-    :hook
-    (emacs-startup-hook . beacon-mode))
-#+end_src
-
-#+RESULTS:
-: beacon
-
-*** 参考
-+ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E3%82%82%E3%81%86%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E8%A6%8B%E5%A4%B1%E3%82%8F%E3%81%AA%E3%81%84----beacon][Emacsモダン化計画 -かわEmacs編- - Qiita]]
-
 ** shell-pop - いつでもどこでもshellを出す                       :PUBLISHED:
 :PROPERTIES:
 :BLOG:     plover
@@ -2042,115 +2175,6 @@ dired-launchを導入すると、通常通り =dired= を開いてからWordやE
 
 #+RESULTS:
 : align
-
-* UI・見た目
-** modus-themes [f5]
-- [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
-
-#+begin_src emacs-lisp
-  (leaf modus-themes
-    :straight t                        ; omit this to use the built-in themes
-    :init
-    ;; Add all your customizations prior to loading the themes
-    (setq modus-themes-italic-constructs t
-          modus-themes-bold-constructs nil
-          modus-themes-region '(bg-only no-extend))
-
-    ;; Load the theme files before enabling a theme (else you get an error).
-    (modus-themes-load-themes)
-    :config
-    ;; Load the theme of your choice:
-    (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
-    :bind ("<f5>" . modus-themes-toggle))
-#+end_src
-
-#+RESULTS:
-: modus-themes
-
-** whitespace - 空白文字の可視化
-- [[https://yanqirenshi.hatenablog.com/entry/2016/07/03/Emacs%3A_whitespace_%E3%81%A7%E4%BD%99%E5%88%86%E3%81%AA%E7%A9%BA%E7%99%BD/%E3%82%BF%E3%83%96%E3%81%AB%E8%89%B2%E3%81%A5%E3%81%91][Emacs: whitespace で余分な空白/タブに色づけ - ほんとのこと知りたいだけなのに。]]
-  - M-x list-faces-display で設定する色の種類と色を確認できます。
-  - 設定する色は M-x list-colors-display で確認する感じ。
-- 色はテーマのデフォルトのままにしておく。
-
-　　　ああ全角　　　　　←全角　あいうえお
-あいうえお　漢字
-
-#+begin_src emacs-lisp
-  (leaf whitespace
-    :require 't
-    :config
-    (setq whitespace-style
-          '(
-            face ; faceで可視化
-            trailing ; 行末
-            tabs ; タブ
-            spaces ; スペース
-            space-mark ; 表示のマッピング
-            tab-mark
-            ))
-    (setq whitespace-display-mappings
-          '(
-            (space-mark ?\u3000 [?□])
-            (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
-            ))
-    (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
-    (setq whitespace-space-regexp "\\(\u3000+\\)")
-    ;; (set-face-attribute 'whitespace-trailing nil
-    ;;                     :foreground nil
-    ;;                     :background "DarkOrange1"
-    ;;                     :underline nil)
-    ;; (set-face-attribute 'whitespace-tab nil
-    ;;                     :foreground "DarkOrange1"
-    ;;                     :background nil
-    ;;                     :underline nil)
-    ;; (set-face-attribute 'whitespace-space nil
-    ;;                     :foreground "DarkOrange1"
-    ;;                     :background nil
-    ;;                     :underline nil)
-    (global-whitespace-mode t))
-#+end_src
-
-#+RESULTS:
-: whitespace
-
-** all-the-icons
-- [[https://github.com/domtronn/all-the-icons.el][GitHub - domtronn/all-the-icons.el: A utility package to collect various Icon Fonts and propertize them within Emacs.]]
-
-- パッケージ導入後、 M-x all-the-icons-install-fonts でOSにフォントを
-  インストールする
-
-#+begin_src emacs-lisp
-  (leaf all-the-icons :straight t)
-#+end_src
-
-#+RESULTS:
-: all-the-icons
-
-** doom-modeline - モードラインにアイコン表示
-
-  #+begin_src emacs-lisp
-    (leaf doom-modeline
-      :straight t
-      :custom
-      ;; (doom-modeline-buffer-file-name-style . 'truncate-with-project)
-      ;; (doom-modeline-icon . t)
-      ;; (doom-modeline-major-mode-icon . nil)
-      ;; (doom-modeline-minor-modes . nil)
-      :init
-      ;; (after-init . doom-modeline-mode)
-      (doom-modeline-mode 1)
-      :config
-      ;; (line-number-mode 1)
-      ;; (column-number-mode 0)
-      ;;   (doom-modeline-def-modeline 'main
-      ;; '(bar workspace-number window-number evil-state god-state ryo-modal xah-fly-keys matches buffer-info remote-host buffer-position parrot selection-info)
-          ;; '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
-      )
-  #+end_src
-
-  #+RESULTS:
-  : doom-modeline
 
 * メール/Web
 ** メール送信機能

@@ -1332,3 +1332,34 @@ org-post-at-pint、org-delete-at-pointはうまく動作している。
 
 #+RESULTS:
 : cmd/eval-buffer-on-before-save
+
+* COMMENT doom-modeline - モードラインにアイコン表示
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-09-19 月 20:55
+:ARCHIVE_FILE: ~/.emacs.d/README.org
+:ARCHIVE_OLPATH: UI・見た目
+:ARCHIVE_CATEGORY: README
+:END:
+
+  #+begin_src emacs-lisp
+    (leaf doom-modeline
+      :straight t
+      :custom
+      ;; (doom-modeline-buffer-file-name-style . 'truncate-with-project)
+      ;; (doom-modeline-icon . t)
+      ;; (doom-modeline-major-mode-icon . nil)
+      ;; (doom-modeline-minor-modes . nil)
+      :init
+      ;; (after-init . doom-modeline-mode)
+      (doom-modeline-mode 1)
+      :config
+      ;; (line-number-mode 1)
+      ;; (column-number-mode 0)
+      ;;   (doom-modeline-def-modeline 'main
+      ;; '(bar workspace-number window-number evil-state god-state ryo-modal xah-fly-keys matches buffer-info remote-host buffer-position parrot selection-info)
+          ;; '(misc-info persp-name lsp github debug minor-modes input-method major-mode process vcs checker))
+      )
+  #+end_src
+
+  #+RESULTS:
+  : doom-modeline
