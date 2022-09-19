@@ -274,17 +274,6 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 #+RESULTS:
 : minions
 
-** ruler-mode - ルラーを表示する
-
-#+begin_src emacs-lisp
-  (leaf ruler-mode
-    :config
-    (ruler-mode 1))
-#+end_src
-
-#+RESULTS:
-: ruler-mode
-
 ** beacon - バッファを切り替えたときビーコンを表示する
 *** 設定
 
@@ -364,6 +353,17 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
 #+RESULTS:
 : all-the-icons
+
+** ruler-mode - ルラーを表示する
+
+#+begin_src emacs-lisp
+  (leaf ruler-mode
+    :config
+    (add-hook 'find-file-hook (lambda () (ruler-mode 1))))
+#+end_src
+
+#+RESULTS:
+: ruler-mode
 
 * Emacs本体の設定
 ** yes/noの選択をy/nに簡略化
