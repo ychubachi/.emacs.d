@@ -281,10 +281,9 @@ Xウインドウで設定したフォントを確認してみましょう。本�
   (leaf beacon
     :straight t
     :custom
-    (beacon-blink-when-focused . t)
+    (beacon-blink-when-focused . nil)
     :config
-    (beacon-mode 1)
-    )
+    (beacon-mode 1))
 #+end_src
 
 #+RESULTS:
