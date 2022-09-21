@@ -235,7 +235,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
     (modus-themes-headings ; this is an alist: read the manual or its doc string
      . '((1 . (regular background 1.215))
          (2 . (regular 1.138))
-         (3 . (regular overline 1.067))
+         (3 . (regular 1.067))
          (t . (regular))))
     :init
     ;; Add all your customizations prior to loading the themes
