@@ -1704,12 +1704,13 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
    - [[https://elpa.gnu.org/packages/undo-tree.html][GNU ELPA - undo-tree]]
 
    - オートセーブがうざいのでnilにした
+     - tに戻した
 
    #+begin_src emacs-lisp
      (leaf undo-tree
        :straight t
        :custom
-       ((undo-tree-auto-save-history . nil))
+       (undo-tree-auto-save-history . t)
        :config
        (global-undo-tree-mode))
    #+end_src
