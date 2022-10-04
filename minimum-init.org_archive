@@ -60,19 +60,23 @@ Archived entries from file c:/Users/yc/.emacs.d/minimum-init.org
 
 * leaf - 「パッケージ設定」のためのパッケージ                      :PBLISHED:
 :PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-11-10 00:01:40]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech
-:POST_TAGS: Emacs, Lisp, Leaf
-:ID:       o2b:046ef621-cfc9-4aa5-9704-861b7710b61d
-:POST_DATE: [2021-11-10 Wed 00:03]
-:POSTID:   293
-:ARCHIVE_TIME: 2022-05-14 土 12:05
-:ARCHIVE_FILE: ~/.emacs.d/minimum-init.org
-:ARCHIVE_OLPATH: パッケージ
-:ARCHIVE_CATEGORY: Tech
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-leaf.html
+:EXPORT_OPTIONS:  toc:nil num:nil
 :END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: leaf - 「パッケージ設定」のためのパッケージ
+permalink: /archives/293
+published: true
+---
+#+end_export
 
 ** leafの導入（straight版）
 leafはEmacsの設定をより美しく記述できるようにする、パッケージの設定を記述するツールです。パッケージのインストールための様々なパッケージと組み合わせ利用します。設計思想がしっかりしていて、利用者を惑わせない、特に、Emacs lispを解する人にとっては、lispの世界観を崩さないで記述できるのが魅力でしょう。

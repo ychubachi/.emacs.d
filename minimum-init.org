@@ -66,15 +66,23 @@ leafに追加するパッケージです。
 * 日本語関係
 ** Linuxでmozcを使った日本語入力の設定（2022年版）                 :PBLISHED:
 :PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-11-23 22:10:47]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech
-:POST_TAGS: Emacs, Lisp, Mozc, IME
-:ID:       o2b:16b90138-c679-4ad8-b1f2-fab55daf0058
-:POST_DATE: [2021-11-23 Tue 22:11]
-:POSTID:   463
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-linux-mozc.html
+:EXPORT_OPTIONS:  toc:nil num:nil
 :END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: Linuxでmozcを使った日本語入力の設定（2022年版）
+permalink: /archives/463
+published: true
+---
+#+end_export
 
 #+begin_comment
 + Mozcのローマ字配列の変更方法
@@ -89,7 +97,7 @@ leafに追加するパッケージです。
   - [[https://w.atwiki.jp/ntemacs/pages/48.html][emacs-mozc を動かすための設定（Emacs 設定編） - NTEmacs @ ウィキ - atwiki（アットウィキ）]]
 
 *** 全体の設定
-Mozcに関連する設定の全体です。個別の説明は[[*Mozcサーバと通信するためのヘルパーコマンド][こちら]]から。
+Mozcに関連する設定の全体です。個別の説明は[[*Mozcサーバと通信するためのヘルパーコマンドの設定][こちら]]から。
 
 #+begin_src emacs-lisp :noweb yes
   (leaf mozc
@@ -127,9 +135,7 @@ WSL環境では、mozc_emacs_helper.exeに置き換えると、Windows側のGoog
 
 *** Mozcによる変換操作の設定[C-o]
 
-- 2022-09-10
-  - C-oでトグルするようにした
-  - postframeはX11をSSHでフォワードすると遅いので、エコーエリアにした
+C-oで変換・無変換をトグルするようにしました。また、以前は postframeで変換候補を出していましたが、X11をSSHでフォワードすると遅いので、エコーエリアに表示するようにしました。
 
 #+NAME: mozc-im
 #+begin_src emacs-lisp :tangle no :noweb yes

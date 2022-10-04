@@ -26,15 +26,24 @@ README.org
 
 ** EmacsのX関係の設定を外部化する
 :PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-11-09 18:32:26]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech
-:POST_TAGS: Emacs, X resources
-:ID:       o2b:93247d9c-9742-45f2-9543-eab6ffe14628
-:POST_DATE: [2021-11-09 Tue 18:33]
-:POSTID:   248
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-xresources.html
+:EXPORT_OPTIONS:  toc:nil num:nil
 :END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: EmacsのX関係の設定を外部化する
+permalink: /archives/248
+published: true
+---
+#+end_export
+
 *** Emacs の X resources 設定
 Emacs をX環境でグラフィカルに起動すると、 Emacs はXクライアントアプリケーションとなりますから、 [[https://wiki.archlinux.jp/index.php/X_resources][X resources ]]を利用した設定を読み込みます。フォントやウインドウの大きさなどを設定できます。
 
@@ -745,15 +754,23 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
 ** embark - カーソル位置にあるテキストに対するアクションを実行（org link対応） [M-.][C-.][C-^ B] :PUBLISHED:
 :PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-11-20 19:03:55]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech
-:POST_TAGS: Emacs, Lisp, embark
-:ID:       o2b:ee0b1a39-a8d8-494b-9e7d-02d794982f19
-:POST_DATE: [2021-11-20 Sat 19:03]
-:POSTID:   363
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-embark.html
+:EXPORT_OPTIONS:  toc:nil num:nil
 :END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: embark - カーソル位置にあるテキストに対するアクションを実行（org link対応）
+permalink: /archives/363
+published: true
+---
+#+end_export
 
 *** 「何か」に対して何かを「実行」するembark
 テキストファイルに書いてあるURLを開きたい、と思ったとき、あなたはどうしますか？
@@ -1611,15 +1628,23 @@ https://chubachi.net/publish
 * 外部パッケージ
 ** which-key - キーバインドのガイド表示                              :draft:
 :PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-11-10 23:59:23]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech
-:POST_TAGS: Emacs, Lisp
-:ID:       o2b:f8c43d20-c1e2-4009-961f-48178cde8c6b
-:POST_DATE: [2021-11-11 Thu 00:23]
-:POSTID:   344
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-which-key.html
+:EXPORT_OPTIONS:  toc:nil num:nil
 :END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: which-key - キーバインドのガイド表示
+permalink: /archives/344
+published: true
+---
+#+end_export
 
 Emacsでは、コントロールやAltキーを押しながら一文字打って、更にもう一文字打つとコマンドが実行される、という操作が基本です。
 
@@ -1668,15 +1693,23 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 + [[http://emacs.rubikitch.com/swap-buffers/][swap-buffers.el : 【多分割対応】ウィンドウを入れ替える新しいコマンド]]
 ** backup-each-save - Emacsで保存するたびに自動でバックアップ     :PUBLISHED:
 :PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-11-20 21:43:40]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech
-:POST_TAGS: Emacs, Lisp
-:ID:       o2b:1712bebe-b383-4335-ad81-c10f995c1ee0
-:POST_DATE: [2021-11-20 Sat 21:43]
-:POSTID:   378
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-backup-each-save.html
+:EXPORT_OPTIONS:  toc:nil num:nil
 :END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: backup-each-save - Emacsで保存するたびに自動でバックアップ
+permalink: /archives/378
+published: true
+---
+#+end_export
 
 るびきちさんの[[http://emacs.rubikitch.com/backup-each-save/][こちら]]の記事からです。[[http://emacs.rubikitch.com/real-auto-save/][real-auto-save.el]]はそこまではいらないかな、という感じです。割としょっちゅうC-x C-sを打っている気がするので。
 
@@ -1926,15 +1959,24 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 
 ** shell-pop - いつでもどこでもshellを出す                       :PUBLISHED:
 :PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-11-09 20:16:56]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech
-:POST_TAGS: Emacs, Lisp
-:ID:       o2b:dc0f7103-fb58-4bae-96e1-54699516f5b0
-:POST_DATE: [2021-11-09 Tue 20:17]
-:POSTID:   254
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-shell-pop.html
+:EXPORT_OPTIONS:  toc:nil num:nil
 :END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: shell-pop - いつでもどこでもshellを出す
+permalink: /archives/254
+published: true
+---
+#+end_export
+
 *** 説明
 Emacsで作業中に、shellで作業をしたくなることはよくあります。そのような際に便利な設定です。
 
@@ -1967,15 +2009,24 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 
 ** visual-fill-column - 長い行を任意の桁で折り返す               :PUBLISHED:
 :PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-11-08 22:19:48]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech
-:POST_TAGS: Emacs
-:ID:       o2b:88634903-8b8b-44b8-9b7f-a50fdc58ed5d
-:POST_DATE: [2021-11-08 Mon 22:21]
-:POSTID:   218
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-visual-fill-column.html
+:EXPORT_OPTIONS:  toc:nil num:nil
 :END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: visual-fill-column - 長い行を任意の桁で折り返す
+permalink: /archives/218
+published: true
+---
+#+end_export
+
 *** 長い行を折り返す？折り返さない？
 Emacsでは長い行を折返して表示してくれます。
 
@@ -2094,15 +2145,23 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 
 ** dired-launch - diredをランチャにする（WSL対応）                :PUBLISHED:
 :PROPERTIES:
-:BLOG:     plover
-:DATE:     [2021-12-12 10:03:35]
-:OPTIONS:  toc:nil num:nil todo:nil pri:nil tags:nil ^:nil
-:CATEGORY: Tech,
-:POST_TAGS: Emacs, dired, dred-launch
-:ID:       o2b:bcb13905-ddce-476c-bfd9-273dd58d7395
-:POST_DATE: [2021-12-12 Sun 10:04]
-:POSTID:   475
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-dired-launch.html
+:EXPORT_OPTIONS:  toc:nil num:nil
 :END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: dired-launch - diredをランチャにする（WSL対応）
+permalink: /archives/475
+published: true
+---
+#+end_export
 
 diredでWordやExcelのファイルを開くと、謎のXMLファイルが入ったディレクトリのようなもの現れ、しょぼんとすることがありませんか？拡張子がdocxやxslxのファイルは、実はいくつかのXMLファイルをアーカイブしたものです。初期設定のままだと、EmacsはそれらがWordやExcelのファイルであると認識せず、アーカイブの中身を表示するのです。
 
