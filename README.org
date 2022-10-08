@@ -1214,6 +1214,8 @@ Emacsでもモードによっては同じように動作します（orgモード
                  '("n" . "note"))
     (add-to-list 'org-structure-template-alist
                  '("w" . "warning"))
+    (add-to-list 'org-structure-template-alist
+                 '("f" . "figure"))
     )
 #+end_src
 
