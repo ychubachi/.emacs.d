@@ -1139,6 +1139,7 @@ Emacsでもモードによっては同じように動作します（orgモード
                               ":EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_drafts/drafts_%{export_file_name}"
                               ":EXPORT_OPTIONS: toc:nil num:nil html5-fancy:t"
                               ":EXPORT_HTML_DOCTYPE: html5"
+                              ":DIR: ~/git/ploversky-jekyll/assets/images/posts/"
                               ":END:"
                               ""
                               "#+begin_comment"
