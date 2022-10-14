@@ -66,7 +66,7 @@ leafに追加するパッケージです。
 * 日本語関係
 ** Linuxでmozcを使った日本語入力の設定（2022年版）                 :PBLISHED:
 :PROPERTIES:
-:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-linux-mozc.html
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-linux-mozc.html
 :EXPORT_OPTIONS:  toc:nil num:nil
 :END:
 
@@ -79,7 +79,7 @@ Next  time: C-u C-c C-e         (Do this anyware in the subtree)
 ---
 layout: post
 title: Linuxでmozcを使った日本語入力の設定（2022年版）
-permalink: /archives/463
+permalink: /archives/463.html
 published: true
 ---
 #+end_export

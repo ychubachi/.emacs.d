@@ -24,9 +24,9 @@ README.org
 - org-roam
   - sqlite3
 
-** EmacsのX関係の設定を外部化する
+** EmacsのX関係の設定を外部化する                                :PUBLISHED:
 :PROPERTIES:
-:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-xresources.html
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-xresources.html
 :EXPORT_OPTIONS:  toc:nil num:nil
 :END:
 
@@ -39,7 +39,7 @@ Next  time: C-u C-c C-e         (Do this anyware in the subtree)
 ---
 layout: post
 title: EmacsのX関係の設定を外部化する
-permalink: /archives/248
+permalink: /archives/248.html
 published: true
 ---
 #+end_export
@@ -754,7 +754,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
 ** embark - カーソル位置にあるテキストに対するアクションを実行（org link対応） [M-.][C-.][C-^ B] :PUBLISHED:
 :PROPERTIES:
-:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-embark.html
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-embark.html
 :EXPORT_OPTIONS:  toc:nil num:nil
 :END:
 
@@ -767,7 +767,7 @@ Next  time: C-u C-c C-e         (Do this anyware in the subtree)
 ---
 layout: post
 title: embark - カーソル位置にあるテキストに対するアクションを実行（org link対応）
-permalink: /archives/363
+permalink: /archives/363.html
 published: true
 ---
 #+end_export
@@ -1649,9 +1649,9 @@ https://chubachi.net/publish
 [[file:animal.png]]
 
 * 外部パッケージ
-** which-key - キーバインドのガイド表示                              :draft:
+** which-key - キーバインドのガイド表示                          :PUBLISHED:
 :PROPERTIES:
-:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-which-key.html
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-which-key.html
 :EXPORT_OPTIONS:  toc:nil num:nil
 :END:
 
@@ -1664,7 +1664,7 @@ Next  time: C-u C-c C-e         (Do this anyware in the subtree)
 ---
 layout: post
 title: which-key - キーバインドのガイド表示
-permalink: /archives/344
+permalink: /archives/344.html
 published: true
 ---
 #+end_export
@@ -1716,7 +1716,7 @@ C-xを打って入力をやめると、画面にその先に打つ文字とそ�
 + [[http://emacs.rubikitch.com/swap-buffers/][swap-buffers.el : 【多分割対応】ウィンドウを入れ替える新しいコマンド]]
 ** backup-each-save - Emacsで保存するたびに自動でバックアップ     :PUBLISHED:
 :PROPERTIES:
-:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-backup-each-save.html
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-backup-each-save.html
 :EXPORT_OPTIONS:  toc:nil num:nil
 :END:
 
@@ -1729,7 +1729,7 @@ Next  time: C-u C-c C-e         (Do this anyware in the subtree)
 ---
 layout: post
 title: backup-each-save - Emacsで保存するたびに自動でバックアップ
-permalink: /archives/378
+permalink: /archives/378.html
 published: true
 ---
 #+end_export
@@ -1983,7 +1983,7 @@ published: true
 
 ** shell-pop - いつでもどこでもshellを出す                       :PUBLISHED:
 :PROPERTIES:
-:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-shell-pop.html
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-shell-pop.html
 :EXPORT_OPTIONS:  toc:nil num:nil
 :END:
 
@@ -1996,7 +1996,7 @@ Next  time: C-u C-c C-e         (Do this anyware in the subtree)
 ---
 layout: post
 title: shell-pop - いつでもどこでもshellを出す
-permalink: /archives/254
+permalink: /archives/254.html
 published: true
 ---
 #+end_export
@@ -2033,7 +2033,7 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 
 ** visual-fill-column - 長い行を任意の桁で折り返す               :PUBLISHED:
 :PROPERTIES:
-:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-visual-fill-column.html
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-visual-fill-column.html
 :EXPORT_OPTIONS:  toc:nil num:nil
 :END:
 
@@ -2046,7 +2046,7 @@ Next  time: C-u C-c C-e         (Do this anyware in the subtree)
 ---
 layout: post
 title: visual-fill-column - 長い行を任意の桁で折り返す
-permalink: /archives/218
+permalink: /archives/218.html
 published: true
 ---
 #+end_export
@@ -2169,7 +2169,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, con
 
 ** dired-launch - diredをランチャにする（WSL対応）                :PUBLISHED:
 :PROPERTIES:
-:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-dired-launch.html
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-dired-launch.html
 :EXPORT_OPTIONS:  toc:nil num:nil
 :END:
 
@@ -2182,7 +2182,7 @@ Next  time: C-u C-c C-e         (Do this anyware in the subtree)
 ---
 layout: post
 title: dired-launch - diredをランチャにする（WSL対応）
-permalink: /archives/475
+permalink: /archives/475.html
 published: true
 ---
 #+end_export

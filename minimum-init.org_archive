@@ -60,7 +60,7 @@ Archived entries from file c:/Users/yc/.emacs.d/minimum-init.org
 
 * leaf - 「パッケージ設定」のためのパッケージ                      :PBLISHED:
 :PROPERTIES:
-:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/2022-10-01-leaf.html
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-leaf.html
 :EXPORT_OPTIONS:  toc:nil num:nil
 :END:
 
@@ -73,7 +73,7 @@ Next  time: C-u C-c C-e         (Do this anyware in the subtree)
 ---
 layout: post
 title: leaf - 「パッケージ設定」のためのパッケージ
-permalink: /archives/293
+permalink: /archives/293.html
 published: true
 ---
 #+end_export
