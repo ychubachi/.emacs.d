@@ -1630,7 +1630,7 @@ https://chubachi.net/publish
 
 #+begin_src emacs-lisp
 ;; plantuml.jarへのパスを設定
-(setq org-plantuml-jar-path "~/.emacs.d/lib/plantuml-1.2022.5.jar")
+(setq org-plantuml-jar-path "~/.emacs.d/lib/plantuml-1.2022.12.jar")
 
 ;; org-babelで使用する言語を登録
 (org-babel-do-load-languages
@@ -2031,7 +2031,7 @@ Emacsで作業中に、shellで作業をしたくなることはよくありま�
 
 [fn:2] [[https://blog.inouetakuya.info/entry/20110627/1309175529][Emacs のシェルモード比較 - shell、ansi-term、multi-term - 彼女からは、おいちゃんと呼ばれています]]
 
-** visual-fill-column - 長い行を任意の桁で折り返す               :PUBLISHED:
+** TODO visual-fill-column - 長い行を任意の桁で折り返す          :PUBLISHED:
 :PROPERTIES:
 :EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-visual-fill-column.html
 :EXPORT_OPTIONS:  toc:nil num:nil
@@ -2047,7 +2047,7 @@ Next  time: C-u C-c C-e         (Do this anyware in the subtree)
 layout: post
 title: visual-fill-column - 長い行を任意の桁で折り返す
 permalink: /archives/218.html
-published: true
+published: false
 ---
 #+end_export
 
