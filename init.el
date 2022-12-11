@@ -22,7 +22,10 @@
 
 ;;; Code:
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Profiling (start)
 (defvar my-tick-previous-time (current-time))
+
 (defun my-tick-init-time (msg)
   "Tick boot sequence."
   (let ((ctime (current-time)))
@@ -32,21 +35,19 @@
              msg)
     (setq my-tick-previous-time ctime)))
 
+;;;;; Start profiling
 (my-tick-init-time "start")
 
-(set-language-environment "Japanese")
-(prefer-coding-system 'utf-8)
-(cond ((eq system-type 'windows-nt)
-       (setq default-process-coding-system (cons 'utf-8 'cp932-unix))))
-
-;; Initialize packages.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Initialize packages
+;;;;; Set vars and initialize
 (customize-set-variable
  'package-archives '(("org"   . "https://orgmode.org/elpa/")
                      ("melpa" . "https://melpa.org/packages/")
                      ("gnu"   . "https://elpa.gnu.org/packages/")))
-  (package-initialize)
+(package-initialize)
 
-;; Install straight.el
+;;;;; Install straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -60,28 +61,38 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; Install leaf.el
+;;;;; Install leaf.el with straight
 (straight-use-package 'leaf)
 (straight-use-package 'leaf-keywords)
 (leaf-keywords-init)
 
-(leaf no-littering
-  :package t
-  :require t)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; High priority packages
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(leaf no-littering :package t :require t)
 
 ;; Install Org with straight.el
 ;; Check Org version with M-x org-version.
-(leaf org
-  :straight t)
+(leaf org :straight t)
+
+(leaf *lang-env
+  :init
+  (set-language-environment "Japanese")
+  (prefer-coding-system 'utf-8)
+  (cond ((eq system-type 'windows-nt)
+         (setq default-process-coding-system (cons 'utf-8 'cp932-unix)))))
 
 ;; Load my settings
-(my-tick-init-time "loading minimum-init.org")
-(org-babel-load-file "~/.emacs.d/minimum-init.org")
+(leaf *load-my-settings
+  :init
+  (my-tick-init-time "loading minimum-init.org")
+  (org-babel-load-file "~/.emacs.d/minimum-init.org")
 
-(my-tick-init-time "loading README.org")
-(org-babel-load-file "~/.emacs.d/README.org")
+  (my-tick-init-time "loading README.org")
+  (org-babel-load-file "~/.emacs.d/README.org")
 
-(my-tick-init-time "end")
+  (my-tick-init-time "end"))
 
 ;; Local Variables:
 ;; indent-tabs-mode: nil
