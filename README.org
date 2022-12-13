@@ -1559,6 +1559,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+begin_src emacs-lisp
   (leaf org-contrib
     :straight t
+    :custom (org-download-method . 'attach)
     :config
     (require 'ox-taskjuggler))
 #+end_src
@@ -1652,6 +1653,21 @@ https://chubachi.net/publish
 
 #+RESULTS:
 [[file:animal.png]]
+
+** org-download
+
+- [[https://github.com/abo-abo/org-download][abo-abo/org-download: Drag and drop images to Emacs org-mode]]
+
+#+begin_src emacs-lisp
+  (leaf org-download
+    :straight t
+    :require t
+    :config
+    (add-hook 'dired-mode-hook 'org-download-enable))
+#+end_src
+
+#+RESULTS:
+: org-download
 
 * 外部パッケージ
 ** which-key - キーバインドのガイド表示                          :PUBLISHED:
