@@ -1559,7 +1559,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+begin_src emacs-lisp
   (leaf org-contrib
     :straight t
-    :custom (org-download-method . 'attach)
     :config
     (require 'ox-taskjuggler))
 #+end_src
@@ -1662,8 +1661,13 @@ https://chubachi.net/publish
   (leaf org-download
     :straight t
     :require t
+    :custom (org-download-method . 'attach)
     :config
-    (add-hook 'dired-mode-hook 'org-download-enable))
+    (setq org-image-actual-width 400) ; width of images (#+ATTR_ORG: 400)
+    (add-hook 'dired-mode-hook 'org-download-enable)
+    (leaf
+      :when (eq system-type 'windows-nt)
+      :custom (org-download-screenshot-method . "magick convert clipboard: %s")))
 #+end_src
 
 #+RESULTS:
