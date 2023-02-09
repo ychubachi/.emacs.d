@@ -1,19 +1,3 @@
-(leaf *leaf-optional-packages
-    :config
-    (leaf leaf-convert
-      :straight t)
-    (leaf leaf-tree
-      :straight t
-      :custom ((imenu-list-size . 30)
-               (imenu-list-position . 'left)))
-    (leaf hydra
-      :straight t)
-;;    (leaf el-get
-;;      :straight t
-;;      :custom ((el-get-git-shallow-clone  . t)))
-    (leaf diminish
-      :straight t))
-
 (define-key key-translation-map [?\C-h] [?\C-?])
 
 (global-set-key (kbd "C-^") help-map)

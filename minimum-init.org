@@ -1,29 +1,13 @@
 #+STARTUP: show2levels
 
+_注：このファイルはもう使用していません。_
+
 これだけは絶対に必要！と思える設定。
 
 * パッケージ
 ** leafの追加パッケージ
 
 leafに追加するパッケージです。
-
-#+begin_src emacs-lisp
-  (leaf *leaf-optional-packages
-    :config
-    (leaf leaf-convert
-      :straight t)
-    (leaf leaf-tree
-      :straight t
-      :custom ((imenu-list-size . 30)
-               (imenu-list-position . 'left)))
-    (leaf hydra
-      :straight t)
-;;    (leaf el-get
-;;      :straight t
-;;      :custom ((el-get-git-shallow-clone  . t)))
-    (leaf diminish
-      :straight t))
-#+end_src
 
 * キーボードバインディング
 ** C-hをBSにする[C-h]
