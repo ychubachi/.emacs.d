@@ -226,43 +226,6 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 : warnings
 
 * UI・見た目
-** modus-themes - 標準のテーマ設定（[f5]で切り替え）
-- [[https://protesilaos.com/modus-themes/][Modus Themes (Modus Operandi and Modus Vivendi) | Protesilaos Stavrou]]
-- ジャンプ率
-  - [[https://type-scale.com/][Type Scale - A Visual Calculator]]
-
-#+begin_src emacs-lisp
-  (leaf modus-themes
-    :straight t                        ; omit this to use the built-in themes
-    :custom
-    (modus-themes-org-blocks . 'tinted-background) ; {nil,'gray-background,'tinted-background}
-    (modus-themes-subtle-line-numbers . t)
-    (modus-themes-mode-line . '(moody borderless (padding . 0) (height . 0.9)))
-    (modus-themes-syntax . '(yellow-comments green-strings))
-    ;; (modus-themes-hl-line . '(underline accented)) ;'(underline accented)
-    (modus-themes-paren-match . '(intense underline))
-    (modus-themes-headings ; this is an alist: read the manual or its doc string
-     . '((1 . (regular background 1.215))
-         (2 . (regular 1.138))
-         (3 . (regular 1.067))
-         (t . (regular))))
-    :init
-    ;; Add all your customizations prior to loading the themes
-    (setq modus-themes-italic-constructs t
-          modus-themes-bold-constructs nil
-          modus-themes-region '(bg-only no-extend))
-    ;; Load the theme files before enabling a theme (else you get an error).
-    (modus-themes-load-themes)
-    :config
-    ;; Load the theme of your choice:
-    (modus-themes-load-vivendi) ;; OR (modus-themes-load-operandi)
-    :bind
-    ("<f5>" . modus-themes-toggle))
-#+end_src
-
-#+RESULTS:
-: modus-themes
-
 ** moody - モードラインにタブとリボンを表示
 
 - [[https://github.com/tarsius/moody][tarsius/moody: Tabs and ribbons for the mode-line]]
@@ -2140,8 +2103,8 @@ C-c qにvisual-fill-column-modeにするキーを割り当てました。M-qでf
 
 また、一行を基準に動作する標準のキーを、画面の一行を基準に動作するコマンドに、次の通り置き換えています[fn:1]。
 
-| キー | 説明                         |
-|-----+-----------------------------|
+| キー | 説明                       |
+|-----+---------------------------|
 | C-a | *画面上の* 行の一番先頭に移動 |
 | C-e | *画面上の* 行の一番末尾に移動 |
 | C-k | *画面上の* 行を一行削除       |
