@@ -102,14 +102,32 @@
     :straight t
     :bind (("C-c e" . macrostep-expand))))
 
-(leaf *Keyboard-Sttings
+(leaf *My-Functions
+  :init
+  (leaf *Fonts
+    :init
+    (defun my/list-available-fonts ()
+      (interactive)
+      (let ((font-list (font-family-list)))
+        (with-output-to-temp-buffer "*Available Fonts*"
+          (set-buffer "*Available Fonts*")
+          (dolist (font font-list)
+            (insert (format "%s\n" font)))
+          (goto-char (point-min)))))
+
+    (defun my/font-exists-p (font-name)
+      (if (null (x-list-fonts font-name))
+          nil t))))
+
+(leaf *Keyboard-Settings
   :init
   (leaf *Help-Keys
     :init
     (define-key key-translation-map [?\C-h] [?\C-?])
     (global-set-key (kbd "C-^") help-map))
 
-  (leaf *undo :bind (("C-z" . undo))))
+  (leaf *Undo
+    :bind (("C-z" . undo))))
 
 (leaf *Japanese-Related-Settings
   :init
@@ -120,73 +138,83 @@
     (cond ((eq system-type 'windows-nt)
            (setq default-process-coding-system (cons 'utf-8 'cp932-unix)))))
 
-  (leaf *Windows-Fonts
-    :disabled t
-    :if (eq system-type 'windows-nt)
-    :init
-    ;; 通常使用するフォント
-    (set-frame-font "PlemolJP-12" nil t)
-    ;; IME未確定時のフォント設定
-    (modify-all-frames-parameters '((ime-font . "PlemolJP-12"))))
-
   (leaf mozc
-  :straight t
-  :config
-  (cond ((eq system-type 'windows-nt)
-         (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
-        (t (setq mozc-helper-program-name "mozc_emacs_helper")))
-  ;; (if (getenv "WSLENV")
-  ;;     ;; (setq mozc-helper-program-name "mozc_emacs_helper_win.sh")
-  ;;     (setq mozc-helper-program-name "mozc_emacs_helper")
-  ;;   (setq mozc-helper-program-name "mozc_emacs_helper"))
-
-  (leaf mozc-im
     :straight t
-    :require t
-    :custom ((default-input-method . "japanese-mozc-im"))
-    :bind* (("C-o" . toggle-input-method))
     :config
-    (setq mozc-candidate-style 'echo-area))
+    (cond ((eq system-type 'windows-nt)
+           (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
+          (t
+           (setq mozc-helper-program-name "mozc_emacs_helper")))
+    ;; (if (getenv "WSLENV")
+    ;;     ;; (setq mozc-helper-program-name "mozc_emacs_helper_win.sh")
+    ;;     (setq mozc-helper-program-name "mozc_emacs_helper")
+    ;;   (setq mozc-helper-program-name "mozc_emacs_helper"))
 
-  (leaf mozc-cursor-color
-    :straight (mozc-cursor-color :type git :host github
-                                 :repo "iRi-E/mozc-el-extensions")
-    :require t
-    :config
-    (setq mozc-cursor-color-alist
-          '((direct        . "gray")
-            (read-only     . "yellow")
-            (hiragana      . "green")
-            (full-katakana . "goldenrod")
-            (half-ascii    . "dark orchid")
-            (full-ascii    . "orchid")
-            (half-katakana . "dark goldenrod")))
-    ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
-    (defvar-local mozc-im-mode nil)
-    (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
-    (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
-    (advice-add 'mozc-cursor-color-update
-                :around (lambda (orig-fun &rest args)
-                          (let ((mozc-mode mozc-im-mode))
-                            (apply orig-fun args)))))
-  (leaf *mozc-win
-    :if (eq system-type 'windows-nt)
-    :config
-    (advice-add 'mozc-session-execute-command
-  	        :after (lambda (&rest args)
-  	                 (when (eq (nth 0 args) 'CreateSession)
-  	                   (mozc-session-sendkey '(Hankaku/Zenkaku)))))))
+    (leaf mozc-im
+      :straight t
+      :require t
+      :custom ((default-input-method . "japanese-mozc-im"))
+      :bind* (("C-o" . toggle-input-method))
+      :config
+      (setq mozc-candidate-style 'echo-area))
 
-  )
+    (leaf mozc-cursor-color
+      :straight (mozc-cursor-color :type git :host github
+                                   :repo "iRi-E/mozc-el-extensions")
+      :require t
+      :config
+      (setq mozc-cursor-color-alist
+            '((direct        . "gray")
+              (read-only     . "yellow")
+              (hiragana      . "green")
+              (full-katakana . "goldenrod")
+              (half-ascii    . "dark orchid")
+              (full-ascii    . "orchid")
+              (half-katakana . "dark goldenrod")))
+      ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
+      (defvar-local mozc-im-mode nil)
+      (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
+      (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
+      (advice-add 'mozc-cursor-color-update
+                  :around (lambda (orig-fun &rest args)
+                            (let ((mozc-mode mozc-im-mode))
+                              (apply orig-fun args)))))
+    (leaf *mozc-win
+      :if (eq system-type 'windows-nt)
+      :config
+      (advice-add 'mozc-session-execute-command
+  	          :after (lambda (&rest args)
+  	                   (when (eq (nth 0 args) 'CreateSession)
+  	                     (mozc-session-sendkey '(Hankaku/Zenkaku))))))))
 
 (leaf *Look-And-Feel
   :custom
   (line-spacing . 0.2)
   :init
+  (leaf *Fonts
+    :doc "フォント設定。確認はC-u C-x =。Xの場合はXResourcesも利用可。"
+    :init
+    ;; ｜あいうえお｜
+    ;; ｜憂鬱な檸檬｜
+    ;; ｜<miilwiim>｜
+    ;; ｜!"#$%&'~{}｜
+    ;; ｜🙆iimmiim>｜
+
+    (let (
+          ;; (font-name "Noto Sans Mono-11")
+          ;; (font-name "PlemolJP-11") ; IBM Plex Sans JP + IBM Plex Mono
+          (font-name "HackGen-11") ;  源ノ角ゴシックの派生 + Hack
+          ;; (font-name "UDEV Gothic NF-12") ; BIZ UDゴシック + JetBrains Mono
+          ;; (font-name "FirgeNerd-11") ; 源真ゴシック + Fira Mono
+          )
+      (if (null (x-list-fonts font-name))
+          (error (format "No such font: %s" font-name)))
+      (set-face-attribute 'default nil :font font-name)))
+
   (leaf modus-themes
     :straight t                        ; omit this to use the built-in themes
     :custom
-    (modus-themes-italic-constructs . t)
+    (modus-themes-italic-constructs . nil)
     (modus-themes-bold-constructs . nil)
     (modus-themes-region . '(bg-only no-extend))
     (modus-themes-org-blocks . 'gray-background) ; {nil,'gray-background,'tinted-background}
