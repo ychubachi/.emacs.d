@@ -25,18 +25,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; Start profiling
 (progn
-  (defvar my-tick-previous-time (current-time))
+  (defvar my/tick-previous-time (current-time))
 
-  (defun my-tick-init-time (msg)
+  (defun my/tick-init-time (msg)
     "Tick boot sequence."
     (let ((ctime (current-time)))
       (message "--- %5.2f[ms] %s"
                (* 1000 (float-time
-                        (time-subtract ctime my-tick-previous-time)))
+                        (time-subtract ctime my/tick-previous-time)))
                msg)
-      (setq my-tick-previous-time ctime)))
+      (setq my/tick-previous-time ctime)))
 
-  (my-tick-init-time "start") ; Start profiling
+  (my/tick-init-time "start") ; Start profiling
   )
 
 ;;;; Package management tools
@@ -67,9 +67,15 @@
     (leaf-keywords-init))
 
   (leaf leaf-tree :ensure t
-    ;; :custom ((imenu-list-size . 30)
-    ;;          (imenu-list-position . 'left))
-    )
+    :custom ((imenu-list-size . 30)
+             (imenu-list-position . 'left))
+    :init
+    (defun my/enable-init-el-minor-mode ()
+      (when (equal
+             (buffer-file-name)
+             (expand-file-name "~/.emacs.d/init.el"))
+        (leaf-tree-mode t)))
+    (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
 
   (leaf leaf-convert :ensure t)
 
@@ -137,23 +143,6 @@
     (leaf Global-Bindings
       :bind (("C-z" . undo)))))
 
-(leaf My-Functions
-  :init
-  (leaf Fonts
-    :init
-    (defun my/list-available-fonts ()
-      (interactive)
-      (let ((font-list (font-family-list)))
-        (with-output-to-temp-buffer "*Available Fonts*"
-          (set-buffer "*Available Fonts*")
-          (dolist (font font-list)
-            (insert (format "%s\n" font)))
-          (goto-char (point-min)))))
-
-    (defun my/font-exists-p (font-name)
-      (if (null (x-list-fonts font-name))
-          nil t))))
-
 (leaf Japanese-Settings
   :init
   (leaf *Language-Environment
@@ -212,107 +201,120 @@
   	                   (when (eq (nth 0 args) 'CreateSession)
   	                     (mozc-session-sendkey '(Hankaku/Zenkaku))))))))
 
-(leaf Look-And-Feel
-  :custom
-  (line-spacing . 0.2)
-  :init
-  (leaf Fonts
-    :doc "フォント設定。確認はC-u C-x =。"
-    :when (display-graphic-p)
-    :init
-    ;; ｜あいうえお｜
-    ;; ｜憂鬱な檸檬｜
-    ;; ｜<miilwiim>｜
-    ;; ｜!"#$%&'~{}｜
-    ;; ｜🙆iimmiim>｜
-    (let (
-          ;; (font-name "Noto Sans Mono-11")
-          ;; (font-name "PlemolJP-11") ; IBM Plex Sans JP + IBM Plex Mono
-          (font-name "HackGen-11") ;  源ノ角ゴシックの派生 + Hack
-          ;; (font-name "UDEV Gothic NF-12") ; BIZ UDゴシック + JetBrains Mono
-          ;; (font-name "FirgeNerd-11") ; 源真ゴシック + Fira Mono
-          )
-      (if (null (x-list-fonts font-name))
-          (error (format "No such font: %s" font-name)))
-      (set-face-attribute 'default nil :font font-name)))
 
-  (leaf modus-themes
-    :straight t                        ; omit this to use the built-in themes
-    :custom
-    (modus-themes-italic-constructs . nil)
-    (modus-themes-bold-constructs . nil)
-    (modus-themes-region . '(bg-only no-extend))
-    (modus-themes-org-blocks . 'gray-background) ; {nil,'gray-background,'tinted-background}
-    (modus-themes-subtle-line-numbers . t)
-    (modus-themes-mode-line . '(moody borderless (padding . 0) (height . 0.9)))
-    (modus-themes-syntax . '(yellow-comments green-strings))
-    ;; (modus-themes-hl-line . '(underline accented)) ;'(underline accented)
-    (modus-themes-paren-match . '(intense underline))
-    (modus-themes-headings ; this is an alist: read the manual or its doc string
-     . '((1 . (regular 1.215))
-         (2 . (regular 1.138))
-         (3 . (regular 1.067))
-         (t . (regular))))
-    :init
-    (require-theme 'modus-themes)
-    ;; Load the theme of your choice:
-    ;; (load-theme 'modus-operandi :no-confirm)
-    (load-theme 'modus-vivendi :no-confirm)
-    :bind
-    ("<f5>" . modus-themes-toggle))
-
-  (leaf org-modern
-    :url "https://github.com/minad/org-modern"
-    :straight t
-    :init
-    ;; Add frame borders and window dividers
-    (modify-all-frames-parameters
-     '((right-divider-width . 10)
-       (internal-border-width . 10)))
-    (dolist (face '(window-divider
-                    window-divider-first-pixel
-                    window-divider-last-pixel))
-      (face-spec-reset-face face)
-      (set-face-foreground face (face-attribute 'default :background)))
-    (set-face-background 'fringe (face-attribute 'default :background))
-
-    ;; (setq org-modern-star '("🟩" "🟣" "🔶" "◎" "○" "※"))
-    ;; (setq org-modern-star '("■" "◆" "◎" "○" "§" "¶"))
-    ;; (setq org-modern-star '("🟧" "🔶" "🟠" "🔸" "§" "¶"))
-    (setq org-modern-star '("■" "◆" "●" "◎" "○" "・"))
-
-    (setq
-     ;; Edit settings
-     org-auto-align-tags nil ; Non-nil keeps tags aligned when modifying headlines.
-     org-tags-column 0
-     org-catch-invisible-edits 'show-and-error
-     org-special-ctrl-a/e t
-
-     ;; Org styling, hide markup etc.
-     org-hide-emphasis-markers t
-     org-pretty-entities t
-     ;; org-ellipsis "…"
-
-     ;; Agenda styling
-     org-agenda-tags-column 0
-     org-agenda-block-separator ?─
-     org-agenda-time-grid
-     '((daily today require-timed)
-       (800 1000 1200 1400 1600 1800 2000)
-       " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-     org-agenda-current-time-string
-     "⭠ now ─────────────────────────────────────────────────"
-     )
-    (global-org-modern-mode)))
-
-
-
-;; Load my settings
-
-
-(leaf Main-Settings
+(leaf Main
   :disabled nil
   :init
+
+  (leaf My-Functions
+    :init
+    (leaf Fonts
+      :init
+      (defun my/list-available-fonts ()
+        (interactive)
+        (let ((font-list (font-family-list)))
+          (with-output-to-temp-buffer "*Available Fonts*"
+            (set-buffer "*Available Fonts*")
+            (dolist (font font-list)
+              (insert (format "%s\n" font)))
+            (goto-char (point-min)))))
+
+      (defun my/font-exists-p (font-name)
+        (if (null (x-list-fonts font-name))
+            nil t))))
+
+  (leaf Look-And-Feel
+    :custom
+    (line-spacing . 0.4)
+    :init
+    (leaf Fonts
+      :doc "フォント設定。確認はC-u C-x =。"
+      :when (display-graphic-p)
+      :init
+      ;; ｜あいうえお｜
+      ;; ｜憂鬱な檸檬｜
+      ;; ｜<miilwiim>｜
+      ;; ｜!"#$%&'~{}｜
+      ;; ｜🙆iimmiim>｜
+      (let (
+            ;; (font-name "Noto Sans Mono-11")
+            ;; (font-name "PlemolJP-11") ; IBM Plex Sans JP + IBM Plex Mono
+            (font-name "HackGen-11")    ;  源ノ角ゴシックの派生 + Hack
+            ;; (font-name "UDEV Gothic NF-12") ; BIZ UDゴシック + JetBrains Mono
+            ;; (font-name "FirgeNerd-11") ; 源真ゴシック + Fira Mono
+            )
+        (if (null (x-list-fonts font-name))
+            (error (format "No such font: %s" font-name)))
+        (set-face-attribute 'default nil :font font-name)))
+
+    (leaf modus-themes
+      :straight t                       ; omit this to use the built-in themes
+      :custom
+      (modus-themes-italic-constructs . nil)
+      (modus-themes-bold-constructs . nil)
+      (modus-themes-region . '(bg-only no-extend))
+      (modus-themes-org-blocks . 'gray-background) ; {nil,'gray-background,'tinted-background}
+      (modus-themes-subtle-line-numbers . t)
+      (modus-themes-mode-line . '(moody borderless (padding . 0) (height . 0.9)))
+      (modus-themes-syntax . '(yellow-comments green-strings))
+      ;; (modus-themes-hl-line . '(underline accented)) ;'(underline accented)
+      (modus-themes-paren-match . '(intense underline))
+      (modus-themes-headings ; this is an alist: read the manual or its doc string
+       . '((1 . (regular 1.215))
+           (2 . (regular 1.138))
+           (3 . (regular 1.067))
+           (t . (regular))))
+      :init
+      (require-theme 'modus-themes)
+      ;; Load the theme of your choice:
+      ;; (load-theme 'modus-operandi :no-confirm)
+      (load-theme 'modus-vivendi :no-confirm)
+      :bind
+      ("<f5>" . modus-themes-toggle))
+
+    (leaf org-modern
+      :url "https://github.com/minad/org-modern"
+      :straight t
+      :init
+      ;; Add frame borders and window dividers
+      (modify-all-frames-parameters
+       '((right-divider-width . 10)
+         (internal-border-width . 10)))
+      (dolist (face '(window-divider
+                      window-divider-first-pixel
+                      window-divider-last-pixel))
+        (face-spec-reset-face face)
+        (set-face-foreground face (face-attribute 'default :background)))
+      (set-face-background 'fringe (face-attribute 'default :background))
+
+      ;; (setq org-modern-star '("🟩" "🟣" "🔶" "◎" "○" "※"))
+      ;; (setq org-modern-star '("■" "◆" "◎" "○" "§" "¶"))
+      ;; (setq org-modern-star '("🟧" "🔶" "🟠" "🔸" "§" "¶"))
+      (setq org-modern-star '("■" "◆" "●" "◎" "○" "・"))
+
+      (setq
+       ;; Edit settings
+       org-auto-align-tags nil ; Non-nil keeps tags aligned when modifying headlines.
+       org-tags-column 0
+       org-catch-invisible-edits 'show-and-error
+       org-special-ctrl-a/e t
+
+       ;; Org styling, hide markup etc.
+       org-hide-emphasis-markers t
+       org-pretty-entities t
+       ;; org-ellipsis "…"
+
+       ;; Agenda styling
+       org-agenda-tags-column 0
+       org-agenda-block-separator ?─
+       org-agenda-time-grid
+       '((daily today require-timed)
+         (800 1000 1200 1400 1600 1800 2000)
+         " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+       org-agenda-current-time-string
+       "⭠ now ─────────────────────────────────────────────────"
+       )
+      (global-org-modern-mode)))
 
   (leaf Org-Mode
   :init
@@ -1596,7 +1598,7 @@
   ;; Do something
   )
 
-(my-tick-init-time "end")
+(my/tick-init-time "end")
 
 (provide 'init.el)
 ;;; init.el ends here
