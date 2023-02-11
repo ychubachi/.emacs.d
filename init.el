@@ -1055,17 +1055,13 @@
   (leaf backup-each-save
     :when (not (eq system-type 'windows-nt))
     :straight t
-    :config
-    ;; バックアップ先
-    (setq backup-each-save-mirror-location "~/.emacs.d/backups")
-    ;; バックアップファイルにつけるsuffix
-    (setq backup-each-save-time-format "%y%m%d_%H%M%S")
-    ;; バックアップするファイルサイズの上限
-    (setq backup-each-save-size-limit 5000000)
-    ;; すべてのファイルをバックアップする
-    (setq backup-each-save-filter-function 'identity)
-    ;; 有効化！
-    (add-hook 'after-save-hook 'backup-each-save))
+    :custom
+    (backup-each-save-mirror-location . "~/.emacs.d/backups") ; バックアップ先
+    (backup-each-save-time-format . "%y%m%d_%H%M%S")          ; バックアップファイルにつけるsuffix
+    (backup-each-save-size-limit . 5000000)                   ; バックアップするファイルサイズの上限
+    (backup-each-save-filter-function . 'identity)            ; すべてのファイルをバックアップする
+    :init
+    (add-hook 'after-save-hook 'backup-each-save)) ; 有効化！
 
   (leaf undo-tree
     :straight t
