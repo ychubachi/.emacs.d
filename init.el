@@ -192,11 +192,9 @@
   	                   (when (eq (nth 0 args) 'CreateSession)
   	                     (mozc-session-sendkey '(Hankaku/Zenkaku))))))))
 
-
 (leaf Main
   :disabled nil
   :init
-
   (leaf My-Functions
     :init
     (leaf Fonts
@@ -216,7 +214,7 @@
 
   (leaf Look-And-Feel
     :custom
-    (line-spacing . 0.4)
+    (line-spacing . 0.2)
     :init
     (leaf Fonts
       :doc "フォント設定。確認はC-u C-x =。"
@@ -310,30 +308,30 @@
   (leaf Org-Mode
     :init
     (leaf Org-Settings
-    :bind
-    (("C-c l" . org-store-link)
-     ("C-c a" . org-agenda)
-     ("C-c c" . org-capture))
-    :custom
-    (org-directory . "~/Dropbox/Org/")
-    (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
-    (org-agenda-files . '("~/Dropbox/Org/"))
-    (org-todo-keyword-faces
-     . '(("NEXT" . (:foreground "blue" :underline t))
-         ("DONE" . (:foreground "pale green"))))
-    (org-todo-keywords . '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
-    (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
-    (org-startup-truncated . nil)
-    (org-return-follows-link  . t)           ; RET/C-mでリンクを開く
-    (org-agenda-start-with-follow-mode . t)  ; アジェンダで関連するorgファイルを開く
-    (org-ellipsis . " ▽")                    ; …,▼, ↴, ⬎, ⤷, ⋱
-    (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
-    (org-agenda-remove-tags . t) ; アジェンダにタグを表示しない
-    (org-id-link-to-org-use-id . 'create-if-interactive-and-no-custom-id)
+      :bind
+      (("C-c l" . org-store-link)
+       ("C-c a" . org-agenda)
+       ("C-c c" . org-capture))
+      :custom
+      (org-directory . "~/Dropbox/Org/")
+      (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
+      (org-agenda-files . '("~/Dropbox/Org/"))
+      (org-todo-keyword-faces
+       . '(("NEXT" . (:foreground "blue" :underline t))
+           ("DONE" . (:foreground "pale green"))))
+      (org-todo-keywords . '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
+      (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
+      (org-startup-truncated . nil)
+      (org-return-follows-link  . t)        ; RET/C-mでリンクを開く
+      (org-agenda-start-with-follow-mode . t) ; アジェンダで関連するorgファイルを開く
+      (org-ellipsis . " ▽")                  ; …,▼, ↴, ⬎, ⤷, ⋱
+      (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
+      (org-agenda-remove-tags . t)             ; アジェンダにタグを表示しない
+      (org-id-link-to-org-use-id . 'create-if-interactive-and-no-custom-id)
+      )
     )
-  )
 
-  (leaf macrostep ; to test leaf macros.
+  (leaf macrostep                       ; to test leaf macros.
     :doc "interactive macro expander"
     :url "https://github.com/joddie/macrostep"
     :straight t
@@ -372,11 +370,11 @@
     :config
     (setq whitespace-style
           '(
-            face ; faceで可視化
-            trailing ; 行末
-            tabs ; タブ
-            spaces ; スペース
-            space-mark ; 表示のマッピング
+            face                        ; faceで可視化
+            trailing                    ; 行末
+            tabs                        ; タブ
+            spaces                      ; スペース
+            space-mark                  ; 表示のマッピング
             tab-mark
             ))
     (setq whitespace-display-mappings
@@ -419,8 +417,8 @@
 
   (leaf vc-hooks
     :custom
-    (vc-follow-symlinks . t)               ; シンボリックリンクの場合、本体を辿る
-    (vc-handled-backends . '(Git)))        ; Gitのみ使用
+    (vc-follow-symlinks . t)            ; シンボリックリンクの場合、本体を辿る
+    (vc-handled-backends . '(Git)))     ; Gitのみ使用
 
   (leaf tramp
     :config
@@ -441,7 +439,7 @@
 
   (leaf display-line-numbers
     :custom
-    (display-line-numbers-width . 5)       ; 表示する行番号の桁数
+    (display-line-numbers-width . 5)    ; 表示する行番号の桁数
     :hook
     (emacs-startup-hook . global-display-line-numbers-mode))
 
@@ -453,9 +451,9 @@
 
   (leaf auto-revert
     :custom
-    (auto-revert-interval . 1)           ; 再読み込みの間隔
-    (auto-revert-verbose . nil)          ; 再読込の際、メッセージを非表示
-    (auto-revert-check-vc-info . t)      ; VCで更新があった場合、自動で更新
+    (auto-revert-interval . 1)          ; 再読み込みの間隔
+    (auto-revert-verbose . nil)         ; 再読込の際、メッセージを非表示
+    (auto-revert-check-vc-info . t)     ; VCで更新があった場合、自動で更新
     :hook
     (emacs-startup-hook . global-auto-revert-mode))
 
@@ -602,24 +600,24 @@
            ;; ("C-c m" . consult-mode-command)
            ;; ("C-c k" . consult-kmacro)
            ;; C-x bindings (ctl-x-map)
-           ("C-x M-:"  . consult-complex-command)     ;; orig. repeat-complex-command
-           ("C-x b"    . consult-buffer)              ;; orig. switch-to-buffer
+           ("C-x M-:"  . consult-complex-command) ;; orig. repeat-complex-command
+           ("C-x b"    . consult-buffer)          ;; orig. switch-to-buffer
            ("C-x 4 b"  . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-           ("C-x 5 b"  . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-           ("C-x r b"  . consult-bookmark)            ;; orig. bookmark-jump
+           ("C-x 5 b"  . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
+           ("C-x r b"  . consult-bookmark)           ;; orig. bookmark-jump
            ;; ("C-x p b"  . consult-project-buffer)      ;; orig. project-switch-to-buffer
-           ("M-#"      . consult-register-load)       ;; Custom M-# bindings for fast register access
-           ("M-'"      . consult-register-store)      ;; orig. abbrev-prefix-mark (unrelated)
+           ("M-#"      . consult-register-load) ;; Custom M-# bindings for fast register access
+           ("M-'"      . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
            ("C-M-#"    . consult-register)
            ;; Other custom bindings
-           ("M-y"      . consult-yank-pop)            ;; orig. yank-pop
-           ("<help> a" . consult-apropos)             ;; orig. apropos-command
+           ("M-y"      . consult-yank-pop) ;; orig. yank-pop
+           ("<help> a" . consult-apropos)  ;; orig. apropos-command
            ;; M-g bindings (goto-map)
            ("M-g e"    . consult-compile-error)
-           ("M-g f"    . consult-flymake)             ;; Alternative: consult-flycheck
-           ("M-g g"    . consult-goto-line)           ;; orig. goto-line
-           ("M-g M-g"  . consult-goto-line)           ;; orig. goto-line
-           ("M-g o"    . consult-outline)             ;; Alternative: consult-org-heading
+           ("M-g f"    . consult-flymake)   ;; Alternative: consult-flycheck
+           ("M-g g"    . consult-goto-line) ;; orig. goto-line
+           ("M-g M-g"  . consult-goto-line) ;; orig. goto-line
+           ("M-g o"    . consult-outline)   ;; Alternative: consult-org-heading
            ("M-g m"    . consult-mark)
            ("M-g k"    . consult-global-mark)
            ("M-g i"    . consult-imenu)
@@ -638,10 +636,10 @@
            ;; Isearch integration
            ("M-s e"    . consult-isearch-history)
            (:isearch-mode-map
-            ("M-e"     . consult-isearch-history)     ;; orig. isearch-edit-string
-            ("M-s e"   . consult-isearch-history)     ;; orig. isearch-edit-string
-            ("M-s l"   . consult-line)                ;; needed by consult-line to detect isearch
-            ("M-s L"   . consult-line-multi)))        ;; needed by consult-line to detect isearch
+            ("M-e"     . consult-isearch-history) ;; orig. isearch-edit-string
+            ("M-s e"   . consult-isearch-history) ;; orig. isearch-edit-string
+            ("M-s l"   . consult-line) ;; needed by consult-line to detect isearch
+            ("M-s L"   . consult-line-multi))) ;; needed by consult-line to detect isearch
 
     ;; Enable autom  atic preview at point in the *Completions* buffer. This is
     ;; relevant when you use the default completion UI.
@@ -729,7 +727,7 @@
                    :empty-lines-after 1
                    :file "~/Dropbox/Org/Memo.org"
                    :datetree t
-                   :unnarrowed nil ; t
+                   :unnarrowed nil       ; t
                    :jump-to-captured nil ;
                    :empty-lines-before 1
                    :template ("* %?"
@@ -1029,7 +1027,7 @@
     :require t
     :custom (org-download-method . 'attach)
     :config
-    (setq org-image-actual-width 400) ; width of images (#+ATTR_ORG: 400)
+    (setq org-image-actual-width 400)   ; width of images (#+ATTR_ORG: 400)
     (add-hook 'dired-mode-hook 'org-download-enable)
     (leaf
       :when (eq system-type 'windows-nt)
@@ -1246,10 +1244,10 @@
     (notmuch-message-mode-hook . visual-fill-column-mode)
     (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1)))
     :custom
-    ((notmuch-draft-folder . "/drafts")   ; 編集中のドラフトはローカルのフォルダに
-     (notmuch-fcc-dirs . nil)             ; 送信済みメールはローカルに保存せず
+    ((notmuch-draft-folder . "/drafts") ; 編集中のドラフトはローカルのフォルダに
+     (notmuch-fcc-dirs . nil)           ; 送信済みメールはローカルに保存せず
                                         ; Gmailに任せる
-     (notmuch-search-oldest-first . nil)  ; 検索結果を新しい順でソート
+     (notmuch-search-oldest-first . nil) ; 検索結果を新しい順でソート
      (notmuch-saved-searches
       . '((:name "flagged"    :query "tag:flagged AND NOT tag:deleted"
                  :key "f" :search-type tree)
@@ -1317,9 +1315,9 @@
           '(("work"
              nil
              "中鉢欣秀 <yc@aiit.ac.jp>"
-             nil ;; No organization header
-             nil ;; No extra headers
-             nil ;; No extra body text
+             nil            ;; No organization header
+             nil            ;; No extra headers
+             nil            ;; No extra body text
              "~/.signature" ;; My signature
              ))))
 
@@ -1343,7 +1341,7 @@
     :custom
     (highlight-indent-guides-auto-enabled . t)
     (highlight-indent-guides-responsive . t)
-    (highlight-indent-guides-method . 'column);fill)) ;character)) ; column
+    (highlight-indent-guides-method . 'column) ;fill)) ;character)) ; column
     )
 
   (leaf rainbow-delimiters
@@ -1479,13 +1477,13 @@
 
     ;; SMTP
     (setq
-     wl-smtp-connection-type   'starttls         ; Use TLS
-     wl-smtp-authenticate-type "login"           ; Authentication type
-     wl-smtp-posting-user      "yc@aiit.ac.jp"   ; Username
-     wl-smtp-posting-server    "smtp.gmail.com"  ; SMTP server
-     wl-smtp-posting-port      587               ; The SMTP port
+     wl-smtp-connection-type   'starttls        ; Use TLS
+     wl-smtp-authenticate-type "login"          ; Authentication type
+     wl-smtp-posting-user      "yc@aiit.ac.jp"  ; Username
+     wl-smtp-posting-server    "smtp.gmail.com" ; SMTP server
+     wl-smtp-posting-port      587              ; The SMTP port
 
-     wl-local-domain           "aiit.ac.jp"       ; The SMTP server again
+     wl-local-domain           "aiit.ac.jp"  ; The SMTP server again
      wl-message-id-domain      "aiit.ac.jp") ; And... Again?
 
     (setq
@@ -1493,9 +1491,9 @@
      wl-draft-folder   "%[Gmail]/下書き"
      wl-trash-folder   "%[Gmail]/ゴミ箱"
 
-     wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>"  ; Our From: header field
-     wl-fcc-force-as-read t           ; Mark sent mail (in the wl-fcc folder) as read
-     wl-default-spec "%")             ; For auto-completion
+     wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>" ; Our From: header field
+     wl-fcc-force-as-read t      ; Mark sent mail (in the wl-fcc folder) as read
+     wl-default-spec "%")        ; For auto-completion
 
     ;; 隠したいヘッダの設定
     (setq wl-message-ignored-field-list
