@@ -141,28 +141,27 @@
 
   (leaf mozc
     :straight t
-    :config
+    :defvar (mozc-helper-program-name)
+    :init
     (cond ((eq system-type 'windows-nt)
            (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
           (t
            (setq mozc-helper-program-name "mozc_emacs_helper")))
-    ;; (if (getenv "WSLENV")
-    ;;     ;; (setq mozc-helper-program-name "mozc_emacs_helper_win.sh")
-    ;;     (setq mozc-helper-program-name "mozc_emacs_helper")
-    ;;   (setq mozc-helper-program-name "mozc_emacs_helper"))
 
     (leaf mozc-im
       :straight t
       :require t
-      :custom ((default-input-method . "japanese-mozc-im"))
+      :custom (default-input-method . "japanese-mozc-im")
       :bind* (("C-o" . toggle-input-method))
-      :config
+      :defvar (mozc-candidate-style)
+      :init
       (setq mozc-candidate-style 'echo-area))
 
     (leaf mozc-cursor-color
       :straight (mozc-cursor-color :type git :host github
                                    :repo "iRi-E/mozc-el-extensions")
       :require t
+      :defvar (mozc-cursor-color-alist) ;; FIXME: defvar-localが原因
       :config
       (setq mozc-cursor-color-alist
             '((direct        . "gray")
@@ -172,17 +171,22 @@
               (half-ascii    . "dark orchid")
               (full-ascii    . "orchid")
               (half-katakana . "dark goldenrod")))
-      ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
-      (defvar-local mozc-im-mode nil)
-      (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
-      (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
-      (advice-add 'mozc-cursor-color-update
-                  :around (lambda (orig-fun &rest args)
-                            (let ((mozc-mode mozc-im-mode))
-                              (apply orig-fun args)))))
+
+      (prog1 "mozc-cursor-color"
+        ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
+        ;; https://w.atwiki.jp/ntemacs/?cmd=word&word=cursor-color&pageid=48
+        (defvar-local mozc-im-mode nil) ;; FIXME: トップレベルじゃないと警告
+        (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
+        (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
+        (advice-add 'mozc-cursor-color-update
+                    :around (lambda (orig-fun &rest args)
+                              (let ((mozc-mode mozc-im-mode))
+                                (apply orig-fun args))))))
+
     (leaf *mozc-win
       :if (eq system-type 'windows-nt)
-      :config
+      :defun (mozc-session-sendkey)
+      :init
       (advice-add 'mozc-session-execute-command
   	          :after (lambda (&rest args)
   	                   (when (eq (nth 0 args) 'CreateSession)
