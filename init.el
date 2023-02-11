@@ -316,7 +316,29 @@
       (global-org-modern-mode)))
 
   (leaf Org-Mode
-  :init
+    :init
+    (leaf Org-Settings
+    :bind
+    (("C-c l" . org-store-link)
+     ("C-c a" . org-agenda)
+     ("C-c c" . org-capture))
+    :custom
+    (org-directory . "~/Dropbox/Org/")
+    (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
+    (org-agenda-files . '("~/Dropbox/Org/"))
+    (org-todo-keyword-faces
+     . '(("NEXT" . (:foreground "blue" :underline t))
+         ("DONE" . (:foreground "pale green"))))
+    (org-todo-keywords . '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
+    (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
+    (org-startup-truncated . nil)
+    (org-return-follows-link  . t)           ; RET/C-mでリンクを開く
+    (org-agenda-start-with-follow-mode . t)  ; アジェンダで関連するorgファイルを開く
+    (org-ellipsis . " ▽")                    ; …,▼, ↴, ⬎, ⤷, ⋱
+    (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
+    (org-agenda-remove-tags . t) ; アジェンダにタグを表示しない
+    (org-id-link-to-org-use-id . 'create-if-interactive-and-no-custom-id)
+    )
   )
 
   (leaf macrostep ; to test leaf macros.
@@ -703,33 +725,7 @@
     ;; if you want to have consult previews as you move around an
     ;; auto-updating embark collect buffer
     :hook
-    (embark-collect-mode . consult-preview-at-point-mode)
-    )
-
-  (leaf org-mode
-    :bind
-    (("C-c l" . org-store-link)
-     ("C-c a" . org-agenda)
-     ("C-c c" . org-capture)
-     ;; ("C-c m" . (lambda () (interactive) (org-capture nil "m"))) ; Warning!
-     )
-    :custom
-    (org-directory . "~/Dropbox/Org/")
-    (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
-    (org-agenda-files . '("~/Dropbox/Org/"))
-    (org-todo-keyword-faces
-     . '(("NEXT" . (:foreground "blue" :underline t))
-         ("DONE" . (:foreground "pale green"))))
-    (org-todo-keywords . '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
-    (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
-    (org-startup-truncated . nil)
-    (org-return-follows-link  . t)           ; RET/C-mでリンクを開く
-    (org-agenda-start-with-follow-mode . t)  ; アジェンダで関連するorgファイルを開く
-    (org-ellipsis . " ▽")                    ; …,▼, ↴, ⬎, ⤷, ⋱
-    (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
-    (org-agenda-remove-tags . t) ; アジェンダにタグを表示しない
-    (org-id-link-to-org-use-id . 'create-if-interactive-and-no-custom-id)
-    )
+    (embark-collect-mode . consult-preview-at-point-mode))
 
   (leaf doct
     :straight t
