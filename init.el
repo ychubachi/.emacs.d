@@ -150,7 +150,7 @@
 
     (leaf mozc-im
       :straight t
-      :require t
+      :require t ; Checked
       :custom (default-input-method . "japanese-mozc-im")
       :bind* (("C-o" . toggle-input-method))
       :defvar (mozc-candidate-style)
@@ -160,7 +160,7 @@
     (leaf mozc-cursor-color
       :straight (mozc-cursor-color :type git :host github
                                    :repo "iRi-E/mozc-el-extensions")
-      :require t
+      :require t ; Checked
       :defvar (mozc-cursor-color-alist) ;; FIXME: defvar-localが原因
       :config
       (setq mozc-cursor-color-alist
@@ -490,9 +490,8 @@
                  (lambda ()
                    (let ((save-silently t)) ; FIXME
                      (recentf-save-list))))
-    (leaf no-littering
-      :after no-littering
-      :config
+
+    (prog1 "no-littering"
       (add-to-list 'recentf-exclude no-littering-var-directory)
       (add-to-list 'recentf-exclude no-littering-etc-directory)))
 
