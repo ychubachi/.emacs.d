@@ -67,8 +67,7 @@
     (leaf-keywords-init))
 
   (leaf leaf-tree :ensure t
-    :custom ((imenu-list-size . 30)
-             (imenu-list-position . 'left))
+    :custom ((imenu-list-position . 'left))
     :init
     (defun my/enable-init-el-minor-mode ()
       (when (equal
