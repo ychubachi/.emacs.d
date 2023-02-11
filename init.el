@@ -23,8 +23,8 @@
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; Start profiling
-(progn
+
+(progn "Start Profiling"
   (defvar my/tick-previous-time (current-time))
 
   (defun my/tick-init-time (msg)
@@ -36,50 +36,18 @@
                msg)
       (setq my/tick-previous-time ctime)))
 
-  (my/tick-init-time "start") ; Start profiling
-  )
+  (my/tick-init-time "start"))
 
-;;;; Package management tools
-
-;; See: https://github.com/conao3/leaf.el#install
+;;;; Package Management Tools
 (eval-and-compile
-  (customize-set-variable
+  (prog1 "package"
+    (customize-set-variable
    'package-archives '(("org" . "https://orgmode.org/elpa/")
                        ("melpa" . "https://melpa.org/packages/")
                        ("gnu" . "https://elpa.gnu.org/packages/")))
-  (package-initialize)
-  (unless (package-installed-p 'leaf)
-    (package-refresh-contents)
-    (package-install 'leaf)))
+    (package-initialize))
 
-(leaf Leaf-Related-Packages
-  :config
-  (leaf leaf-keywords
-    :ensure t
-    :init
-    ;; optional packages if you want to use :hydra, :el-get, :blackout,,,
-    (leaf hydra :ensure t)
-    (leaf el-get :ensure t)
-    (leaf blackout :ensure t)
-
-    :config
-    ;; initialize leaf-keywords.el
-    (leaf-keywords-init))
-
-  (leaf leaf-tree :ensure t
-    :custom ((imenu-list-position . 'left))
-    :init
-    (defun my/enable-init-el-minor-mode ()
-      (when (equal
-             (buffer-file-name)
-             (expand-file-name "~/.emacs.d/init.el"))
-        (leaf-tree-mode t)))
-    (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
-
-  (leaf leaf-convert :ensure t)
-
-  (leaf *straight.el
-    :init
+  (prog1 "straight.el"
     (defvar bootstrap-version)
     (let ((bootstrap-file
            (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -91,7 +59,27 @@
              'silent 'inhibit-cookies)
           (goto-char (point-max))
           (eval-print-last-sexp)))
-      (load bootstrap-file nil 'nomessage))))
+      (load bootstrap-file nil 'nomessage)))
+
+  (prog1 "leaf"
+    (straight-use-package 'leaf)
+    (straight-use-package 'leaf-keywords)
+    (leaf-keywords-init))
+
+  (leaf Leaf
+    :init
+    (leaf leaf-tree
+      :straight t
+      :custom (imenu-list-position . 'left)
+      :init
+      (defun my/enable-init-el-minor-mode ()
+        (when (equal
+               (buffer-file-name)
+               (expand-file-name "~/.emacs.d/init.el"))
+          (leaf-tree-mode t)))
+      (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
+
+  (leaf leaf-convert :straight t)))
 
 (leaf Hi-Priority-Packages
   :init
@@ -1100,7 +1088,7 @@
     :added "2020-11-30"
     :emacs>= 25.1
     ;; :straight t
-    :package t
+    :straight t
     :after git-commit with-editor
     :bind (("C-x g" . magit-status))
     )
@@ -1246,8 +1234,9 @@
     )
 
   (leaf notmuch
+    :disabled nil
     ;; :straight t
-    :package t
+    :straight t
     :require t
     :hook
     (notmuch-message-mode-hook . visual-fill-column-mode)
@@ -1303,14 +1292,14 @@
           (notmuch-tree-tag (list "+flagged"))))))
 
   (leaf ol-notmuch
-    :package t
+    :straight t
     :require t
     :after notmuch org)
 
   (leaf consult-notmuch
     ;; :straight (consult-notmuch :type git :host github
     ;;                            :repo "emacsmirror/consult-notmuch")
-    :package t
+    :straight t
     :after consult notmuch)
 
   (leaf mm-decode
@@ -1591,6 +1580,8 @@
 (leaf *Test-Bed
   :init
   ;; Do something
+  ;; TODO (leaf hydra :straight t)
+  ;; TODO (leaf blackout :straight t)
   )
 
 (my/tick-init-time "end")
