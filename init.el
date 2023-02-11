@@ -1,5 +1,5 @@
 ;;; init.el --- My init.el  -*- lexical-binding: t; -*-
-;; Copyright (C) 2022 Yoshihide Chubachi
+;; Copyright (C) 2022-2023 Yoshihide Chubachi
 
 ;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
 
