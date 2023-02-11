@@ -1111,31 +1111,24 @@
   (leaf migemo
     :when (eq system-type 'gnu/linux)
     :straight t
-    :require t
+    :require t ; Checked on 2023-02-12
+    :custom
+    (migemo-command . "cmigemo")
+    (migemo-options .'("-q" "--emacs"))
+    (migemo-dictionary . "/usr/share/cmigemo/utf-8/migemo-dict")
+    (migemo-user-dictionary . nil)
+    (migemo-regex-dictionary . nil)
+    (migemo-coding-system . 'utf-8-unix)
+    :defun (migemo-init)
     :config
-    ;; cmigemo(default)
-    (setq migemo-command "cmigemo")
-    (setq migemo-options '("-q" "--emacs"))
-
-    ;; ruby migemo
-    ;; (setq migemo-command "ruby")
-    ;; (setq migemo-options '("-S" "migemo" "-t" "emacs" "-i" "\a"))
-
-    ;; Set your installed path
-    (setq migemo-dictionary "/usr/share/cmigemo/utf-8/migemo-dict")
-
-    (setq migemo-user-dictionary nil)
-    (setq migemo-regex-dictionary nil)
-    (setq migemo-coding-system 'utf-8-unix)
-    (migemo-init)
-    )
+    (migemo-init))
 
   (leaf migemo
     :when (and
            (eq system-type 'windows-nt)
            (file-exists-p "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict"))
     :straight t
-    :setq
+    :custom
     (migemo-dictionary . "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict")
     :config
     (load-library "migemo")
@@ -1452,11 +1445,6 @@
 
   (leaf iedit :straight t)
 
-  (defhydra hydra-zoom (global-map "<f2>")
-    "zoom"
-    ("i" text-scale-increase "in")
-    ("o" text-scale-decrease "out"))
-
   (leaf wanderlust :straight t
     :config
     ;; IMAP
@@ -1583,6 +1571,10 @@
   :init
   ;; Do something
   ;; TODO (leaf hydra :straight t)
+  (defhydra hydra-zoom (global-map "<f2>")
+    "zoom"
+    ("i" text-scale-increase "in")
+    ("o" text-scale-decrease "out"))
   ;; TODO (leaf blackout :straight t)
   )
 
