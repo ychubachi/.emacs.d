@@ -479,12 +479,16 @@
 
   (leaf recentf
     :custom
-    (recentf-max-menu-items  . 25)
+    (recentf-max-menu-items  . 500)
     (recentf-max-saved-items . 2000)
     (recentf-auto-cleanup    . 'never)
-    (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:"))
+    (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS"
+                         "^/sudo:" "/straight"))
     :hook
     (emacs-startup-hook . recentf-mode)
+    :defun (recentf-save-list)
+    :defvar (recentf-exclude)
+    :defvar (no-littering-var-directory no-littering-etc-directory)
     :config
     (run-at-time nil (* 5 60)
                  (lambda ()
