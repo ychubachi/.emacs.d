@@ -1489,17 +1489,6 @@
 
     (leaf After-Init-Hook
       :init
-      (leaf company
-        :disabled t
-        :straight t
-        :hook (after-init-hook . global-company-mode)
-        :custom (company-selection-default . nil)
-        :config
-        (defun my-company-inhibit-idle-begin ()
-          (setq-local company-begin-commands nil))
-        (add-hook 'org-mode-hook #'my-company-inhibit-idle-begin)
-        (add-hook 'text-mode-hook #'my-company-inhibit-idle-begin))
-
       (leaf corfu
         :doc " Completion Overlay Region FUnction"
         :url "https://github.com/minad/corfu"
