@@ -647,6 +647,7 @@
                      (window-parameters (mode-line-format . none))))
       :config
       (leaf *my-embark-orglink
+        :disabled t ; FIXME: embark-define-keymapは古い
         :after org embark
         :config
         (defun my-embark-orglink-at-point ()
@@ -1505,7 +1506,7 @@
         :straight t
         ;; Optional customizations
         :custom
-        (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+        (corfu-cycle . t)                ;; Enable cycling for `corfu-next/previous'
         (corfu-auto . t)                 ;; Enable auto completion
         ;; (corfu-separator ?\s)          ;; Orderless field separator
         ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
@@ -1620,7 +1621,7 @@
     (leaf w32-browser :straight t)
     (leaf dired+
       :straight (dired+ :type git :host github
-                        :repo "emacsmirror/dired-plus")))))
+                        :repo "emacsmirror/dired-plus"))))
 
 (leaf Original-Packages
   :init
