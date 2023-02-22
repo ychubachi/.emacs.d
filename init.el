@@ -63,25 +63,7 @@
   (prog1 "leaf"
     (straight-use-package 'leaf)
     (straight-use-package 'leaf-keywords)
-    (leaf-keywords-init))
-
-  (leaf Leaf
-    :init
-    (leaf leaf-tree
-      :straight t
-      :custom (imenu-list-position . 'left)
-      :init
-      (defun my/enable-init-el-minor-mode ()
-        (when (equal
-               (buffer-file-name)
-               (expand-file-name "~/.emacs.d/init.el"))
-          ;; "  ("を追加
-          (setq outline-regexp
-                ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (")
-          (leaf-tree-mode t)))
-      (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
-
-    (leaf leaf-convert :straight t)))
+    (leaf-keywords-init)))
 
 (leaf Hi-Priority-Packages
   :init
@@ -93,34 +75,69 @@
 
 (leaf Minimum
   :init
+  (leaf Global-Keyboard-Bindings
+    :bind (("C-z" . undo))
+    :init
+    (leaf Help-Keys
+      :init
+      (define-key key-translation-map [?\C-h] [?\C-?])
+      (global-set-key (kbd "C-^") help-map)))
+
+  (leaf Global-Minnor-Mode
+    :init
+    (leaf outline
+      ;; :custom
+      ;; ((outline-mode-prefix-map . "\C-c\C-o")
+      ;;  (outline-minnor-mode-prefix-map . "\C-c\C-o"))
+      :defvar (outline-mode-prefix-map)
+      :hook
+      (emacs-startup-hook . outline-minor-mode)
+      :init
+      (require 'outline)
+      (add-hook 'outline-minor-mode-hook
+	        (lambda () (local-set-key
+                            "\C-c\C-o"
+	                    outline-mode-prefix-map)))
+      (eval-after-load "outline" '(require 'foldout))
+      ;; (setq outline-regexp ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (") ; "  ("を追加
+      )
+
+    (leaf paren
+      :custom
+      (show-paren-style . 'mixed)
+      :init
+      (show-paren-mode 1)))
+
   (leaf Language-Environment
     :init
-    (set-language-environment "Japanese")
-    (prefer-coding-system 'utf-8)
-    (cond ((eq system-type 'windows-nt)
-           (setq default-process-coding-system (cons 'utf-8 'cp932-unix)))))
-
-  (leaf Fonts
-    :doc "フォント設定。確認はC-u C-x =。"
-    :when (display-graphic-p)
-    :custom
-    (line-spacing . 0.2)
-    :init
-    ;; ｜あいうえお｜
-    ;; ｜憂鬱な檸檬｜
-    ;; ｜<miilwiim>｜
-    ;; ｜!"#$%&'~{}｜
-    ;; ｜🙆iimmiim>｜
-    (let (
-          ;; (font-name "Noto Sans Mono-11")
-          ;; (font-name "PlemolJP-11")        ; IBM Plex Sans JP + IBM Plex Mono
-          (font-name "HackGen-11")            ; 源ノ角ゴシックの派生 + Hack
-          ;; (font-name "UDEV Gothic NF-12")  ; BIZ UDゴシック + JetBrains Mono
-          ;; (font-name "FirgeNerd-11")       ; 源真ゴシック + Fira Mono
-          )
-      (if (null (x-list-fonts font-name))
-          (error (format "No such font: %s" font-name)))
-      (set-face-attribute 'default nil :font font-name)))
+    (leaf Japanese
+      :init
+      (set-language-environment "Japanese")
+      (prefer-coding-system 'utf-8)
+      (cond ((eq system-type 'windows-nt)
+             (setq default-process-coding-system
+                   (cons 'utf-8 'cp932-unix)))))
+    (leaf Fonts
+      :doc "フォント設定。確認はC-u C-x =。"
+      :when (display-graphic-p)
+      :custom
+      (line-spacing . 0.2)
+      :init
+      ;; ｜あいうえお｜
+      ;; ｜憂鬱な檸檬｜
+      ;; ｜<miilwiim>｜
+      ;; ｜!"#$%&'~{}｜
+      ;; ｜🙆iimmiim>｜
+      (let (
+            ;; (font-name "Noto Sans Mono-11")
+            ;; (font-name "PlemolJP-11")        ; IBM Plex Sans JP + IBM Plex Mono
+            (font-name "HackGen-11") ; 源ノ角ゴシックの派生 + Hack
+            ;; (font-name "UDEV Gothic NF-12")  ; BIZ UDゴシック + JetBrains Mono
+            ;; (font-name "FirgeNerd-11")       ; 源真ゴシック + Fira Mono
+            )
+        (if (null (x-list-fonts font-name))
+            (error (format "No such font: %s" font-name)))
+        (set-face-attribute 'default nil :font font-name))))
 
   (leaf Input-Method
     :init
@@ -136,7 +153,7 @@
 
     (leaf mozc-im
       :straight t
-      :require t                        ; Checked
+      :require t                     ; Checked
       :custom (default-input-method . "japanese-mozc-im")
       :bind* (("C-o" . toggle-input-method))
       :defvar (mozc-candidate-style)
@@ -146,7 +163,7 @@
     (leaf mozc-cursor-color
       :straight (mozc-cursor-color :type git :host github
                                    :repo "iRi-E/mozc-el-extensions")
-      :require t                        ; Checked
+      :require t                     ; Checked
       :defvar (mozc-cursor-color-alist) ;; FIXME: defvar-localが原因
       :config
       (setq mozc-cursor-color-alist
@@ -179,37 +196,98 @@
   	                     (mozc-session-sendkey '(Hankaku/Zenkaku))))))
     (leaf isearch
       :bind ((isearch-mode-map
-              ("C-o" . isearch-toggle-input-method)))))
+              ("C-o" . isearch-toggle-input-method))))))
 
-  (leaf Global-Keyboard-Bindings
+(leaf Emacs-Lisp
+  :disabled nil
+  :init
+  (leaf Global-Bindings
     :init
-    (leaf Help-Keys
-      :init
-      (define-key key-translation-map [?\C-h] [?\C-?])
-      (global-set-key (kbd "C-^") help-map))
+    (leaf macrostep                       ; to test leaf macros.
+      :doc "interactive macro expander"
+      :url "https://github.com/joddie/macrostep"
+      :straight t
+      :bind (("C-c e" . macrostep-expand))))
 
-    (leaf Global-Bindings
-      :bind (("C-z" . undo)))))
+
+  (leaf Emacs-Lisp-Mode-Hook
+    :init
+    (leaf paredit
+      :straight t
+      :commands enable-paredit-mode
+      :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
+             (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
+             (ielm-mode-hook . enable-paredit-mode)
+             (lisp-mode-hook . enable-paredit-mode)
+             (lisp-interaction-mode-hook . enable-paredit-mode)
+             (scheme-mode-hook . enable-paredit-mode)))
+
+    (leaf flycheck
+      :doc "On-the-fly syntax checking"
+      :emacs>= 24.3
+      :straight t
+      :bind (("M-n" . flycheck-next-error)
+             ("M-p" . flycheck-previous-error))
+      :custom ((flycheck-emacs-lisp-initialize-packages . t)
+               (flycheck-disabled-checkers . '(emacs-lisp-checkdoc)))
+      :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
+      :config
+      (leaf flycheck-package
+        :doc "A Flycheck checker for elisp package authors"
+        :straight t
+        :config
+        (flycheck-package-setup))
+
+      (leaf flycheck-elsa
+        :doc "Flycheck for Elsa."
+        :emacs>= 25
+        :straight t
+        :config
+        (flycheck-elsa-setup))))
+
+  (leaf Emacs-Lisp-Mode-Map
+    :init
+    (leaf emacs-refactor
+      :straight t
+      :bind ((emacs-lisp-mode-map
+              ("M-RET" . emr-show-refactor-menu))))))
 
 (leaf Main
+  :disabled nil
   :init
+  (leaf Leaf
+    :init
+    (leaf leaf-tree
+      :straight t
+      :custom (imenu-list-position . 'left)
+      :defun (leaf-tree-mode)
+      :init
+      (defun my/enable-init-el-minor-mode ()
+        (when (equal
+               (buffer-file-name)
+               (expand-file-name "~/.emacs.d/init.el"))
+          (leaf-tree-mode t)))
+      (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
+
+    (leaf leaf-convert :straight t))
+
   (leaf Misc
     :init
     (defalias 'yes-or-no-p 'y-or-n-p))
 
   (leaf Builtin-Variables
     :custom
-    (inhibit-startup-screen . t)      ; スタートアップスクリーンを非表示
-    (ring-bell-function . 'ignore)    ; ベルを鳴らさない
-    (fill-column . 80)                ; 80桁で改行（モードによる）
-    (indent-tabs-mode . nil)          ; インデントの際タブを使わない
+    (inhibit-startup-screen . t)        ; スタートアップスクリーンを非表示
+    (ring-bell-function . 'ignore)      ; ベルを鳴らさない
+    (fill-column . 80)                  ; 80桁で改行（モードによる）
+    (indent-tabs-mode . nil)            ; インデントの際タブを使わない
     (byte-compile-warnings
-     . '(not cl-functions obsolete))  ; (require 'cl)を検査しない
-    (epg-pinentry-mode . 'loopback)   ; GnuPGのパスフレーズをミニバッファで
+     . '(not cl-functions obsolete))    ; (require 'cl)を検査しない
+    (epg-pinentry-mode . 'loopback)     ; GnuPGのパスフレーズをミニバッファで
     (plstore-cache-passphrase-for-symmetric-encryption . t)
                                         ; パスフレーズをキャッシュ
-    (select-active-regions . 'only)   ; リージョン選択時の移動を早くする
-    (dired-dwim-target . t)           ; diredでターゲットを他のdiredバッファに
+    (select-active-regions . 'only)     ; リージョン選択時の移動を早くする
+    (dired-dwim-target . t)             ; diredでターゲットを他のdiredバッファに
     :init
     (leaf cus-edit
       :config
@@ -228,8 +306,8 @@
 
     (leaf vc-hooks
       :custom
-      (vc-follow-symlinks . t)        ; シンボリックリンクの場合、本体を辿る
-      (vc-handled-backends . '(Git))) ; Gitのみ使用
+      (vc-follow-symlinks . t)          ; シンボリックリンクの場合、本体を辿る
+      (vc-handled-backends . '(Git)))   ; Gitのみ使用
 
     (leaf files
       :defun (no-littering-expand-var-file-name)
@@ -241,7 +319,6 @@
        . `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))))
 
   (leaf Builtin-Packages
-    :disabled nil
     :init
     (leaf Emacs-Startup-Hook
       :init
@@ -268,12 +345,6 @@
         (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
         :hook
         (emacs-startup-hook . global-auto-revert-mode))
-
-      (leaf paren
-        :custom
-        (show-paren-style . 'mixed)
-        :hook
-        (emacs-startup-hook . show-paren-mode))
 
       (leaf recentf
         :custom
@@ -382,9 +453,7 @@
 
       (leaf outline-minor-mode
         :init
-        (add-hook 'outline-minor-mode-hook
-                  (lambda () (local-set-key "\C-c\C-o"
-                                            outline-mode-prefix-map))))
+        )
       ))
 
   (leaf Builtin-Misc
@@ -396,12 +465,11 @@
 
     )
   (leaf External-Packages
-    :disabled nil
     :init
     (leaf Look-And-Feel
       :init
       (leaf modus-themes
-        :straight t                       ; omit this to use the built-in themes
+        :straight t                     ; omit this to use the built-in themes
         :custom
         (modus-themes-italic-constructs . nil)
         (modus-themes-bold-constructs . nil)
@@ -426,7 +494,6 @@
         ("<f5>" . modus-themes-toggle))
 
       (leaf moody
-        :disabled nil
         :straight t
         :defun (moody-replace-mode-line-buffer-identification
                 moody-replace-vc-mode
@@ -525,15 +592,6 @@
          )
         (global-org-modern-mode)))
 
-    (leaf Programming
-      :init
-      (leaf EmacsLisp
-        :init
-        (leaf macrostep                   ; to test leaf macros.
-          :doc "interactive macro expander"
-          :url "https://github.com/joddie/macrostep"
-          :straight t
-          :bind (("C-c e" . macrostep-expand)))))
     (leaf Emacs-Startup-Hook
       :init
       (leaf yasnippet-snippets
@@ -557,7 +615,6 @@
         (emacs-startup-hook . global-git-gutter-mode)))
 
     (leaf Unorganized
-      :disabled nil
       :init
       (leaf Misc
         :init
@@ -637,7 +694,7 @@
                        (window-parameters (mode-line-format . none))))
         :config
         (leaf *my-embark-orglink
-          :disabled t                     ; FIXME: embark-define-keymapは古い
+          :disabled t                   ; FIXME: embark-define-keymapは古い
           :after org embark
           :config
           (defun my-embark-orglink-at-point ()
@@ -1163,7 +1220,7 @@
       (leaf migemo
         :when (eq system-type 'gnu/linux)
         :straight t
-        :require t                        ; Checked on 2023-02-12
+        :require t                      ; Checked on 2023-02-12
         :custom
         (migemo-command . "cmigemo")
         (migemo-options .'("-q" "--emacs"))
@@ -1265,8 +1322,6 @@
       (leaf Mail-Client
         :init
         (leaf notmuch
-          :disabled nil
-          ;; :straight t
           :straight t
           :require t
           :hook
@@ -1274,7 +1329,7 @@
           (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1)))
           :custom
           ((notmuch-draft-folder . "/drafts") ; 編集中のドラフトはローカルのフォルダに
-           (notmuch-fcc-dirs . nil)           ; 送信済みメールはローカルに保存せず
+           (notmuch-fcc-dirs . nil)     ; 送信済みメールはローカルに保存せず
                                         ; Gmailに任せる
            (notmuch-search-oldest-first . nil) ; 検索結果を新しい順でソート
            (notmuch-saved-searches
@@ -1385,8 +1440,8 @@
            wl-trash-folder   "%[Gmail]/ゴミ箱"
 
            wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>" ; Our From: header field
-           wl-fcc-force-as-read t  ; Mark sent mail (in the wl-fcc folder) as read
-           wl-default-spec "%")    ; For auto-completion
+           wl-fcc-force-as-read t ; Mark sent mail (in the wl-fcc folder) as read
+           wl-default-spec "%")   ; For auto-completion
 
           ;; 隠したいヘッダの設定
           (setq wl-message-ignored-field-list
@@ -1452,35 +1507,10 @@
           :hook
           (prog-mode-hook . rainbow-delimiters-mode)))
 
-      (leaf Emacs-Lisp-Mode-Hook
-        :init
-        (leaf flycheck
-          :doc "On-the-fly syntax checking"
-          :emacs>= 24.3
-          :straight t
-          :bind (("M-n" . flycheck-next-error)
-                 ("M-p" . flycheck-previous-error))
-          :custom ((flycheck-emacs-lisp-initialize-packages . t)
-                   (flycheck-disabled-checkers . '(emacs-lisp-checkdoc)))
-          :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
-          :config
-          (leaf flycheck-package
-            :doc "A Flycheck checker for elisp package authors"
-            :straight t
-            :config
-            (flycheck-package-setup))
-
-          (leaf flycheck-elsa
-            :doc "Flycheck for Elsa."
-            :emacs>= 25
-            :straight t
-            :config
-            (flycheck-elsa-setup))))
-
       (leaf After-Init-Hook
         :init
         (leaf corfu
-          :doc " Completion Overlay Region FUnction"
+          :doc "Completion Overlay Region FUnction"
           :url "https://github.com/minad/corfu"
           :straight t
           ;; Optional customizations
@@ -1562,24 +1592,9 @@
     (leaf Emacs-Lisp-Mode-Hook
       :init
       ;; TODO: Move them to Bultin-Package
-      (add-hook
-       'emacs-lisp-mode-hook
-       'outline-minor-mode)
 
-      (leaf paredit
-        :straight t
-        :commands enable-paredit-mode
-        :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
-               (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
-               (ielm-mode-hook . enable-paredit-mode)
-               (lisp-mode-hook . enable-paredit-mode)
-               (lisp-interaction-mode-hook . enable-paredit-mode)
-               (scheme-mode-hook . enable-paredit-mode)))
 
-      (leaf emacs-refactor
-        :straight t
-        :bind ((emacs-lisp-mode-map
-                ("M-RET" . emr-show-refactor-menu)))))
+      )
 
     (leaf ert
       ;; TODO: Make it as Emacs-Lisp-Mode binding
@@ -1602,7 +1617,6 @@
         :straight (dired+ :type git :host github
                           :repo "emacsmirror/dired-plus")))
     (leaf Original-Packages
-      :disabled t
       :init
       (leaf org-sync-gtasks
         ;; :straight (org-sync-gtasks :type git :host github
