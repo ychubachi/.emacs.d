@@ -209,7 +209,6 @@
       :straight t
       :bind (("C-c e" . macrostep-expand))))
 
-
   (leaf Emacs-Lisp-Mode-Hook
     :init
     (leaf paredit
@@ -243,7 +242,16 @@
         :emacs>= 25
         :straight t
         :config
-        (flycheck-elsa-setup))))
+        (flycheck-elsa-setup)))
+
+    (leaf ert
+      ;; TODO: Make it as Emacs-Lisp-Mode binding
+      :bind (("C-c t" . cmd/run-ert))
+      :config
+      (defun cmd/run-ert ()
+        (interactive)
+        (eval-buffer)
+        (call-interactively 'ert))))
 
   (leaf Emacs-Lisp-Mode-Map
     :init
@@ -1586,24 +1594,6 @@
       :config
       ;; Set dockerfile-image-name as safe variable.
       (put 'dockerfile-image-name 'safe-local-variable #'stringp))
-
-
-
-    (leaf Emacs-Lisp-Mode-Hook
-      :init
-      ;; TODO: Move them to Bultin-Package
-
-
-      )
-
-    (leaf ert
-      ;; TODO: Make it as Emacs-Lisp-Mode binding
-      :bind (("C-c t" . cmd/run-ert))
-      :config
-      (defun cmd/run-ert ()
-        (interactive)
-        (eval-buffer)
-        (call-interactively 'ert)))
 
     (leaf Install-Only-Packages
       :init
