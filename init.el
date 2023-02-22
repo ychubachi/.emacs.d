@@ -288,7 +288,7 @@
     (cond ((eq system-type 'windows-nt)
            (setq default-process-coding-system (cons 'utf-8 'cp932-unix)))))
 
-  (leaf IME
+  (leaf Input-Method
     (leaf mozc
       :straight t
       :defvar (mozc-helper-program-name)
