@@ -1666,8 +1666,9 @@
     :init
     (defhydra hydra-zoom (global-map "<f12>")
       "zoom"
-      ("i" text-scale-increase "in")
-      ("o" text-scale-decrease "out"))
+      ("i" text-scale-increase "Zoom in")
+      ("o" text-scale-decrease "Zoom out")
+      ("l" global-display-line-numbers-mode "Line number"))
 
     (defhydra hydra-buffer-menu (:color pink
                                         :hint nil)
