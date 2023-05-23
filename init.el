@@ -65,6 +65,22 @@
     (straight-use-package 'leaf-keywords)
     (leaf-keywords-init)))
 
+(leaf Leaf-Extentions
+  :init
+  (leaf leaf-tree
+    :straight t
+    :custom (imenu-list-position . 'left)
+    :defun (leaf-tree-mode)
+    :init
+    (defun my/enable-init-el-minor-mode ()
+      (when (equal
+             (buffer-file-name)
+             (expand-file-name "~/.emacs.d/init.el"))
+        (leaf-tree-mode t)))
+    (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
+
+  (leaf leaf-convert :straight t))
+
 ;; Settings with Leaf
 (leaf Minimum
   :init
@@ -239,12 +255,6 @@
         :hook
         (emacs-startup-hook . global-display-fill-column-indicator-mode))
 
-      (leaf display-line-numbers
-        :custom
-        (display-line-numbers-width . 5) ; 表示する行番号の桁数
-        :hook
-        (emacs-startup-hook . global-display-line-numbers-mode))
-
       (leaf save-place
         :custom
         (save-place . t)
@@ -278,12 +288,6 @@
         ((clean-buffer-list-delay-general . 1))
         :hook
         (emacs-startup-hook . midnight-mode)))
-
-    (leaf Find-File-Hook
-      :init
-      (leaf ruler-mode
-        :hook
-        (find-file-hook . (lambda () (ruler-mode 1)))))
 
     (leaf Before-Save-Hook
       :init
@@ -405,21 +409,17 @@
 
 (leaf External-Packages
   :init
-  (leaf Leaf
+  (leaf Install-Only-Packages
     :init
-    (leaf leaf-tree
-      :straight t
-      :custom (imenu-list-position . 'left)
-      :defun (leaf-tree-mode)
-      :init
-      (defun my/enable-init-el-minor-mode ()
-        (when (equal
-               (buffer-file-name)
-               (expand-file-name "~/.emacs.d/init.el"))
-          (leaf-tree-mode t)))
-      (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
-
-    (leaf leaf-convert :straight t))
+    (leaf popup :straight t)
+    (leaf list-utils :straight t)
+    (leaf iedit :straight t)
+    (leaf files+ :straight t)
+    (leaf ls-lisp+ :straight t)
+    (leaf w32-browser :straight t)
+    (leaf dired+
+      :straight (dired+ :type git :host github
+                        :repo "emacsmirror/dired-plus")))
 
   (leaf CompletionUI
     :init
@@ -720,25 +720,6 @@
       :config
       (consult-customize consult--source-buffer :hidden t :default nil)
       (add-to-list 'consult-buffer-sources persp-consult-source)))
-
-  (leaf coverage :straight t)
-
-  (leaf dockerfile-mode :straight t
-    :config
-    ;; Set dockerfile-image-name as safe variable.
-    (put 'dockerfile-image-name 'safe-local-variable #'stringp))
-
-  (leaf Install-Only-Packages
-    :init
-    (leaf popup :straight t)
-    (leaf list-utils :straight t)
-    (leaf iedit :straight t)
-    (leaf files+ :straight t)
-    (leaf ls-lisp+ :straight t)
-    (leaf w32-browser :straight t)
-    (leaf dired+
-      :straight (dired+ :type git :host github
-                        :repo "emacsmirror/dired-plus")))
 
   (leaf Org-Mode
     :init
@@ -1138,6 +1119,13 @@
                                                            plain-tex-mode))
                       (let ((mark-even-if-inactive transient-mark-mode))
                         (indent-region (region-beginning) (region-end) nil)))))))
+
+    (leaf coverage :straight t)
+
+    (leaf dockerfile-mode :straight t
+      :config
+      ;; Set dockerfile-image-name as safe variable.
+      (put 'dockerfile-image-name 'safe-local-variable #'stringp))
 
     (leaf Emacs-Lisp-Development
       :init
@@ -1648,10 +1636,22 @@
     (setq load-path (cons "~/git/org-sync-qiita" load-path))
     (require 'org-sync-qiita)))
 
-(leaf *Test-Bed
+(leaf Disabled
+  :disabled t
   :init
+  (leaf Line-Numbers-And-Ruler
+    :init
+    (leaf display-line-numbers
+      :custom
+      (display-line-numbers-width . 5)  ; 表示する行番号の桁数
+      :hook
+      (emacs-startup-hook . global-display-line-numbers-mode))
+
+    (leaf ruler-mode
+      :hook
+      (find-file-hook . (lambda () (ruler-mode 1)))))
+
   (leaf projectile
-    :disabled t
     :straight t
     :require t
     :bind ((projectile-mode-map
@@ -1662,6 +1662,9 @@
     (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
     (projectile-mode 1))
 
+  )
+(leaf *Test-Bed
+  :init
   (leaf hydra :straight t
     :init
     (defhydra hydra-zoom (global-map "<f12>")
