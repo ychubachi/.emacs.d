@@ -65,9 +65,14 @@
     (straight-use-package 'leaf-keywords)
     (leaf-keywords-init)))
 
-(leaf undo-tree ; This does not work well inside of the leaf macro.
+;; undo-tree does not work well inside of the leaf macro.
+;; no-littering doc says,
+;;   For that reason, simply loading no-littering, does not theme the built-in backup and auto-save functionality, and the third-party undo-tree package.
+;; https://github.com/emacscollective/no-littering
+(leaf undo-tree
+  :doc "https://elpa.gnu.org/packages/undo-tree.html"
   :straight t
-  :require t ; Checked
+  :require t                            ; Checked
   :bind ("C-z" . undo-tree-undo)
   :custom
   (undo-tree-auto-save-history . t)
