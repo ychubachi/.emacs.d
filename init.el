@@ -65,7 +65,7 @@
     (straight-use-package 'leaf-keywords)
     (leaf-keywords-init)))
 
-(leaf undo-tree
+(leaf undo-tree ; This does not work well inside of the leaf macro.
   :straight t
   :require t ; Checked
   :bind ("C-z" . undo-tree-undo)
