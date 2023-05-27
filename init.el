@@ -66,6 +66,21 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Settings with Leaf
+
+;; unstable. error.
+(leaf undo-tree
+  :doc "https://elpa.gnu.org/packages/undo-tree.html"
+  :straight t
+  :require t                            ; Checked
+  :bind ("C-z" . undo-tree-undo)
+  :custom
+  (undo-tree-auto-save-history . t)
+  :init
+  (defadvice undo-tree-make-history-save-file-name
+      (after undo-tree activate)
+    (setq ad-return-value (concat ad-return-value ".gz")))
+  (global-undo-tree-mode))
+
 (leaf Minimum
   :disabled nil
   :init
@@ -113,7 +128,7 @@
       (let (
             ;; (font-name "Noto Sans Mono-11")
             ;; (font-name "PlemolJP-11")        ; IBM Plex Sans JP + IBM Plex Mono
-            (font-name "HackGen-11")  ; 源ノ角ゴシックの派生 + Hack
+            (font-name "HackGen-11")    ; 源ノ角ゴシックの派生 + Hack
             ;; (font-name "UDEV Gothic NF-12")  ; BIZ UDゴシック + JetBrains Mono
             ;; (font-name "FirgeNerd-11")       ; 源真ゴシック + Fira Mono
             )
@@ -135,7 +150,7 @@
 
     (leaf mozc-im
       :straight t
-      :require t                      ; Checked
+      :require t                        ; Checked
       :custom (default-input-method . "japanese-mozc-im")
       :bind* (("C-o" . toggle-input-method))
       :defvar (mozc-candidate-style)
@@ -237,19 +252,6 @@
 
     (leaf Global-Minnor-Mode
       :init
-      (leaf undo-tree
-        :doc "https://elpa.gnu.org/packages/undo-tree.html"
-        :straight t
-        :require t                    ; Checked
-        :bind ("C-z" . undo-tree-undo)
-        :custom
-        (undo-tree-auto-save-history . t)
-        :init
-        (defadvice undo-tree-make-history-save-file-name
-            (after undo-tree activate)
-          (setq ad-return-value (concat ad-return-value ".gz")))
-        (global-undo-tree-mode))
-
       (leaf auto-revert
         :custom
         (auto-revert-interval . 1)      ; 再読み込みの間隔
@@ -1642,49 +1644,49 @@
       (leaf ox-qmd :straight t)
       :config
       (setq load-path (cons "~/git/org-sync-qiita" load-path))
-      (require 'org-sync-qiita)))
+      (require 'org-sync-qiita))))
 
-  (leaf Disabled
-    :disabled t
+(leaf Disabled
+  :disabled t
+  :init
+
+  (leaf Line-Numbers-And-Ruler
     :init
+    (leaf display-line-numbers
+      :custom
+      (display-line-numbers-width . 5) ; 表示する行番号の桁数
+      :hook
+      (emacs-startup-hook . global-display-line-numbers-mode))
 
-    (leaf Line-Numbers-And-Ruler
-      :init
-      (leaf display-line-numbers
-        :custom
-        (display-line-numbers-width . 5) ; 表示する行番号の桁数
-        :hook
-        (emacs-startup-hook . global-display-line-numbers-mode))
+    (leaf ruler-mode
+      :hook
+      (find-file-hook . (lambda () (ruler-mode 1)))))
 
-      (leaf ruler-mode
-        :hook
-        (find-file-hook . (lambda () (ruler-mode 1)))))
+  (leaf projectile
+    :straight t
+    :require t
+    :bind ((projectile-mode-map
+            ("C-x p" . projectile-command-map))
+           (projectile-command-map
+            ("b" . consult-project-buffer)))
+    :config
+    (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
+    (projectile-mode 1))
 
-    (leaf projectile
-      :straight t
-      :require t
-      :bind ((projectile-mode-map
-              ("C-x p" . projectile-command-map))
-             (projectile-command-map
-              ("b" . consult-project-buffer)))
-      :config
-      (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
-      (projectile-mode 1))
-
-    )
-  (leaf *Test-Bed
+  )
+(leaf *Test-Bed
+  :init
+  (leaf hydra :straight t
     :init
-    (leaf hydra :straight t
-      :init
-      (defhydra hydra-zoom (global-map "<f12>")
-        "zoom"
-        ("i" text-scale-increase "Zoom in")
-        ("o" text-scale-decrease "Zoom out")
-        ("l" global-display-line-numbers-mode "Line number"))
+    (defhydra hydra-zoom (global-map "<f12>")
+      "zoom"
+      ("i" text-scale-increase "Zoom in")
+      ("o" text-scale-decrease "Zoom out")
+      ("l" global-display-line-numbers-mode "Line number"))
 
-      (defhydra hydra-buffer-menu (:color pink
-                                          :hint nil)
-        "
+    (defhydra hydra-buffer-menu (:color pink
+                                        :hint nil)
+      "
 ^Mark^             ^Unmark^           ^Actions^          ^Search
 ^^^^^^^^-----------------------------------------------------------------
 _m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
@@ -1693,34 +1695,33 @@ _d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
 _D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
 _~_: modified
 "
-        ("m" Buffer-menu-mark)
-        ("u" Buffer-menu-unmark)
-        ("U" Buffer-menu-backup-unmark)
-        ("d" Buffer-menu-delete)
-        ("D" Buffer-menu-delete-backwards)
-        ("s" Buffer-menu-save)
-        ("~" Buffer-menu-not-modified)
-        ("x" Buffer-menu-execute)
-        ("b" Buffer-menu-bury)
-        ("g" revert-buffer)
-        ("T" Buffer-menu-toggle-files-only)
-        ("O" Buffer-menu-multi-occur :color blue)
-        ("I" Buffer-menu-isearch-buffers :color blue)
-        ("R" Buffer-menu-isearch-buffers-regexp :color blue)
-        ("c" nil "cancel")
-        ("v" Buffer-menu-select "select" :color blue)
-        ("o" Buffer-menu-other-window "other-window" :color blue)
-        ("q" quit-window "quit" :color blue))
+      ("m" Buffer-menu-mark)
+      ("u" Buffer-menu-unmark)
+      ("U" Buffer-menu-backup-unmark)
+      ("d" Buffer-menu-delete)
+      ("D" Buffer-menu-delete-backwards)
+      ("s" Buffer-menu-save)
+      ("~" Buffer-menu-not-modified)
+      ("x" Buffer-menu-execute)
+      ("b" Buffer-menu-bury)
+      ("g" revert-buffer)
+      ("T" Buffer-menu-toggle-files-only)
+      ("O" Buffer-menu-multi-occur :color blue)
+      ("I" Buffer-menu-isearch-buffers :color blue)
+      ("R" Buffer-menu-isearch-buffers-regexp :color blue)
+      ("c" nil "cancel")
+      ("v" Buffer-menu-select "select" :color blue)
+      ("o" Buffer-menu-other-window "other-window" :color blue)
+      ("q" quit-window "quit" :color blue))
 
-      (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
+    (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
 
-    ;; TODO (leaf blackout :straight t)
-    (leaf outline-magic :straight t
-      :init
-      (define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle))
+  ;; TODO (leaf blackout :straight t)
+  (leaf outline-magic :straight t
+    :init
+    (define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle))
 
-    (leaf origami :straight t))
-  )
+  (leaf origami :straight t))
 
 (my/tick-init-time "end")
 
