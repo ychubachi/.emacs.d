@@ -67,20 +67,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Settings with Leaf
 
-;; unstable. error.
-(leaf undo-tree
-  :doc "https://elpa.gnu.org/packages/undo-tree.html"
-  :straight t
-  :require t                            ; Checked
-  :bind ("C-z" . undo-tree-undo)
-  :custom
-  (undo-tree-auto-save-history . t)
-  :init
-  (defadvice undo-tree-make-history-save-file-name
-      (after undo-tree activate)
-    (setq ad-return-value (concat ad-return-value ".gz")))
-  (global-undo-tree-mode))
-
 (leaf Minimum
   :disabled nil
   :init
@@ -1676,8 +1662,22 @@
     (projectile-mode 1))
 
   )
-(leaf *Test-Bed
+(leaf Test-Bed
   :init
+  ;; unstable. error.
+  (leaf undo-tree
+    :doc "https://elpa.gnu.org/packages/undo-tree.html"
+    :straight t
+    :require t                            ; Checked
+    :bind ("C-z" . undo-tree-undo)
+    :custom
+    (undo-tree-auto-save-history . t)
+    :init
+    (defadvice undo-tree-make-history-save-file-name
+        (after undo-tree activate)
+      (setq ad-return-value (concat ad-return-value ".gz")))
+    (global-undo-tree-mode))
+
   (leaf hydra :straight t
     :init
     (defhydra hydra-zoom (global-map "<f12>")
