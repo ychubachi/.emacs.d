@@ -89,100 +89,98 @@
       :init
       (defalias 'yes-or-no-p 'y-or-n-p)))
 
-  (leaf Japanese-Settings
+  (leaf Language-Environment
     :init
-    (leaf Language-Environment
+    (leaf Coding-System
       :init
-      (leaf Coding-System
-        :init
-        (set-language-environment "Japanese")
-        (prefer-coding-system 'utf-8)
-        (cond ((eq system-type 'windows-nt)
-               (setq default-process-coding-system
-                     (cons 'utf-8 'cp932-unix)))))
+      (set-language-environment "Japanese")
+      (prefer-coding-system 'utf-8)
+      (cond ((eq system-type 'windows-nt)
+             (setq default-process-coding-system
+                   (cons 'utf-8 'cp932-unix)))))
 
-      (leaf Fonts
-        :doc "フォント設定。確認はC-u C-x =。"
-        :when (display-graphic-p)
-        :custom
-        (line-spacing . 0.2)
-        :init
-        ;; ｜あいうえお｜
-        ;; ｜憂鬱な檸檬｜
-        ;; ｜<miilwiim>｜
-        ;; ｜!"#$%&'~{}｜
-        ;; ｜🙆iimmiim>｜
-        (let (
-              ;; (font-name "Noto Sans Mono-11")
-              ;; (font-name "PlemolJP-11")        ; IBM Plex Sans JP + IBM Plex Mono
-              (font-name "HackGen-11")  ; 源ノ角ゴシックの派生 + Hack
-              ;; (font-name "UDEV Gothic NF-12")  ; BIZ UDゴシック + JetBrains Mono
-              ;; (font-name "FirgeNerd-11")       ; 源真ゴシック + Fira Mono
-              )
-          (if (null (x-list-fonts font-name))
-              (error (format "No such font: %s" font-name)))
-          (set-face-attribute 'default nil :font font-name))))
-
-    (leaf Input-Method
+    (leaf Fonts
+      :doc "フォント設定。確認はC-u C-x =。"
+      :when (display-graphic-p)
+      :custom
+      (line-spacing . 0.2)
       :init
-      (leaf mozc
-        :straight t
-        :defvar (mozc-helper-program-name)
-        :init
-        (cond
-         ((eq system-type 'windows-nt)
-          (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
-         (t
-          (setq mozc-helper-program-name "mozc_emacs_helper"))))
+      ;; ｜あいうえお｜
+      ;; ｜憂鬱な檸檬｜
+      ;; ｜<miilwiim>｜
+      ;; ｜!"#$%&'~{}｜
+      ;; ｜🙆iimmiim>｜
+      (let (
+            ;; (font-name "Noto Sans Mono-11")
+            ;; (font-name "PlemolJP-11")        ; IBM Plex Sans JP + IBM Plex Mono
+            (font-name "HackGen-11")  ; 源ノ角ゴシックの派生 + Hack
+            ;; (font-name "UDEV Gothic NF-12")  ; BIZ UDゴシック + JetBrains Mono
+            ;; (font-name "FirgeNerd-11")       ; 源真ゴシック + Fira Mono
+            )
+        (if (null (x-list-fonts font-name))
+            (error (format "No such font: %s" font-name)))
+        (set-face-attribute 'default nil :font font-name))))
 
-      (leaf mozc-im
-        :straight t
-        :require t                      ; Checked
-        :custom (default-input-method . "japanese-mozc-im")
-        :bind* (("C-o" . toggle-input-method))
-        :defvar (mozc-candidate-style)
-        :init
-        (setq mozc-candidate-style 'echo-area))
+  (leaf Input-Method
+    :init
+    (leaf mozc
+      :straight t
+      :defvar (mozc-helper-program-name)
+      :init
+      (cond
+       ((eq system-type 'windows-nt)
+        (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
+       (t
+        (setq mozc-helper-program-name "mozc_emacs_helper"))))
 
-      (leaf mozc-cursor-color
-        :straight (mozc-cursor-color :type git :host github
-                                     :repo "iRi-E/mozc-el-extensions")
-        :require t                        ; Checked
-        :defvar (mozc-cursor-color-alist) ;; FIXME: defvar-localが原因
-        :config
-        (setq mozc-cursor-color-alist
-              '((direct        . "gray")
-                (read-only     . "yellow")
-                (hiragana      . "green")
-                (full-katakana . "goldenrod")
-                (half-ascii    . "dark orchid")
-                (full-ascii    . "orchid")
-                (half-katakana . "dark goldenrod")))
+    (leaf mozc-im
+      :straight t
+      :require t                      ; Checked
+      :custom (default-input-method . "japanese-mozc-im")
+      :bind* (("C-o" . toggle-input-method))
+      :defvar (mozc-candidate-style)
+      :init
+      (setq mozc-candidate-style 'echo-area))
 
-        (prog1 "mozc-cursor-color"
-          ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
-          ;; https://w.atwiki.jp/ntemacs/?cmd=word&word=cursor-color&pageid=48
-          (defvar-local mozc-im-mode nil) ;; FIXME: トップレベルじゃないと警告
-          (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
-          (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
-          (advice-add 'mozc-cursor-color-update
-                      :around (lambda (orig-fun &rest args)
-                                (let ((mozc-mode mozc-im-mode))
-                                  (apply orig-fun args))))))
+    (leaf mozc-cursor-color
+      :straight (mozc-cursor-color :type git :host github
+                                   :repo "iRi-E/mozc-el-extensions")
+      :require t                        ; Checked
+      :defvar (mozc-cursor-color-alist) ;; FIXME: defvar-localが原因
+      :config
+      (setq mozc-cursor-color-alist
+            '((direct        . "gray")
+              (read-only     . "yellow")
+              (hiragana      . "green")
+              (full-katakana . "goldenrod")
+              (half-ascii    . "dark orchid")
+              (full-ascii    . "orchid")
+              (half-katakana . "dark goldenrod")))
 
-      (leaf isearch
-        :bind ((isearch-mode-map
-                ("C-o" . isearch-toggle-input-method))))
+      (prog1 "mozc-cursor-color"
+        ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
+        ;; https://w.atwiki.jp/ntemacs/?cmd=word&word=cursor-color&pageid=48
+        (defvar-local mozc-im-mode nil) ;; FIXME: トップレベルじゃないと警告
+        (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
+        (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
+        (advice-add 'mozc-cursor-color-update
+                    :around (lambda (orig-fun &rest args)
+                              (let ((mozc-mode mozc-im-mode))
+                                (apply orig-fun args))))))
 
-      (leaf mozc-windows
-        :if (eq system-type 'windows-nt)
-        :defun (mozc-session-sendkey)
-        :init
-        (advice-add 'mozc-session-execute-command
-  	            :after (lambda (&rest args)
-  	                     (when (eq (nth 0 args) 'CreateSession)
-  	                       (mozc-session-sendkey '(Hankaku/Zenkaku))))))
-      ))
+    (leaf isearch
+      :bind ((isearch-mode-map
+              ("C-o" . isearch-toggle-input-method))))
+
+    (leaf mozc-windows
+      :if (eq system-type 'windows-nt)
+      :defun (mozc-session-sendkey)
+      :init
+      (advice-add 'mozc-session-execute-command
+  	          :after (lambda (&rest args)
+  	                   (when (eq (nth 0 args) 'CreateSession)
+  	                     (mozc-session-sendkey '(Hankaku/Zenkaku))))))
+    )
 
   ;; end of Minimum
   )
@@ -190,22 +188,6 @@
 (leaf Main
   :disabled nil
   :init
-  (leaf Leaf-Extentions
-    :init
-    (leaf leaf-tree
-      :straight t
-      :custom (imenu-list-position . 'left)
-      :defun (leaf-tree-mode)
-      :init
-      (defun my/enable-init-el-minor-mode ()
-        (when (equal
-               (buffer-file-name)
-               (expand-file-name "~/.emacs.d/init.el"))
-          (leaf-tree-mode t)))
-      (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
-
-    (leaf leaf-convert :straight t))
-
   (leaf Builtin-Packages
     :init
     (leaf Variables
@@ -426,6 +408,22 @@
 
   (leaf External-Packages
     :init
+    (leaf Leaf-Extentions
+      :init
+      (leaf leaf-tree
+        :straight t
+        :custom (imenu-list-position . 'left)
+        :defun (leaf-tree-mode)
+        :init
+        (defun my/enable-init-el-minor-mode ()
+          (when (equal
+                 (buffer-file-name)
+                 (expand-file-name "~/.emacs.d/init.el"))
+            (leaf-tree-mode t)))
+        (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
+
+      (leaf leaf-convert :straight t))
+
     (leaf Install-Only-Packages
       :init
       (leaf popup :straight t)
