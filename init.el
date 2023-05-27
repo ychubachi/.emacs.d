@@ -23,7 +23,6 @@
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (prog1 "Start Profiling"
   (defvar my/tick-previous-time (current-time))
 
@@ -65,20 +64,7 @@
     (straight-use-package 'leaf-keywords)
     (leaf-keywords-init)))
 
-;; undo-tree does not work well inside of the leaf macro.
-;; no-littering doc says,
-;;   For that reason, simply loading no-littering, does not theme the built-in backup and auto-save functionality, and the third-party undo-tree package.
-;; https://github.com/emacscollective/no-littering
-(leaf undo-tree
-  :doc "https://elpa.gnu.org/packages/undo-tree.html"
-  :straight t
-  :require t                            ; Checked
-  :bind ("C-z" . undo-tree-undo)
-  :custom
-  (undo-tree-auto-save-history . t)
-  :init
-  (global-undo-tree-mode))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Settings with Leaf
 (leaf Minimum
   :disabled nil
@@ -222,9 +208,9 @@
 
   (leaf Builtin-Packages
     :init
-    (leaf Builtin-Variables
+    (leaf Variables
       :init
-      (leaf Custom-Variables
+      (leaf Emacs-Variables
         :custom
         ((inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
          (ring-bell-function . 'ignore) ; ベルを鳴らさない
@@ -266,165 +252,177 @@
         (version-control . t)
         (auto-save-file-name-transforms
          . `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))))
-    (leaf Builtin-Packages
+
+    (leaf Global-Minnor-Mode
       :init
-      (leaf Emacs-Startup-Hook
+      (leaf undo-tree
+        :doc "https://elpa.gnu.org/packages/undo-tree.html"
+        :straight t
+        :require t                    ; Checked
+        :bind ("C-z" . undo-tree-undo)
+        :custom
+        (undo-tree-auto-save-history . t)
         :init
-        (leaf display-fill-column-indicator
-          :hook
-          (emacs-startup-hook . global-display-fill-column-indicator-mode))
+        (defadvice undo-tree-make-history-save-file-name
+            (after undo-tree activate)
+          (setq ad-return-value (concat ad-return-value ".gz")))
+        (global-undo-tree-mode))
 
-        (leaf save-place
-          :custom
-          (save-place . t)
-          :hook
-          (emacs-startup-hook . save-place-mode))
-
-        (leaf recentf
-          :custom
-          (recentf-max-menu-items  . 500)
-          (recentf-max-saved-items . 2000)
-          (recentf-auto-cleanup    . 'never)
-          (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS"
-                               "^/sudo:" "/straight"))
-          :hook
-          (emacs-startup-hook . recentf-mode)
-          :defun (recentf-save-list)
-          :defvar (recentf-exclude)
-          :defvar (no-littering-var-directory no-littering-etc-directory)
-          :config
-          (run-at-time nil (* 5 60)
-                       (lambda ()
-                         (let ((save-silently t)) ; FIXME
-                           (recentf-save-list))))
-
-          (prog1 "no-littering"
-            (add-to-list 'recentf-exclude no-littering-var-directory)
-            (add-to-list 'recentf-exclude no-littering-etc-directory)))
-
-        (leaf midnight
-          :custom
-          ((clean-buffer-list-delay-general . 1))
-          :hook
-          (emacs-startup-hook . midnight-mode)))
-
-      (leaf Before-Save-Hook
+      (leaf auto-revert
+        :custom
+        (auto-revert-interval . 1)      ; 再読み込みの間隔
+        (auto-revert-verbose . nil)     ; 再読込の際、メッセージを非表示
+        (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
         :init
-        (leaf delete-trailing-whitespace
-          :init
-          (add-hook 'before-save-hook 'delete-trailing-whitespace)))
+        (global-auto-revert-mode 1))
 
-      (leaf Global-Minnor-Mode
+      (leaf savehist
+        ;; Persist history over Emacs restarts.
+        ;; Vertico sorts by history position.
         :init
-        (leaf auto-revert
-          :custom
-          (auto-revert-interval . 1)      ; 再読み込みの間隔
-          (auto-revert-verbose . nil)     ; 再読込の際、メッセージを非表示
-          (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
-          :init
-          (global-auto-revert-mode 1))
+        (savehist-mode 1))
 
-        (leaf savehist
-          ;; Persist history over Emacs restarts.
-          ;; Vertico sorts by history position.
-          :init
-          (savehist-mode 1))
-
-        (leaf show-paren-mode
-          :custom
-          (show-paren-style . 'mixed)
-          :init
-          (show-paren-mode 1))
-
-        (leaf goto-addr
-          :doc "Toggle Goto-Address mode in all buffers."
-          :url "https://www.gnu.org/software/emacs/manual/html_node/emacs/Goto-Address-mode.html"
-          :init
-          ;; You can follow the URL by typing C-c RET
-          (global-goto-address-mode 1))
-
-        (leaf whitespace
-          :require 't
-          :config
-          (setq whitespace-style
-                '(
-                  face                  ; faceで可視化
-                  trailing              ; 行末
-                  tabs                  ; タブ
-                  spaces                ; スペース
-                  space-mark            ; 表示のマッピング
-                  tab-mark
-                  ))
-          (setq whitespace-display-mappings
-                '(
-                  (space-mark ?\u3000 [?□])
-                  (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
-                  ))
-          (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
-          (setq whitespace-space-regexp "\\(\u3000+\\)")
-          ;; (set-face-attribute 'whitespace-trailing nil
-          ;;                     :foreground nil
-          ;;                     :background "DarkOrange1"
-          ;;                     :underline nil)
-          ;; (set-face-attribute 'whitespace-tab nil
-          ;;                     :foreground "DarkOrange1"
-          ;;                     :background nil
-          ;;                     :underline nil)
-          ;; (set-face-attribute 'whitespace-space nil
-          ;;                     :foreground "DarkOrange1"
-          ;;                     :background nil
-          ;;                     :underline nil)
-          (global-whitespace-mode t))
-
-        (leaf outline-mode
-          :defvar (outline-mode-prefix-map)
-          :custom
-          :init
-          (require 'outline)
-          (eval-after-load "outline"
-            '(require 'foldout))
-          (add-hook 'outline-minor-mode-hook
-	            (lambda () (local-set-key
-                                "\C-c\C-o"
-	                        outline-mode-prefix-map)))
-          ;; (setq outline-regexp ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (") ; "  ("を追加
-          ;; (outline-minor-mode 1) ; TODO: outline-mode is not GLOBAL minnor mode
-          ))
-
-      (leaf Global-Key-Bindings
+      (leaf show-paren-mode
+        :custom
+        (show-paren-style . 'mixed)
         :init
-        (leaf frame
-          :bind ("<f11>" . toggle-frame-maximized))
+        (show-paren-mode 1))
 
-        (leaf imenu-list
-          :bind (("C-c i" . imenu-list-smart-toggle))
-          :hook
-          (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
-
-        (leaf simple
-          :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
-        ;; End of Builtin-Packages/Global-Key-Bindings
-        )
-
-      (leaf Minnor-Mode-Settings
+      (leaf goto-addr
+        :doc "Toggle Goto-Address mode in all buffers."
+        :url "https://www.gnu.org/software/emacs/manual/html_node/emacs/Goto-Address-mode.html"
         :init
-        (leaf wdired
-          :doc "Rename files editing their names in dired buffers"
-          :tag "builtin"
-          :added "2020-11-21"
-          :require t
-          :config
-          (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
-          :bind ((wdired-mode-map
-                  ("C-o" . toggle-input-method))))
-        )
+        ;; You can follow the URL by typing C-c RET
+        (global-goto-address-mode 1))
 
-      (leaf Advices
+      (leaf whitespace
+        :require 't
+        :config
+        (setq whitespace-style
+              '(
+                face                  ; faceで可視化
+                trailing              ; 行末
+                tabs                  ; タブ
+                spaces                ; スペース
+                space-mark            ; 表示のマッピング
+                tab-mark
+                ))
+        (setq whitespace-display-mappings
+              '(
+                (space-mark ?\u3000 [?□])
+                (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+                ))
+        (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+        (setq whitespace-space-regexp "\\(\u3000+\\)")
+        ;; (set-face-attribute 'whitespace-trailing nil
+        ;;                     :foreground nil
+        ;;                     :background "DarkOrange1"
+        ;;                     :underline nil)
+        ;; (set-face-attribute 'whitespace-tab nil
+        ;;                     :foreground "DarkOrange1"
+        ;;                     :background nil
+        ;;                     :underline nil)
+        ;; (set-face-attribute 'whitespace-space nil
+        ;;                     :foreground "DarkOrange1"
+        ;;                     :background nil
+        ;;                     :underline nil)
+        (global-whitespace-mode t))
+
+      (leaf outline-mode
+        :defvar (outline-mode-prefix-map)
+        :custom
         :init
-        (leaf tramp
-          :config
-          (defadvice tramp-sh-handle-vc-registered (around tramp-sh-handle-vc-registered activate)
-            (let ((vc-handled-backends nil)) ad-do-it))))))
+        (require 'outline)
+        (eval-after-load "outline"
+          '(require 'foldout))
+        (add-hook 'outline-minor-mode-hook
+	          (lambda () (local-set-key
+                              "\C-c\C-o"
+	                      outline-mode-prefix-map)))
+        ;; (setq outline-regexp ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (") ; "  ("を追加
+        ;; (outline-minor-mode 1) ; TODO: outline-mode is not GLOBAL minnor mode
+        ))
+
+    (leaf Global-Key-Bindings
+      :init
+      (leaf frame
+        :bind ("<f11>" . toggle-frame-maximized))
+
+      (leaf imenu-list
+        :bind (("C-c i" . imenu-list-smart-toggle))
+        :hook
+        (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
+
+      (leaf simple
+        :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
+      ;; End of Builtin-Packages/Global-Key-Bindings
+      )
+
+    (leaf Emacs-Startup-Hook
+      :init
+      (leaf display-fill-column-indicator
+        :hook
+        (emacs-startup-hook . global-display-fill-column-indicator-mode))
+
+      (leaf save-place
+        :custom
+        (save-place . t)
+        :hook
+        (emacs-startup-hook . save-place-mode))
+
+      (leaf recentf
+        :custom
+        (recentf-max-menu-items  . 500)
+        (recentf-max-saved-items . 2000)
+        (recentf-auto-cleanup    . 'never)
+        (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS"
+                             "^/sudo:" "/straight"))
+        :hook
+        (emacs-startup-hook . recentf-mode)
+        :defun (recentf-save-list)
+        :defvar (recentf-exclude)
+        :defvar (no-littering-var-directory no-littering-etc-directory)
+        :config
+        (run-at-time nil (* 5 60)
+                     (lambda ()
+                       (let ((save-silently t)) ; FIXME
+                         (recentf-save-list))))
+
+        (prog1 "no-littering"
+          (add-to-list 'recentf-exclude no-littering-var-directory)
+          (add-to-list 'recentf-exclude no-littering-etc-directory)))
+
+      (leaf midnight
+        :custom
+        ((clean-buffer-list-delay-general . 1))
+        :hook
+        (emacs-startup-hook . midnight-mode)))
+
+    (leaf Before-Save-Hook
+      :init
+      (leaf delete-trailing-whitespace
+        :init
+        (add-hook 'before-save-hook 'delete-trailing-whitespace)))
+
+    (leaf Minnor-Mode-Settings
+      :init
+      (leaf wdired
+        :doc "Rename files editing their names in dired buffers"
+        :tag "builtin"
+        :added "2020-11-21"
+        :require t
+        :config
+        (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
+        :bind ((wdired-mode-map
+                ("C-o" . toggle-input-method))))
+      )
+
+    (leaf Advices
+      :init
+      (leaf tramp
+        :config
+        (defadvice tramp-sh-handle-vc-registered (around tramp-sh-handle-vc-registered activate)
+          (let ((vc-handled-backends nil)) ad-do-it)))))
 
   (leaf External-Packages
     :init
