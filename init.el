@@ -438,6 +438,19 @@
         :straight (dired+ :type git :host github
                           :repo "emacsmirror/dired-plus")))
 
+    (leaf Global-Minnor-Mode
+      :init
+      (leaf which-key
+        :doc "Display available keybindings in popup"
+        :req "emacs-24.4"
+        :tag "emacs>=24.4"
+        :url "https://github.com/justbur/emacs-which-key"
+        :added "2021-10-20"
+        :emacs>= 24.4
+        :straight t
+        :config
+        (which-key-mode)))
+
     (leaf CompletionUI
       :init
       (leaf vertico
@@ -1435,17 +1448,6 @@
                      (getenv "WSLENV"))
             (setq browse-url-browser-function 'cmd/wsl-browser)
             (setq browse-url-generic-program "web-browser"))))
-
-      (leaf which-key
-        :doc "Display available keybindings in popup"
-        :req "emacs-24.4"
-        :tag "emacs>=24.4"
-        :url "https://github.com/justbur/emacs-which-key"
-        :added "2021-10-20"
-        :emacs>= 24.4
-        :straight t
-        :config
-        (which-key-mode))
 
       (leaf backup-each-save
         :when (not (eq system-type 'windows-nt))
