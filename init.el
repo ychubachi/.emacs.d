@@ -374,6 +374,9 @@
 
     (leaf Before-Save-Hook
       :init
+      (leaf delete-trailing-whitespace
+        :init
+        (add-hook 'before-save-hook 'delete-trailing-whitespace))
       )
 
     (leaf Minnor-Mode-Settings
@@ -425,10 +428,6 @@
       (leaf dired+
         :straight (dired+ :type git :host github
                           :repo "emacsmirror/dired-plus")))
-
-    (leaf Global-Minnor-Mode
-      :init
-      )
 
     (leaf KeyboardUI
       :init
@@ -1125,6 +1124,92 @@ _~_: modified
                 (wl-summary-goto-last-visited-folder)))))
         (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)))
 
+    (leaf Development
+      :init
+      (leaf *auto-indent-yanked-code
+        :url "https://www.emacswiki.org/emacs/AutoIndentation"
+        :init
+        (dolist (command '(yank yank-pop))
+          (eval `(defadvice ,command (after indent-region activate)
+                   (and (not current-prefix-arg)
+                        (member major-mode '(emacs-lisp-mode lisp-mode
+                                                             clojure-mode    scheme-mode
+                                                             haskell-mode    ruby-mode
+                                                             rspec-mode      python-mode
+                                                             c-mode          c++-mode
+                                                             objc-mode       latex-mode
+                                                             plain-tex-mode))
+                        (let ((mark-even-if-inactive transient-mark-mode))
+                          (indent-region (region-beginning) (region-end) nil)))))))
+
+      (leaf coverage :straight t)
+
+      (leaf dockerfile-mode :straight t
+        :config
+        ;; Set dockerfile-image-name as safe variable.
+        (put 'dockerfile-image-name 'safe-local-variable #'stringp))
+
+      (leaf Emacs-Lisp
+        :init
+        (leaf paredit
+          :straight t
+          :commands enable-paredit-mode
+          :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
+                 (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
+                 (ielm-mode-hook . enable-paredit-mode)
+                 (lisp-mode-hook . enable-paredit-mode)
+                 (lisp-interaction-mode-hook . enable-paredit-mode)
+                 (scheme-mode-hook . enable-paredit-mode)))
+
+        (leaf Global-Bindings
+          :init
+          (leaf macrostep               ; to test leaf macros.
+            :doc "interactive macro expander"
+            :url "https://github.com/joddie/macrostep"
+            :straight t
+            :bind (("C-c e" . macrostep-expand)))) ;; TODO: elisp mode?
+
+        (leaf Emacs-Lisp-Mode-Hook
+          :init
+          (leaf flycheck
+            :doc "On-the-fly syntax checking"
+            :emacs>= 24.3
+            :straight t
+            :bind (("M-n" . flycheck-next-error)
+                   ("M-p" . flycheck-previous-error))
+            :custom ((flycheck-emacs-lisp-initialize-packages . t)
+                     (flycheck-disabled-checkers . '(emacs-lisp-checkdoc)))
+            :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
+            :config
+            (leaf flycheck-package
+              :doc "A Flycheck checker for elisp package authors"
+              :straight t
+              :config
+              (flycheck-package-setup))
+
+            (leaf flycheck-elsa
+              :doc "Flycheck for Elsa."
+              :emacs>= 25
+              :straight t
+              :config
+              (flycheck-elsa-setup)))
+
+          (leaf ert
+            ;; TODO: Make it as Emacs-Lisp-Mode binding
+            :bind (("C-c t" . cmd/run-ert))
+            :config
+            (defun cmd/run-ert ()
+              (interactive)
+              (eval-buffer)
+              (call-interactively 'ert))))
+
+        (leaf Emacs-Lisp-Mode-Map
+          :init
+          (leaf emacs-refactor
+            :straight t
+            :bind ((emacs-lisp-mode-map
+                    ("M-RET" . emr-show-refactor-menu)))))))
+
     (leaf Global-Key-Bindings
       :init
       (leaf embark
@@ -1345,6 +1430,23 @@ _~_: modified
       ;; End of Global-Key-Bindings
       )
 
+    (leaf Global-Minnor-Mode
+      :init
+      (leaf undo-tree
+        :doc "https://elpa.gnu.org/packages/undo-tree.html"
+        :straight t
+        :require t                          ; Checked
+        :bind ("C-z" . undo-tree-visualize) ; test trailing
+        :custom
+        (undo-tree-auto-save-history . t)
+        (undo-tree-visualizer-diff . t)
+        :init
+        ;; (defadvice undo-tree-make-history-save-file-name
+        ;;     (after undo-tree activate)
+        ;;   (setq ad-return-value (concat ad-return-value ".gz")))
+        (global-undo-tree-mode))
+      )
+
     (leaf Emacs-Startup-Hook
       :init
       (leaf yasnippet-snippets
@@ -1366,92 +1468,6 @@ _~_: modified
         ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
         :hook
         (emacs-startup-hook . global-git-gutter-mode)))
-
-    (leaf Development
-      :init
-      (leaf *auto-indent-yanked-code
-        :url "https://www.emacswiki.org/emacs/AutoIndentation"
-        :init
-        (dolist (command '(yank yank-pop))
-          (eval `(defadvice ,command (after indent-region activate)
-                   (and (not current-prefix-arg)
-                        (member major-mode '(emacs-lisp-mode lisp-mode
-                                                             clojure-mode    scheme-mode
-                                                             haskell-mode    ruby-mode
-                                                             rspec-mode      python-mode
-                                                             c-mode          c++-mode
-                                                             objc-mode       latex-mode
-                                                             plain-tex-mode))
-                        (let ((mark-even-if-inactive transient-mark-mode))
-                          (indent-region (region-beginning) (region-end) nil)))))))
-
-      (leaf coverage :straight t)
-
-      (leaf dockerfile-mode :straight t
-        :config
-        ;; Set dockerfile-image-name as safe variable.
-        (put 'dockerfile-image-name 'safe-local-variable #'stringp))
-
-      (leaf Emacs-Lisp
-        :init
-        (leaf paredit
-          :straight t
-          :commands enable-paredit-mode
-          :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
-                 (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
-                 (ielm-mode-hook . enable-paredit-mode)
-                 (lisp-mode-hook . enable-paredit-mode)
-                 (lisp-interaction-mode-hook . enable-paredit-mode)
-                 (scheme-mode-hook . enable-paredit-mode)))
-
-        (leaf Global-Bindings
-          :init
-          (leaf macrostep               ; to test leaf macros.
-            :doc "interactive macro expander"
-            :url "https://github.com/joddie/macrostep"
-            :straight t
-            :bind (("C-c e" . macrostep-expand)))) ;; TODO: elisp mode?
-
-        (leaf Emacs-Lisp-Mode-Hook
-          :init
-          (leaf flycheck
-            :doc "On-the-fly syntax checking"
-            :emacs>= 24.3
-            :straight t
-            :bind (("M-n" . flycheck-next-error)
-                   ("M-p" . flycheck-previous-error))
-            :custom ((flycheck-emacs-lisp-initialize-packages . t)
-                     (flycheck-disabled-checkers . '(emacs-lisp-checkdoc)))
-            :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
-            :config
-            (leaf flycheck-package
-              :doc "A Flycheck checker for elisp package authors"
-              :straight t
-              :config
-              (flycheck-package-setup))
-
-            (leaf flycheck-elsa
-              :doc "Flycheck for Elsa."
-              :emacs>= 25
-              :straight t
-              :config
-              (flycheck-elsa-setup)))
-
-          (leaf ert
-            ;; TODO: Make it as Emacs-Lisp-Mode binding
-            :bind (("C-c t" . cmd/run-ert))
-            :config
-            (defun cmd/run-ert ()
-              (interactive)
-              (eval-buffer)
-              (call-interactively 'ert))))
-
-        (leaf Emacs-Lisp-Mode-Map
-          :init
-          (leaf emacs-refactor
-            :straight t
-            :bind ((emacs-lisp-mode-map
-                    ("M-RET" . emr-show-refactor-menu)))))))
 
     (leaf TODO:Unorganized
       :init
@@ -1711,24 +1727,6 @@ _~_: modified
 
 (leaf Test-Bed
   :init
-  (leaf delete-trailing-whitespace
-    :init
-    (add-hook 'before-save-hook 'delete-trailing-whitespace)) ; tail
-
-  (leaf undo-tree
-        :doc "https://elpa.gnu.org/packages/undo-tree.html"
-        :straight t
-        :require t                          ; Checked
-        :bind ("C-z" . undo-tree-visualize) ; test trailing
-        :custom
-        (undo-tree-auto-save-history . t)
-        (undo-tree-visualizer-diff . t)
-        :init
-        ;; (defadvice undo-tree-make-history-save-file-name
-        ;;     (after undo-tree activate)
-        ;;   (setq ad-return-value (concat ad-return-value ".gz")))
-        (global-undo-tree-mode))
-
   ;; TODO (leaf blackout :straight t)
   (leaf origami
     :url "http://emacs.rubikitch.com/origami/"
