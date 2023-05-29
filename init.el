@@ -182,7 +182,6 @@
   	                   (when (eq (nth 0 args) 'CreateSession)
   	                     (mozc-session-sendkey '(Hankaku/Zenkaku))))))
     )
-
   ;; end of Minimum
   )
 
@@ -311,7 +310,11 @@
 	                      outline-mode-prefix-map)))
         ;; (setq outline-regexp ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (") ; "  ("を追加
         ;; (outline-minor-mode 1) ; TODO: outline-mode is not GLOBAL minnor mode
-        ))
+        )
+
+      (leaf outline-magic :straight t
+	:init
+	(define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle)))
 
     (leaf Global-Key-Bindings
       :init
@@ -363,6 +366,7 @@
           (add-to-list 'recentf-exclude no-littering-etc-directory)))
 
       (leaf midnight
+	:url "https://www.emacswiki.org/emacs/MidnightMode"
         :custom
         ((clean-buffer-list-delay-general . 1))
         :hook
@@ -370,9 +374,7 @@
 
     (leaf Before-Save-Hook
       :init
-      (leaf delete-trailing-whitespace
-        :init
-        (add-hook 'before-save-hook 'delete-trailing-whitespace)))
+      )
 
     (leaf Minnor-Mode-Settings
       :init
@@ -426,6 +428,10 @@
 
     (leaf Global-Minnor-Mode
       :init
+      )
+
+    (leaf KeyboardUI
+      :init
       (leaf which-key
         :doc "Display available keybindings in popup"
         :req "emacs-24.4"
@@ -435,7 +441,48 @@
         :emacs>= 24.4
         :straight t
         :config
-        (which-key-mode)))
+        (which-key-mode))
+
+      (leaf hydra :straight t
+	:init
+	(defhydra hydra-zoom (global-map "<f12>")
+	  "zoom"
+	  ("i" text-scale-increase "Zoom in")
+	  ("o" text-scale-decrease "Zoom out")
+	  ("l" global-display-line-numbers-mode "Line number"))
+
+	(defhydra hydra-buffer-menu (:color pink
+                                            :hint nil)
+	  "
+^Mark^             ^Unmark^           ^Actions^          ^Search
+^^^^^^^^-----------------------------------------------------------------
+_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
+_s_: save          _U_: unmark up     _b_: bury          _I_: isearch
+_d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
+_D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
+_~_: modified
+"
+	  ("m" Buffer-menu-mark)
+	  ("u" Buffer-menu-unmark)
+	  ("U" Buffer-menu-backup-unmark)
+	  ("d" Buffer-menu-delete)
+	  ("D" Buffer-menu-delete-backwards)
+	  ("s" Buffer-menu-save)
+	  ("~" Buffer-menu-not-modified)
+	  ("x" Buffer-menu-execute)
+	  ("b" Buffer-menu-bury)
+	  ("g" revert-buffer)
+	  ("T" Buffer-menu-toggle-files-only)
+	  ("O" Buffer-menu-multi-occur :color blue)
+	  ("I" Buffer-menu-isearch-buffers :color blue)
+	  ("R" Buffer-menu-isearch-buffers-regexp :color blue)
+	  ("c" nil "cancel")
+	  ("v" Buffer-menu-select "select" :color blue)
+	  ("o" Buffer-menu-other-window "other-window" :color blue)
+	  ("q" quit-window "quit" :color blue))
+
+	(define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
+      )
 
     (leaf CompletionUI
       :init
@@ -1345,8 +1392,18 @@
         ;; Set dockerfile-image-name as safe variable.
         (put 'dockerfile-image-name 'safe-local-variable #'stringp))
 
-      (leaf Emacs-Lisp-Development
+      (leaf Emacs-Lisp
         :init
+        (leaf paredit
+          :straight t
+          :commands enable-paredit-mode
+          :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
+                 (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
+                 (ielm-mode-hook . enable-paredit-mode)
+                 (lisp-mode-hook . enable-paredit-mode)
+                 (lisp-interaction-mode-hook . enable-paredit-mode)
+                 (scheme-mode-hook . enable-paredit-mode)))
+
         (leaf Global-Bindings
           :init
           (leaf macrostep               ; to test leaf macros.
@@ -1357,16 +1414,6 @@
 
         (leaf Emacs-Lisp-Mode-Hook
           :init
-          (leaf paredit
-            :straight t
-            :commands enable-paredit-mode
-            :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
-                   (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
-                   (ielm-mode-hook . enable-paredit-mode)
-                   (lisp-mode-hook . enable-paredit-mode)
-                   (lisp-interaction-mode-hook . enable-paredit-mode)
-                   (scheme-mode-hook . enable-paredit-mode)))
-
           (leaf flycheck
             :doc "On-the-fly syntax checking"
             :emacs>= 24.3
@@ -1660,70 +1707,32 @@
     :config
     (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
     (projectile-mode 1))
-
   )
+
 (leaf Test-Bed
   :init
-  ;; unstable. error.
+  (leaf delete-trailing-whitespace
+    :init
+    (add-hook 'before-save-hook 'delete-trailing-whitespace)) ; tail
+
   (leaf undo-tree
-    :doc "https://elpa.gnu.org/packages/undo-tree.html"
-    :straight t
-    :require t                            ; Checked
-    :bind ("C-z" . undo-tree-undo)
-    :custom
-    (undo-tree-auto-save-history . t)
-    :init
-    (defadvice undo-tree-make-history-save-file-name
-        (after undo-tree activate)
-      (setq ad-return-value (concat ad-return-value ".gz")))
-    (global-undo-tree-mode))
-
-  (leaf hydra :straight t
-    :init
-    (defhydra hydra-zoom (global-map "<f12>")
-      "zoom"
-      ("i" text-scale-increase "Zoom in")
-      ("o" text-scale-decrease "Zoom out")
-      ("l" global-display-line-numbers-mode "Line number"))
-
-    (defhydra hydra-buffer-menu (:color pink
-                                        :hint nil)
-      "
-^Mark^             ^Unmark^           ^Actions^          ^Search
-^^^^^^^^-----------------------------------------------------------------
-_m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
-_s_: save          _U_: unmark up     _b_: bury          _I_: isearch
-_d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
-_D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
-_~_: modified
-"
-      ("m" Buffer-menu-mark)
-      ("u" Buffer-menu-unmark)
-      ("U" Buffer-menu-backup-unmark)
-      ("d" Buffer-menu-delete)
-      ("D" Buffer-menu-delete-backwards)
-      ("s" Buffer-menu-save)
-      ("~" Buffer-menu-not-modified)
-      ("x" Buffer-menu-execute)
-      ("b" Buffer-menu-bury)
-      ("g" revert-buffer)
-      ("T" Buffer-menu-toggle-files-only)
-      ("O" Buffer-menu-multi-occur :color blue)
-      ("I" Buffer-menu-isearch-buffers :color blue)
-      ("R" Buffer-menu-isearch-buffers-regexp :color blue)
-      ("c" nil "cancel")
-      ("v" Buffer-menu-select "select" :color blue)
-      ("o" Buffer-menu-other-window "other-window" :color blue)
-      ("q" quit-window "quit" :color blue))
-
-    (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
+        :doc "https://elpa.gnu.org/packages/undo-tree.html"
+        :straight t
+        :require t                          ; Checked
+        :bind ("C-z" . undo-tree-visualize) ; test trailing
+        :custom
+        (undo-tree-auto-save-history . t)
+        (undo-tree-visualizer-diff . t)
+        :init
+        ;; (defadvice undo-tree-make-history-save-file-name
+        ;;     (after undo-tree activate)
+        ;;   (setq ad-return-value (concat ad-return-value ".gz")))
+        (global-undo-tree-mode))
 
   ;; TODO (leaf blackout :straight t)
-  (leaf outline-magic :straight t
-    :init
-    (define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle))
-
-  (leaf origami :straight t))
+  (leaf origami
+    :url "http://emacs.rubikitch.com/origami/"
+    :straight t))
 
 (my/tick-init-time "end")
 
