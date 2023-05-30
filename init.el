@@ -101,10 +101,8 @@
                    (cons 'utf-8 'cp932-unix)))))
 
     (leaf Fonts
-      :doc "フォント設定。確認はC-u C-x =。"
+      :doc "フォント設定。C-u C-x = で文字毎に確認できる。"
       :when (display-graphic-p)
-      :custom
-      (line-spacing . 0.2)
       :init
       ;; ｜あいうえお｜
       ;; ｜憂鬱な檸檬｜
@@ -205,6 +203,7 @@
                                         ; パスフレーズをキャッシュ
          (select-active-regions . 'only) ; リージョン選択時の移動を早くする
          (dired-dwim-target . t)        ; diredでターゲットを他のdiredバッファに
+         (line-spacing . 0.25)
          )
         :init
         (customize-set-variable
@@ -701,16 +700,19 @@ _~_: modified
         (modus-themes-syntax . '(yellow-comments green-strings))
         (modus-themes-hl-line . '(underline accented)) ;'(underline accented)
         (modus-themes-paren-match . '(intense underline))
-        (modus-themes-headings ; this is an alist: read the manual or its doc string
-         . '((1 . (regular 1.215))
-             (2 . (regular 1.138))
-             (3 . (regular 1.067))
-             (t . (regular))))
+        (modus-themes-headings . ; this is an alist: read the manual or its doc string
+                               ;; https://typescale.com/ 1.125 - Major Second
+                               '((1 . (regular 1.802))
+                                 (2 . (regular 1.602))
+                                 (3 . (regular 1.424))
+                                 (4 . (bold 1.266))
+                                 (5 . (reqular 1.125))
+                                 (t . (regular))))
         :init
         (require-theme 'modus-themes)
         ;; Load the theme of your choice:
-        ;; (load-theme 'modus-operandi :no-confirm)
-        (load-theme 'modus-vivendi :no-confirm)
+        (load-theme 'modus-operandi :no-confirm)
+        ;; (load-theme 'modus-vivendi :no-confirm)
         :bind
         ("<f5>" . modus-themes-toggle))
 
@@ -1455,7 +1457,7 @@ _~_: modified
         :doc "https://elpa.gnu.org/packages/undo-tree.html"
         :straight t
         :require t                          ; Checked
-        :bind ("C-z" . undo-tree-visualize) ; test trailing
+        :bind ("C-z" . undo-tree-undo)
         :custom
         (undo-tree-auto-save-history . t)
         (undo-tree-visualizer-diff . t)
