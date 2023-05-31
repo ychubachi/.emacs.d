@@ -83,7 +83,8 @@
     :init
     (leaf Help-Keys
       :init
-      (define-key key-translation-map [?\C-h] [?\C-?])
+      ;; (define-key key-translation-map [?\C-h] [?\C-?])
+      (global-set-key "\C-h" `delete-backward-char)
       (global-set-key (kbd "C-^") help-map))
 
     (leaf yes-or-no-p
