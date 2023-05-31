@@ -103,23 +103,19 @@
 
     (leaf Fonts
       :doc "フォント設定。C-u C-x = で文字毎に確認できる。"
-      :when (display-graphic-p)
       :init
       ;; ｜あいうえお｜
       ;; ｜憂鬱な檸檬｜
       ;; ｜<miilwiim>｜
       ;; ｜!"#$%&'~{}｜
       ;; ｜🙆iimmiim>｜
-      (let (
-            ;; (font-name "Noto Sans Mono-11")
-            ;; (font-name "PlemolJP-11")        ; IBM Plex Sans JP + IBM Plex Mono
-            (font-name "HackGen-11")    ; 源ノ角ゴシックの派生 + Hack
-            ;; (font-name "UDEV Gothic NF-12")  ; BIZ UDゴシック + JetBrains Mono
-            ;; (font-name "FirgeNerd-11")       ; 源真ゴシック + Fira Mono
-            )
-        (if (null (x-list-fonts font-name))
-            (error (format "No such font: %s" font-name)))
-        (set-face-attribute 'default nil :font font-name))))
+      (custom-set-faces
+       ;; '(default ((t (:family "Noto Sans"))))
+       ;; '(default ((t (:family "PlemolJP"))))
+       '(default ((t (:family "HackGen"))))
+       ;; '(default ((t (:family "UDEV Gothic NF"))))
+       ;; '(default ((t (:family "FirgeNerd"))))
+       )))
 
   (leaf Input-Method
     :init
