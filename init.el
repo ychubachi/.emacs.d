@@ -443,6 +443,7 @@
         :config
         (which-key-mode))
 
+
       (leaf hydra :straight t
 	:init
 	(defhydra hydra-zoom (global-map "<f12>")
@@ -1727,14 +1728,18 @@ _~_: modified
     :config
     (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
     (projectile-mode 1))
+
+  (leaf blackout :straight t)
+
+  (leaf origami
+    :url "http://emacs.rubikitch.com/origami/"
+    :straight t)
   )
 
 (leaf Test-Bed
   :init
-  ;; TODO (leaf blackout :straight t)
-  (leaf origami
-    :url "http://emacs.rubikitch.com/origami/"
-    :straight t))
+  ;; Experimental Settings
+)
 
 (my/tick-init-time "end")
 
