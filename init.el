@@ -700,10 +700,10 @@ _~_: modified
         (modus-themes-paren-match . '(intense underline))
         (modus-themes-headings . ; this is an alist: read the manual or its doc string
                                ;; https://typescale.com/ 1.125 - Major Second
-                               '((1 . (regular 1.802))
+                               '((1 . (bold 1.802))
                                  (2 . (regular 1.602))
-                                 (3 . (regular 1.424))
-                                 (4 . (bold 1.266))
+                                 (3 . (bold 1.424))
+                                 (4 . (regular 1.266))
                                  (5 . (reqular 1.125))
                                  (t . (regular))))
         :init
@@ -763,7 +763,7 @@ _~_: modified
         (org-startup-truncated . nil)
         (org-return-follows-link  . t)          ; RET/C-mでリンクを開く
         (org-agenda-start-with-follow-mode . t) ; アジェンダで関連するorgファイルを開く
-        (org-ellipsis . " ▽")                  ; …,▼, ↴, ⬎, ⤷, ⋱
+        (org-ellipsis . "↴")                  ; ▽,…,▼, ↴, ⬎, ⤷, ⋱
         (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
         (org-agenda-remove-tags . t)             ; アジェンダにタグを表示しない
         (org-id-link-to-org-use-id . 'create-if-interactive-and-no-custom-id)
