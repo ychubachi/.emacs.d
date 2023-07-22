@@ -1039,7 +1039,7 @@ _~_: modified
         :config
         (add-hook 'org-mode-hook (lambda nil (org-superstar-mode 1)))
         (setq org-superstar-headline-bullets-list
-              '("●" "■" "▷" "○")))
+              '("●" "■" "▷" "○"))) ; TODO: org-modernと重複？
 
       (leaf ox-zenn
         :straight t
