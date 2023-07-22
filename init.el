@@ -23,19 +23,17 @@
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prog1 "Start Profiling"
-  (defvar my/tick-previous-time (current-time))
+;; (prog1 "Start Profiling"
+;;   (defvar my/tick-previous-time (current-time))
 
-  (defun my/tick-init-time (msg)
-    "Tick boot sequence."
-    (let ((ctime (current-time)))
-      (message "--- %5.2f[ms] %s"
-               (* 1000 (float-time
-                        (time-subtract ctime my/tick-previous-time)))
-               msg)
-      (setq my/tick-previous-time ctime)))
-
-  (my/tick-init-time "start"))
+;;   (defun my/tick-init-time (msg)
+;;     "Tick boot sequence."
+;;     (let ((ctime (current-time)))
+;;       (message "--- %5.2f[ms] %s"
+;;                (* 1000 (float-time
+;;                         (time-subtract ctime my/tick-previous-time)))
+;;                msg)
+;;       (setq my/tick-previous-time ctime)))
 
 (eval-and-compile
   (prog1 "package"
@@ -1737,7 +1735,9 @@ _~_: modified
   ;; Experimental Settings
 )
 
-(my/tick-init-time "end")
+;;   (my/tick-init-time "start"))
+
+;; (my/tick-init-time "end")
 
 (provide 'init.el)
 ;;; init.el ends here
