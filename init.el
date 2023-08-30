@@ -1154,6 +1154,7 @@ _~_: modified
     (leaf Mail-Client
       :init
       (leaf notmuch
+        :when (not (eq system-type 'windows-nt))
         :straight t
         :require t
         :hook
@@ -1215,6 +1216,7 @@ _~_: modified
         :after notmuch org)
 
       (leaf consult-notmuch
+        :when (not (eq system-type 'windows-nt))
         ;; :straight (consult-notmuch :type git :host github
         ;;                            :repo "emacsmirror/consult-notmuch")
         :straight t
