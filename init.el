@@ -700,12 +700,19 @@ _~_: modified
         (modus-themes-paren-match . '(intense underline))
         (modus-themes-headings . ; this is an alist: read the manual or its doc string
                                ;; https://typescale.com/ 1.125 - Major Second
-                               '((1 . (regular 1.802))
-                                 (2 . (regular 1.602))
-                                 (3 . (regular 1.424))
-                                 (4 . (bold 1.266))
-                                 (5 . (reqular 1.125))
-                                 (t . (regular))))
+                               ;; '((1 . (regular 1.802))
+                               ;;   (2 . (regular 1.602))
+                               ;;   (3 . (regular 1.424))
+                               ;;   (4 . (bold 1.266))
+                               ;;   (5 . (reqular 1.125))
+                               ;;  (t . (regular))
+                               '((1 . (regular 1.424))
+                                 (2 . (regular 1.266))
+                                 (3 . (regular 1.125))
+                                 (4 . (bold ))
+                                 (5 . (boldr))
+                                 (t . (regular)))
+                               )
         :init
         (require-theme 'modus-themes)
         ;; Load the theme of your choice:
