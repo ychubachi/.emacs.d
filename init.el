@@ -23,19 +23,17 @@
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(prog1 "Start Profiling"
-  (defvar my/tick-previous-time (current-time))
+;; (prog1 "Start Profiling"
+;;   (defvar my/tick-previous-time (current-time))
 
-  (defun my/tick-init-time (msg)
-    "Tick boot sequence."
-    (let ((ctime (current-time)))
-      (message "--- %5.2f[ms] %s"
-               (* 1000 (float-time
-                        (time-subtract ctime my/tick-previous-time)))
-               msg)
-      (setq my/tick-previous-time ctime)))
-
-  (my/tick-init-time "start"))
+;;   (defun my/tick-init-time (msg)
+;;     "Tick boot sequence."
+;;     (let ((ctime (current-time)))
+;;       (message "--- %5.2f[ms] %s"
+;;                (* 1000 (float-time
+;;                         (time-subtract ctime my/tick-previous-time)))
+;;                msg)
+;;       (setq my/tick-previous-time ctime)))
 
 (eval-and-compile
   (prog1 "package"
@@ -687,6 +685,7 @@ _~_: modified
     (leaf Look-And-Feel
       :init
       (leaf modus-themes
+        :disabled t
         :straight t                     ; omit this to use the built-in themes
         :custom
         (modus-themes-italic-constructs . nil)
@@ -762,63 +761,21 @@ _~_: modified
         (org-directory . "~/Dropbox/Org/")
         (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
         (org-agenda-files . '("~/Dropbox/Org/"))
+        (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
+
         (org-todo-keyword-faces
          . '(("NEXT" . (:foreground "blue" :underline t))
              ("DONE" . (:foreground "pale green"))))
         (org-todo-keywords . '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
-        (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
+
         (org-startup-truncated . nil)
         (org-return-follows-link  . t)          ; RET/C-mでリンクを開く
         (org-agenda-start-with-follow-mode . t) ; アジェンダで関連するorgファイルを開く
-        (org-ellipsis . " ▽")                  ; …,▼, ↴, ⬎, ⤷, ⋱
+        (org-ellipsis . "↴")                  ; ▽,…,▼, ↴, ⬎, ⤷, ⋱
         (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
-        (org-agenda-remove-tags . t)             ; アジェンダにタグを表示しない
+        ;; (org-agenda-remove-tags . t)             ; アジェンダにタグを表示しない
         (org-id-link-to-org-use-id . 'create-if-interactive-and-no-custom-id)
         )
-
-      (leaf org-modern
-        :url "https://github.com/minad/org-modern"
-        :straight t
-        :init
-        ;; Add frame borders and window dividers
-        (modify-all-frames-parameters
-         '((right-divider-width . 10)
-           (internal-border-width . 10)))
-        (dolist (face '(window-divider
-                        window-divider-first-pixel
-                        window-divider-last-pixel))
-          (face-spec-reset-face face)
-          (set-face-foreground face (face-attribute 'default :background)))
-        (set-face-background 'fringe (face-attribute 'default :background))
-
-        ;; (setq org-modern-star '("🟩" "🟣" "🔶" "◎" "○" "※"))
-        ;; (setq org-modern-star '("■" "◆" "◎" "○" "§" "¶"))
-        ;; (setq org-modern-star '("🟧" "🔶" "🟠" "🔸" "§" "¶"))
-        (setq org-modern-star '("■" "◆" "●" "◎" "○" "・"))
-
-        (setq
-         ;; Edit settings
-         org-auto-align-tags nil ; Non-nil keeps tags aligned when modifying headlines.
-         org-tags-column 0
-         org-catch-invisible-edits 'show-and-error
-         org-special-ctrl-a/e t
-
-         ;; Org styling, hide markup etc.
-         org-hide-emphasis-markers t
-         org-pretty-entities t
-         ;; org-ellipsis "…"
-
-         ;; Agenda styling
-         org-agenda-tags-column 0
-         org-agenda-block-separator ?─
-         org-agenda-time-grid
-         '((daily today require-timed)
-           (800 1000 1200 1400 1600 1800 2000)
-           " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-         org-agenda-current-time-string
-         "⭠ now ─────────────────────────────────────────────────"
-         )
-        (global-org-modern-mode))
 
       (leaf doct
         :straight t
@@ -922,220 +879,289 @@ _~_: modified
                                     ":EXPORT_DATE: %U"
                                     ":END:"
                                     "\n** %?"))))))))
-      (leaf org-tempo
-        :require t
-        :config
-        (add-to-list 'org-structure-template-alist
-                     '("el" . "src emacs-lisp"))
-        (add-to-list 'org-structure-template-alist
-                     '("sh" . "src bash"))
-        (add-to-list 'org-structure-template-alist
-                     '("rb" . "src ruby :results output"))
-        (add-to-list 'org-structure-template-alist
-                     '("j"  . "src java :results output"))
-        (add-to-list 'org-structure-template-alist
-                     '("py" . "src python :results output"))
-        (add-to-list 'org-structure-template-alist
-                     '("n" . "note"))
-        (add-to-list 'org-structure-template-alist
-                     '("w" . "warning"))
-        (add-to-list 'org-structure-template-alist
-                     '("f" . "figure")))
 
-      (leaf ox-latex
-        :require t
-        :custom
-        (org-latex-compiler      . "lualatex")
-        (org-latex-pdf-process   . '("latexmk -f -gg -pvc- -%latex %f"))
-        (org-latex-default-class . "jlreq")
-        (org-latex-hyperref-template
-         . "\\hypersetup{\n pdfauthor={%a},\n pdftitle={%t},\n pdfkeywords={%k},pdfsubject={%d},\n pdfcreator={%c},\n pdflang={Japanese},\n colorlinks={true},linkcolor={blue}\n}\n")
-        (org-latex-listings . 'minted)
-        (org-latex-minted-options
-         . '(("frame" "lines")
-             ("framesep=2mm")
-             ("linenos=true")
-             ("baselinestretch=1.2")
-             ("fontsize=\\footnotesize")
-             ("breaklines")))
-        :config
-        (add-to-list
-         'org-latex-classes
-         '("jlreq"
-           "\\documentclass{jlreq}"
-           ("\\section{%s}"       . "\\section*{%s}")
-           ("\\subsection{%s}"    . "\\subsection*{%s}")
-           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-           ("\\paragraph{%s}"     . "\\paragraph*{%s}")
-           ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
-        (add-to-list
-         'org-latex-classes
-         '("jlreq-tate"
-           "\\documentclass[tate]{jlreq}"
-           ("\\section{%s}"       . "\\section*{%s}")
-           ("\\subsection{%s}"    . "\\subsection*{%s}")
-           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-           ("\\paragraph{%s}"     . "\\paragraph*{%s}")
-           ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
-        (add-to-list
-         'org-latex-classes
-         '("bxjsarticle"
-           "\\documentclass{bxjsarticle}\n\\usepackage{luatexja}"
-           ("\\section{%s}"       . "\\section*{%s}")
-           ("\\subsection{%s}"    . "\\subsection*{%s}")
-           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-           ("\\paragraph{%s}"     . "\\paragraph*{%s}")
-           ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
-        (add-to-list
-         'org-latex-classes
-         '("beamer"
-           "\\documentclass[presentation]{beamer}\n\\usepackage{luatexja}\n\\renewcommand\\kanjifamilydefault{\\gtdefault}"
-           ("\\section{%s}"       . "\\section*{%s}")
-           ("\\subsection{%s}"    . "\\subsection*{%s}")
-           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+      (leaf Org-Look-And-Feel
+        :init
+        (leaf org-modern
+          :disabled nil
+          :url "https://github.com/minad/org-modern"
+          :straight t
+          :custom
+          ;;  dashが全角で表示されるので修正
+          ((org-modern-list . '((?+ . "◦") (?- . "-") (?* . "•")))
+           (org-modern-star . '("■"
+                                ".◆"
+                                "..●"
+                                "...＊"
+                                "....＋"))) ; ■
+          :init
+          ;; Add frame borders and window dividers
+          (modify-all-frames-parameters
+           '((right-divider-width . 10)
+             (internal-border-width . 10)))
+          (dolist (face '(window-divider
+                          window-divider-first-pixel
+                          window-divider-last-pixel))
+            (face-spec-reset-face face)
+            (set-face-foreground face (face-attribute 'default :background)))
+          (set-face-background 'fringe (face-attribute 'default :background))
 
-        (add-to-list 'org-latex-packages-alist
-                     "\\usepackage{minted}" t))
+          ;; (setq org-modern-star '("🟩" "🟣" "🔶" "◎" "○" "※"))
+          ;; (setq org-modern-star '("■" "◆" "◎" "○" "§" "¶"))
+          ;; (setq org-modern-star '("🟧" "🔶" "🟠" "🔸" "§" "¶"))
 
-      (leaf ox-beamer
-        :require t
-        :custom
-        (org-beamer-outline-frame-title . "目次")
-        (org-beamer-frame-default-options . "t"))
 
-      (leaf *org-babel
-        :config
-        (org-babel-do-load-languages
-         'org-babel-load-languages
-         '((java . t) (ruby . t) (python . t) (C . t) (dot . t)))
-        (setq org-confirm-babel-evaluate nil)
-        (eval-after-load 'org
-          (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images))
-        (nconc org-babel-default-header-args:java
-               '((:dir . nil)
-                 (:results . "value"))))
+          (setq
+           ;; Edit settings
+           org-auto-align-tags nil ; Non-nil keeps tags aligned when modifying headlines.
+           org-tags-column 0
+           org-catch-invisible-edits 'show-and-error
+           org-special-ctrl-a/e t
 
-      (leaf *org-use-speed-commands
-        :config
-        (setq org-use-speed-commands
-              (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**")))))
+           ;; Org styling, hide markup etc.
+           org-hide-emphasis-markers t
+           org-pretty-entities t
+           ;; org-ellipsis "…"
 
-      (leaf org2blog
-        :straight t
-        :config
-        (require 'auth-source)
-        (let* ((credentials (auth-source-user-and-password "ploversky.net"))
-               (username (nth 0 credentials))
-               (password (nth 1 credentials))
-               (config `("plover"
-                         :url "https://ploversky.net/xmlrpc.php"
-                         :username ,username
-                         :password ,password)))
-          (setq org2blog/wp-blog-alist `(,config)))
-        (setq org2blog/wp-image-upload t)
-        (setq org2blog/wp-show-post-in-browser 'show)
-        (setq org2blog/wp-use-sourcecode-shortcode t))
+           ;; Agenda styling
+           org-agenda-tags-column 0
+           org-agenda-block-separator ?─
+           org-agenda-time-grid
+           '((daily today require-timed)
+             (800 1000 1200 1400 1600 1800 2000)
+             " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+           org-agenda-current-time-string
+           "⭠ now ─────────────────────────────────────────────────"
+           )
+          (global-org-modern-mode))
 
-      (leaf ox-hugo
-        :straight t
-        :require t
-        :after ox)
+        (leaf org-superstar
+          :disabled t
+          :straight t
+          :config
+          (add-hook 'org-mode-hook (lambda nil (org-superstar-mode 1)))
+          (setq org-superstar-headline-bullets-list
+                '("●" "■" "▷" "○"))) ; TODO: org-modernと重複？
+        )
 
-      (leaf org-superstar
-        :straight t
-        :config
-        (add-hook 'org-mode-hook (lambda nil (org-superstar-mode 1)))
-        (setq org-superstar-headline-bullets-list
-              '("●" "■" "▷" "○")))
+      (leaf Org-Documentation
+        :init
+        (leaf ox-latex
+          :require t
+          :custom
+          (org-latex-compiler      . "lualatex")
+          (org-latex-pdf-process   . '("latexmk -f -gg -pvc- -%latex %f"))
+          (org-latex-default-class . "jlreq")
+          (org-latex-hyperref-template
+           . "\\hypersetup{\n pdfauthor={%a},\n pdftitle={%t},\n pdfkeywords={%k},pdfsubject={%d},\n pdfcreator={%c},\n pdflang={Japanese},\n colorlinks={true},linkcolor={blue}\n}\n")
+          (org-latex-listings . 'minted)
+          (org-latex-minted-options
+           . '(("frame" "lines")
+               ("framesep=2mm")
+               ("linenos=true")
+               ("baselinestretch=1.2")
+               ("fontsize=\\footnotesize")
+               ("breaklines")))
+          :config
+          (add-to-list
+           'org-latex-classes
+           '("jlreq"
+             "\\documentclass{jlreq}"
+             ("\\section{%s}"       . "\\section*{%s}")
+             ("\\subsection{%s}"    . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+             ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+             ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+          (add-to-list
+           'org-latex-classes
+           '("jlreq-tate"
+             "\\documentclass[tate]{jlreq}"
+             ("\\section{%s}"       . "\\section*{%s}")
+             ("\\subsection{%s}"    . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+             ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+             ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+          (add-to-list
+           'org-latex-classes
+           '("bxjsarticle"
+             "\\documentclass{bxjsarticle}\n\\usepackage{luatexja}"
+             ("\\section{%s}"       . "\\section*{%s}")
+             ("\\subsection{%s}"    . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+             ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+             ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+          (add-to-list
+           'org-latex-classes
+           '("beamer"
+             "\\documentclass[presentation]{beamer}\n\\usepackage{luatexja}\n\\renewcommand\\kanjifamilydefault{\\gtdefault}"
+             ("\\section{%s}"       . "\\section*{%s}")
+             ("\\subsection{%s}"    . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
-      (leaf ox-zenn
-        :straight t
-        :after org
-        :require t ox-publish
-        :defun zenn/f-parent org-publish
-        :defvar org-publish-project-alist
-        :preface
-        (defvar zenn/org-dir "~/git/zenn-content")
+          (add-to-list 'org-latex-packages-alist
+                       "\\usepackage{minted}" t))
 
-        (defun zenn/org-publish (arg)
-          "Publish zenn blog files."
-          (interactive "P")
-          (let ((force (or (equal '(4) arg) (equal '(64) arg)))
-                (async (or (equal '(16) arg) (equal '(64) arg))))
-            (org-publish "zenn" arg force async)))
+        (leaf ox-beamer
+          :require t
+          :custom
+          (org-beamer-outline-frame-title . "目次")
+          (org-beamer-frame-default-options . "t"))
 
-        :config
-        (setf
-         (alist-get "zenn" org-publish-project-alist nil nil #'string=)
-         (list
-          :base-directory (expand-file-name "" zenn/org-dir)
-          :base-extension "org"
-          :publishing-directory (expand-file-name "../" zenn/org-dir)
-          :recursive t
-          :publishing-function 'org-zenn-publish-to-markdown)))
+        (leaf ox-pandoc :straight t :require t))
 
-      (leaf ox-pandoc :straight t :require t)
+      (leaf Org-Publishing
+        :init
+        (leaf org2blog
+          :straight t
+          :config
+          (require 'auth-source)
+          (let* ((credentials (auth-source-user-and-password "ploversky.net"))
+                 (username (nth 0 credentials))
+                 (password (nth 1 credentials))
+                 (config `("plover"
+                           :url "https://ploversky.net/xmlrpc.php"
+                           :username ,username
+                           :password ,password)))
+            (setq org2blog/wp-blog-alist `(,config)))
+          (setq org2blog/wp-image-upload t)
+          (setq org2blog/wp-show-post-in-browser 'show)
+          (setq org2blog/wp-use-sourcecode-shortcode t))
 
-      (leaf org-pomodoro
-        :straight t
-        :require t)
+        (leaf ox-hugo
+          :straight t
+          :require t
+          :after ox)
 
-      (leaf org-contrib
-        :straight t
-        :config
-        (require 'ox-taskjuggler))
+        (leaf ox-zenn
+          :straight t
+          :after org
+          :require t ox-publish
+          :defun zenn/f-parent org-publish
+          :defvar org-publish-project-alist
+          :preface
+          (defvar zenn/org-dir "~/git/zenn-content")
+          (defun zenn/org-publish (arg)
+            "Publish zenn blog files."
+            (interactive "P")
+            (let ((force (or (equal '(4) arg) (equal '(64) arg)))
+                  (async (or (equal '(16) arg) (equal '(64) arg))))
+              (org-publish "zenn" arg force async)))
+          :config
+          (setf
+           (alist-get "zenn" org-publish-project-alist nil nil #'string=)
+           (list
+            :base-directory (expand-file-name "" zenn/org-dir)
+            :base-extension "org"
+            :publishing-directory (expand-file-name "../" zenn/org-dir)
+            :recursive t
+            :publishing-function 'org-zenn-publish-to-markdown)))
 
-      (leaf *org-publish-project-alist
-        :config
-        (setq org-publish-project-alist
-              '(("chubachi.net"
-                 :components ("chubachi.net-orgfiles" "chubachi.net-others"))
+        (leaf org-publish-project-alist
+          :config
+          (setq org-publish-project-alist
+                '(("chubachi.net"
+                   :components ("chubachi.net-orgfiles" "chubachi.net-others"))
 
-                ("chubachi.net-orgfiles"
-                 :publishing-function org-html-publish-to-html
-                 :base-directory "~/Dropbox/Org/publish/chubachi.net/"
-                 :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish"
-                 :base-extension "org"
-                 :recursive t
-                 ;; options for html files
-                 ;; :exclude "PrivatePage.org" ;; regexp
-                 ;; :headline-levels 3
-                 ;; :section-numbers nil
-                 ;; :with-toc nil
-                 ;; :html-head "<link rel=\"stylesheet\" type=\"text/css\"
-                 ;;    href=\"https://gongzhitaao.org/orgcss/org.css\"/>"
-                 ;;:html-preamble t
-                 )
+                  ("chubachi.net-orgfiles"
+                   :publishing-function org-html-publish-to-html
+                   :base-directory "~/Dropbox/Org/publish/chubachi.net/"
+                   :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish"
+                   :base-extension "org"
+                   :recursive t
+                   ;; options for html files
+                   ;; :exclude "PrivatePage.org" ;; regexp
+                   ;; :headline-levels 3
+                   ;; :section-numbers nil
+                   ;; :with-toc nil
+                   ;; :html-head "<link rel=\"stylesheet\" type=\"text/css\"
+                   ;;    href=\"https://gongzhitaao.org/orgcss/org.css\"/>"
+                   ;;:html-preamble t
+                   )
 
-                ("chubachi.net-others"
-                 :publishing-function org-publish-attachment
-                 :base-directory "~/Dropbox/Org/publish/chubachi.net/"
-                 :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish/"
-                 :base-extension "jpg\\|gif\\|png|css\\|el"
-                 :recursive t))))
+                  ("chubachi.net-others"
+                   :publishing-function org-publish-attachment
+                   :base-directory "~/Dropbox/Org/publish/chubachi.net/"
+                   :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish/"
+                   :base-extension "jpg\\|gif\\|png|css\\|el"
+                   :recursive t)))))
 
-      ;; plantuml.jarへのパスを設定
-      (setq org-plantuml-jar-path "~/.emacs.d/lib/plantuml-1.2022.12.jar")
+      (leaf Org-Editing
+        :init
+        (leaf *org-use-speed-commands
+          :config
+          (setq org-use-speed-commands
+                (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**")))))
+        (leaf org-tempo
+          :require t
+          :config
+          (add-to-list 'org-structure-template-alist
+                       '("el" . "src emacs-lisp"))
+          (add-to-list 'org-structure-template-alist
+                       '("sh" . "src bash"))
+          (add-to-list 'org-structure-template-alist
+                       '("rb" . "src ruby :results output"))
+          (add-to-list 'org-structure-template-alist
+                       '("j"  . "src java :results output"))
+          (add-to-list 'org-structure-template-alist
+                       '("py" . "src python :results output"))
+          (add-to-list 'org-structure-template-alist
+                       '("n" . "note"))
+          (add-to-list 'org-structure-template-alist
+                       '("w" . "warning"))
+          (add-to-list 'org-structure-template-alist
+                       '("f" . "figure")))
+        )
 
-      ;; org-babelで使用する言語を登録
-      (org-babel-do-load-languages
-       'org-babel-load-languages
-       '((plantuml . t)))
+      (leaf Org-Other
+        :init
+        (leaf *org-babel
+          :config
+          (org-babel-do-load-languages
+           'org-babel-load-languages
+           '((java . t) (ruby . t) (python . t) (C . t) (dot . t)))
+          (setq org-confirm-babel-evaluate nil)
+          (eval-after-load 'org
+            (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images))
+          (nconc org-babel-default-header-args:java
+                 '((:dir . nil)
+                   (:results . "value"))))
+        (leaf org-pomodoro
+          :straight t
+          :require t)
 
-      (leaf org-download
-        :straight t
-        :require t
-        :custom (org-download-method . 'attach)
-        :config
-        (setq org-image-actual-width 400) ; width of images (#+ATTR_ORG: 400)
-        (add-hook 'dired-mode-hook 'org-download-enable)
-        (leaf
-          :when (eq system-type 'windows-nt)
-          :custom (org-download-screenshot-method . "magick convert clipboard: %s"))))
+        (leaf org-contrib
+          :straight t
+          :config
+          (require 'ox-taskjuggler))
+
+        (leaf *org-plantuml
+          :init
+          ;; plantuml.jarへのパスを設定
+          (setq org-plantuml-jar-path "~/.emacs.d/lib/plantuml-1.2022.12.jar")
+
+          ;; org-babelで使用する言語を登録
+          (org-babel-do-load-languages
+           'org-babel-load-languages
+           '((plantuml . t)))
+          )
+        (leaf org-download
+          :straight t
+          :require t
+          :custom (org-download-method . 'attach)
+          :config
+          (setq org-image-actual-width 400) ; width of images (#+ATTR_ORG: 400)
+          (add-hook 'dired-mode-hook 'org-download-enable)
+          (leaf
+            :when (eq system-type 'windows-nt)
+            :custom (org-download-screenshot-method . "magick convert clipboard: %s")))
+        )
+
+)
 
     (leaf Mail-Client
       :init
       (leaf notmuch
+        :when (not (eq system-type 'windows-nt))
         :straight t
         :require t
         :hook
@@ -1197,6 +1223,7 @@ _~_: modified
         :after notmuch org)
 
       (leaf consult-notmuch
+        :when (not (eq system-type 'windows-nt))
         ;; :straight (consult-notmuch :type git :host github
         ;;                            :repo "emacsmirror/consult-notmuch")
         :straight t
@@ -1638,48 +1665,8 @@ _~_: modified
 
       (leaf After-Init-Hook
         :init
-        (leaf corfu
-          :doc "Completion Overlay Region FUnction"
-          :url "https://github.com/minad/corfu"
-          :straight t
-          ;; Optional customizations
-          :custom
-          (corfu-cycle . t) ;; Enable cycling for `corfu-next/previous'
-          (corfu-auto . t)  ;; Enable auto completion
-          ;; (corfu-separator ?\s)          ;; Orderless field separator
-          ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-          ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-          ;; (corfu-preview-current nil)    ;; Disable current candidate preview
-          ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
-          ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-          ;; (corfu-scroll-margin 5)        ;; Use scroll margin
-
-          ;; Enable Corfu only for certain modes.
-          ;; :hook ((prog-mode . corfu-mode)
-          ;;        (shell-mode . corfu-mode)
-          ;;        (eshell-mode . corfu-mode))
-
-          ;; Recommended: Enable Corfu globally.
-          ;; This is recommended since Dabbrev can be used globally (M-/).
-          ;; See also `corfu-excluded-modes'.
-          :init
-          (global-corfu-mode))
-
-        ;; A few more useful configurations...
-        (leaf TODO:emacs
-          :init
-          ;; TAB cycle if there are only few candidates
-          (setq completion-cycle-threshold 3)
-
-          ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
-          ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
-          ;;
-          (setq read-extended-command-predicate
-                #'command-completion-default-include-p)
-
-          ;; Enable indentation+completion using the TAB key.
-          ;; `completion-at-point' is often bound to M-TAB.
-          (setq tab-always-indent 'complete))))
+        )
+      )
     )
 
   (leaf Original-Packages
@@ -1737,6 +1724,50 @@ _~_: modified
   (leaf origami
     :url "http://emacs.rubikitch.com/origami/"
     :straight t)
+
+  (leaf corfu
+    :disabled t ;; TODO
+    :doc "Completion Overlay Region FUnction"
+    :url "https://github.com/minad/corfu"
+    :straight t
+    ;; Optional customizations
+    ;; :custom
+    ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+    ;; (corfu-auto t)                 ;; Enable auto completion
+    ;; (corfu-separator ?\s)          ;; Orderless field separator
+    ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+    ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+    ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+    ;; Enable Corfu only for certain modes.
+    ;; :hook ((prog-mode . corfu-mode)
+    ;;        (shell-mode . corfu-mode)
+    ;;        (eshell-mode . corfu-mode))
+
+    ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+    ;; be used globally (M-/).  See also the customization variable
+    ;; `global-corfu-modes' to exclude certain modes.
+    :init
+    (global-corfu-mode)
+
+    ;; A few more useful configurations...
+    (leaf emacs
+      :init
+      ;; TAB cycle if there are only few candidates
+      (setq completion-cycle-threshold 3)
+
+      ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+      ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+      ;;
+      (setq read-extended-command-predicate
+            #'command-completion-default-include-p)
+
+      ;; Enable indentation+completion using the TAB key.
+      ;; `completion-at-point' is often bound to M-TAB.
+      (setq tab-always-indent 'complete)))
   )
 
 (leaf Test-Bed
@@ -1744,7 +1775,9 @@ _~_: modified
   ;; Experimental Settings
 )
 
-(my/tick-init-time "end")
+;;   (my/tick-init-time "start"))
+
+;; (my/tick-init-time "end")
 
 (provide 'init.el)
 ;;; init.el ends here
