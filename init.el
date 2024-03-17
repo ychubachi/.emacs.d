@@ -23,18 +23,8 @@
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (prog1 "Start Profiling"
-;;   (defvar my/tick-previous-time (current-time))
-
-;;   (defun my/tick-init-time (msg)
-;;     "Tick boot sequence."
-;;     (let ((ctime (current-time)))
-;;       (message "--- %5.2f[ms] %s"
-;;                (* 1000 (float-time
-;;                         (time-subtract ctime my/tick-previous-time)))
-;;                msg)
-;;       (setq my/tick-previous-time ctime)))
-
+;; Package managers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (eval-and-compile
   (prog1 "package"
     (customize-set-variable
@@ -66,8 +56,8 @@
     (leaf-keywords-init)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Settings with Leaf
-
+;; Minimum Settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (leaf Minimum
   :disabled nil
   :init
@@ -172,28 +162,28 @@
       (advice-add 'mozc-session-execute-command
   	          :after (lambda (&rest args)
   	                   (when (eq (nth 0 args) 'CreateSession)
-  	                     (mozc-session-sendkey '(Hankaku/Zenkaku))))))
-    )
-  ;; end of Minimum
-  )
+  	                     (mozc-session-sendkey '(Hankaku/Zenkaku))))))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Builtin packages (Emacs core)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (leaf Builtin-Packages
   :init
   (leaf Variables
     :init
     (leaf Emacs-Variables
       :custom
-      ((inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
-       (ring-bell-function . 'ignore) ; ベルを鳴らさない
-       (fill-column . 80)             ; 80桁で改行（モードによる）
-       (indent-tabs-mode . nil)       ; インデントの際タブを使わない
+      ((inhibit-startup-screen . t)     ; スタートアップスクリーンを非表示
+       (ring-bell-function . 'ignore)   ; ベルを鳴らさない
+       (fill-column . 80)               ; 80桁で改行（モードによる）
+       (indent-tabs-mode . nil)         ; インデントの際タブを使わない
        (byte-compile-warnings
         . '(not cl-functions obsolete)) ; (require 'cl)を検査しない
        (epg-pinentry-mode . 'loopback)  ; GnuPGのパスフレーズをミニバッファで
        (plstore-cache-passphrase-for-symmetric-encryption . t)
                                         ; パスフレーズをキャッシュ
-       (select-active-regions . 'only) ; リージョン選択時の移動を早くする
-       (dired-dwim-target . t)        ; diredでターゲットを他のdiredバッファに
+       (select-active-regions . 'only)  ; リージョン選択時の移動を早くする
+       (dired-dwim-target . t)          ; diredでターゲットを他のdiredバッファに
        (line-spacing . 0.25)
        )
       :init
@@ -213,8 +203,8 @@
 
     (leaf vc-hooks
       :custom
-      (vc-follow-symlinks . t)        ; シンボリックリンクの場合、本体を辿る
-      (vc-handled-backends . '(Git))) ; Gitのみ使用
+      (vc-follow-symlinks . t)          ; シンボリックリンクの場合、本体を辿る
+      (vc-handled-backends . '(Git)))   ; Gitのみ使用
 
     (leaf files
       :defun (no-littering-expand-var-file-name)
@@ -229,9 +219,9 @@
     :init
     (leaf auto-revert
       :custom
-      (auto-revert-interval . 1)      ; 再読み込みの間隔
-      (auto-revert-verbose . nil)     ; 再読込の際、メッセージを非表示
-      (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
+      (auto-revert-interval . 1)        ; 再読み込みの間隔
+      (auto-revert-verbose . nil)       ; 再読込の際、メッセージを非表示
+      (auto-revert-check-vc-info . t)   ; VCで更新があった場合、自動で更新
       :init
       (global-auto-revert-mode 1))
 
@@ -259,11 +249,11 @@
       :config
       (setq whitespace-style
             '(
-              face                  ; faceで可視化
-              trailing              ; 行末
-              tabs                  ; タブ
-              spaces                ; スペース
-              space-mark            ; 表示のマッピング
+              face                      ; faceで可視化
+              trailing                  ; 行末
+              tabs                      ; タブ
+              spaces                    ; スペース
+              space-mark                ; 表示のマッピング
               tab-mark
               ))
       (setq whitespace-display-mappings
@@ -317,7 +307,7 @@
       (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
 
     (leaf simple
-      :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
+      :bind ("M-SPC" . cycle-spacing))  ; Not working when ALT-SPC is typed.
     ;; End of Builtin-Packages/Global-Key-Bindings
     )
 
