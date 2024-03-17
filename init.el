@@ -1161,179 +1161,6 @@ _~_: modified
 
 )
 
-    (leaf Mail-Client
-      :init
-      (leaf notmuch
-        :when (not (eq system-type 'windows-nt))
-        :straight t
-        :require t
-        :hook
-        (notmuch-message-mode-hook . visual-fill-column-mode)
-        (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1)))
-        :custom
-        ((notmuch-draft-folder . "/drafts") ; 編集中のドラフトはローカルのフォルダに
-         (notmuch-fcc-dirs . nil)           ; 送信済みメールはローカルに保存せず
-                                        ; Gmailに任せる
-         (notmuch-search-oldest-first . nil) ; 検索結果を新しい順でソート
-         (notmuch-saved-searches
-          . '((:name "flagged"    :query "tag:flagged AND NOT tag:deleted"
-                     :key "f" :search-type tree)
-              (:name "inbox"      :query "tag:inbox folder:/Gmail\\/inbox/ AND NOT tag:deleted"
-                     :key "i" :search-type tree)
-              (:name "unread"     :query "tag:unread AND NOT tag:deleted"
-                     :key "u" :search-type tree)
-              (:name "sent"       :query "tag:sent AND NOT tag:deleted"
-                     :key "s" :search-type tree)
-              (:name "drafts"     :query "tag:draft AND NOT tag:deleted"
-                     :key "d" :search-type tree)
-              (:name "Gmal Inbox" :query "folder:/Gmail\\/inbox/"
-                     :key "I" :search-type tree)
-              (:name "Gmal Sent"  :query "folder:/Gmail\\/sent/"
-                     :key "S" :search-type tree)
-              (:name "all mail"   :query "NOT tag:deleted"
-                     :key "a" :search-type tree)))
-         )
-        :bind (("C-c r" . notmuch-hello))
-        :config
-        (advice-add #'notmuch-read-tag-changes
-                    :filter-return (lambda (x) (mapcar #'string-trim x))) ; vertico対策
-        :config
-        (define-key notmuch-search-mode-map "f"
-          (lambda ()
-            "toggle flaged tag for message"
-            (interactive)
-            (if (member "flagged" (notmuch-search-get-tags))
-                (notmuch-search-tag (list "-flagged"))
-              (notmuch-search-tag (list "+flagged")))))
-        (define-key notmuch-show-mode-map "f"
-          (lambda ()
-            "toggle flaged tag for message"
-            (interactive)
-            (if (member "flagged" (notmuch-show-get-tags))
-                (notmuch-show-tag (list "-flagged"))
-              (notmuch-show-tag (list "+flagged")))))
-        (define-key notmuch-tree-mode-map "f"
-          (lambda ()
-            "toggle flaged tag for message"
-            (interactive)
-            (if (member "flagged" (notmuch-tree-get-tags))
-                (notmuch-tree-tag (list "-flagged"))
-              (notmuch-tree-tag (list "+flagged"))))))
-
-      (leaf ol-notmuch
-        :straight t
-        :require t
-        :after notmuch org)
-
-      (leaf consult-notmuch
-        :when (not (eq system-type 'windows-nt))
-        ;; :straight (consult-notmuch :type git :host github
-        ;;                            :repo "emacsmirror/consult-notmuch")
-        :straight t
-        :after consult notmuch)
-
-      (leaf mm-decode
-        :custom (mm-default-directory . "~/Downloads/"))
-
-      (leaf gnus-alias
-        :straight (gnus-alias :type git :host github
-                              :repo "hexmode/gnus-alias")
-        :config
-        (setq gnus-alias-identity-alist
-              '(("work"
-                 nil
-                 "中鉢欣秀 <yc@aiit.ac.jp>"
-                 nil            ;; No organization header
-                 nil            ;; No extra headers
-                 nil            ;; No extra body text
-                 "~/.signature" ;; My signature
-                 ))))
-
-      (leaf wanderlust :straight t
-        :config
-        ;; IMAP
-        (setq elmo-imap4-default-user "yc@aiit.ac.jp"
-              elmo-imap4-default-authenticate-type 'clear
-              elmo-imap4-default-server "imap.gmail.com"
-              elmo-imap4-default-port 993
-              elmo-imap4-default-stream-type 'ssl
-              )
-        ;; For non ascii-characters in folder-names
-        (setq elmo-imap4-use-modified-utf7 t)
-
-        ;; (setq elmo-plugged t)
-        ;; (setq elmo-plugged-condition 'independent)
-
-        ;; メッセージ受信の上限を無限にする
-        (setq elmo-message-fetch-threshold nil)
-
-        ;; SMTP
-        (setq
-         wl-smtp-connection-type   'starttls        ; Use TLS
-         wl-smtp-authenticate-type "login"          ; Authentication type
-         wl-smtp-posting-user      "yc@aiit.ac.jp"  ; Username
-         wl-smtp-posting-server    "smtp.gmail.com" ; SMTP server
-         wl-smtp-posting-port      587              ; The SMTP port
-
-         wl-local-domain           "aiit.ac.jp"  ; The SMTP server again
-         wl-message-id-domain      "aiit.ac.jp") ; And... Again?
-
-        (setq
-         wl-default-folder "%INBOX"
-         wl-draft-folder   "%[Gmail]/下書き"
-         wl-trash-folder   "%[Gmail]/ゴミ箱"
-
-         wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>" ; Our From: header field
-         wl-fcc-force-as-read t  ; Mark sent mail (in the wl-fcc folder) as read
-         wl-default-spec "%")    ; For auto-completion
-
-        ;; 隠したいヘッダの設定
-        (setq wl-message-ignored-field-list
-              '("ARC-.*:" "X-.*:" ".*Received.*:"
-                "Authentication-Results:" "MIME-Version:"
-                "List-.*:" "DKIM-.*:"
-                ".*Path:" ".*Id:" "^References:"
-                "^Replied:" "^Errors-To:"
-                "^Lines:" "^Sender:" ".*Host:" "^Xref:"
-                "^Content-Type:" "^Precedence:"
-                "^Status:" "^X-VM-.*:"))
-
-        ;; 表示するヘッダの設定
-        ;; 'wl-message-ignored-field-list' より優先される
-        (setq wl-message-visible-field-list '("^Message-Id:"))
-
-        ;; 大きいメッセージを送信時に分割しない
-        (setq mime-edit-split-message nil)
-
-        (require 'wl-qs)
-        (setq wl-quicksearch-folder "%[Gmail]/すべてのメール")
-
-        (add-to-list 'wl-dispose-folder-alist
-                     '("^%INBOX" . remove))
-        (add-to-list 'wl-dispose-folder-alist
-                     '(".*Junk$" . remove))
-
-        (require 'elmo nil 'noerror)
-        (defun my:wl-summary-jump-to-referer-message ()
-          (interactive)
-          (when (wl-summary-message-number)
-            (if (eq (elmo-folder-type-internal wl-summary-buffer-elmo-folder) 'flag)
-                (progn
-                  (let* ((referer (elmo-flag-folder-referrer
-                                   wl-summary-buffer-elmo-folder
-                                   (wl-summary-message-number)))
-                         (folder (if (> (length referer) 1)
-                                     (completing-read
-                                      (format "Jump to (%s): " (car (car referer)))
-                                      referer
-                                      nil t nil nil (car (car referer)))
-                                   (car (car referer)))))
-                    (wl-summary-goto-folder-subr folder 'no-sync nil nil t)
-                    (wl-summary-jump-to-msg (cdr (assoc folder referer)))))
-              (when (eq (elmo-folder-type wl-summary-last-visited-folder) 'internal)
-                (wl-summary-goto-last-visited-folder)))))
-        (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)))
-
     (leaf Development
       :init
       (leaf *auto-indent-yanked-code
@@ -1698,12 +1525,184 @@ _~_: modified
 (leaf Disabled
   :disabled t
   :init
+  (leaf Mail-Client
+    :init
+    (leaf notmuch
+      :when (not (eq system-type 'windows-nt))
+      :straight t
+      :require t
+      :hook
+      (notmuch-message-mode-hook . visual-fill-column-mode)
+      (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1)))
+      :custom
+      ((notmuch-draft-folder . "/drafts") ; 編集中のドラフトはローカルのフォルダに
+       (notmuch-fcc-dirs . nil)           ; 送信済みメールはローカルに保存せず
+                                        ; Gmailに任せる
+       (notmuch-search-oldest-first . nil) ; 検索結果を新しい順でソート
+       (notmuch-saved-searches
+        . '((:name "flagged"    :query "tag:flagged AND NOT tag:deleted"
+                   :key "f" :search-type tree)
+            (:name "inbox"      :query "tag:inbox folder:/Gmail\\/inbox/ AND NOT tag:deleted"
+                   :key "i" :search-type tree)
+            (:name "unread"     :query "tag:unread AND NOT tag:deleted"
+                   :key "u" :search-type tree)
+            (:name "sent"       :query "tag:sent AND NOT tag:deleted"
+                   :key "s" :search-type tree)
+            (:name "drafts"     :query "tag:draft AND NOT tag:deleted"
+                   :key "d" :search-type tree)
+            (:name "Gmal Inbox" :query "folder:/Gmail\\/inbox/"
+                   :key "I" :search-type tree)
+            (:name "Gmal Sent"  :query "folder:/Gmail\\/sent/"
+                   :key "S" :search-type tree)
+            (:name "all mail"   :query "NOT tag:deleted"
+                   :key "a" :search-type tree)))
+       )
+      :bind (("C-c r" . notmuch-hello))
+      :config
+      (advice-add #'notmuch-read-tag-changes
+                  :filter-return (lambda (x) (mapcar #'string-trim x))) ; vertico対策
+      :config
+      (define-key notmuch-search-mode-map "f"
+                  (lambda ()
+                    "toggle flaged tag for message"
+                    (interactive)
+                    (if (member "flagged" (notmuch-search-get-tags))
+                        (notmuch-search-tag (list "-flagged"))
+                      (notmuch-search-tag (list "+flagged")))))
+      (define-key notmuch-show-mode-map "f"
+                  (lambda ()
+                    "toggle flaged tag for message"
+                    (interactive)
+                    (if (member "flagged" (notmuch-show-get-tags))
+                        (notmuch-show-tag (list "-flagged"))
+                      (notmuch-show-tag (list "+flagged")))))
+      (define-key notmuch-tree-mode-map "f"
+                  (lambda ()
+                    "toggle flaged tag for message"
+                    (interactive)
+                    (if (member "flagged" (notmuch-tree-get-tags))
+                        (notmuch-tree-tag (list "-flagged"))
+                      (notmuch-tree-tag (list "+flagged"))))))
+
+    (leaf ol-notmuch
+      :straight t
+      :require t
+      :after notmuch org)
+
+    (leaf consult-notmuch
+      :when (not (eq system-type 'windows-nt))
+      ;; :straight (consult-notmuch :type git :host github
+      ;;                            :repo "emacsmirror/consult-notmuch")
+      :straight t
+      :after consult notmuch)
+
+    (leaf mm-decode
+      :custom (mm-default-directory . "~/Downloads/"))
+
+    (leaf gnus-alias
+      :straight (gnus-alias :type git :host github
+                            :repo "hexmode/gnus-alias")
+      :config
+      (setq gnus-alias-identity-alist
+            '(("work"
+               nil
+               "中鉢欣秀 <yc@aiit.ac.jp>"
+               nil            ;; No organization header
+               nil            ;; No extra headers
+               nil            ;; No extra body text
+               "~/.signature" ;; My signature
+               ))))
+
+    (leaf wanderlust :straight t
+      :config
+      ;; IMAP
+      (setq elmo-imap4-default-user "yc@aiit.ac.jp"
+            elmo-imap4-default-authenticate-type 'clear
+            elmo-imap4-default-server "imap.gmail.com"
+            elmo-imap4-default-port 993
+            elmo-imap4-default-stream-type 'ssl
+            )
+      ;; For non ascii-characters in folder-names
+      (setq elmo-imap4-use-modified-utf7 t)
+
+      ;; (setq elmo-plugged t)
+      ;; (setq elmo-plugged-condition 'independent)
+
+      ;; メッセージ受信の上限を無限にする
+      (setq elmo-message-fetch-threshold nil)
+
+      ;; SMTP
+      (setq
+       wl-smtp-connection-type   'starttls        ; Use TLS
+       wl-smtp-authenticate-type "login"          ; Authentication type
+       wl-smtp-posting-user      "yc@aiit.ac.jp"  ; Username
+       wl-smtp-posting-server    "smtp.gmail.com" ; SMTP server
+       wl-smtp-posting-port      587              ; The SMTP port
+
+       wl-local-domain           "aiit.ac.jp"  ; The SMTP server again
+       wl-message-id-domain      "aiit.ac.jp") ; And... Again?
+
+      (setq
+       wl-default-folder "%INBOX"
+       wl-draft-folder   "%[Gmail]/下書き"
+       wl-trash-folder   "%[Gmail]/ゴミ箱"
+
+       wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>" ; Our From: header field
+       wl-fcc-force-as-read t  ; Mark sent mail (in the wl-fcc folder) as read
+       wl-default-spec "%")    ; For auto-completion
+
+      ;; 隠したいヘッダの設定
+      (setq wl-message-ignored-field-list
+            '("ARC-.*:" "X-.*:" ".*Received.*:"
+              "Authentication-Results:" "MIME-Version:"
+              "List-.*:" "DKIM-.*:"
+              ".*Path:" ".*Id:" "^References:"
+              "^Replied:" "^Errors-To:"
+              "^Lines:" "^Sender:" ".*Host:" "^Xref:"
+              "^Content-Type:" "^Precedence:"
+              "^Status:" "^X-VM-.*:"))
+
+      ;; 表示するヘッダの設定
+      ;; 'wl-message-ignored-field-list' より優先される
+      (setq wl-message-visible-field-list '("^Message-Id:"))
+
+      ;; 大きいメッセージを送信時に分割しない
+      (setq mime-edit-split-message nil)
+
+      (require 'wl-qs)
+      (setq wl-quicksearch-folder "%[Gmail]/すべてのメール")
+
+      (add-to-list 'wl-dispose-folder-alist
+                   '("^%INBOX" . remove))
+      (add-to-list 'wl-dispose-folder-alist
+                   '(".*Junk$" . remove))
+
+      (require 'elmo nil 'noerror)
+      (defun my:wl-summary-jump-to-referer-message ()
+        (interactive)
+        (when (wl-summary-message-number)
+          (if (eq (elmo-folder-type-internal wl-summary-buffer-elmo-folder) 'flag)
+              (progn
+                (let* ((referer (elmo-flag-folder-referrer
+                                 wl-summary-buffer-elmo-folder
+                                 (wl-summary-message-number)))
+                       (folder (if (> (length referer) 1)
+                                   (completing-read
+                                    (format "Jump to (%s): " (car (car referer)))
+                                    referer
+                                    nil t nil nil (car (car referer)))
+                                 (car (car referer)))))
+                  (wl-summary-goto-folder-subr folder 'no-sync nil nil t)
+                  (wl-summary-jump-to-msg (cdr (assoc folder referer)))))
+            (when (eq (elmo-folder-type wl-summary-last-visited-folder) 'internal)
+              (wl-summary-goto-last-visited-folder)))))
+      (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)))
 
   (leaf Line-Numbers-And-Ruler
     :init
     (leaf display-line-numbers
       :custom
-      (display-line-numbers-width . 5) ; 表示する行番号の桁数
+      (display-line-numbers-width . 5)  ; 表示する行番号の桁数
       :hook
       (emacs-startup-hook . global-display-line-numbers-mode))
 
