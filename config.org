@@ -1,0 +1,5 @@
+* config.org
+
+#+begin_src emacs-lisp :tangle "config.el"
+  (message "config.org")
+#+end_src
