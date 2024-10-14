@@ -69,19 +69,25 @@
       (leaf-keywords-init)))
 #+end_src
 
+** orgを読み込む
++ タングルする前に最新バージョンに更新する
+
+#+begin_src emacs-lisp :tangle "init.el"
+(leaf org :straight t)
+#+end_src
+
 ** tangle-file
 
 + ファイルをタングルする
+  - org-babel-load-fileの方が手軽
+    * config.orgのすべてのコードブロックをconfig.elに出力
+  - org-babel-tangle-fileだと
+    * :tangleオプションを設定したコードのみ出力
+  - 参考
+    * https://blog.symdon.info/posts/1628301275/
 
 #+begin_src emacs-lisp :tangle "init.el"
-  (eval-when-compile
-    (require 'org)
-    (org-babel-tangle-file (expand-file-name "early-init.org" user-emacs-directory))
-    (byte-compile-file (expand-file-name "early-init.el" user-emacs-directory))
-    (org-babel-tangle-file (expand-file-name "config.org" user-emacs-directory))
-    (byte-compile-file (expand-file-name "config.el" user-emacs-directory)))
-
-  (load-file "config.el")
+  (org-babel-load-file "config.org")
 #+end_src
 
 ** フッター

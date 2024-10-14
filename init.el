@@ -49,14 +49,9 @@
     (straight-use-package 'leaf-keywords)
     (leaf-keywords-init)))
 
-(eval-when-compile
-  (require 'org)
-  (org-babel-tangle-file (expand-file-name "early-init.org" user-emacs-directory))
-  (byte-compile-file (expand-file-name "early-init.el" user-emacs-directory))
-  (org-babel-tangle-file (expand-file-name "config.org" user-emacs-directory))
-  (byte-compile-file (expand-file-name "config.el" user-emacs-directory)))
+(leaf org :straight t)
 
-(load-file "config.el")
+(org-babel-load-file "config.org")
 
 (provide 'init.el)
 ;;; init.el ends here
