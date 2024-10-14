@@ -1,5 +1,9 @@
 #+TITLE: config.org
 
+* TODO TODO
+- README.bak.orgから解説文をコピー
+- code block は leaf で囲む
+
 * はじめに
 ** この設定について
 - init.elの実行時、このREADME.orgからREADME.elを生成します。

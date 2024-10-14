@@ -3,3 +3,7 @@
 
 README.org
 - [[https://github.com/ychubachi/.emacs.d#readme][ychubachi/.emacs.d: emacs setting files created on 2020/11/23]]
+
+* はじめに
++ Emacsの設定ファイルです
++ init.elは [[FILE:init.org][init.org]] から生成します
