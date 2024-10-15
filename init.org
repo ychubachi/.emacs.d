@@ -70,7 +70,7 @@
 #+end_src
 
 ** orgを読み込む
-+ タングルする前に最新バージョンに更新する
++ タングルする前にorgパッケージを最新バージョンに更新する
 
 #+begin_src emacs-lisp :tangle "init.el"
 (leaf org :straight t)
