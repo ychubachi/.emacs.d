@@ -87,7 +87,7 @@
     * https://blog.symdon.info/posts/1628301275/
 
 #+begin_src emacs-lisp :tangle "init.el"
-  (org-babel-load-file "config.org")
+  (org-babel-load-file (expand-file-name "config.org" user-emacs-directory))
 #+end_src
 
 ** フッター
