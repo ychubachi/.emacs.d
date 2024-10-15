@@ -23,130 +23,234 @@
 
 ;;; Code:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (prog1 "Start Profiling"
-;;   (defvar my/tick-previous-time (current-time))
+(leaf no-littering :straight t :require t
+        :url "https://github.com/emacscollective/no-littering#usage"
+        :init
+        (let ((dir (no-littering-expand-var-file-name "lock-files/")))
+          (make-directory dir t)
+          (setq lock-file-name-transforms `((".*" ,dir t))))
 
-;;   (defun my/tick-init-time (msg)
-;;     "Tick boot sequence."
-;;     (let ((ctime (current-time)))
-;;       (message "--- %5.2f[ms] %s"
-;;                (* 1000 (float-time
-;;                         (time-subtract ctime my/tick-previous-time)))
-;;                msg)
-;;       (setq my/tick-previous-time ctime)))
+        (require 'recentf)
+        (add-to-list 'recentf-exclude
+                     (recentf-expand-file-name no-littering-var-directory))
+        (add-to-list 'recentf-exclude
+                     (recentf-expand-file-name no-littering-etc-directory))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Settings with Leaf
+        (custom-set-variables '(custom-file
+                                (no-littering-expand-etc-file-name "custom.el"))))
 
-(leaf Minimum
-  :disabled nil
+(leaf Help-Keys
+        :init
+        ;; (define-key key-translation-map [?\C-h] [?\C-?])
+        (global-set-key "\C-h" `delete-backward-char)
+        (global-set-key (kbd "C-^") help-map))
+
+(leaf Yes-or-no-p
+        :init
+        (defalias 'yes-or-no-p 'y-or-n-p))
+
+(leaf Emacs-Variables
+  :custom
+  ((inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
+   (ring-bell-function . 'ignore) ; ベルを鳴らさない
+   (fill-column . 80)             ; 80桁で改行（モードによる）
+   (indent-tabs-mode . nil)       ; インデントの際タブを使わない
+   (byte-compile-warnings
+    . '(not cl-functions obsolete)) ; (require 'cl)を検査しない
+   (epg-pinentry-mode . 'loopback)  ; GnuPGのパスフレーズをミニバッファで
+   (plstore-cache-passphrase-for-symmetric-encryption . t)
+                                          ; パスフレーズをキャッシュ
+   (select-active-regions . 'only) ; リージョン選択時の移動を早くする
+   (dired-dwim-target . t)        ; diredでターゲットを他のdiredバッファに
+   (line-spacing . 0.25)
+   ))
+
+(leaf Coding-System
+        :init
+        (set-language-environment "Japanese")
+        (prefer-coding-system 'utf-8)
+        (cond ((eq system-type 'windows-nt)
+               (setq default-process-coding-system
+                     (cons 'utf-8 'cp932-unix)))))
+
+(leaf Fonts
+  :doc "フォント設定。C-u C-x = で文字毎に確認できる。"
   :init
-  (leaf Hi-Priority-Packages
-    :init
-    (leaf no-littering
-      :url "https://github.com/emacscollective/no-littering#usage"
-      :straight t :require t))
+  ;; ｜あいうえお｜
+  ;; ｜憂鬱な檸檬｜
+  ;; ｜<miilwiim>｜
+  ;; ｜!"#$%&'~{}｜
+  ;; ｜🙆iimmiim>｜
+  (custom-set-faces
+   ;; '(default ((t (:family "Noto Sans"))))
+   ;; '(default ((t (:family "PlemolJP"))))
+   '(default ((t (:family "HackGen"))))
+   ;; '(default ((t (:family "UDEV Gothic NF"))))
+   ;; '(default ((t (:family "FirgeNerd"))))
+   ))
 
-  (leaf Minimum-Initialization
-    :init
-    (leaf Help-Keys
-      :init
-      ;; (define-key key-translation-map [?\C-h] [?\C-?])
-      (global-set-key "\C-h" `delete-backward-char)
-      (global-set-key (kbd "C-^") help-map))
+(leaf mozc
+  :straight t
+  :defvar (mozc-helper-program-name)
+  :init
+  (cond
+   ((eq system-type 'windows-nt)
+    (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
+   (t
+    (setq mozc-helper-program-name "mozc_emacs_helper"))))
 
-    (leaf yes-or-no-p
-      :init
-      (defalias 'yes-or-no-p 'y-or-n-p)))
+(leaf mozc-im
+  :straight t
+  :require t                        ; Checked
+  :custom (default-input-method . "japanese-mozc-im")
+  :bind* (("C-o" . toggle-input-method))
+  :defvar (mozc-candidate-style)
+  :init
+  (setq mozc-candidate-style 'echo-area))
 
-  (leaf Language-Environment
-    :init
-    (leaf Coding-System
-      :init
-      (set-language-environment "Japanese")
-      (prefer-coding-system 'utf-8)
-      (cond ((eq system-type 'windows-nt)
-             (setq default-process-coding-system
-                   (cons 'utf-8 'cp932-unix)))))
+(leaf mozc-cursor-color
+  :straight (mozc-cursor-color :type git :host github
+                               :repo "iRi-E/mozc-el-extensions")
+  :require t                        ; Checked
+  :defvar (mozc-cursor-color-alist) ;; FIXME: defvar-localが原因
+  :config
+  (setq mozc-cursor-color-alist
+        '((direct        . "gray")
+          (read-only     . "yellow")
+          (hiragana      . "green")
+          (full-katakana . "goldenrod")
+          (half-ascii    . "dark orchid")
+          (full-ascii    . "orchid")
+          (half-katakana . "dark goldenrod")))
 
-    (leaf Fonts
-      :doc "フォント設定。C-u C-x = で文字毎に確認できる。"
-      :init
-      ;; ｜あいうえお｜
-      ;; ｜憂鬱な檸檬｜
-      ;; ｜<miilwiim>｜
-      ;; ｜!"#$%&'~{}｜
-      ;; ｜🙆iimmiim>｜
-      (custom-set-faces
-       ;; '(default ((t (:family "Noto Sans"))))
-       ;; '(default ((t (:family "PlemolJP"))))
-       '(default ((t (:family "HackGen"))))
-       ;; '(default ((t (:family "UDEV Gothic NF"))))
-       ;; '(default ((t (:family "FirgeNerd"))))
-       )))
+  (prog1 "mozc-cursor-color"
+    ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
+    ;; https://w.atwiki.jp/ntemacs/?cmd=word&word=cursor-color&pageid=48
+    (defvar-local mozc-im-mode nil) ;; FIXME: トップレベルじゃないと警告
+    (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
+    (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
+    (advice-add 'mozc-cursor-color-update
+                :around (lambda (orig-fun &rest args)
+                          (let ((mozc-mode mozc-im-mode))
+                            (apply orig-fun args))))))
 
-  (leaf Input-Method
-    :init
-    (leaf mozc
-      :straight t
-      :defvar (mozc-helper-program-name)
-      :init
-      (cond
-       ((eq system-type 'windows-nt)
-        (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
-       (t
-        (setq mozc-helper-program-name "mozc_emacs_helper"))))
+(leaf isearch
+  :bind ((isearch-mode-map
+          ("C-o" . isearch-toggle-input-method))))
 
-    (leaf mozc-im
-      :straight t
-      :require t                        ; Checked
-      :custom (default-input-method . "japanese-mozc-im")
-      :bind* (("C-o" . toggle-input-method))
-      :defvar (mozc-candidate-style)
-      :init
-      (setq mozc-candidate-style 'echo-area))
+(leaf mozc-windows
+  :if (eq system-type 'windows-nt)
+  :defun (mozc-session-sendkey)
+  :init
+  (advice-add 'mozc-session-execute-command
+              :after (lambda (&rest args)
+                       (when (eq (nth 0 args) 'CreateSession)
+                         (mozc-session-sendkey '(Hankaku/Zenkaku))))))
 
-    (leaf mozc-cursor-color
-      :straight (mozc-cursor-color :type git :host github
-                                   :repo "iRi-E/mozc-el-extensions")
-      :require t                        ; Checked
-      :defvar (mozc-cursor-color-alist) ;; FIXME: defvar-localが原因
-      :config
-      (setq mozc-cursor-color-alist
-            '((direct        . "gray")
-              (read-only     . "yellow")
-              (hiragana      . "green")
-              (full-katakana . "goldenrod")
-              (half-ascii    . "dark orchid")
-              (full-ascii    . "orchid")
-              (half-katakana . "dark goldenrod")))
+(leaf recentf
+          :custom
+          (recentf-max-menu-items  . 500)
+          (recentf-max-saved-items . 2000)
+          (recentf-auto-cleanup    . 'never)
+          (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS"
+                               "^/sudo:" "/straight"))
+          :hook
+          (emacs-startup-hook . recentf-mode)
+          :defun (recentf-save-list)
+          :defvar (recentf-exclude)
+          :config
+          (run-at-time nil (* 5 60)
+                       (lambda ()
+                         (let ((save-silently t)) ; FIXME
+                           (recentf-save-list)))))
 
-      (prog1 "mozc-cursor-color"
-        ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
-        ;; https://w.atwiki.jp/ntemacs/?cmd=word&word=cursor-color&pageid=48
-        (defvar-local mozc-im-mode nil) ;; FIXME: トップレベルじゃないと警告
-        (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
-        (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
-        (advice-add 'mozc-cursor-color-update
-                    :around (lambda (orig-fun &rest args)
-                              (let ((mozc-mode mozc-im-mode))
-                                (apply orig-fun args))))))
+(leaf undo-tree
+          :doc "https://elpa.gnu.org/packages/undo-tree.html"
+          :straight t
+          :require t                          ; Checked
+          :bind ("C-z" . undo-tree-undo)
+          :custom
+          (undo-tree-auto-save-history . t)
+          (undo-tree-visualizer-diff . t)
+          :init
+          ;; (defadvice undo-tree-make-history-save-file-name
+          ;;     (after undo-tree activate)
+          ;;   (setq ad-return-value (concat ad-return-value ".gz")))
+          (global-undo-tree-mode))
 
-    (leaf isearch
-      :bind ((isearch-mode-map
-              ("C-o" . isearch-toggle-input-method))))
+(leaf auto-revert
+  :custom
+  (auto-revert-interval . 1)      ; 再読み込みの間隔
+  (auto-revert-verbose . nil)     ; 再読込の際、メッセージを非表示
+  (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
+  :init
+  (global-auto-revert-mode 1))
 
-    (leaf mozc-windows
-      :if (eq system-type 'windows-nt)
-      :defun (mozc-session-sendkey)
-      :init
-      (advice-add 'mozc-session-execute-command
-                  :after (lambda (&rest args)
-                           (when (eq (nth 0 args) 'CreateSession)
-                             (mozc-session-sendkey '(Hankaku/Zenkaku))))))
-    )
-  ;; end of Minimum
+(leaf savehist
+          ;; Persist history over Emacs restarts.
+          ;; Vertico sorts by history position.
+          :init
+          (savehist-mode 1))
+
+(leaf show-paren-mode
+          :custom
+          (show-paren-style . 'mixed)
+          :init
+          (show-paren-mode 1))
+
+(leaf goto-addr
+          :doc "Toggle Goto-Address mode in all buffers."
+          :url "https://www.gnu.org/software/emacs/manual/html_node/emacs/Goto-Address-mode.html"
+          :init
+          ;; You can follow the URL by typing C-c RET
+          (global-goto-address-mode 1))
+
+(leaf whitespace
+          :require 't
+          :config
+          (setq whitespace-style
+                '(
+                  face                  ; faceで可視化
+                  trailing              ; 行末
+                  tabs                  ; タブ
+                  spaces                ; スペース
+                  space-mark            ; 表示のマッピング
+                  tab-mark
+                  ))
+          (setq whitespace-display-mappings
+                '(
+                  (space-mark ?\u3000 [?□])
+                  (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+                  ))
+          (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+          (setq whitespace-space-regexp "\\(\u3000+\\)")
+          ;; (set-face-attribute 'whitespace-trailing nil
+          ;;                     :foreground nil
+          ;;                     :background "DarkOrange1"
+          ;;                     :underline nil)
+          ;; (set-face-attribute 'whitespace-tab nil
+          ;;                     :foreground "DarkOrange1"
+          ;;                     :background nil
+          ;;                     :underline nil)
+          ;; (set-face-attribute 'whitespace-space nil
+          ;;                     :foreground "DarkOrange1"
+          ;;                     :background nil
+          ;;                     :underline nil)
+          (global-whitespace-mode t))
+
+(leaf outline-mode
+  :defvar (outline-mode-prefix-map)
+  :custom
+  :init
+  (require 'outline)
+  (eval-after-load "outline"
+    '(require 'foldout))
+  (add-hook 'outline-minor-mode-hook
+            (lambda () (local-set-key
+                        "\C-c\C-o"
+                        outline-mode-prefix-map)))
+  ;; (setq outline-regexp ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (") ; "  ("を追加
+  ;; (outline-minor-mode 1) ; TODO: outline-mode is not GLOBAL minnor mode
   )
 
 (leaf Main
@@ -156,25 +260,6 @@
     :init
     (leaf Variables
       :init
-      (leaf Emacs-Variables
-        :custom
-        ((inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
-         (ring-bell-function . 'ignore) ; ベルを鳴らさない
-         (fill-column . 80)             ; 80桁で改行（モードによる）
-         (indent-tabs-mode . nil)       ; インデントの際タブを使わない
-         (byte-compile-warnings
-          . '(not cl-functions obsolete)) ; (require 'cl)を検査しない
-         (epg-pinentry-mode . 'loopback)  ; GnuPGのパスフレーズをミニバッファで
-         (plstore-cache-passphrase-for-symmetric-encryption . t)
-                                        ; パスフレーズをキャッシュ
-         (select-active-regions . 'only) ; リージョン選択時の移動を早くする
-         (dired-dwim-target . t)        ; diredでターゲットを他のdiredバッファに
-         (line-spacing . 0.25)
-         )
-        :init
-        (customize-set-variable
-         'custom-file (no-littering-expand-etc-file-name "custom.el"))
-        )
 
       (leaf Mail-Variables
         :custom
@@ -192,94 +277,14 @@
         (vc-handled-backends . '(Git))) ; Gitのみ使用
 
       (leaf files
-        :defun (no-littering-expand-var-file-name)
         :custom
         (backup-directory-alist . '(("." . ".backup~")))
         (delete-old-versions . t)
         (version-control . t)
-        (auto-save-file-name-transforms
-         . `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))))
+        ))
 
     (leaf Global-Minnor-Mode
-      :init
-      (leaf auto-revert
-        :custom
-        (auto-revert-interval . 1)      ; 再読み込みの間隔
-        (auto-revert-verbose . nil)     ; 再読込の際、メッセージを非表示
-        (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
-        :init
-        (global-auto-revert-mode 1))
-
-      (leaf savehist
-        ;; Persist history over Emacs restarts.
-        ;; Vertico sorts by history position.
-        :init
-        (savehist-mode 1))
-
-      (leaf show-paren-mode
-        :custom
-        (show-paren-style . 'mixed)
-        :init
-        (show-paren-mode 1))
-
-      (leaf goto-addr
-        :doc "Toggle Goto-Address mode in all buffers."
-        :url "https://www.gnu.org/software/emacs/manual/html_node/emacs/Goto-Address-mode.html"
-        :init
-        ;; You can follow the URL by typing C-c RET
-        (global-goto-address-mode 1))
-
-      (leaf whitespace
-        :require 't
-        :config
-        (setq whitespace-style
-              '(
-                face                  ; faceで可視化
-                trailing              ; 行末
-                tabs                  ; タブ
-                spaces                ; スペース
-                space-mark            ; 表示のマッピング
-                tab-mark
-                ))
-        (setq whitespace-display-mappings
-              '(
-                (space-mark ?\u3000 [?□])
-                (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
-                ))
-        (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
-        (setq whitespace-space-regexp "\\(\u3000+\\)")
-        ;; (set-face-attribute 'whitespace-trailing nil
-        ;;                     :foreground nil
-        ;;                     :background "DarkOrange1"
-        ;;                     :underline nil)
-        ;; (set-face-attribute 'whitespace-tab nil
-        ;;                     :foreground "DarkOrange1"
-        ;;                     :background nil
-        ;;                     :underline nil)
-        ;; (set-face-attribute 'whitespace-space nil
-        ;;                     :foreground "DarkOrange1"
-        ;;                     :background nil
-        ;;                     :underline nil)
-        (global-whitespace-mode t))
-
-      (leaf outline-mode
-        :defvar (outline-mode-prefix-map)
-        :custom
-        :init
-        (require 'outline)
-        (eval-after-load "outline"
-          '(require 'foldout))
-        (add-hook 'outline-minor-mode-hook
-                  (lambda () (local-set-key
-                              "\C-c\C-o"
-                              outline-mode-prefix-map)))
-        ;; (setq outline-regexp ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (") ; "  ("を追加
-        ;; (outline-minor-mode 1) ; TODO: outline-mode is not GLOBAL minnor mode
-        )
-
-      (leaf outline-magic :straight t
-        :init
-        (define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle)))
+      :init)
 
     (leaf Global-Key-Bindings
       :init
@@ -307,28 +312,6 @@
         (save-place . t)
         :hook
         (emacs-startup-hook . save-place-mode))
-
-      (leaf recentf
-        :custom
-        (recentf-max-menu-items  . 500)
-        (recentf-max-saved-items . 2000)
-        (recentf-auto-cleanup    . 'never)
-        (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS"
-                             "^/sudo:" "/straight"))
-        :hook
-        (emacs-startup-hook . recentf-mode)
-        :defun (recentf-save-list)
-        :defvar (recentf-exclude)
-        :defvar (no-littering-var-directory no-littering-etc-directory)
-        :config
-        (run-at-time nil (* 5 60)
-                     (lambda ()
-                       (let ((save-silently t)) ; FIXME
-                         (recentf-save-list))))
-
-        (prog1 "no-littering"
-          (add-to-list 'recentf-exclude no-littering-var-directory)
-          (add-to-list 'recentf-exclude no-littering-etc-directory)))
 
       (leaf midnight
         :url "https://www.emacswiki.org/emacs/MidnightMode"
@@ -364,38 +347,38 @@
         (defadvice tramp-sh-handle-vc-registered (around tramp-sh-handle-vc-registered activate)
           (let ((vc-handled-backends nil)) ad-do-it)))))
 
-  (leaf External-Packages
+(leaf External-Packages
+  :init
+  (leaf Leaf-Extentions
     :init
-    (leaf Leaf-Extentions
+    (leaf leaf-tree
+      :straight t
+      :custom (imenu-list-position . 'left)
+      :defun (leaf-tree-mode)
       :init
-      (leaf leaf-tree
-        :straight t
-        :custom (imenu-list-position . 'left)
-        :defun (leaf-tree-mode)
-        :init
-        (defun my/enable-init-el-minor-mode ()
-          (when (equal
-                 (buffer-file-name)
-                 (expand-file-name "~/.emacs.d/init.el"))
-            (leaf-tree-mode t)))
-        (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
+      (defun my/enable-init-el-minor-mode ()
+        (when (equal
+               (buffer-file-name)
+               (expand-file-name "~/.emacs.d/init.el"))
+          (leaf-tree-mode t)))
+      (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
 
-      (leaf leaf-convert :straight t))
+    (leaf leaf-convert :straight t))
 
-    (leaf Install-Only-Packages
-      :init
-      (leaf yaml-mode :straight t)
-      (leaf popup :straight t)
-      (leaf list-utils :straight t)
-      (leaf iedit :straight t)
-      (leaf files+ :straight t)
-      (leaf ls-lisp+ :straight t)
-      (leaf w32-browser :straight t)
-      (leaf dired+
-        :straight (dired+ :type git :host github
-                          :repo "emacsmirror/dired-plus")))
+  (leaf Install-Only-Packages
+    :init
+    (leaf yaml-mode :straight t)
+    (leaf popup :straight t)
+    (leaf list-utils :straight t)
+    (leaf iedit :straight t)
+    (leaf files+ :straight t)
+    (leaf ls-lisp+ :straight t)
+    (leaf w32-browser :straight t)
+    (leaf dired+
+      :straight (dired+ :type git :host github
+                        :repo "emacsmirror/dired-plus")))
 
-    (leaf KeyboardUI
+(leaf KeyboardUI
       :init
       (leaf which-key
         :doc "Display available keybindings in popup"
@@ -450,7 +433,7 @@ _~_: modified
         (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
       )
 
-    (leaf CompletionUI
+(leaf CompletionUI
       :init
       (leaf vertico
         :doc "入力補完の候補をTABを押さずとも一覧から選べるようにする"
@@ -653,7 +636,7 @@ _~_: modified
           (embark-collect-mode . consult-preview-at-point-mode))
         ))
 
-    (leaf Look-And-Feel
+(leaf Look-And-Feel
       :init
       (leaf modus-themes
         :disabled t
@@ -1449,19 +1432,7 @@ _~_: modified
 
     (leaf Global-Minnor-Mode
       :init
-      (leaf undo-tree
-        :doc "https://elpa.gnu.org/packages/undo-tree.html"
-        :straight t
-        :require t                          ; Checked
-        :bind ("C-z" . undo-tree-undo)
-        :custom
-        (undo-tree-auto-save-history . t)
-        (undo-tree-visualizer-diff . t)
-        :init
-        ;; (defadvice undo-tree-make-history-save-file-name
-        ;;     (after undo-tree activate)
-        ;;   (setq ad-return-value (concat ad-return-value ".gz")))
-        (global-undo-tree-mode))
+
 
       (leaf google-this
         :straight t

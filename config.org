@@ -4,141 +4,7 @@
 - README.bak.orgから解説文をコピー
 - code block は leaf で囲む
 
-* はじめに
-** この設定について
-- init.elの実行時、このREADME.orgからREADME.elを生成します。
-- orgのハッケージはinit.el内で最新版に更新しておきます。
-
-** 事前にインストールしておくもの
-- 各種フォント
-  - Noto Sans Mono CJK JP-12
-- migemo
-  - cmigemo
-- pygment
-  - python3をインストール
-  - /home/yc/.local/binにパス
-  - pip install -U pip
-  - pip install pygments
-- graphviz(dot)
-  - sudo apt install graphviz
-- org-roam
-  - sqlite3
-
-** EmacsのX関係の設定を外部化する                                :PUBLISHED:
-:PROPERTIES:
-:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-xresources.html
-:EXPORT_OPTIONS:  toc:nil num:nil
-:END:
-
-#+begin_comment
-First time: C-c C-e C-b C-s h h (Do this here)
-Next  time: C-u C-c C-e         (Do this anyware in the subtree)
-#+end_comment
-
-#+begin_export html
----
-layout: post
-title: EmacsのX関係の設定を外部化する
-permalink: /archives/248.html
-published: true
----
-#+end_export
-
-*** Emacs の X resources 設定
-Emacs をX環境でグラフィカルに起動すると、 Emacs はXクライアントアプリケーションとなりますから、 [[https://wiki.archlinux.jp/index.php/X_resources][X resources ]]を利用した設定を読み込みます。フォントやウインドウの大きさなどを設定できます。
-
-これらの設定は、Emacs lisp で書く init.el でもできますが、 Emacs はコンソール端末でXウインドウを使わず作業をすることも多いです。そのため、 X resources で設定できるものは、init.elではなくX resources の方に設定しておくというのも一つの考え方です。
-
-また、 init.el  でウインドウのサイズを設定すると、一旦標準のサイズで立ち上がってから  改めて設定されたサイズに切り替わるという、ギクシャクした振る舞いになります。resources に設定しておくと、スムーズに起動します（起動時間も多少、早くなるかもしれません）。
-
-設定できるのは、次の例の通り、Xウインドウで動作するEmacsのフォントや、行間（lineSpacing）、ウインドウのサイズ（geometry）などです。設定できる項目の一覧は [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Table-of-Resources.html][Table-of-Resources]] にあります。プログラム名は Emacs にしました[fn:1]。
-
-#+begin_example
-!! ~/.Xresources
-Emacs.font: Noto Sans Mono CJK JP-12
-Emacs.lineSpacing: 0
-Emacs.geometry: 220x38-80+50
-Emacs.cursorBlink: off
-Emacs.coursorColor: dark green
-Emacs.menuBar: on
-Emacs.toolBar: off
-Emacs.tabBar: on
-Emacs.verticalScrollBars: off
-Eamcs.useXIM: off
-#+end_example
-
-この設定を有効にするには、ターミナルで
-#+begin_src bash
-  xrdb ~/.Xresources
-#+end_src
-
-と打ちます。設定されたか確認するには、
-#+begin_src bash
-  xrdb -query
-#+end_src
-
-とします。この設定は logout すると無効になりますから、 Emacs を起動する前に必ず xrdb コマンドを実行しなくてはなりません。通常のXデスクトップ環境でしたら .xinitrc にこの設定をします。WSL では、 .bashrc に書いてしまって良いでしょう。
-
-#+begin_src bash
-  [[ -f ~/.Xresources ]] && xrdb ~/.Xresources
-#+end_src
-
-*** Emacsでの動作確認
-.Xresources に書いた設定が読み込まれるかEmacsで試してみる方法は次のとおりです。
-
-#+begin_src bash
-  emacs -q
-#+end_src
-
-オプションは -Q でなく -q です。 -Q だと Emacs は Xリソースを処理しません[fn:2]。
-
-[fn:1] [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][Emacsでは通常、‘emacs’です。Emacsの実行可能ファイル名の如何にかかわらずに、Emacsのすべてのインスタンスに適用される定義を指定するには、‘Emacs’を使用します。]]
-
-[fn:2]  [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][変数inhibit-x-resourcesを非nil値にセットした場合、EmacsはXリソースを処理しません。コマンドラインオプション‘-Q’ (または‘--quick’)でEmacsを呼び出した場合、inhibit-x-resourcesは自動的にtにセットされます]]
-*** フォントの確認
-
-Xウインドウで設定したフォントを確認してみましょう。本当は全て等幅になるとよいのですが、なかなか難しい・・・。
-
-- [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]] より
-#+begin_example
-| mmmm |
-| llll |
-| 日本 |
-| 漢字 |
-| ああ |
-| んん |
-| ￥￥ |
-| \\\\ |
-| 　　   |
-|      |
-
-|abcdefghijkl|
-|ABCDEFGHIJKL|
-|'";:-+=/\~`?|
-|∞≤≥∏∑∫|
-|×±≒≡⊆⊇|  ← GUI だと一部半角になる
-|αβγδεζ|  ← GUI だと半角になる
-|ηθικλμ|  ← GUI だと半角になる
-|ΑΒΓΔΕΖ|  ← GUI だと半角になる
-|ΗΘΙΚΛΜ|  ← GUI だと半角になる
-|日本語の美観|
-|あいうえおか|
-|アイウエオカ|
-|ｱｲｳｴｵｶｷｸｹｺｻｼ|
-
-| hoge                 | hogeghoe | age              |
-|----------------------+----------+------------------|
-| 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
-|----------------------+----------+------------------|
-#+end_example
-** 参考になるサイト
-- [[http://xahlee.info/emacs/emacs/elisp.html][Practical Emacs Lisp]]
-** no-littering - .emacs.d/をきれいに保つ
-
-- すべてのパッケージの前に実行するために、init.elに設定
-  - [[https://github.com/emacscollective/no-littering][emacscollective/no-littering: Help keeping ~/.emacs.d clean]]
-
-* 必須設定
+* ヘッダー
 ** Copyright
 - Copyright など。
 
@@ -169,120 +35,320 @@ Xウインドウで設定したフォントを確認してみましょう。本�
   ;;; Code:
 #+end_src
 
-** 古いinit.elをとりあえず放り込む
+* 優先設定
+** no-littering - .emacs.d/をきれいに保つ
+- すべてのパッケージの前に実行するために、init.elのなるだけ冒頭に設定
+  - [[https://github.com/emacscollective/no-littering][emacscollective/no-littering: Help keeping ~/.emacs.d clean]]
 
++ Lock ファイル
++ recentf用の設定
++ カスタマイズファイルの指定
++ auto-save、backupとundo-treeについて
+  - セキュリティの問題が懸念される
 
 #+begin_src emacs-lisp
-  (leaf Minimum
-    :disabled nil
-    :init
-    (leaf Hi-Priority-Packages
-      :init
-      (leaf no-littering
-        :url "https://github.com/emacscollective/no-littering#usage"
-        :straight t :require t))
+    (leaf no-littering :straight t :require t
+            :url "https://github.com/emacscollective/no-littering#usage"
+            :init
+            (let ((dir (no-littering-expand-var-file-name "lock-files/")))
+              (make-directory dir t)
+              (setq lock-file-name-transforms `((".*" ,dir t))))
 
-    (leaf Minimum-Initialization
-      :init
-      (leaf Help-Keys
+            (require 'recentf)
+            (add-to-list 'recentf-exclude
+                         (recentf-expand-file-name no-littering-var-directory))
+            (add-to-list 'recentf-exclude
+                         (recentf-expand-file-name no-littering-etc-directory))
+
+            (custom-set-variables '(custom-file
+                                    (no-littering-expand-etc-file-name "custom.el"))))
+#+end_src
+
+* 必須設定
+** DeleteキーとHelpキーの変更
+
+#+begin_src emacs-lisp
+  (leaf Help-Keys
+          :init
+          ;; (define-key key-translation-map [?\C-h] [?\C-?])
+          (global-set-key "\C-h" `delete-backward-char)
+          (global-set-key (kbd "C-^") help-map))
+#+end_src
+
+** yes/noをy/nに変更する
+
+#+begin_src emacs-lisp
+(leaf Yes-or-no-p
         :init
-        ;; (define-key key-translation-map [?\C-h] [?\C-?])
-        (global-set-key "\C-h" `delete-backward-char)
-        (global-set-key (kbd "C-^") help-map))
+        (defalias 'yes-or-no-p 'y-or-n-p))
+#+end_src
 
-      (leaf yes-or-no-p
-        :init
-        (defalias 'yes-or-no-p 'y-or-n-p)))
+** Emacs本体のカスタム変数
 
-    (leaf Language-Environment
-      :init
-      (leaf Coding-System
+#+begin_src emacs-lisp
+  (leaf Emacs-Variables
+    :custom
+    ((inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
+     (ring-bell-function . 'ignore) ; ベルを鳴らさない
+     (fill-column . 80)             ; 80桁で改行（モードによる）
+     (indent-tabs-mode . nil)       ; インデントの際タブを使わない
+     (byte-compile-warnings
+      . '(not cl-functions obsolete)) ; (require 'cl)を検査しない
+     (epg-pinentry-mode . 'loopback)  ; GnuPGのパスフレーズをミニバッファで
+     (plstore-cache-passphrase-for-symmetric-encryption . t)
+                                            ; パスフレーズをキャッシュ
+     (select-active-regions . 'only) ; リージョン選択時の移動を早くする
+     (dired-dwim-target . t)        ; diredでターゲットを他のdiredバッファに
+     (line-spacing . 0.25)
+     ))
+#+end_src
+
+* フォント/日本語入力
+** コーディングシステム
+
+#+begin_src emacs-lisp
+(leaf Coding-System
         :init
         (set-language-environment "Japanese")
         (prefer-coding-system 'utf-8)
         (cond ((eq system-type 'windows-nt)
                (setq default-process-coding-system
                      (cons 'utf-8 'cp932-unix)))))
+#+end_src
 
-      (leaf Fonts
-        :doc "フォント設定。C-u C-x = で文字毎に確認できる。"
-        :init
-        ;; ｜あいうえお｜
-        ;; ｜憂鬱な檸檬｜
-        ;; ｜<miilwiim>｜
-        ;; ｜!"#$%&'~{}｜
-        ;; ｜🙆iimmiim>｜
-        (custom-set-faces
-         ;; '(default ((t (:family "Noto Sans"))))
-         ;; '(default ((t (:family "PlemolJP"))))
-         '(default ((t (:family "HackGen"))))
-         ;; '(default ((t (:family "UDEV Gothic NF"))))
-         ;; '(default ((t (:family "FirgeNerd"))))
-         )))
+** フォント
 
-    (leaf Input-Method
-      :init
-      (leaf mozc
-        :straight t
-        :defvar (mozc-helper-program-name)
-        :init
-        (cond
-         ((eq system-type 'windows-nt)
-          (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
-         (t
-          (setq mozc-helper-program-name "mozc_emacs_helper"))))
+#+begin_src emacs-lisp
+  (leaf Fonts
+    :doc "フォント設定。C-u C-x = で文字毎に確認できる。"
+    :init
+    ;; ｜あいうえお｜
+    ;; ｜憂鬱な檸檬｜
+    ;; ｜<miilwiim>｜
+    ;; ｜!"#$%&'~{}｜
+    ;; ｜🙆iimmiim>｜
+    (custom-set-faces
+     ;; '(default ((t (:family "Noto Sans"))))
+     ;; '(default ((t (:family "PlemolJP"))))
+     '(default ((t (:family "HackGen"))))
+     ;; '(default ((t (:family "UDEV Gothic NF"))))
+     ;; '(default ((t (:family "FirgeNerd"))))
+     ))
+#+end_src
 
-      (leaf mozc-im
-        :straight t
-        :require t                        ; Checked
-        :custom (default-input-method . "japanese-mozc-im")
-        :bind* (("C-o" . toggle-input-method))
-        :defvar (mozc-candidate-style)
-        :init
-        (setq mozc-candidate-style 'echo-area))
+** 日本語入力
 
-      (leaf mozc-cursor-color
-        :straight (mozc-cursor-color :type git :host github
-                                     :repo "iRi-E/mozc-el-extensions")
-        :require t                        ; Checked
-        :defvar (mozc-cursor-color-alist) ;; FIXME: defvar-localが原因
-        :config
-        (setq mozc-cursor-color-alist
-              '((direct        . "gray")
-                (read-only     . "yellow")
-                (hiragana      . "green")
-                (full-katakana . "goldenrod")
-                (half-ascii    . "dark orchid")
-                (full-ascii    . "orchid")
-                (half-katakana . "dark goldenrod")))
+#+begin_src emacs-lisp
+  (leaf mozc
+    :straight t
+    :defvar (mozc-helper-program-name)
+    :init
+    (cond
+     ((eq system-type 'windows-nt)
+      (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
+     (t
+      (setq mozc-helper-program-name "mozc_emacs_helper"))))
 
-        (prog1 "mozc-cursor-color"
-          ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
-          ;; https://w.atwiki.jp/ntemacs/?cmd=word&word=cursor-color&pageid=48
-          (defvar-local mozc-im-mode nil) ;; FIXME: トップレベルじゃないと警告
-          (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
-          (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
-          (advice-add 'mozc-cursor-color-update
-                      :around (lambda (orig-fun &rest args)
-                                (let ((mozc-mode mozc-im-mode))
-                                  (apply orig-fun args))))))
+  (leaf mozc-im
+    :straight t
+    :require t                        ; Checked
+    :custom (default-input-method . "japanese-mozc-im")
+    :bind* (("C-o" . toggle-input-method))
+    :defvar (mozc-candidate-style)
+    :init
+    (setq mozc-candidate-style 'echo-area))
 
-      (leaf isearch
-        :bind ((isearch-mode-map
-                ("C-o" . isearch-toggle-input-method))))
+  (leaf mozc-cursor-color
+    :straight (mozc-cursor-color :type git :host github
+                                 :repo "iRi-E/mozc-el-extensions")
+    :require t                        ; Checked
+    :defvar (mozc-cursor-color-alist) ;; FIXME: defvar-localが原因
+    :config
+    (setq mozc-cursor-color-alist
+          '((direct        . "gray")
+            (read-only     . "yellow")
+            (hiragana      . "green")
+            (full-katakana . "goldenrod")
+            (half-ascii    . "dark orchid")
+            (full-ascii    . "orchid")
+            (half-katakana . "dark goldenrod")))
 
-      (leaf mozc-windows
-        :if (eq system-type 'windows-nt)
-        :defun (mozc-session-sendkey)
-        :init
-        (advice-add 'mozc-session-execute-command
-                    :after (lambda (&rest args)
-                             (when (eq (nth 0 args) 'CreateSession)
-                               (mozc-session-sendkey '(Hankaku/Zenkaku))))))
-      )
-    ;; end of Minimum
+    (prog1 "mozc-cursor-color"
+      ;; mozc-cursor-color を利用するための対策（NTEmacs@ウィキより）
+      ;; https://w.atwiki.jp/ntemacs/?cmd=word&word=cursor-color&pageid=48
+      (defvar-local mozc-im-mode nil) ;; FIXME: トップレベルじゃないと警告
+      (add-hook 'mozc-im-activate-hook (lambda () (setq mozc-im-mode t)))
+      (add-hook 'mozc-im-deactivate-hook (lambda () (setq mozc-im-mode nil)))
+      (advice-add 'mozc-cursor-color-update
+                  :around (lambda (orig-fun &rest args)
+                            (let ((mozc-mode mozc-im-mode))
+                              (apply orig-fun args))))))
+
+  (leaf isearch
+    :bind ((isearch-mode-map
+            ("C-o" . isearch-toggle-input-method))))
+
+  (leaf mozc-windows
+    :if (eq system-type 'windows-nt)
+    :defun (mozc-session-sendkey)
+    :init
+    (advice-add 'mozc-session-execute-command
+                :after (lambda (&rest args)
+                         (when (eq (nth 0 args) 'CreateSession)
+                           (mozc-session-sendkey '(Hankaku/Zenkaku))))))
+
+#+end_src
+
+* グローバルマイナーモード
+** TODO recentf
++ startup-hookを使わないようにする
+
+#+begin_src emacs-lisp
+  (leaf recentf
+            :custom
+            (recentf-max-menu-items  . 500)
+            (recentf-max-saved-items . 2000)
+            (recentf-auto-cleanup    . 'never)
+            (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS"
+                                 "^/sudo:" "/straight"))
+            :hook
+            (emacs-startup-hook . recentf-mode)
+            :defun (recentf-save-list)
+            :defvar (recentf-exclude)
+            :config
+            (run-at-time nil (* 5 60)
+                         (lambda ()
+                           (let ((save-silently t)) ; FIXME
+                             (recentf-save-list)))))
+#+end_src
+
+** undo-tree
+
+#+begin_src emacs-lisp
+(leaf undo-tree
+          :doc "https://elpa.gnu.org/packages/undo-tree.html"
+          :straight t
+          :require t                          ; Checked
+          :bind ("C-z" . undo-tree-undo)
+          :custom
+          (undo-tree-auto-save-history . t)
+          (undo-tree-visualizer-diff . t)
+          :init
+          ;; (defadvice undo-tree-make-history-save-file-name
+          ;;     (after undo-tree activate)
+          ;;   (setq ad-return-value (concat ad-return-value ".gz")))
+          (global-undo-tree-mode))
+#+end_src
+
+** auto-revert
+
+#+begin_src emacs-lisp
+  (leaf auto-revert
+    :custom
+    (auto-revert-interval . 1)      ; 再読み込みの間隔
+    (auto-revert-verbose . nil)     ; 再読込の際、メッセージを非表示
+    (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
+    :init
+    (global-auto-revert-mode 1))
+#+end_src
+
+** savehist
+
+#+begin_src emacs-lisp
+(leaf savehist
+          ;; Persist history over Emacs restarts.
+          ;; Vertico sorts by history position.
+          :init
+          (savehist-mode 1))
+#+end_src
+
+** show-paren
+
+#+begin_src emacs-lisp
+(leaf show-paren-mode
+          :custom
+          (show-paren-style . 'mixed)
+          :init
+          (show-paren-mode 1))
+#+end_src
+
+** goto-addr
+
+#+begin_src emacs-lisp
+  (leaf goto-addr
+            :doc "Toggle Goto-Address mode in all buffers."
+            :url "https://www.gnu.org/software/emacs/manual/html_node/emacs/Goto-Address-mode.html"
+            :init
+            ;; You can follow the URL by typing C-c RET
+            (global-goto-address-mode 1))
+#+end_src
+
+** whitespace
+
+#+begin_src emacs-lisp
+  (leaf whitespace
+            :require 't
+            :config
+            (setq whitespace-style
+                  '(
+                    face                  ; faceで可視化
+                    trailing              ; 行末
+                    tabs                  ; タブ
+                    spaces                ; スペース
+                    space-mark            ; 表示のマッピング
+                    tab-mark
+                    ))
+            (setq whitespace-display-mappings
+                  '(
+                    (space-mark ?\u3000 [?□])
+                    (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+                    ))
+            (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+            (setq whitespace-space-regexp "\\(\u3000+\\)")
+            ;; (set-face-attribute 'whitespace-trailing nil
+            ;;                     :foreground nil
+            ;;                     :background "DarkOrange1"
+            ;;                     :underline nil)
+            ;; (set-face-attribute 'whitespace-tab nil
+            ;;                     :foreground "DarkOrange1"
+            ;;                     :background nil
+            ;;                     :underline nil)
+            ;; (set-face-attribute 'whitespace-space nil
+            ;;                     :foreground "DarkOrange1"
+            ;;                     :background nil
+            ;;                     :underline nil)
+            (global-whitespace-mode t))
+#+end_src
+
+** TODO outline-mode
+
+#+begin_src emacs-lisp
+  (leaf outline-mode
+    :defvar (outline-mode-prefix-map)
+    :custom
+    :init
+    (require 'outline)
+    (eval-after-load "outline"
+      '(require 'foldout))
+    (add-hook 'outline-minor-mode-hook
+              (lambda () (local-set-key
+                          "\C-c\C-o"
+                          outline-mode-prefix-map)))
+    ;; (setq outline-regexp ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (") ; "  ("を追加
+    ;; (outline-minor-mode 1) ; TODO: outline-mode is not GLOBAL minnor mode
     )
 #+end_src
+
+** COMMENT outline-magic
+
+#+begin_src emacs-lisp
+(leaf outline-magic :straight t
+          :init
+          (define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle))
+#+end_src
+
+* 古いinit.el
+** 古いinit.elをとりあえず放り込む
 
 ** Main
 
@@ -294,25 +360,6 @@ Xウインドウで設定したフォントを確認してみましょう。本�
       :init
       (leaf Variables
         :init
-        (leaf Emacs-Variables
-          :custom
-          ((inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
-           (ring-bell-function . 'ignore) ; ベルを鳴らさない
-           (fill-column . 80)             ; 80桁で改行（モードによる）
-           (indent-tabs-mode . nil)       ; インデントの際タブを使わない
-           (byte-compile-warnings
-            . '(not cl-functions obsolete)) ; (require 'cl)を検査しない
-           (epg-pinentry-mode . 'loopback)  ; GnuPGのパスフレーズをミニバッファで
-           (plstore-cache-passphrase-for-symmetric-encryption . t)
-                                          ; パスフレーズをキャッシュ
-           (select-active-regions . 'only) ; リージョン選択時の移動を早くする
-           (dired-dwim-target . t)        ; diredでターゲットを他のdiredバッファに
-           (line-spacing . 0.25)
-           )
-          :init
-          (customize-set-variable
-           'custom-file (no-littering-expand-etc-file-name "custom.el"))
-          )
 
         (leaf Mail-Variables
           :custom
@@ -330,94 +377,14 @@ Xウインドウで設定したフォントを確認してみましょう。本�
           (vc-handled-backends . '(Git))) ; Gitのみ使用
 
         (leaf files
-          :defun (no-littering-expand-var-file-name)
           :custom
           (backup-directory-alist . '(("." . ".backup~")))
           (delete-old-versions . t)
           (version-control . t)
-          (auto-save-file-name-transforms
-           . `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))))
+          ))
 
       (leaf Global-Minnor-Mode
-        :init
-        (leaf auto-revert
-          :custom
-          (auto-revert-interval . 1)      ; 再読み込みの間隔
-          (auto-revert-verbose . nil)     ; 再読込の際、メッセージを非表示
-          (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
-          :init
-          (global-auto-revert-mode 1))
-
-        (leaf savehist
-          ;; Persist history over Emacs restarts.
-          ;; Vertico sorts by history position.
-          :init
-          (savehist-mode 1))
-
-        (leaf show-paren-mode
-          :custom
-          (show-paren-style . 'mixed)
-          :init
-          (show-paren-mode 1))
-
-        (leaf goto-addr
-          :doc "Toggle Goto-Address mode in all buffers."
-          :url "https://www.gnu.org/software/emacs/manual/html_node/emacs/Goto-Address-mode.html"
-          :init
-          ;; You can follow the URL by typing C-c RET
-          (global-goto-address-mode 1))
-
-        (leaf whitespace
-          :require 't
-          :config
-          (setq whitespace-style
-                '(
-                  face                  ; faceで可視化
-                  trailing              ; 行末
-                  tabs                  ; タブ
-                  spaces                ; スペース
-                  space-mark            ; 表示のマッピング
-                  tab-mark
-                  ))
-          (setq whitespace-display-mappings
-                '(
-                  (space-mark ?\u3000 [?□])
-                  (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
-                  ))
-          (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
-          (setq whitespace-space-regexp "\\(\u3000+\\)")
-          ;; (set-face-attribute 'whitespace-trailing nil
-          ;;                     :foreground nil
-          ;;                     :background "DarkOrange1"
-          ;;                     :underline nil)
-          ;; (set-face-attribute 'whitespace-tab nil
-          ;;                     :foreground "DarkOrange1"
-          ;;                     :background nil
-          ;;                     :underline nil)
-          ;; (set-face-attribute 'whitespace-space nil
-          ;;                     :foreground "DarkOrange1"
-          ;;                     :background nil
-          ;;                     :underline nil)
-          (global-whitespace-mode t))
-
-        (leaf outline-mode
-          :defvar (outline-mode-prefix-map)
-          :custom
-          :init
-          (require 'outline)
-          (eval-after-load "outline"
-            '(require 'foldout))
-          (add-hook 'outline-minor-mode-hook
-                    (lambda () (local-set-key
-                                "\C-c\C-o"
-                                outline-mode-prefix-map)))
-          ;; (setq outline-regexp ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (") ; "  ("を追加
-          ;; (outline-minor-mode 1) ; TODO: outline-mode is not GLOBAL minnor mode
-          )
-
-        (leaf outline-magic :straight t
-          :init
-          (define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle)))
+        :init)
 
       (leaf Global-Key-Bindings
         :init
@@ -445,28 +412,6 @@ Xウインドウで設定したフォントを確認してみましょう。本�
           (save-place . t)
           :hook
           (emacs-startup-hook . save-place-mode))
-
-        (leaf recentf
-          :custom
-          (recentf-max-menu-items  . 500)
-          (recentf-max-saved-items . 2000)
-          (recentf-auto-cleanup    . 'never)
-          (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS"
-                               "^/sudo:" "/straight"))
-          :hook
-          (emacs-startup-hook . recentf-mode)
-          :defun (recentf-save-list)
-          :defvar (recentf-exclude)
-          :defvar (no-littering-var-directory no-littering-etc-directory)
-          :config
-          (run-at-time nil (* 5 60)
-                       (lambda ()
-                         (let ((save-silently t)) ; FIXME
-                           (recentf-save-list))))
-
-          (prog1 "no-littering"
-            (add-to-list 'recentf-exclude no-littering-var-directory)
-            (add-to-list 'recentf-exclude no-littering-etc-directory)))
 
         (leaf midnight
           :url "https://www.emacswiki.org/emacs/MidnightMode"
@@ -1604,19 +1549,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
       (leaf Global-Minnor-Mode
         :init
-        (leaf undo-tree
-          :doc "https://elpa.gnu.org/packages/undo-tree.html"
-          :straight t
-          :require t                          ; Checked
-          :bind ("C-z" . undo-tree-undo)
-          :custom
-          (undo-tree-auto-save-history . t)
-          (undo-tree-visualizer-diff . t)
-          :init
-          ;; (defadvice undo-tree-make-history-save-file-name
-          ;;     (after undo-tree activate)
-          ;;   (setq ad-return-value (concat ad-return-value ".gz")))
-          (global-undo-tree-mode))
+
 
         (leaf google-this
           :straight t
@@ -1895,7 +1828,7 @@ Xウインドウで設定したフォントを確認してみましょう。本�
   )
 #+end_src
 
-** フッタの記述
+* フッタの記述
 
 #+begin_src emacs-lisp
 (provide 'config)
@@ -1907,3 +1840,133 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 
 ;;; config.el ends here
 #+end_src
+
+* （旧）はじめに
+** この設定について
+- init.elの実行時、このREADME.orgからREADME.elを生成します。
+- orgのハッケージはinit.el内で最新版に更新しておきます。
+
+** 事前にインストールしておくもの
+- 各種フォント
+  - Noto Sans Mono CJK JP-12
+- migemo
+  - cmigemo
+- pygment
+  - python3をインストール
+  - /home/yc/.local/binにパス
+  - pip install -U pip
+  - pip install pygments
+- graphviz(dot)
+  - sudo apt install graphviz
+- org-roam
+  - sqlite3
+
+** EmacsのX関係の設定を外部化する                                :PUBLISHED:
+:PROPERTIES:
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-xresources.html
+:EXPORT_OPTIONS:  toc:nil num:nil
+:END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: EmacsのX関係の設定を外部化する
+permalink: /archives/248.html
+published: true
+---
+#+end_export
+
+*** Emacs の X resources 設定
+Emacs をX環境でグラフィカルに起動すると、 Emacs はXクライアントアプリケーションとなりますから、 [[https://wiki.archlinux.jp/index.php/X_resources][X resources ]]を利用した設定を読み込みます。フォントやウインドウの大きさなどを設定できます。
+
+これらの設定は、Emacs lisp で書く init.el でもできますが、 Emacs はコンソール端末でXウインドウを使わず作業をすることも多いです。そのため、 X resources で設定できるものは、init.elではなくX resources の方に設定しておくというのも一つの考え方です。
+
+また、 init.el  でウインドウのサイズを設定すると、一旦標準のサイズで立ち上がってから  改めて設定されたサイズに切り替わるという、ギクシャクした振る舞いになります。resources に設定しておくと、スムーズに起動します（起動時間も多少、早くなるかもしれません）。
+
+設定できるのは、次の例の通り、Xウインドウで動作するEmacsのフォントや、行間（lineSpacing）、ウインドウのサイズ（geometry）などです。設定できる項目の一覧は [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Table-of-Resources.html][Table-of-Resources]] にあります。プログラム名は Emacs にしました[fn:1]。
+
+#+begin_example
+!! ~/.Xresources
+Emacs.font: Noto Sans Mono CJK JP-12
+Emacs.lineSpacing: 0
+Emacs.geometry: 220x38-80+50
+Emacs.cursorBlink: off
+Emacs.coursorColor: dark green
+Emacs.menuBar: on
+Emacs.toolBar: off
+Emacs.tabBar: on
+Emacs.verticalScrollBars: off
+Eamcs.useXIM: off
+#+end_example
+
+この設定を有効にするには、ターミナルで
+#+begin_src bash
+  xrdb ~/.Xresources
+#+end_src
+
+と打ちます。設定されたか確認するには、
+#+begin_src bash
+  xrdb -query
+#+end_src
+
+とします。この設定は logout すると無効になりますから、 Emacs を起動する前に必ず xrdb コマンドを実行しなくてはなりません。通常のXデスクトップ環境でしたら .xinitrc にこの設定をします。WSL では、 .bashrc に書いてしまって良いでしょう。
+
+#+begin_src bash
+  [[ -f ~/.Xresources ]] && xrdb ~/.Xresources
+#+end_src
+
+*** Emacsでの動作確認
+.Xresources に書いた設定が読み込まれるかEmacsで試してみる方法は次のとおりです。
+
+#+begin_src bash
+  emacs -q
+#+end_src
+
+オプションは -Q でなく -q です。 -Q だと Emacs は Xリソースを処理しません[fn:2]。
+
+[fn:1] [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][Emacsでは通常、‘emacs’です。Emacsの実行可能ファイル名の如何にかかわらずに、Emacsのすべてのインスタンスに適用される定義を指定するには、‘Emacs’を使用します。]]
+
+[fn:2]  [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][変数inhibit-x-resourcesを非nil値にセットした場合、EmacsはXリソースを処理しません。コマンドラインオプション‘-Q’ (または‘--quick’)でEmacsを呼び出した場合、inhibit-x-resourcesは自動的にtにセットされます]]
+*** フォントの確認
+
+Xウインドウで設定したフォントを確認してみましょう。本当は全て等幅になるとよいのですが、なかなか難しい・・・。
+
+- [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]] より
+#+begin_example
+| mmmm |
+| llll |
+| 日本 |
+| 漢字 |
+| ああ |
+| んん |
+| ￥￥ |
+| \\\\ |
+| 　　   |
+|      |
+
+|abcdefghijkl|
+|ABCDEFGHIJKL|
+|'";:-+=/\~`?|
+|∞≤≥∏∑∫|
+|×±≒≡⊆⊇|  ← GUI だと一部半角になる
+|αβγδεζ|  ← GUI だと半角になる
+|ηθικλμ|  ← GUI だと半角になる
+|ΑΒΓΔΕΖ|  ← GUI だと半角になる
+|ΗΘΙΚΛΜ|  ← GUI だと半角になる
+|日本語の美観|
+|あいうえおか|
+|アイウエオカ|
+|ｱｲｳｴｵｶｷｸｹｺｻｼ|
+
+| hoge                 | hogeghoe | age              |
+|----------------------+----------+------------------|
+| 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
+|----------------------+----------+------------------|
+#+end_example
+** 参考になるサイト
+- [[http://xahlee.info/emacs/emacs/elisp.html][Practical Emacs Lisp]]
