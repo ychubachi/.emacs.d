@@ -7,3 +7,4 @@ README.org
 * はじめに
 + Emacsの設定ファイルです
 + init.elは [[FILE:init.org][init.org]] から生成します
++ init.elは config.org を読み込みます
