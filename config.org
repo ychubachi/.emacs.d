@@ -1,8 +1,9 @@
 #+TITLE: config.org
 
-* TODO TODO
-- README.bak.orgから解説文をコピー
-- code block は leaf で囲む
+* TODOs
+** TODO README.bak.orgから解説文をコピー
+** TODO 自分流にカスタマイズする部分とそうでないところを分ける？
+** TODO recentfがおかしい？
 
 * ヘッダー
 ** Copyright
