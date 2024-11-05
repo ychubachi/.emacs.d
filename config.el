@@ -1194,30 +1194,7 @@ _~_: modified
         :init
         )
       )
-    )
-
-  (leaf Original-Packages
-    :init
-    (leaf org-sync-gtasks
-      ;; :straight (org-sync-gtasks :type git :host github
-      ;;                            :repo "ychubachi/org-sync-gtasks"
-      ;;                            :branch "develop")
-      :init
-      (leaf oauth2 :straight t)
-      :config
-      (setq load-path (cons "~/git/org-sync-gtasks" load-path))
-      (require 'org-sync-gtasks))
-
-    (leaf org-sync-qiita
-      ;; :straight (org-sync-gtasks :type git :host github
-      ;;                            :repo "ychubachi/org-sync-gtasks"
-      ;;                            :branch "develop")
-      :init
-      (leaf request-deferred :straight t)
-      (leaf ox-qmd :straight t)
-      :config
-      (setq load-path (cons "~/git/org-sync-qiita" load-path))
-      (require 'org-sync-qiita))))
+    ))
 
 (leaf Disabled
   :disabled t
@@ -1715,6 +1692,27 @@ _~_: modified
 (setq org-imenu-depth 3)
 
 (add-hook 'org-mode-hook 'imenu-list-minor-mode)
+
+(leaf org-sync-gtasks
+  ;; :straight (org-sync-gtasks :type git :host github
+  ;;                            :repo "ychubachi/org-sync-gtasks"
+  ;;                            :branch "develop")
+  :init
+  (leaf oauth2 :straight t)
+  :config
+  (setq load-path (cons "~/git/org-sync-gtasks" load-path))
+  (require 'org-sync-gtasks))
+
+(leaf org-sync-qiita
+  ;; :straight (org-sync-gtasks :type git :host github
+  ;;                            :repo "ychubachi/org-sync-gtasks"
+  ;;                            :branch "develop")
+  :init
+  (leaf request-deferred :straight t)
+  (leaf ox-qmd :straight t)
+  :config
+  (setq load-path (cons "~/git/org-sync-qiita" load-path))
+  (require 'org-sync-qiita))
 
 (provide 'config)
 
