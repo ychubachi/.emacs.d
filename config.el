@@ -205,38 +205,35 @@
           ;; You can follow the URL by typing C-c RET
           (global-goto-address-mode 1))
 
-(leaf whitespace
-          :require 't
-          :config
-          (setq whitespace-style
-                '(
-                  face                  ; faceで可視化
-                  trailing              ; 行末
-                  tabs                  ; タブ
-                  spaces                ; スペース
-                  space-mark            ; 表示のマッピング
-                  tab-mark
-                  ))
-          (setq whitespace-display-mappings
-                '(
-                  (space-mark ?\u3000 [?□])
-                  (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
-                  ))
-          (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
-          (setq whitespace-space-regexp "\\(\u3000+\\)")
-          ;; (set-face-attribute 'whitespace-trailing nil
-          ;;                     :foreground nil
-          ;;                     :background "DarkOrange1"
-          ;;                     :underline nil)
-          ;; (set-face-attribute 'whitespace-tab nil
-          ;;                     :foreground "DarkOrange1"
-          ;;                     :background nil
-          ;;                     :underline nil)
-          ;; (set-face-attribute 'whitespace-space nil
-          ;;                     :foreground "DarkOrange1"
-          ;;                     :background nil
-          ;;                     :underline nil)
-          (global-whitespace-mode t))
+(setq whitespace-style
+      '(
+        face                  ; faceで可視化
+        trailing              ; 行末
+        tabs                  ; タブ
+        spaces                ; スペース
+        space-mark            ; 表示のマッピング
+        tab-mark
+        ))
+(setq whitespace-display-mappings
+      '(
+        (space-mark ?\u3000 [?□])
+        (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+        ))
+(setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+(setq whitespace-space-regexp "\\(\u3000+\\)")
+;; (set-face-attribute 'whitespace-trailing nil
+;;                     :foreground nil
+;;                     :background "DarkOrange1"
+;;                     :underline nil)
+;; (set-face-attribute 'whitespace-tab nil
+;;                     :foreground "DarkOrange1"
+;;                     :background nil
+;;                     :underline nil)
+;; (set-face-attribute 'whitespace-space nil
+;;                     :foreground "DarkOrange1"
+;;                     :background nil
+;;                     :underline nil)
+(global-whitespace-mode t)
 
 (leaf outline-mode
   :defvar (outline-mode-prefix-map)
@@ -666,34 +663,6 @@ _~_: modified
         ;; (load-theme 'modus-vivendi :no-confirm)
         :bind
         ("<f5>" . modus-themes-toggle))
-
-      (leaf moody
-        :straight t
-        :defun (moody-replace-mode-line-buffer-identification
-                moody-replace-vc-mode
-                moody-replace-eldoc-minibuffer-message-function)
-        :config
-        (setq x-underline-at-descent-line t)
-        (moody-replace-mode-line-buffer-identification)
-        (moody-replace-vc-mode)
-        (moody-replace-eldoc-minibuffer-message-function))
-
-      (leaf minions
-        :doc "A minor-mode menu for the mode line"
-        :url "https://github.com/tarsius/minions"
-        :straight t
-        :custom (minions-mode-line-lighter . "[+]")
-        :defun (minions-mode)
-        :config
-        (minions-mode 1)
-        (global-set-key [S-down-mouse-3] 'minions-minor-modes-menu))
-
-      (leaf beacon
-        :straight t
-        :custom
-        (beacon-blink-when-focused . t)
-        :config
-        (beacon-mode 1))
 
       (leaf all-the-icons :straight t))
 
@@ -1188,13 +1157,7 @@ _~_: modified
         (leaf rainbow-delimiters
           :straight t
           :hook
-          (prog-mode-hook . rainbow-delimiters-mode)))
-
-      (leaf After-Init-Hook
-        :init
-        )
-      )
-    ))
+          (prog-mode-hook . rainbow-delimiters-mode))))))
 
 (leaf Disabled
   :disabled t
@@ -1278,6 +1241,29 @@ _~_: modified
   :init
   ;; Experimental Settings
 )
+
+(leaf moody
+  :straight t
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
+
+(leaf minions
+  :straight t
+  :require t
+  :config
+  (minions-mode 1)
+  (setq minions-mode-line-lighter "[+]")
+  (global-set-key [S-down-mouse-3] 'minions-minor-modes-menu))
+
+(leaf beacon
+  :straight t
+  :custom
+  (beacon-blink-when-focused . nil)
+  :config
+  (beacon-mode 1))
 
 (leaf Org-Mode
         :init

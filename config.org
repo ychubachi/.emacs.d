@@ -285,42 +285,49 @@
             (global-goto-address-mode 1))
 #+end_src
 
-*** whitespace
+* whitespace - 空白文字の可視化
+- [[https://yanqirenshi.hatenablog.com/entry/2016/07/03/Emacs%3A_whitespace_%E3%81%A7%E4%BD%99%E5%88%86%E3%81%AA%E7%A9%BA%E7%99%BD/%E3%82%BF%E3%83%96%E3%81%AB%E8%89%B2%E3%81%A5%E3%81%91][Emacs: whitespace で余分な空白/タブに色づけ - ほんとのこと知りたいだけなのに。]]
+  - M-x list-faces-display で設定する色の種類と色を確認できます。
+  - 設定する色は M-x list-colors-display で確認する感じ。
+- 色はテーマのデフォルトのままにしておく。
+
+　　　ああ全角　　　　　←全角　あいうえお
+あいうえお　漢字
 
 #+begin_src emacs-lisp
-  (leaf whitespace
-            :require 't
-            :config
-            (setq whitespace-style
-                  '(
-                    face                  ; faceで可視化
-                    trailing              ; 行末
-                    tabs                  ; タブ
-                    spaces                ; スペース
-                    space-mark            ; 表示のマッピング
-                    tab-mark
-                    ))
-            (setq whitespace-display-mappings
-                  '(
-                    (space-mark ?\u3000 [?□])
-                    (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
-                    ))
-            (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
-            (setq whitespace-space-regexp "\\(\u3000+\\)")
-            ;; (set-face-attribute 'whitespace-trailing nil
-            ;;                     :foreground nil
-            ;;                     :background "DarkOrange1"
-            ;;                     :underline nil)
-            ;; (set-face-attribute 'whitespace-tab nil
-            ;;                     :foreground "DarkOrange1"
-            ;;                     :background nil
-            ;;                     :underline nil)
-            ;; (set-face-attribute 'whitespace-space nil
-            ;;                     :foreground "DarkOrange1"
-            ;;                     :background nil
-            ;;                     :underline nil)
-            (global-whitespace-mode t))
+  (setq whitespace-style
+        '(
+          face                  ; faceで可視化
+          trailing              ; 行末
+          tabs                  ; タブ
+          spaces                ; スペース
+          space-mark            ; 表示のマッピング
+          tab-mark
+          ))
+  (setq whitespace-display-mappings
+        '(
+          (space-mark ?\u3000 [?□])
+          (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+          ))
+  (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+  (setq whitespace-space-regexp "\\(\u3000+\\)")
+  ;; (set-face-attribute 'whitespace-trailing nil
+  ;;                     :foreground nil
+  ;;                     :background "DarkOrange1"
+  ;;                     :underline nil)
+  ;; (set-face-attribute 'whitespace-tab nil
+  ;;                     :foreground "DarkOrange1"
+  ;;                     :background nil
+  ;;                     :underline nil)
+  ;; (set-face-attribute 'whitespace-space nil
+  ;;                     :foreground "DarkOrange1"
+  ;;                     :background nil
+  ;;                     :underline nil)
+  (global-whitespace-mode t)
 #+end_src
+
+#+RESULTS:
+: t
 
 *** TODO outline-mode
 
@@ -783,34 +790,6 @@
           ;; (load-theme 'modus-vivendi :no-confirm)
           :bind
           ("<f5>" . modus-themes-toggle))
-
-        (leaf moody
-          :straight t
-          :defun (moody-replace-mode-line-buffer-identification
-                  moody-replace-vc-mode
-                  moody-replace-eldoc-minibuffer-message-function)
-          :config
-          (setq x-underline-at-descent-line t)
-          (moody-replace-mode-line-buffer-identification)
-          (moody-replace-vc-mode)
-          (moody-replace-eldoc-minibuffer-message-function))
-
-        (leaf minions
-          :doc "A minor-mode menu for the mode line"
-          :url "https://github.com/tarsius/minions"
-          :straight t
-          :custom (minions-mode-line-lighter . "[+]")
-          :defun (minions-mode)
-          :config
-          (minions-mode 1)
-          (global-set-key [S-down-mouse-3] 'minions-minor-modes-menu))
-
-        (leaf beacon
-          :straight t
-          :custom
-          (beacon-blink-when-focused . t)
-          :config
-          (beacon-mode 1))
 
         (leaf all-the-icons :straight t))
 
@@ -1390,7 +1369,60 @@
     ;; Experimental Settings
   )
 #+end_src
+* UI・見た目
+** moody - モードラインにタブとリボンを表示
 
+- [[https://github.com/tarsius/moody][tarsius/moody: Tabs and ribbons for the mode-line]]
+
+#+begin_src emacs-lisp
+  (leaf moody
+    :straight t
+    :config
+    (setq x-underline-at-descent-line t)
+    (moody-replace-mode-line-buffer-identification)
+    (moody-replace-vc-mode)
+    (moody-replace-eldoc-minibuffer-message-function))
+#+end_src
+
+#+RESULTS:
+: moody
+
+** minions - マイナーモードの表示をコンパクトにする
+
+- [[https://github.com/tarsius/minions][tarsius/minions: A minor-mode menu for the mode line]]
+
+#+begin_src emacs-lisp
+  (leaf minions
+    :straight t
+    :require t
+    :config
+    (minions-mode 1)
+    (setq minions-mode-line-lighter "[+]")
+    (global-set-key [S-down-mouse-3] 'minions-minor-modes-menu))
+#+end_src
+
+#+RESULTS:
+: minions
+
+** beacon - バッファを切り替えたときビーコンを表示する
+*** 設定
+
+#+begin_src emacs-lisp
+  (leaf beacon
+    :straight t
+    :custom
+    (beacon-blink-when-focused . nil)
+    :config
+    (beacon-mode 1))
+#+end_src
+
+#+RESULTS:
+: beacon
+
+*** 参考
++ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E3%82%82%E3%81%86%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E8%A6%8B%E5%A4%B1%E3%82%8F%E3%81%AA%E3%81%84----beacon][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
+*
 * TODO Org
 ** 古い設定
 #+begin_src emacs-lisp
