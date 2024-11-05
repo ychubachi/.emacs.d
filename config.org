@@ -1851,9 +1851,6 @@
     (add-hook 'org-mode-hook 'imenu-list-minor-mode)
   #+end_src
 
-#+RESULTS:
-| imenu-list-minor-mode | (lambda nil (imenu-add-to-menubar Imenu)) | #[0 \205 \301 \205 \302\303\301 !\304P!\305!\205 \306!\262\207 [org-ctags-enabled-p buffer-file-name expand-file-name file-name-directory /TAGS file-exists-p visit-tags-table] 3] | #[0 \305\306	>\203 \307 |
-
 * フッタの記述
 
 #+begin_src emacs-lisp
