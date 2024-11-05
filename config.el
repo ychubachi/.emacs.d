@@ -1714,6 +1714,8 @@ _~_: modified
           (lambda () (imenu-add-to-menubar "Imenu")))
 (setq org-imenu-depth 3)
 
+(add-hook 'org-mode-hook 'imenu-list-minor-mode)
+
 (provide 'config)
 
 ;; Local Variables:
