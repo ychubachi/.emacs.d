@@ -250,6 +250,19 @@
   ;; (outline-minor-mode 1) ; TODO: outline-mode is not GLOBAL minnor mode
   )
 
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+(leaf frame
+          :bind ("<f11>" . toggle-frame-maximized))
+
+(leaf imenu-list
+  :bind (("C-c i" . imenu-list-smart-toggle))
+  :hook
+  (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
+
+(leaf simple
+  :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
+
 (leaf Main
   :disabled nil
   :init
@@ -283,21 +296,6 @@
     (leaf Global-Minnor-Mode
       :init)
 
-    (leaf Global-Key-Bindings
-      :init
-      (leaf frame
-        :bind ("<f11>" . toggle-frame-maximized))
-
-      (leaf imenu-list
-        :bind (("C-c i" . imenu-list-smart-toggle))
-        :hook
-        (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
-
-      (leaf simple
-        :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
-      ;; End of Builtin-Packages/Global-Key-Bindings
-      )
-
     (leaf Emacs-Startup-Hook
       :init
       (leaf display-fill-column-indicator
@@ -316,13 +314,6 @@
         ((clean-buffer-list-delay-general . 1))
         :hook
         (emacs-startup-hook . midnight-mode)))
-
-    (leaf Before-Save-Hook
-      :init
-      (leaf delete-trailing-whitespace
-        :init
-        (add-hook 'before-save-hook 'delete-trailing-whitespace))
-      )
 
     (leaf Minnor-Mode-Settings
       :init
@@ -662,9 +653,7 @@ _~_: modified
         (load-theme 'modus-operandi :no-confirm)
         ;; (load-theme 'modus-vivendi :no-confirm)
         :bind
-        ("<f5>" . modus-themes-toggle))
-
-      (leaf all-the-icons :straight t))
+        ("<f5>" . modus-themes-toggle)))
 
     (leaf Mail-Client
       :init
@@ -1169,11 +1158,7 @@ _~_: modified
       :custom
       (display-line-numbers-width . 5) ; 表示する行番号の桁数
       :hook
-      (emacs-startup-hook . global-display-line-numbers-mode))
-
-    (leaf ruler-mode
-      :hook
-      (find-file-hook . (lambda () (ruler-mode 1)))))
+      (emacs-startup-hook . global-display-line-numbers-mode)))
 
   (leaf projectile
     :straight t
@@ -1264,6 +1249,8 @@ _~_: modified
   (beacon-blink-when-focused . nil)
   :config
   (beacon-mode 1))
+
+(leaf all-the-icons :straight t)
 
 (leaf Org-Mode
         :init
