@@ -81,3 +81,5 @@ org-roam.db
 /annotations
 /var/
 /org-persist/
+
+config.el
