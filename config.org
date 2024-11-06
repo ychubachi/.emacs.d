@@ -118,7 +118,9 @@
                      (cons 'utf-8 'cp932-unix)))))
 #+end_src
 
-*** フォント
+*** TODO フォント
+
+- TODO: [[https://qiita.com/query1000/items/4b0b8db872adc1a5e2e9][Emacsで絵文字と他の字の幅を合わせる #font - Qiita]]
 
 #+begin_src emacs-lisp
   (leaf Fonts
