@@ -306,35 +306,38 @@
 あいうえお　漢字
 
 #+begin_src emacs-lisp
-  (setq whitespace-style
-        '(
-          face                  ; faceで可視化
-          trailing              ; 行末
-          tabs                  ; タブ
-          spaces                ; スペース
-          space-mark            ; 表示のマッピング
-          tab-mark
-          ))
-  (setq whitespace-display-mappings
-        '(
-          (space-mark ?\u3000 [?□])
-          (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
-          ))
-  (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
-  (setq whitespace-space-regexp "\\(\u3000+\\)")
-  ;; (set-face-attribute 'whitespace-trailing nil
-  ;;                     :foreground nil
-  ;;                     :background "DarkOrange1"
-  ;;                     :underline nil)
-  ;; (set-face-attribute 'whitespace-tab nil
-  ;;                     :foreground "DarkOrange1"
-  ;;                     :background nil
-  ;;                     :underline nil)
-  ;; (set-face-attribute 'whitespace-space nil
-  ;;                     :foreground "DarkOrange1"
-  ;;                     :background nil
-  ;;                     :underline nil)
-  (global-whitespace-mode t)
+  (leaf whitespace
+    :init
+    (setq whitespace-style
+          '(
+            face                  ; faceで可視化
+            trailing              ; 行末
+            tabs                  ; タブ
+            spaces                ; スペース
+            space-mark            ; 表示のマッピング
+            tab-mark
+            ))
+    (setq whitespace-display-mappings
+          '(
+            (space-mark ?\u3000 [?□])
+            (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+            ))
+    (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+    (setq whitespace-space-regexp "\\(\u3000+\\)")
+    ;; (set-face-attribute 'whitespace-trailing nil
+    ;;                     :foreground nil
+    ;;                     :background "DarkOrange1"
+    ;;                     :underline nil)
+    ;; (set-face-attribute 'whitespace-tab nil
+    ;;                     :foreground "DarkOrange1"
+    ;;                     :background nil
+    ;;                     :underline nil)
+    ;; (set-face-attribute 'whitespace-space nil
+    ;;                     :foreground "DarkOrange1"
+    ;;                     :background nil
+    ;;                     :underline nil)
+    (global-whitespace-mode t)
+    )
 #+end_src
 
 #+RESULTS:
@@ -371,11 +374,13 @@
 *** 保存時、不要な空白を削除
 
 #+begin_src emacs-lisp
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+    (leaf simple
+      :init
+      (add-hook 'before-save-hook 'delete-trailing-whitespace))
 #+end_src
 
 #+RESULTS:
-| delete-trailing-whitespace |
+: simple
 
 ** グローバルキーバインディング
 *** 画面の最大・縮小 [<f11>]
@@ -401,9 +406,8 @@
 #+RESULTS:
 : simple
 
-* 作業中 :WIP:
-** ミニバッファ補完UI関連の設定
-*** 説明
+* ミニバッファ補完UI
+** 説明
 
 - Emacsのミニバッファの使い勝手を良くする設定
 - 次の5つを組み合わせる ([[https://github.com/minad/vertico?tab=readme-ov-file#complementary-packages][GitHub - minad/vertico: :dizzy: vertico.el - VERTical Interactive COmpletion]])
@@ -413,7 +417,7 @@
   - Embark: Minibuffer actions and context menu
   - Orderless: Advanced completion style
 
-*** vertico - 補完リストをカーソルで選択
+** vertico - 補完リストをカーソルで選択
 :PROPERTIES:
 :ID:       93e6fe5e-58fd-427e-b989-533ab6a83cf5
 :END:
@@ -450,7 +454,7 @@
 #+RESULTS:
 : savehist
 
-*** orderless - 補完リストをスペース区切りのキーワードで検索
+** orderless - 補完リストをスペース区切りのキーワードで検索
 - [[https://github.com/oantolin/orderless][GitHub - oantolin/orderless: Emacs completion style that matches multiple regexps in any order]]
 - Verticoで、スペースで区切ったキーワードで検索できるようにする。
 
@@ -468,7 +472,7 @@
 #+RESULTS:
 : orderless
 
-*** Marginalia[M-A]
+** Marginalia[M-A]
 - [[https://github.com/minad/marginalia][GitHub - minad/marginalia: marginalia.el - Marginalia in the minibuffer]]
 - Enable richer annotations using the Marginalia package
 
@@ -484,7 +488,7 @@
 #+RESULTS:
 : marginalia
 
-*** embark - カーソル位置にあるテキストに対するアクションを実行（org link対応） [M-.][C-.][C-^ B] :PUBLISHED:
+** embark - カーソル位置にあるテキストに対するアクションを実行（org link対応） [M-.][C-.][C-^ B] :PUBLISHED:
 :PROPERTIES:
 :EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-embark.html
 :EXPORT_OPTIONS:  toc:nil num:nil
@@ -504,7 +508,7 @@ published: true
 ---
 #+end_export
 
-**** 「何か」に対して何かを「実行」するembark
+*** 「何か」に対して何かを「実行」するembark
 テキストファイルに書いてあるURLを開きたい、と思ったとき、あなたはどうしますか？
 
 今どきのテキストエディタはURLやメールアドレスなどを認識し、リンクとして表示してくれますね。このリンクを開くには、リンクにマウスカーソルをあて、クリックするのが普通です。
@@ -517,7 +521,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 また、 embark-dwim （C-.に設定）を押すとembarkがおすすめのアクションを選んで実行してくれます。なお、dwimとはdo what i meanの略で、「私の意図するところを（察して）行え」といった意味でしょうか。意訳すれば、「適当によろしく」みたいなものかな。
 
-**** org linkを辿るアクションが見当たらない!
+*** org linkを辿るアクションが見当たらない!
 さて、この便利なembark、とても不思議なことに、orgのリンクを扱うアクションが見当たりませんでした。結構、いろいろ検索して見当たらなかったので、「ない理由が分からない自分のほうが変なのかも」とも思った次第です。
 
 まあ、とはいえ、あってもだれも困らないとも思うので、自分で作りました。orgモードと、もちろん、embarkに依存するので、leafで設定をしています。
@@ -551,7 +555,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS: my-embark-orglink
 : *my-embark-orglink
 
-**** 全体の設定
+*** 全体の設定
 せっかくですので、設定全体も掲載しておきますね。バインディングに使っているC-@ですがヘルプのプレフィックスです。私はC-hをBSにしているので、C-@をヘルプ（もともとのC-hの機能）にしています。
 
 #+begin_src emacs-lisp :syntaxhl :noweb yes
@@ -576,14 +580,14 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : embark
 
-**** 閑話休題
+*** 閑話休題
 探せばどこかに必ずあるはずだ、と思って探したものがどうしても見つからないとき、「あるはずだ」と思った自分が間違っているのではないか、とも思ってしまうのは、自分の弱さなのでしょうか。
 
 ところで、embarkとは「Emacs Mini-Buffer Actions Rooted in Keymaps」の頭文字を取って名付けたようです。キーマップに基づきミニバッファで行うアクションといった意味になりますが、もともと embark は英語で「乗船する」という単語です。なかなかおしゃれなネーミングなのですね。
 
 [fn:embark] [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
 
-**** COMMENT 備考
+*** COMMENT 備考
 - 関係ないけど正規表現を試すには
   - [[https://koseki.hatenablog.com/entry/20110710/emacsReBuilder][Emacsの正規表現編集モード re-builder とややこしいバックスラッシュ問題について。 - こせきの技術日記]]
 
@@ -594,7 +598,7 @@ Emacsでもモードによっては同じように動作します（orgモード
   - embark-url-map
   - embark-general-map
 
-*** consult - switch-to-bufferなどの補完候補を拡張する
+** consult - switch-to-bufferなどの補完候補を拡張する
 - [[https://github.com/minad/consult][GitHub - minad/consult: consult.el - Consulting completing-read]]
 - 2022-03-02
   - 次のエラーが出るようになった
@@ -732,7 +736,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : consult
 
-*** embark-consult
+** embark-consult
 
 #+begin_src emacs-lisp
   ;; Consult users will also want the embark-consult package.
@@ -750,8 +754,8 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : embark-consult
 
-** org-mode関連の設定
-*** orgのためのディレクトリ設定
+* org-mode
+** orgのためのディレクトリ設定
 - org-agenda-filesのリストにDropboxのディレクトリを追加しておく。
   - この中にあるorgファイルがすべてagendaに反映される。
 - org-num-modeをすべてのファイルで実行する
@@ -760,17 +764,17 @@ Emacsでもモードによっては同じように動作します（orgモード
 
 - 設定するアジェンダファイル
 
-  | ファイル          | 内容                          |
-  |------------------+------------------------------|
-  | Memo.org         | 思いつき、メモを書きなぐり用   |
-  | Notebook.org     | ある程度きちんとしたメモ書き   |
+  | ファイル          | 内容                           |
+  |-------------------+--------------------------------|
+  | Memo.org          | 思いつき、メモを書きなぐり用   |
+  | Notebook.org      | ある程度きちんとしたメモ書き   |
   | ブログファイル    | ブログの記事をまとめたファイル |
   | emacs設定ファイル | orgファイルで書いたEmacsの設定 |
 
   - TODOはどのファイルに書いて良い
   - org-switchbかconsult-org-agendaをどこかにバインドするといいかも？（C-,）
     - C-c bにバインド
-*** org-modeの設定 [C-c l,a,c,m]
+** org-modeの設定 [C-c l,a,c,m]
 
 + TODOをMAYBE NEXT STARED WAITING DLEGATEDなど分けてもよいが、TODOに優先度#A #B #Cをつけるほうがアジェンダが見やすくなる
 
@@ -783,7 +787,6 @@ Emacsでもモードによっては同じように動作します（orgモード
     (("C-c l" . org-store-link)
      ("C-c a" . org-agenda)
      ("C-c c" . org-capture)
-     ;; ("C-c m" . (lambda () (interactive) (org-capture nil "m"))) ; Warning!
      )
     :custom
     (org-directory . "~/Dropbox/Org/")
@@ -807,7 +810,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : org-mode
 
-*** doctを利用したorg-captureの設定
+** doctを利用したorg-captureの設定
 
 - [[https://orgmode.org/manual/Capture-templates.html][Capture templates (The Org Manual)]]
 - [[https://www.5ing-myway.com/org-capture/][org-captureをカスタマイズして、すばやくメモを取る方法 | 趣味に生きる。]]
@@ -926,7 +929,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : doct
 
-*** org-tempo - ソースコードブロック入力の省力化
+** org-tempo - ソースコードブロック入力の省力化
    - "<el"+<TAB> 等でemacs-lispのソースコードブロックがでるように設定。
 
 #+begin_src emacs-lisp
@@ -955,7 +958,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : org-tempo
 
-*** org-latex関連                                                     :Qiita:
+** org-latex関連                                                     :Qiita:
 :PROPERTIES:
 :EXPORT_TITLE: Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版
 :QIITA-ID: 6c1b51b135eca9065902
@@ -964,7 +967,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 :QIITA-URL: https://qiita.com/ychubachi/private/6c1b51b135eca9065902
 :END:
 
-**** はじめに
+*** はじめに
 Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版です。
 
 LaTeXエンジンにはlualatexを使います。
@@ -985,7 +988,7 @@ bxjsarticleはjlreqを使うならば不要な気もしますが、一応。
 - LaTeXの文字列部分は別ファイルにするのがよいかもしれない
   - [[http://xahlee.info/emacs/emacs/elisp_read_file_content.html][Elisp: Read File Content as String or List of Lines]]
 
-**** init.elの設定                                                   :Qiita:
+*** init.elの設定                                                    :Qiita:
 leafを利用して設定しています。
 
 #+begin_src emacs-lisp :noweb yes
@@ -1073,11 +1076,11 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 :EXPORT_OPTIONS: toc:nil
 #+end_example
 
-**** 参考
+*** 参考
 - [[https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:org:latex:start][Org-LaTeX [QumaWiki]]]
 - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
 
-*** babel - Java/Ruby/Python/Grophviz (dot)
+** babel - Java/Ruby/Python/Grophviz (dot)
 
 - babelで評価するときに確認を出さない
   - [[https://emacs.stackexchange.com/questions/23946/how-can-i-stop-the-confirmation-to-evaluate-source-code-when-exporting-to-html][org mode - How can I stop the confirmation to evaluate source code when exporting to html? - Emacs Stack Exchange]]
@@ -1102,7 +1105,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : *babel
 
-*** スピードコマンド
+** スピードコマンド
 
 - tにするとヘッドラインの行頭にカーソルがあるとき、1文字でコマンドが打てる。
   - C-c C-n => n
@@ -1122,7 +1125,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : *org-use-speed-commands
 
-*** org2blog
+** org2blog
 
 #+begin_comment
 - [[id:o2b:ee0b1a39-a8d8-494b-9e7d-02d794982f19][embark - カーソル位置にあるテキストに対するアクションを実行]]を
@@ -1137,13 +1140,13 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 + 説明
   * orgでWordpressに投稿する
   * Buffer全体で記事を書く場合
-    | キーn操作  | 関数                          | 説明                |
-    |-----------+------------------------------+--------------------|
-    | C-c M-p g | org2blog-user-interface      | メニュー表示        |
-    | C-c M-p D | org2blog-buffer-page-save    | ページをWPに保存    |
-    | C-c M-p P | org2blog-buffer-page-publish | ページを公開        |
-    | C-c M-p d | org2blog-buffer-post-save    | ポストをWPに保存    |
-    | C-c M-p p | org2blog-buffer-post-publish | ポストを公開        |
+    | キーn操作 | 関数                         | 説明                 |
+    |-----------+------------------------------+----------------------|
+    | C-c M-p g | org2blog-user-interface      | メニュー表示         |
+    | C-c M-p D | org2blog-buffer-page-save    | ページをWPに保存     |
+    | C-c M-p P | org2blog-buffer-page-publish | ページを公開         |
+    | C-c M-p d | org2blog-buffer-post-save    | ポストをWPに保存     |
+    | C-c M-p p | org2blog-buffer-post-publish | ポストを公開         |
     | C-c M-p t | org2blog-complete            | カテゴリやタグの補完 |
 
 + 参考
@@ -1178,7 +1181,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : org2blog
 
-*** ox-hugo
+** ox-hugo
 - [[https://github.com/kaushalmodi/ox-hugo][GitHub - kaushalmodi/ox-hugo: A carefully crafted Org exporter back-end for Hugo]]
 
 #+begin_src emacs-lisp
@@ -1191,7 +1194,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : ox-hugo
 
-*** org-superstar
+** org-superstar
   * org-bullets の進化版
     + [[https://github.com/integral-dw/org-superstar-mode/blob/master/DEMO.org][org-superstar-mode/DEMO.org at master · integral-dw/org-superstar-mode · GitHub]]
   * asterisk
@@ -1210,8 +1213,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : org-superstar
 
-*** ox-zenn - zenn.devにブログを書く
-**** 参考
+** ox-zenn - zenn.devにブログを書く
+*** 参考
 + [[https://zenn.dev/conao3/articles/ox-zenn-usage][org-modeドキュメントからZenn Flavored Markdownを生成するox-zennの使い方]]
 
 #+begin_src emacs-lisp
@@ -1245,7 +1248,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : ox-zenn
 
-*** ox-pandoc - pandocでorgファイルからのエキスポートを拡張する
+** ox-pandoc - pandocでorgファイルからのエキスポートを拡張する
 + [[https://github.com/kawabata/ox-pandoc][kawabata/ox-pandoc: Another org-mode exporter via pandoc.]]
 
 #+begin_src emacs-lisp
@@ -1255,8 +1258,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : ox-pandoc
 
-*** org-pomodoro - ポモドーロテクニック [C-c p]
-**** 設定
+** org-pomodoro - ポモドーロテクニック [C-c p]
+*** 設定
 
 1. TODOのエントリーを書く
 2. M-x org-pomodoroでタイマースタート
@@ -1273,10 +1276,10 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : org-pomodoro
 
-**** 参考
+*** 参考
 + [[https://fnwiya.hatenablog.com/entry/2016/01/11/203000][emacsでポモドーロテクニック（org-pomodoro） - fnwiya's quine]]
 
-*** org-contrib - Non GNUのorgパッケージ
+** org-contrib - Non GNUのorgパッケージ
 
 + 利用するパッケージ
   * ox-taskjuggler
@@ -1293,9 +1296,9 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : org-contrib
 
-*** org-publish
+** org-publish
 
-**** 説明
+*** 説明
 
 https://chubachi.net/publish
   index.html
@@ -1305,7 +1308,7 @@ https://chubachi.net/publish
       fig1.jpg
 
 
-**** 設定
+*** 設定
 
 - 設定は各プロジェクトで行うことにした
   - 下は一例
@@ -1345,7 +1348,7 @@ https://chubachi.net/publish
 #+RESULTS:
 : *org-publish-project-alist
 
-**** 参考
+*** 参考
 - [[https://orgmode.org/manual/Complex-example.html][Complex example (The Org Manual)]]
 
 
@@ -1356,7 +1359,7 @@ https://chubachi.net/publish
 + Upload
   + [[https://orgmode.org/manual/Complex-example.html][Complex example (The Org Manual)]]
 
-*** PlantUML
+** PlantUML
 - 参考
    - [[https://qiita.com/sambatriste/items/2e01d5aa91903ae72b24][org-modeでUMLを埋め込み(PlantUML) - Qiita]]
 
@@ -1380,7 +1383,7 @@ https://chubachi.net/publish
 #+RESULTS:
 [[file:animal.png]]
 
-*** org-download
+** org-download
 
 - [[https://github.com/abo-abo/org-download][abo-abo/org-download: Drag and drop images to Emacs org-mode]]
 
@@ -1400,6 +1403,7 @@ https://chubachi.net/publish
 #+RESULTS:
 : org-download
 
+* 作業中 :WIP:
 * COMMENT #古いinit.el
 ** 古いinit.elをとりあえず放り込む
 
@@ -3986,11 +3990,11 @@ C-c qにvisual-fill-column-modeにするキーを割り当てました。M-qでf
 
 また、一行を基準に動作する標準のキーを、画面の一行を基準に動作するコマンドに、次の通り置き換えています[fn:1]。
 
-| キー | 説明                         |
-|-----+-----------------------------|
-| C-a | *画面上の* 行の一番先頭に移動 |
-| C-e | *画面上の* 行の一番末尾に移動 |
-| C-k | *画面上の* 行を一行削除       |
+| キー | 説明                          |
+|------+-------------------------------|
+| C-a  | *画面上の* 行の一番先頭に移動 |
+| C-e  | *画面上の* 行の一番末尾に移動 |
+| C-k  | *画面上の* 行を一行削除       |
 
 この設定により、折り返す桁を自由に指定できる上に、画面上の一行を単位として編集できます。
 
@@ -4155,14 +4159,14 @@ Emacs標準のメール送信機能を利用するための設定です[fn:sendi
 メールを編集して送信するコマンドは次の通りです。
 
 | C-x m   | メール編集（Messageモード） |
-| C-c C-c | メール送信                 |
-| C-c C-a | ファイルの添付[fn:mime]    |
+| C-c C-c | メール送信                  |
+| C-c C-a | ファイルの添付[fn:mime]     |
 
 関連する設定ファイルです。
 
-| ~/.signature | メール署名[fn:signature]           |
+| ~/.signature | メール署名[fn:signature]            |
 | ~/.authinfo  | smtpサーバ・パスワード[fn:authinfo] |
-| ~/.netrc     | エイリアス                         |
+| ~/.netrc     | エイリアス                          |
 
 ユーザ名とアカウントを設定します。
 
@@ -4296,12 +4300,12 @@ SMTPのパスワードは~/.authinfoで設定します。
 
 + スレッドモードの操作
 
-| キー | 説明              |
-|-----+------------------|
-| m   | 新規メッセージ    |
-| n   | 次の行            |
-| SPC | メールを読み進める |
-| M-n | 次のスレッド      |
+| キー | 説明               |
+|------+--------------------|
+| m    | 新規メッセージ     |
+| n    | 次の行             |
+| SPC  | メールを読み進める |
+| M-n  | 次のスレッド       |
 
 **** 設定:notmuch [C-c r]
 
@@ -4833,7 +4837,7 @@ emacs-lisp-mode-hook
 
 Wanderlustが依存するライブラリ
 
-| SEMI | MIMEサポート                                |
+| SEMI | MIMEサポート                                 |
 | APEL | 基礎的な多種の関数群（charactor-encoding等） |
 | FLIM | MIME用符号化（base64エンコーディング等）     |
 
