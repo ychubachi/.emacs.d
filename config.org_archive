@@ -355,3 +355,64 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 | 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
 |----------------------+----------+------------------|
 #+end_example
+
+* Copyright
+:PROPERTIES:
+:ARCHIVE_TIME: 2025-01-07 火 22:25
+:ARCHIVE_FILE: ~/.emacs.d/config.org
+:ARCHIVE_OLPATH: COMMENT 古いREADME.org → 記事にしたものを移す/必須設定
+:ARCHIVE_CATEGORY: config
+:END:
+- Copyright など。
+
+#+begin_src emacs-lisp
+  ;;; README.el --- My README.el  -*- lexical-binding: t; -*-
+
+  ;; Copyright (C) 2020 Yoshihide Chubachi
+
+  ;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
+
+  ;; This program is free software: you can redistribute it and/or modify
+  ;; it under the terms of the GNU General Public License as published by
+  ;; the Free Software Foundation, either version 3 of the License, or
+  ;; (at your option) any later version.
+
+  ;; This program is distributed in the hope that it will be useful,
+  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ;; GNU General Public License for more details.
+
+  ;; You should have received a copy of the GNU General Public License
+  ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+  ;;; Commentary:
+
+  ;;  My README.el.
+
+  ;;; Code:
+  (my-tick-init-time "loading README.el")
+#+end_src
+
+* カスタマイズ変数の設定
+:PROPERTIES:
+:ARCHIVE_TIME: 2025-01-07 火 22:26
+:ARCHIVE_FILE: ~/.emacs.d/config.org
+:ARCHIVE_OLPATH: COMMENT 古いREADME.org → 記事にしたものを移す/必須設定
+:ARCHIVE_CATEGORY: config
+:END:
+- 一旦全て設定せず、必要になったら再度設定する
+- グローバルモードの設定がカスタマイズ変数でもできる場合、カスタマイズ変数を使用
+
+#+begin_src emacs-lisp
+  (leaf cus-start
+    :doc "define customization properties of builtins"
+    :tag "builtin" "internal"
+    :custom)
+#+end_src
+
+#+RESULTS:
+: cus-start
+
++ 参考
+  * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
+  * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]

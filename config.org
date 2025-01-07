@@ -889,43 +889,9 @@
           ))
 #+end_src
 
-*** Look-And-Feel
+#+RESULTS:
+: embark-consult
 
-#+begin_src emacs-lisp
-      (leaf Look-And-Feel
-        :init
-#+end_src
-** modus-themes
-#+begin_src emacs-lisp
-        (leaf modus-themes
-          :disabled t
-          :straight t                     ; omit this to use the built-in themes
-          :custom
-          (modus-themes-italic-constructs . nil)
-          (modus-themes-bold-constructs . nil)
-          (modus-themes-region . '(bg-only no-extend))
-          (modus-themes-org-blocks . 'gray-background) ; {nil,'gray-background,'tinted-background}
-          (modus-themes-subtle-line-numbers . t)
-          (modus-themes-mode-line . '(moody borderless (padding . 0) (height . 0.9)))
-          (modus-themes-syntax . '(yellow-comments green-strings))
-          (modus-themes-hl-line . '(underline accented)) ;'(underline accented)
-          (modus-themes-paren-match . '(intense underline))
-          ;; (modus-themes-headings . ; this is an alist: read the manual or its doc string
-          ;;                        ;; https://typescale.com/ 1.125 - Major Second
-          ;;                        '((1 . (bold 1.802))
-          ;;                          (2 . (regular 1.602))
-          ;;                          (3 . (bold 1.424))
-          ;;                          (4 . (regular 1.266))
-          ;;                          (5 . (reqular 1.125))
-          ;;                          (t . (regular))))
-          :init
-          (require-theme 'modus-themes)
-          ;; Load the theme of your choice:
-          (load-theme 'modus-operandi :no-confirm)
-          ;; (load-theme 'modus-vivendi :no-confirm)
-          :bind
-          ("<f5>" . modus-themes-toggle)))
-#+end_src
 ** メールクライアント
 #+begin_src emacs-lisp
 
@@ -992,6 +958,10 @@
                 (notmuch-tree-tag (list "+flagged"))))))
 
   #+end_src
+
+#+RESULTS:
+: notmuch
+
 ** ol-notmuch
 #+begin_src emacs-lisp
         (leaf ol-notmuch
@@ -1375,13 +1345,18 @@
               :init
 
               #+end_src
-** warning-suppress-types
+** 実行時に出る警告を非表示にする
+
 #+begin_src emacs-lisp
-              (leaf *warnings
-                :custom
-                (warning-suppress-types . '(((yasnippet backquote-change))
-                                            (org-element-cache)))))
+  (leaf *warnings
+    :custom
+    (warning-suppress-types . '(((yasnippet backquote-change))
+                                (org-element-cache)))))
 #+end_src
+
+#+RESULTS:
+: *warnings
+
 ** headline
 #+begin_src emacs-lisp
 
@@ -1914,7 +1889,7 @@
           )
 
 #+end_src
-*** headline
+** headline
 #+begin_src emacs-lisp
         (leaf Org-Documentation
           :init
@@ -2377,68 +2352,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 - すべてのパッケージの前に実行するために、init.elに設定
   - [[https://github.com/emacscollective/no-littering][emacscollective/no-littering: Help keeping ~/.emacs.d clean]]
-
-** 必須設定
-*** Copyright
-- Copyright など。
-
-#+begin_src emacs-lisp
-  ;;; README.el --- My README.el  -*- lexical-binding: t; -*-
-
-  ;; Copyright (C) 2020 Yoshihide Chubachi
-
-  ;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
-
-  ;; This program is free software: you can redistribute it and/or modify
-  ;; it under the terms of the GNU General Public License as published by
-  ;; the Free Software Foundation, either version 3 of the License, or
-  ;; (at your option) any later version.
-
-  ;; This program is distributed in the hope that it will be useful,
-  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ;; GNU General Public License for more details.
-
-  ;; You should have received a copy of the GNU General Public License
-  ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-  ;;; Commentary:
-
-  ;;  My README.el.
-
-  ;;; Code:
-  (my-tick-init-time "loading README.el")
-#+end_src
-
-*** カスタマイズ変数の設定
-- 一旦全て設定せず、必要になったら再度設定する
-- グローバルモードの設定がカスタマイズ変数でもできる場合、カスタマイズ変数を使用
-
-#+begin_src emacs-lisp
-  (leaf cus-start
-    :doc "define customization properties of builtins"
-    :tag "builtin" "internal"
-    :custom
-#+end_src
-
-#+RESULTS:
-: cus-start
-
-+ 参考
-  * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
-  * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
-
-*** 警告の非表示
-
-#+begin_src emacs-lisp
-  (leaf warnings
-    :custom
-    (warning-suppress-types . '(((yasnippet backquote-change))
-                                (org-element-cache))))
-#+end_src
-
-#+RESULTS:
-: warnings
 
 ** Emacs本体の設定
 *** COMMENT バッファを表示するウインドウを固定する
