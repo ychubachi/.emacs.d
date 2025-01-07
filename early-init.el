@@ -22,6 +22,8 @@
 
 ;;; Code:
 
+(setq package-enable-at-startup nil)
+
 (eval-and-compile
   (prog1 "package"
     (customize-set-variable
@@ -52,9 +54,13 @@
     (straight-use-package 'leaf-keywords)
     (leaf-keywords-init)))
 
-(when (fboundp 'startup-redirect-eln-cache)
-  (startup-redirect-eln-cache
-   (convert-standard-filename
-          (expand-file-name  "var/eln-cache/" user-emacs-directory))))
+(leaf org :straight t)
+
+(when (and (fboundp 'startup-redirect-eln-cache)
+         (fboundp 'native-comp-available-p)
+         (native-comp-available-p))
+(startup-redirect-eln-cache
+ (convert-standard-filename
+  (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 
 ;;; early-init.el ends here

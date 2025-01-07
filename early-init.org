@@ -1,13 +1,12 @@
-#+TITLE: config.el
+#+TITLE: early-init.el.el
 #+AUTHOR: Yoshihide Chubachi
 
-* early-init.el
 
 #+begin_comment
 + early-init.elを生成するには C-c C-v t (org-babel-tangle) を実行
 #+end_comment
 
-** あらまし
+* あらまし
 + early-init.elはinit.elより前に読み込まれる設定ファイルである
 + ここでパッケージ管理機能の初期設定等を行うと、後で読み込まれるinit.elに反映さ
   れる
@@ -15,7 +14,7 @@
   はじめからその設定で表示される
   + init.elで変更すると一度デフォルトのサイズで表示されてから、設定したサイズに
     切り替わるので画面がちらつく
-** ヘッダー
+* ヘッダー
 #+begin_src emacs-lisp :tangle "early-init.el"
   ;;; early-init.el --- My early-init.el  -*- lexical-binding: t; -*-
   ;; Copyright (C) 2022-2025 Yoshihide Chubachi
@@ -42,8 +41,20 @@
   ;;; Code:
 #+end_src
 
-** パッケージ関連
+* 設定
+** パッケージシステムの自動初期化を行わせない
++ Emacs 27以降、 init.el を実行する前に自動的に (package-initialize) を実行する
++ ここではパッケージマネージャを手動で初期化するので、自動実行を行わないようにす
+  る
+  + これにより (package-initialize) が二重に実行されるのを防ぐ
++ 参考
+  + [[https://www.reddit.com/r/emacs/comments/t66hue/what_does_setq_packageenableatstartup_nil/][What does "(setq package-enable-at-startup nil) (package-initialize)" in Emacs config do? : r/emacs]]
 
+#+begin_src emacs-lisp :tangle "early-init.el"
+  (setq package-enable-at-startup nil)
+#+end_src
+
+** パッケージマネージャの初期化
 + 標準パッケージとstraight.el、leafを設定
 
 #+begin_src emacs-lisp :tangle "early-init.el"
@@ -77,17 +88,31 @@
       (straight-use-package 'leaf-keywords)
       (leaf-keywords-init)))
 #+end_src
+* orgパッケージを最新にする
++ orgパッケージを最新バージョンに更新する
++ init.elでconfig.orgをタングルする前に行う
 
-** no-litteringのための設定
-+  https://github.com/emacscollective/no-littering/blob/master/README.org
+#+begin_src emacs-lisp :tangle "early-init.el"
+(leaf org :straight t)
+#+end_src
+
+** ネイティブコンパイルのキャッシュ設定
++ no-litteringのための設定
++ Emacs 29以上の際に行うと良いようだ
+  + https://github.com/emacscollective/no-littering/blob/master/README.org
 
 #+Begin_src emacs-lisp :tangle early-init.el
-  (when (fboundp 'startup-redirect-eln-cache)
-    (startup-redirect-eln-cache
-     (convert-standard-filename
-            (expand-file-name  "var/eln-cache/" user-emacs-directory))))
+  (when (and (fboundp 'startup-redirect-eln-cache)
+           (fboundp 'native-comp-available-p)
+           (native-comp-available-p))
+  (startup-redirect-eln-cache
+   (convert-standard-filename
+    (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 #+end_src
-** フッター
+
+#+RESULTS:
+
+* フッター
 #+begin_src emacs-lisp :tangle early-init.el
 ;;; early-init.el ends here
 #+end_src

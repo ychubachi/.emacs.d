@@ -37,14 +37,6 @@
   ;;; Code:
 #+end_src
 
-** orgパッケージの更新
-+ orgパッケージを最新バージョンに更新する
-+ これはタングルする前に行う
-
-#+begin_src emacs-lisp :tangle "init.el"
-(leaf org :straight t)
-#+end_src
-
 ** tangle-file
 
 + ファイルをタングルする
