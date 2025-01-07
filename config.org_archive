@@ -131,3 +131,115 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 | 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
 |----------------------+----------+------------------|
 #+end_example
+
+* EmacsのX関係の設定を外部化する                                :PUBLISHED:
+:PROPERTIES:
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-xresources.html
+:EXPORT_OPTIONS:  toc:nil num:nil
+:ARCHIVE_TIME: 2025-01-07 火 21:17
+:ARCHIVE_FILE: ~/.emacs.d/config.org
+:ARCHIVE_OLPATH: COMMENT 古いREADME.org → 記事にしたものを移す/はじめに
+:ARCHIVE_CATEGORY: config
+:END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: EmacsのX関係の設定を外部化する
+permalink: /archives/248.html
+published: true
+---
+#+end_export
+
+** Emacs の X resources 設定
+Emacs をX環境でグラフィカルに起動すると、 Emacs はXクライアントアプリケーションとなりますから、 [[https://wiki.archlinux.jp/index.php/X_resources][X resources ]]を利用した設定を読み込みます。フォントやウインドウの大きさなどを設定できます。
+
+これらの設定は、Emacs lisp で書く init.el でもできますが、 Emacs はコンソール端末でXウインドウを使わず作業をすることも多いです。そのため、 X resources で設定できるものは、init.elではなくX resources の方に設定しておくというのも一つの考え方です。
+
+また、 init.el  でウインドウのサイズを設定すると、一旦標準のサイズで立ち上がってから  改めて設定されたサイズに切り替わるという、ギクシャクした振る舞いになります。resources に設定しておくと、スムーズに起動します（起動時間も多少、早くなるかもしれません）。
+
+設定できるのは、次の例の通り、Xウインドウで動作するEmacsのフォントや、行間（lineSpacing）、ウインドウのサイズ（geometry）などです。設定できる項目の一覧は [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Table-of-Resources.html][Table-of-Resources]] にあります。プログラム名は Emacs にしました[fn:1]。
+
+#+begin_example
+!! ~/.Xresources
+Emacs.font: Noto Sans Mono CJK JP-12
+Emacs.lineSpacing: 0
+Emacs.geometry: 220x38-80+50
+Emacs.cursorBlink: off
+Emacs.coursorColor: dark green
+Emacs.menuBar: on
+Emacs.toolBar: off
+Emacs.tabBar: on
+Emacs.verticalScrollBars: off
+Eamcs.useXIM: off
+#+end_example
+
+この設定を有効にするには、ターミナルで
+#+begin_src bash
+  xrdb ~/.Xresources
+#+end_src
+
+と打ちます。設定されたか確認するには、
+#+begin_src bash
+  xrdb -query
+#+end_src
+
+とします。この設定は logout すると無効になりますから、 Emacs を起動する前に必ず xrdb コマンドを実行しなくてはなりません。通常のXデスクトップ環境でしたら .xinitrc にこの設定をします。WSL では、 .bashrc に書いてしまって良いでしょう。
+
+#+begin_src bash
+  [[ -f ~/.Xresources ]] && xrdb ~/.Xresources
+#+end_src
+
+** Emacsでの動作確認
+.Xresources に書いた設定が読み込まれるかEmacsで試してみる方法は次のとおりです。
+
+#+begin_src bash
+  emacs -q
+#+end_src
+
+オプションは -Q でなく -q です。 -Q だと Emacs は Xリソースを処理しません[fn:2]。
+
+[fn:1] [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][Emacsでは通常、‘emacs’です。Emacsの実行可能ファイル名の如何にかかわらずに、Emacsのすべてのインスタンスに適用される定義を指定するには、‘Emacs’を使用します。]]
+
+[fn:2]  [[https://ayatakesi.github.io/emacs/27.1/html/Resources.html][変数inhibit-x-resourcesを非nil値にセットした場合、EmacsはXリソースを処理しません。コマンドラインオプション‘-Q’ (または‘--quick’)でEmacsを呼び出した場合、inhibit-x-resourcesは自動的にtにセットされます]]
+** フォントの確認
+
+Xウインドウで設定したフォントを確認してみましょう。本当は全て等幅になるとよいのですが、なかなか難しい・・・。
+
+- [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]] より
+#+begin_example
+| mmmm |
+| llll |
+| 日本 |
+| 漢字 |
+| ああ |
+| んん |
+| ￥￥ |
+| \\\\ |
+| 　　   |
+|      |
+
+|abcdefghijkl|
+|ABCDEFGHIJKL|
+|'";:-+=/\~`?|
+|∞≤≥∏∑∫|
+|×±≒≡⊆⊇|  ← GUI だと一部半角になる
+|αβγδεζ|  ← GUI だと半角になる
+|ηθικλμ|  ← GUI だと半角になる
+|ΑΒΓΔΕΖ|  ← GUI だと半角になる
+|ΗΘΙΚΛΜ|  ← GUI だと半角になる
+|日本語の美観|
+|あいうえおか|
+|アイウエオカ|
+|ｱｲｳｴｵｶｷｸｹｺｻｼ|
+
+| hoge                 | hogeghoe | age              |
+|----------------------+----------+------------------|
+| 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
+|----------------------+----------+------------------|
+#+end_example

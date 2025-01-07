@@ -2339,25 +2339,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 + コメントアウトを徐々に外して行く
 
 ** はじめに
-*** この設定について
-- init.elの実行時、このREADME.orgからREADME.elを生成します。
-- orgのハッケージはinit.el内で最新版に更新しておきます。
-
-*** 事前にインストールしておくもの
-- 各種フォント
-  - Noto Sans Mono CJK JP-12
-- migemo
-  - cmigemo
-- pygment
-  - python3をインストール
-  - /home/yc/.local/binにパス
-  - pip install -U pip
-  - pip install pygments
-- graphviz(dot)
-  - sudo apt install graphviz
-- org-roam
-  - sqlite3
-
 *** EmacsのX関係の設定を外部化する                                :PUBLISHED:
 :PROPERTIES:
 :EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-xresources.html
