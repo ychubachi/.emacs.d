@@ -3317,7 +3317,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : org-tempo
 
-*** org-latex関連 :Qiita:PUBLISHED:
+*** org-latex関連 :PUBLISHED:
 :PROPERTIES:
 :EXPORT_TITLE: Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版
 :QIITA-ID: 6c1b51b135eca9065902
