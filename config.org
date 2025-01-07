@@ -3324,7 +3324,7 @@ Emacsでもモードによっては同じように動作します（orgモード
 #+RESULTS:
 : org-tempo
 
-*** org-latex関連                                                     :Qiita:
+*** org-latex関連 :Qiita:PUBLISHED:
 :PROPERTIES:
 :EXPORT_TITLE: Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版
 :QIITA-ID: 6c1b51b135eca9065902
@@ -3354,7 +3354,7 @@ bxjsarticleはjlreqを使うならば不要な気もしますが、一応。
 - LaTeXの文字列部分は別ファイルにするのがよいかもしれない
   - [[http://xahlee.info/emacs/emacs/elisp_read_file_content.html][Elisp: Read File Content as String or List of Lines]]
 
-**** init.elの設定                                                   :Qiita:
+**** init.elの設定
 leafを利用して設定しています。
 
 #+begin_src emacs-lisp :noweb yes
