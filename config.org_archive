@@ -1,0 +1,21 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/yc/.emacs.d/config.org
+
+
+* COMMENT google-this
+:PROPERTIES:
+:ARCHIVE_TIME: 2025-01-07 火 19:43
+:ARCHIVE_FILE: ~/.emacs.d/config.org
+:ARCHIVE_OLPATH: 現在使用中の設定
+:ARCHIVE_CATEGORY: config
+:END:
++ ほとんど使わない
++ キーバインドがorgとかぶる
+#+begin_src emacs-lisp
+        (leaf google-this
+          :straight t
+          :config
+          (google-this-mode 1))
+  #+end_src

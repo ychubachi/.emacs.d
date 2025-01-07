@@ -1278,13 +1278,6 @@
 
 
 #+end_src
-** COMMENT google-this
-#+begin_src emacs-lisp
-        (leaf google-this
-          :straight t
-          :config
-          (google-this-mode 1))
-  #+end_src
 ** headline
 #+begin_src emacs-lisp
 
