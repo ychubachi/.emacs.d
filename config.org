@@ -1581,12 +1581,6 @@
 : ruler-mode
 
 ** TODO Org
-
-#+begin_src emacs-lisp
-(leaf Org-Mode
-        :init
-#+end_src
-
 *** Org-Mode全般の設定
 
 #+begin_src emacs-lisp
@@ -1721,12 +1715,8 @@
                                       ":END:"
                                       "\n** %?"))))))))
 #+end_src
-** FIXME OrgのLook-And-Feel
-#+begin_src emacs-lisp
-        (leaf Org-Look-And-Feel
-          :init
-#+end_src
-**** org-modern
+** OrgのLook-And-Feel
+*** org-modern
 #+begin_src emacs-lisp
           (leaf org-modern
             :disabled nil
@@ -1782,7 +1772,7 @@
             (global-org-modern-mode))
 
 #+end_src
-**** org-superstar
+*** org-superstar
 #+begin_src emacs-lisp
   (leaf org-superstar
             :disabled t
@@ -1791,11 +1781,9 @@
             (add-hook 'org-mode-hook (lambda nil (org-superstar-mode 1)))
             (setq org-superstar-headline-bullets-list
                   '("●" "■" "▷" "○"))) ; TODO: org-modernと重複？
-          )
-
 #+end_src
 ** Org-Documentation
-* org-latex関連 :PUBLISHED:
+**** org-latex関連 :PUBLISHED:
 :PROPERTIES:
 :EXPORT_TITLE: Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版
 :QIITA-ID: 6c1b51b135eca9065902
@@ -2160,11 +2148,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (leaf
       :when (eq system-type 'windows-nt)
       :custom (org-download-screenshot-method . "magick convert clipboard: %s")))
-#+end_src
-
-**** FIXME
-#+begin_src emacs-lisp
-  )
 #+end_src
 
 **** TODO org-modeとimenuの連携 → leafにする
