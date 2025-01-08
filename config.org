@@ -467,8 +467,6 @@
   (leaf Main
     :disabled nil
     :init
-    (leaf Builtin-Packages
-      :init
 #+end_src
 *** メールアドレスの設定
 #+begin_src emacs-lisp
@@ -562,11 +560,6 @@
         (let ((vc-handled-backends nil)) ad-do-it)))
     #+end_src
 
-** FIXME
-
-#+begin_src emacs-lisp
-  ) ; CHECK
-#+end_src
 
 ** FIXME External-Packages
 *** leaf-tree
@@ -1218,7 +1211,7 @@
               :bind ((emacs-lisp-mode-map
                       ("M-RET" . emr-show-refactor-menu)))))))
 #+end_src
-*** Global-Key-Bindngs
+** Global-Key-Bindngs
 #+begin_src emacs-lisp
       (leaf Global-Key-Bindings
         :init
