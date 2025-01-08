@@ -1130,17 +1130,13 @@
                    (scheme-mode-hook . enable-paredit-mode)))
 #+end_src
 ** Global-Bindings
-#+begin_src emacs-lisp
-  (leaf Global-Bindings
-    :init
-#+end_src
-*** macrostep
+*** TODO macrostep
 #+begin_src emacs-lisp
             (leaf macrostep               ; to test leaf macros.
               :doc "interactive macro expander"
               :url "https://github.com/joddie/macrostep"
               :straight t
-              :bind (("C-c e" . macrostep-expand)))) ;; TODO: elisp mode?
+              :bind (("C-c e" . macrostep-expand))) ;; TODO: elisp mode?
 #+end_src
 *** Emacs-Lisp-Mode-Hook
 #+begin_src emacs-lisp
@@ -1186,11 +1182,6 @@
                 (call-interactively 'ert))))
 
    #+end_src
-** Emacs-Lisp-Mode-Map
-#+begin_src emacs-lisp
-       (leaf Emacs-Lisp-Mode-Map
-            :init
-#+end_src
 *** emacs-refactor
 #+begin_src emacs-lisp
             (leaf emacs-refactor
@@ -1275,8 +1266,6 @@
                  ("C-a" . beginning-of-visual-line)
                  ("C-e" . end-of-visual-line)
                  ("C-k" . kill-visual-line))))
-        ;; End of Global-Key-Bindings
-        )
 #+end_src
 ** Emacs-Startup-Hook
 *** yasnippet-snippetsの設定
@@ -1308,6 +1297,8 @@
 #+begin_src emacs-lisp
   (leaf TODO:Unorganized
     :init
+    (leaf Misc
+      :init
               #+end_src
 *** 実行時に出る警告を非表示にする
 
@@ -1315,7 +1306,7 @@
   (leaf *warnings
     :custom
     (warning-suppress-types . '(((yasnippet backquote-change))
-                                (org-element-cache))))
+                                (org-element-cache)))))
 #+end_src
 
 #+RESULTS:
