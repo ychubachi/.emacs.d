@@ -1184,11 +1184,7 @@
               :bind ((emacs-lisp-mode-map
                       ("M-RET" . emr-show-refactor-menu))))))
 #+end_src
-** FIXME Global-Key-Bindngs
-#+begin_src emacs-lisp
-      (leaf Global-Key-Bindings
-        :init
-#+end_src
+** Global-Key-Bindngs
 *** perspective
 #+begin_src emacs-lisp
         (leaf perspective
@@ -1458,10 +1454,6 @@
     :straight t
     :hook
     (prog-mode-hook . rainbow-delimiters-mode))
-#+end_src
-** FIXME
-#+begin_src emacs-lisp
-  )
 #+end_src
 ** COMMENT 不使用パッケージ
 #+begin_src emacs-lisp
