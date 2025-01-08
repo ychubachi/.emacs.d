@@ -416,3 +416,2690 @@ Xウインドウで設定したフォントを確認してみましょう。本�
 + 参考
   * [[https://ayatakesi.github.io/emacs/24.5/Backup-Names.html][GNU Emacs Manual(Japanese Translation): Backup Names]]
   * If delete-old-versions is t, Emacs deletes the excess backup files silently.]]
+
+* COMMENT 古いREADME.org → 記事にしたものを移す
+:PROPERTIES:
+:ARCHIVE_TIME: 2025-01-08 水 20:42
+:ARCHIVE_FILE: ~/.emacs.d/config.org
+:ARCHIVE_CATEGORY: config
+:END:
+
+** TODO 作業方針
++ 文書の全体構造はこちらを活かす
++ コメントアウトを徐々に外して行く
+
+** はじめに
+*** 参考になるサイト
+- [[http://xahlee.info/emacs/emacs/elisp.html][Practical Emacs Lisp]]
+*** no-littering - .emacs.d/をきれいに保つ
+
+- すべてのパッケージの前に実行するために、init.elに設定
+  - [[https://github.com/emacscollective/no-littering][emacscollective/no-littering: Help keeping ~/.emacs.d clean]]
+
+** Emacs本体の設定
+*** COMMENT バッファを表示するウインドウを固定する
+
+- [[https://ayatakesi.github.io/lispref/27.1/html/Buffer-Display-Action-Functions.html][Buffer Display Action Functions (GNU Emacs Lisp Reference Manual)]]
+- [[https://github.com/nex3/perspective-el][nex3/perspective-el: Perspectives for Emacs.]]
+
+#+begin_src emacs-lisp :tangle no
+  (leaf *display-buffer-base-action
+    :config
+    (customize-set-variable
+     'display-buffer-base-action
+     '((display-buffer-reuse-window display-buffer-same-window)
+       (reusable-frames . t)))
+    (customize-set-variable 'even-window-sizes nil))
+#+end_src
+
+#+RESULTS:
+: *display-buffer-base-action
+
+*** COMMENT デバッグの設定
+
+[[https://flex.phys.tohoku.ac.jp/texi/emacs-jp/emacs-jp_165.html][GNU Emacs Manual - Lisp Debug]]
+
+#+begin_src emacs-lisp :tangle no
+  (setq debug-on-error t)
+#+end_src
+
+** ビルトインパッケージの設定
+*** dired
+
+- driedを2つ開いたとき、もう一方をターゲットにする
+  - [[https://qiita.com/mtmtcode/items/8665122e01f6f5ef502f][Emacs標準のファイラdiredの基本的な使い方と便利なTipsいくつか - Qiita]]
+
+#+begin_src emacs-lisp
+  (leaf dired :custom (dired-dwim-target . t))
+#+end_src
+
+#+RESULTS:
+: dired
+
+*** tramp
+
+
+#+begin_src emacs-lisp
+  (leaf tramp
+    :config
+    (defadvice tramp-sh-handle-vc-registered (around tramp-sh-handle-vc-registered activate)
+      (let ((vc-handled-backends nil)) ad-do-it)))
+#+end_src
+
+#+RESULTS:
+: tramp
+
+*** files (auto-save/backup)
+
+#+begin_src emacs-lisp
+  (leaf files
+    :custom
+    (backup-directory-alist . '(("." . ".backup~")))
+    (delete-old-versions . t)
+    (version-control . t))
+#+end_src
+
+#+RESULTS:
+: files
+
+*** display-fill-column-indicator
+
+#+begin_src emacs-lisp
+  (leaf display-fill-column-indicator
+    :hook
+    (emacs-startup-hook . global-display-fill-column-indicator-mode))
+#+end_src
+
+#+RESULTS:
+: display-fill-column-indicator
+
+*** display-line-numbers
+
+#+begin_src emacs-lisp
+  (leaf display-line-numbers
+    :custom
+    (display-line-numbers-width . 5)       ; 表示する行番号の桁数
+    :hook
+    (emacs-startup-hook . global-display-line-numbers-mode))
+#+end_src
+
+#+RESULTS:
+: display-line-numbers
+
+*** save-places
+
+#+begin_src emacs-lisp
+  (leaf save-place
+    :custom
+    (save-place . t)
+    :hook
+    (emacs-startup-hook . save-place-mode))
+#+end_src
+
+*** auto-revert
+更新されたら自動的に再読込
+
+#+begin_src emacs-lisp
+  (leaf auto-revert
+    :custom
+    (auto-revert-interval . 1)           ; 再読み込みの間隔
+    (auto-revert-verbose . nil)          ; 再読込の際、メッセージを非表示
+    (auto-revert-check-vc-info . t)      ; VCで更新があった場合、自動で更新
+    :hook
+    (emacs-startup-hook . global-auto-revert-mode))
+#+end_src
+
+#+RESULTS:
+: auto-revert
+
+*** paren
+
+#+begin_src emacs-lisp
+  (leaf paren
+    :custom
+    (show-paren-style . 'mixed)
+    :hook
+    (emacs-startup-hook . show-paren-mode))
+#+end_src
+
+#+RESULTS:
+: paren
+
+*** isearch [C-o]                                                     :FIXME:
+
+- isearch で漢字入力ができるようにする
+
+#+begin_src emacs-lisp
+  (leaf isearch
+    :bind ((isearch-mode-map
+            ("C-o" . isearch-toggle-input-method))))
+#+end_src
+
+*** wdired [C-o]                                                      :FIXME:
+- 関連する設定
+  - [[id:o2b:bcb13905-ddce-476c-bfd9-273dd58d7395][dired-launch - diredをランチャにする（WSL対応）]]
+- [[https://www.emacswiki.org/emacs/DiredPlus][[Home] Dired Plus]]
+
+- [[https://ohzeki.hatenablog.com/entry/20160115/1452838970][Emacsのdired表示でファイル名編集 - ohzeki’s diary]]
+
+#+begin_src emacs-lisp
+  (leaf wdired
+    :doc "Rename files editing their names in dired buffers"
+    :tag "builtin"
+    :added "2020-11-21"
+    :require t
+    :config
+    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
+    :bind ((wdired-mode-map
+            ("C-o" . toggle-input-method))))
+#+end_src
+
+#+RESULTS:
+: wdired
+
+*** recentf
+
+#+begin_src emacs-lisp
+    (leaf recentf
+      :custom
+      (recentf-max-menu-items  . 25)
+      (recentf-max-saved-items . 2000)
+      (recentf-auto-cleanup    . 'never)
+      (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:"))
+      :hook
+      (emacs-startup-hook . recentf-mode)
+      :config
+      (run-at-time nil (* 5 60)
+               (lambda ()
+                 (let ((save-silently t)) ; FIXME
+                   (recentf-save-list))))
+      )
+#+end_src
+
+#+RESULTS:
+: recentf
+
+*** midnight - 一定期間使用しなかった buffer を自動削除
+- 使い方、これでいいのかな？
+- [[https://uwabami.github.io/cc-env/Emacs.html][midnight: 一定期間使用しなかった buffer を自動削除]]
+
+#+begin_src emacs-lisp
+  (leaf midnight
+    :custom
+    ((clean-buffer-list-delay-general . 1))
+    :hook
+    (emacs-startup-hook . midnight-mode))
+#+end_src
+
+#+RESULTS:
+: midnight
+
+*** imenu-list [C-c i]
+
+- [[https://github.com/bmag/imenu-list][bmag/imenu-list: Emacs plugin to show the current buffer's imenu entries in a separate buffer]]
+- 本家ではC-c 'にバインドしているが、Orgとかち合うので C-c i にバインド
+- display-line-numbersで出している行番号が邪魔なので非表示に
+
+#+begin_src emacs-lisp
+  (leaf *imenu-list
+    :bind (("C-c i" . imenu-list-smart-toggle))
+    :hook (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
+#+end_src
+
+#+RESULTS:
+: *imenu-list
+
+*** outline-minnor-mode - アウトラインマイナーモードの設定
++ outline-modeのプリフィックスはC-c C-oに変更しました。理由は指が慣れていること。org-open-at-pointとバッティングしますが、そもそもoutline-minnor-modeとorg-modeを併用することはないので気にしないことにしています。
+
+#+begin_src emacs-lisp
+  (leaf outline-minor-mode
+    :config
+    (add-hook 'outline-minor-mode-hook
+              (lambda () (local-set-key "\C-c\C-o"
+                                        outline-mode-prefix-map))))
+#+end_src
+
+#+RESULTS:
+: outline-minor-mode
+
+*** FFAP - find-file-at-pointなど
+
+#+begin_src emacs-lisp
+  (leaf ffap
+    :config
+    (ffap-bindings))
+#+end_src
+
+#+RESULTS:
+: ffap
+
+** ミニバッファ補完UI関連の設定
+*** vertico - 補完リストをカーソルで選択
+- VERTical Interactive COmpletion の略
+- Emacsの標準の補完システムを土台とした垂直補完UI
+- [[https://github.com/minad/vertico/][GitHub - minad/vertico: vertico.el - VERTical Interactive COmpletion]]
+
+#+begin_src emacs-lisp
+  (leaf vertico
+    :straight t
+    :custom
+    ;; 最大20件まで表示するように
+    (vertico-count . 20)
+    :config
+    (vertico-mode)
+    (setq vertico-resize t)
+    (setq vertico-cycle t)
+    )
+#+end_src
+
+#+RESULTS:
+: vertico
+
+*** orderless - 補完リストをスペース区切りのキーワードで検索
+- [[https://github.com/oantolin/orderless][GitHub - oantolin/orderless: Emacs completion style that matches multiple regexps in any order]]
+- Verticoで、スペースで区切ったキーワードで検索できるようにする。
+
+#+begin_src emacs-lisp
+  (leaf orderless
+    :straight t
+    :init
+    ;; Configure a custom style dispatcher (see the Consult wiki)
+    ;; (setq orderless-style-dispatchers '(+orderless-dispatch))
+    (setq completion-styles '(orderless)
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+
+#+RESULTS:
+: orderless
+
+*** savehist - 履歴機能
+
+#+begin_src emacs-lisp
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+  (leaf savehist
+    :straight t
+    :init
+    (savehist-mode))
+#+end_src
+
+#+RESULTS:
+: savehist
+
+*** Marginalia[M-A]
+- [[https://github.com/minad/marginalia][GitHub - minad/marginalia: marginalia.el - Marginalia in the minibuffer]]
+- Enable richer annotations using the Marginalia package
+
+#+begin_src emacs-lisp
+  (leaf marginalia
+    :straight t
+    :bind (:minibuffer-local-map
+           ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
+#+end_src
+
+#+RESULTS:
+: marginalia
+
+*** embark - カーソル位置にあるテキストに対するアクションを実行（org link対応） [M-.][C-.][C-^ B] :PUBLISHED:
+:PROPERTIES:
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-embark.html
+:EXPORT_OPTIONS:  toc:nil num:nil
+:END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: embark - カーソル位置にあるテキストに対するアクションを実行（org link対応）
+permalink: /archives/363.html
+published: true
+---
+#+end_export
+
+**** 「何か」に対して何かを「実行」するembark
+テキストファイルに書いてあるURLを開きたい、と思ったとき、あなたはどうしますか？
+
+今どきのテキストエディタはURLやメールアドレスなどを認識し、リンクとして表示してくれますね。このリンクを開くには、リンクにマウスカーソルをあて、クリックするのが普通です。
+
+Emacsでもモードによっては同じように動作します（orgモードなど）。この際、マウスではなくてキーボードでも開くことができます。orgモードですと、テキストカーソルをリンクの上に移動させ、C-c C-oで開けます。org-open-at-pointという関数が呼び出されます。リンクはURLやメールアドレスだけでなく、他のorgファイルへの参照や、脚注があります。
+
+さて、話をより一般的にして「いまカーソルの位置にある何か」に対して「アクション」を行うことをできるようにする、embark[fn:embark]というパッケージがあります。「URLを開く」というアクションだけでなく、ソースコードのシンボルの定義を開く、ヘルプを調べるなど様々なアクションを実行できます。
+
+何かをしたい（ex URLを開く、シンボルの定義を参照する、等）文字列があればそこにカーソルをもっていき、embark-act（私はM-.に設定）を実行しましょう。そうすれば、ミニバッファにメニューが表示され、実行したいアクションを選択できます。
+
+また、 embark-dwim （C-.に設定）を押すとembarkがおすすめのアクションを選んで実行してくれます。なお、dwimとはdo what i meanの略で、「私の意図するところを（察して）行え」といった意味でしょうか。意訳すれば、「適当によろしく」みたいなものかな。
+
+**** org linkを辿るアクションが見当たらない!
+さて、この便利なembark、とても不思議なことに、orgのリンクを扱うアクションが見当たりませんでした。結構、いろいろ検索して見当たらなかったので、「ない理由が分からない自分のほうが変なのかも」とも思った次第です。
+
+まあ、とはいえ、あってもだれも困らないとも思うので、自分で作りました。orgモードと、もちろん、embarkに依存するので、leafで設定をしています。
+
+#+NAME: my-embark-orglink
+#+begin_src emacs-lisp :syntaxhl :tangle no
+  (leaf *my-embark-orglink
+    :after org embark
+    :config
+    (defun my-embark-orglink-at-point ()
+      "Target a link at point of orglink."
+      (save-excursion
+        (let* ((cur (point))
+               (beg (progn (search-backward "[" nil t) (point)))
+               (end (progn (search-forward  "]" nil t) (point)))
+               (str (buffer-substring-no-properties beg end)))
+          (when (and (<= beg cur) (<= cur end))
+            (save-match-data
+              (when (string-match "\\(\\[.+\\]\\)" str)
+                `(orglink
+                  ,(format "%s" (match-string 1 str))
+                  ,beg . ,end)))))))
+    (add-to-list 'embark-target-finders 'my-embark-orglink-at-point)
+    (embark-define-keymap embark-orglink-map
+      "Orglink keymap"
+      ("RET" org-open-at-point)
+      ("o" org-open-at-point))
+    (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-map)))
+#+end_src
+
+#+RESULTS: my-embark-orglink
+: *my-embark-orglink
+
+**** 全体の設定
+せっかくですので、設定全体も掲載しておきますね。バインディングに使っているC-@ですがヘルプのプレフィックスです。私はC-hをBSにしているので、C-@をヘルプ（もともとのC-hの機能）にしています。
+
+#+begin_src emacs-lisp :syntaxhl :noweb yes
+  (leaf embark
+    :straight t
+    :bind
+    (("M-." . embark-act)
+     ("C-." . embark-dwim)
+     ("C-^ B" . embark-bindings) ;; C-h -> C-^ にしています
+     )
+    :init
+    (setq prefix-help-command #'embark-prefix-help-command)
+    :config
+    (add-to-list 'display-buffer-alist
+                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                   nil
+                   (window-parameters (mode-line-format . none))))
+    :config
+    <<my-embark-orglink>>)
+#+end_src
+
+#+RESULTS:
+: embark
+
+**** 閑話休題
+探せばどこかに必ずあるはずだ、と思って探したものがどうしても見つからないとき、「あるはずだ」と思った自分が間違っているのではないか、とも思ってしまうのは、自分の弱さなのでしょうか。
+
+ところで、embarkとは「Emacs Mini-Buffer Actions Rooted in Keymaps」の頭文字を取って名付けたようです。キーマップに基づきミニバッファで行うアクションといった意味になりますが、もともと embark は英語で「乗船する」という単語です。なかなかおしゃれなネーミングなのですね。
+
+[fn:embark] [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
+
+**** COMMENT 備考
+- 関係ないけど正規表現を試すには
+  - [[https://koseki.hatenablog.com/entry/20110710/emacsReBuilder][Emacsの正規表現編集モード re-builder とややこしいバックスラッシュ問題について。 - こせきの技術日記]]
+
+- 本当はorgをロードしたら実行すべき
+(org-thing-at-point)が使えない？nilを返してくる
+
+- emberkのアクションはキーマップで定義
+  - embark-url-map
+  - embark-general-map
+
+*** consult - switch-to-bufferなどの補完候補を拡張する
+- [[https://github.com/minad/consult][GitHub - minad/consult: consult.el - Consulting completing-read]]
+- 2022-03-02
+  - 次のエラーが出るようになった
+    - user-error: consult--source-file is neither a Consult command nor a Consult source
+  - (emacs-version)
+    "GNU Emacs 27.1 (build 1, x86_64-pc-linux-gnu, GTK+ Version 3.24.20, cairo version 1.16.0)
+     of 2020-09-20"
+  - エラーの箇所
+    - [[https://github.com/minad/consult/blob/main/consult.el#L516][consult/consult.el at main · minad/consult]]
+    - "consult--source-file"という値はない？
+      - [[https://github.com/minad/consult/blob/main/consult.el#L205][consult/consult.el at main · minad/consult]]
+    - 設定してた！
+      - [[https://github.com/minad/consult#use-package-example][minad/consult: consult.el - Consulting completing-read]]
+    - 該当箇所削除
+
+#+begin_src emacs-lisp
+  ;; Example configuration for Consult
+  (leaf consult
+    :straight (consult :type git :host github
+                       :repo "minad/consult")
+    ;; Replace bindings. Lazily loaded due by `use-package'.
+    :bind (;; C-c bindings (mode-specific-map)
+           ;; ("C-c h" . consult-history)
+           ;; ("C-c m" . consult-mode-command)
+           ;; ("C-c k" . consult-kmacro)
+           ;; C-x bindings (ctl-x-map)
+           ("C-x M-:"  . consult-complex-command)     ;; orig. repeat-complex-command
+           ("C-x b"    . consult-buffer)              ;; orig. switch-to-buffer
+           ("C-x 4 b"  . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+           ("C-x 5 b"  . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+           ("C-x r b"  . consult-bookmark)            ;; orig. bookmark-jump
+           ;; ("C-x p b"  . consult-project-buffer)      ;; orig. project-switch-to-buffer
+           ("M-#"      . consult-register-load)       ;; Custom M-# bindings for fast register access
+           ("M-'"      . consult-register-store)      ;; orig. abbrev-prefix-mark (unrelated)
+           ("C-M-#"    . consult-register)
+                                                      ;; Other custom bindings
+           ("M-y"      . consult-yank-pop)            ;; orig. yank-pop
+           ("<help> a" . consult-apropos)             ;; orig. apropos-command
+                                                      ;; M-g bindings (goto-map)
+           ("M-g e"    . consult-compile-error)
+           ("M-g f"    . consult-flymake)             ;; Alternative: consult-flycheck
+           ("M-g g"    . consult-goto-line)           ;; orig. goto-line
+           ("M-g M-g"  . consult-goto-line)           ;; orig. goto-line
+           ("M-g o"    . consult-outline)             ;; Alternative: consult-org-heading
+           ("M-g m"    . consult-mark)
+           ("M-g k"    . consult-global-mark)
+           ("M-g i"    . consult-imenu)
+           ("M-g I"    . consult-imenu-multi)
+           ;; M-s bindings (search-map)
+           ("M-s d"    . consult-find)
+           ("M-s D"    . consult-locate)
+           ("M-s g"    . consult-grep)
+           ("M-s G"    . consult-git-grep)
+           ("M-s r"    . consult-ripgrep)
+           ("M-s l"    . consult-line)
+           ("M-s L"    . consult-line-multi)
+           ("M-s m"    . consult-multi-occur)
+           ("M-s k"    . consult-keep-lines)
+           ("M-s u"    . consult-focus-lines)
+           ;; Isearch integration
+           ("M-s e"    . consult-isearch-history)
+           (:isearch-mode-map
+            ("M-e"     . consult-isearch-history)     ;; orig. isearch-edit-string
+            ("M-s e"   . consult-isearch-history)     ;; orig. isearch-edit-string
+            ("M-s l"   . consult-line)                ;; needed by consult-line to detect isearch
+            ("M-s L"   . consult-line-multi)))        ;; needed by consult-line to detect isearch
+
+    ;; Enable autom  atic preview at point in the *Completions* buffer. This is
+    ;; relevant when you use the default completion UI.
+    :hook (completion-list-mode . consult-preview-at-point-mode)
+
+    ;; The :init configuration is always executed (Not lazy)
+    :init
+
+    ;; Optionally configure the register formatting. This improves the register
+    ;; preview for `consult-register', `consult-register-load',
+    ;; `consult-register-store' and the Emacs built-ins.
+    (setq register-preview-delay 0.5
+          register-preview-function #'consult-register-format)
+
+    ;; Optionally tweak the register preview window.
+    ;; This adds thin lines, sorting and hides the mode line of the window.
+    (advice-add #'register-preview :override #'consult-register-window)
+
+    ;; Optionally replace `completing-read-multiple' with an enhanced version.
+    (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+
+    ;; Use Consult to select xref locations with preview
+    (setq xref-show-xrefs-function #'consult-xref
+          xref-show-definitions-function #'consult-xref)
+
+    ;; Configure other variables and modes in the :config section,
+    ;; after lazily loading the package.
+    :config
+
+    ;; Optionally configure preview. The default value
+    ;; is 'any, such that any key triggers the preview.
+    ;; (setq consult-preview-key 'any)
+    ;; (setq consult-preview-key (kbd "M-."))
+    ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+    ;; For some commands and buffer sources it is useful to configure the
+    ;; :preview-key on a per-command basis using the `consult-customize' macro.
+    (consult-customize
+     consult-theme
+     :preview-key '(:debounce 0.2 any)
+     consult-ripgrep consult-git-grep consult-grep
+     consult-bookmark consult-recent-file consult-xref
+     consult--source-bookmark consult--source-recent-file
+     consult--source-project-recent-file
+     :preview-key (kbd "M-."))
+
+    ;; Optionally configure the narrowing key.
+    ;; Both < and C-+ work reasonably well.
+    (setq consult-narrow-key "<") ;; (kbd "C-+")
+
+    ;; Optionally make narrowing help available in the minibuffer.
+    ;; You may want to use `embark-prefix-help-command' or which-key instead.
+    ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+    ;; By default `consult-project-function' uses `project-root' from project.el.
+    ;; Optionally configure a different project root function.
+    ;; There are multiple reasonable alternatives to chose from.
+    ;; 1. project.el (the default)
+    ;; (setq consult-project-function #'consult--default-project--function)
+    ;; 2. projectile.el (projectile-project-root)
+    (autoload 'projectile-project-root "projectile")
+    (setq consult-project-function (lambda (_) (projectile-project-root)))
+    ;; 3. vc.el (vc-root-dir)
+    ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+    ;; 4. locate-dominating-file
+    ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+    )
+#+end_src
+
+#+RESULTS:
+: consult
+
+*** embark-consult
+
+#+begin_src emacs-lisp
+  ;; Consult users will also want the embark-consult package.
+  (leaf embark-consult
+    :straight t
+    :after (embark consult)
+    ;; :demand t ; only necessary if you have the hook below
+    ;; if you want to have consult previews as you move around an
+    ;; auto-updating embark collect buffer
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode)
+    )
+#+end_src
+
+#+RESULTS:
+: embark-consult
+
+** org-mode関連の設定
+*** orgのためのディレクトリ設定
+- org-agenda-filesのリストにDropboxのディレクトリを追加しておく。
+  - この中にあるorgファイルがすべてagendaに反映される。
+- org-num-modeをすべてのファイルで実行する
+  - (org-startup-numerated . t)がうまく反映されない。
+- Androd端末から利用するには [[https://play.google.com/store/apps/details?id=com.orgzly][Orgzly]] が良さそう。
+
+- 設定するアジェンダファイル
+
+  | ファイル          | 内容                           |
+  |-------------------+--------------------------------|
+  | Memo.org          | 思いつき、メモを書きなぐり用   |
+  | Notebook.org      | ある程度きちんとしたメモ書き   |
+  | ブログファイル    | ブログの記事をまとめたファイル |
+  | emacs設定ファイル | orgファイルで書いたEmacsの設定 |
+
+  - TODOはどのファイルに書いて良い
+  - org-switchbかconsult-org-agendaをどこかにバインドするといいかも？（C-,）
+    - C-c bにバインド
+*** org-modeの設定 [C-c l,a,c,m]
+
++ TODOをMAYBE NEXT STARED WAITING DLEGATEDなど分けてもよいが、TODOに優先度#A #B #Cをつけるほうがアジェンダが見やすくなる
+
++ 見出しを折りたたんだときの...を変更
+  * [[https://endlessparentheses.com/changing-the-org-mode-ellipsis.html][Changing the org-mode ellipsis · Endless Parentheses]]
+
+#+begin_src emacs-lisp
+  (leaf org-mode
+    :bind
+    (("C-c l" . org-store-link)
+     ("C-c a" . org-agenda)
+     ("C-c c" . org-capture)
+     ;; ("C-c m" . (lambda () (interactive) (org-capture nil "m"))) ; Warning!
+     )
+    :custom
+    (org-directory . "~/Dropbox/Org/")
+    (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
+    (org-agenda-files . '("~/Dropbox/Org/"))
+    (org-todo-keyword-faces
+     . '(("NEXT" . (:foreground "blue" :underline t))
+         ("DONE" . (:foreground "pale green"))))
+    (org-todo-keywords . '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
+    (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
+    (org-startup-truncated . nil)
+    (org-return-follows-link  . t)           ; RET/C-mでリンクを開く
+    (org-agenda-start-with-follow-mode . t)  ; アジェンダで関連するorgファイルを開く
+    (org-ellipsis . " ▽")                    ; …,▼, ↴, ⬎, ⤷, ⋱
+    (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
+    (org-agenda-remove-tags . t) ; アジェンダにタグを表示しない
+    (org-id-link-to-org-use-id . 'create-if-interactive-and-no-custom-id)
+    )
+#+end_src
+
+#+RESULTS:
+: org-mode
+
+*** doctを利用したorg-captureの設定
+
+- [[https://orgmode.org/manual/Capture-templates.html][Capture templates (The Org Manual)]]
+- [[https://www.5ing-myway.com/org-capture/][org-captureをカスタマイズして、すばやくメモを取る方法 | 趣味に生きる。]]
+
+- ファイルは org-directory 以下にある。
+
+- [[https://github.com/progfolio/doct#installation][GitHub - progfolio/doct: DOCT: Declarative Org Capture Templates for Emacs]]
+- ミニバッファで日本語が入力できない
+- [[https://blog.tomoya.dev/posts/a-new-wave-has-arrived-at-emacs/][Emacsの次世代ミニバッファ補完UI | 日々、とんは語る。]]
+
+#+begin_src emacs-lisp
+  (leaf doct
+    :straight t
+    ;;recommended: defer until calling doct
+                                          ;:commands (doct)
+    :config
+    (setq org-capture-templates
+          (doct '(("Memo" :keys "m"
+                   :empty-lines-after 1
+                   :file "~/Dropbox/Org/Memo.org"
+                   :datetree t
+                   :unnarrowed nil ; t
+                   :jump-to-captured nil ;
+                   :empty-lines-before 1
+                   :template ("* %?"
+                              ":PROPERTIES:"
+                              ":CREATED: %U"
+                              ":LINK: %a"
+                              ":END:"))
+                  ("Todo" :keys "t"
+                   :file "~/Dropbox/Org/Memo.org"
+                   :datetree t
+                   :empty-lines-before 1
+                   :template ("* TODO %?"
+                              ":PROPERTIES:"
+                              ":CREATED: %U"
+                              ":LINK: %a"
+                              ":END:"))
+                  ("Notebook" :keys "n"
+                   :prepend t
+                   :empty-lines-after 1
+                   :file "~/Dropbox/Org/Notebook.org"
+                   :unnarrowed t
+                   :template ("* %^{Description}"
+                              ":PROPERTIES:"
+                              ":CREATED: %T"
+                              ":END:"
+                              "\n%?"))
+                  ("Post" :keys "p"
+                   :file "~/Dropbox/Org/Memo.org"
+                   :datetree t
+                   :unnarrowed t
+                   :jump-to-captured nil
+                   :empty-lines-before 1
+                   ; :empty-lines-after 1
+                   :todo-state "TODO"
+                   :export_file_name (lambda () (concat (format-time-string "%Y-%m-%d-%H-%M-%S") ".html"))
+                   :template ("* %{todo-state} %^{Headline} :POST:"
+                              ":PROPERTIES:"
+                              ":CREATED: %U"
+                              ":EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_drafts/drafts_%{export_file_name}"
+                              ":EXPORT_OPTIONS: toc:nil num:nil html5-fancy:t"
+                              ":EXPORT_HTML_DOCTYPE: html5"
+                              ":DIR: ~/git/ploversky-jekyll/assets/images/posts/"
+                              ":END:"
+                              ""
+                              "#+begin_comment"
+                              "First time: C-c C-e C-b C-s h h (Do this here)"
+                              "Next  time: C-u C-c C-e         (Do this anyware in the subtree)"
+                              "#+end_comment"
+                              ""
+                              "#+begin_export html"
+                              "---"
+                              "layout: post"
+                              "title:"
+                              "categories:"
+                              "tags:"
+                              "published: true"
+                              "---"
+                              "#+end_export"
+                              "\n**  %?"))
+                  ("Blog" :keys "b"
+                   :prepend t
+                   :empty-lines-after 1
+                   :unnarrowed t
+                   :children
+                   (("ploversky@zenn.dev" :keys "z"
+                     :file "~/git/ploversky-zenn.dev/plaversky@zenn.dev.org"
+                     :headline   "記事"
+                     :todo-state "TODO"
+                     :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
+                     :template ("* %{todo-state} %^{Description}"
+                                ":PROPERTIES:"
+                                ":CREATED: %T"
+                                ":EXPORT_FILE_NAME: articles/%{export_file_name}"
+                                ":EXPORT_GFM_TAGS: blog"
+                                ":EXPORT_GFM_CUSTOM_FRONT_MATTER: :emoji 👩‍💻"
+                                ":EXPORT_GFM_CUSTOM_FRONT_MATTER+: :type tech"
+                                ":EXPORT_GFM_CUSTOM_FRONT_MATTER+: :published false"
+                                ":END:"
+                                "\n* %?"))
+                    ("blog.chubachi.net"  :keys "b"
+                     :file "~/git/ychubachi.github.io/blog.chubachi.net.org"
+                     :headline   "Blog"
+                     :todo-state "TODO"
+                     :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
+                     :template ("* %{todo-state} %^{Description}"
+                                ":PROPERTIES:"
+                                ":CREATED: %T"
+                                ":EXPORT_FILE_NAME: %{export_file_name}"
+                                ":EXPORT_DATE: %U"
+                                ":END:"
+                                "\n** %?"))))))))
+#+end_src
+
+#+RESULTS:
+: doct
+
+*** org-tempo - ソースコードブロック入力の省力化
+   - "<el"+<TAB> 等でemacs-lispのソースコードブロックがでるように設定。
+
+#+begin_src emacs-lisp
+  (leaf org-tempo
+    :require t
+    :config
+    (add-to-list 'org-structure-template-alist
+                 '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist
+                 '("sh" . "src bash"))
+    (add-to-list 'org-structure-template-alist
+                 '("rb" . "src ruby :results output"))
+    (add-to-list 'org-structure-template-alist
+                 '("j"  . "src java :results output"))
+    (add-to-list 'org-structure-template-alist
+                 '("py" . "src python :results output"))
+    (add-to-list 'org-structure-template-alist
+                 '("n" . "note"))
+    (add-to-list 'org-structure-template-alist
+                 '("w" . "warning"))
+    (add-to-list 'org-structure-template-alist
+                 '("f" . "figure"))
+    )
+#+end_src
+
+#+RESULTS:
+: org-tempo
+
+*** babel - Java/Ruby/Python/Grophviz (dot)
+
+- babelで評価するときに確認を出さない
+  - [[https://emacs.stackexchange.com/questions/23946/how-can-i-stop-the-confirmation-to-evaluate-source-code-when-exporting-to-html][org mode - How can I stop the confirmation to evaluate source code when exporting to html? - Emacs Stack Exchange]]
+
+- インラインイメージの自動再描画
+  - [[https://emacs.stackexchange.com/questions/3302/live-refresh-of-inline-images-with-org-display-inline-images][org mode - live refresh of inline images with org-display-inline-images - Emacs Stack Exchange]]
+
+#+begin_src emacs-lisp
+  (leaf *org-babel
+    :config
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((java . t) (ruby . t) (python . t) (C . t) (dot . t)))
+    (setq org-confirm-babel-evaluate nil)
+    (eval-after-load 'org
+      (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images))
+    (nconc org-babel-default-header-args:java
+           '((:dir . nil)
+             (:results . "value"))))
+#+end_src
+
+#+RESULTS:
+: *babel
+
+*** スピードコマンド
+
+- tにするとヘッドラインの行頭にカーソルがあるとき、1文字でコマンドが打てる。
+  - C-c C-n => n
+
+- 次の設定をすると、*の上にカーソルがあれば、機能する。
+  - [[help:looking-at]]
+  - [[help:org-outline-regexp]]
+  - [[help:looking-back]] (非推奨）
+
+#+begin_src emacs-lisp
+  (leaf *org-use-speed-commands
+    :config
+    (setq org-use-speed-commands
+      (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**")))))
+#+end_src
+
+#+RESULTS:
+: *org-use-speed-commands
+
+*** org2blog
+
+#+begin_comment
+- [[id:o2b:ee0b1a39-a8d8-494b-9e7d-02d794982f19][embark - カーソル位置にあるテキストに対するアクションを実行]]を
+- org2blog-subtree-post-publishする
+- シンタックスハイライトが崩れている
+- 一旦、Wordpressで編集すると、うまくショートコードも入っている
+- 改めて公開するとインデントが乱れる
+- [[https://shop-hi-mall.com/wordpress-blank/][WordPressの文頭スペース（空白）が消える原因と対処法を解説！ - アフィリエイトゼミ]]をみて[[https://wordpress.org/plugins/tinymce-advanced/][Advanced Editor Tools (previously TinyMCE Advanced) – WordPress plugin | WordPress.org]]をインストール
+- 一旦、編集して再度公開するとシンタックスハイライトが動作する
+#+end_comment
+
++ 説明
+  * orgでWordpressに投稿する
+  * Buffer全体で記事を書く場合
+    | キーn操作 | 関数                         | 説明                 |
+    |-----------+------------------------------+----------------------|
+    | C-c M-p g | org2blog-user-interface      | メニュー表示         |
+    | C-c M-p D | org2blog-buffer-page-save    | ページをWPに保存     |
+    | C-c M-p P | org2blog-buffer-page-publish | ページを公開         |
+    | C-c M-p d | org2blog-buffer-post-save    | ポストをWPに保存     |
+    | C-c M-p p | org2blog-buffer-post-publish | ポストを公開         |
+    | C-c M-p t | org2blog-complete            | カテゴリやタグの補完 |
+
++ 参考
+  * [[https://github.com/org2blog/org2blog#requirements-and-compatibility][org2blog/org2blog: Blog from Org mode to WordPress.]]
++ パスワードは~/.netrcに書く
+
++ 備考
+  * ソースコードのエキスポートでエラー発生（2021-11-05）
+  * どうやらコードに`(backquote)が2つあるとエラーになるようだ・・・
+  * Wordpressのxmlrpcの問題か？セキュリティ対策？？
+    - プロバイダのWAFの設定だった
+
+#+begin_src emacs-lisp
+  (leaf org2blog
+    :straight t
+    :config
+    (require 'auth-source)
+    (let* ((credentials (auth-source-user-and-password "ploversky.net"))
+           (username (nth 0 credentials))
+           (password (nth 1 credentials))
+           (config `("plover"
+                     :url "https://ploversky.net/xmlrpc.php"
+                     :username ,username
+                     :password ,password)))
+      (setq org2blog/wp-blog-alist `(,config)))
+    (setq org2blog/wp-image-upload t)
+    (setq org2blog/wp-show-post-in-browser 'show)
+    (setq org2blog/wp-use-sourcecode-shortcode t)
+    )
+#+end_src
+
+#+RESULTS:
+: org2blog
+
+*** ox-hugo
+- [[https://github.com/kaushalmodi/ox-hugo][GitHub - kaushalmodi/ox-hugo: A carefully crafted Org exporter back-end for Hugo]]
+
+#+begin_src emacs-lisp
+  (leaf ox-hugo
+    :straight t
+    :require t
+    :after ox)
+#+end_src
+
+#+RESULTS:
+: ox-hugo
+
+*** org-superstar
+  * org-bullets の進化版
+    + [[https://github.com/integral-dw/org-superstar-mode/blob/master/DEMO.org][org-superstar-mode/DEMO.org at master · integral-dw/org-superstar-mode · GitHub]]
+  * asterisk
+    + plus
+      - minus
+
+#+begin_src emacs-lisp
+  (leaf org-superstar
+    :straight t
+    :config
+    (add-hook 'org-mode-hook (lambda nil (org-superstar-mode 1)))
+    (setq org-superstar-headline-bullets-list
+    '("●" "■" "▷" "○")))
+#+end_src
+
+#+RESULTS:
+: org-superstar
+
+*** ox-zenn - zenn.devにブログを書く
+**** 参考
++ [[https://zenn.dev/conao3/articles/ox-zenn-usage][org-modeドキュメントからZenn Flavored Markdownを生成するox-zennの使い方]]
+
+#+begin_src emacs-lisp
+  (leaf ox-zenn
+    :straight t
+    :after org
+    :require t ox-publish
+    :defun zenn/f-parent org-publish
+    :defvar org-publish-project-alist
+    :preface
+    (defvar zenn/org-dir "~/git/zenn-content")
+
+    (defun zenn/org-publish (arg)
+      "Publish zenn blog files."
+      (interactive "P")
+      (let ((force (or (equal '(4) arg) (equal '(64) arg)))
+            (async (or (equal '(16) arg) (equal '(64) arg))))
+        (org-publish "zenn" arg force async)))
+
+    :config
+    (setf
+     (alist-get "zenn" org-publish-project-alist nil nil #'string=)
+     (list
+      :base-directory (expand-file-name "" zenn/org-dir)
+      :base-extension "org"
+      :publishing-directory (expand-file-name "../" zenn/org-dir)
+      :recursive t
+      :publishing-function 'org-zenn-publish-to-markdown)))
+#+end_src
+
+#+RESULTS:
+: ox-zenn
+
+*** ox-pandoc - pandocでorgファイルからのエキスポートを拡張する
++ [[https://github.com/kawabata/ox-pandoc][kawabata/ox-pandoc: Another org-mode exporter via pandoc.]]
+
+#+begin_src emacs-lisp
+  (leaf ox-pandoc :straight t :require t)
+#+end_src
+
+#+RESULTS:
+: ox-pandoc
+
+*** org-pomodoro - ポモドーロテクニック [C-c p]
+**** 設定
+
+1. TODOのエントリーを書く
+2. M-x org-pomodoroでタイマースタート
+3. C-c C-x C-o で一時停止
+4. C-c C-x TAB で再開
+5. 時間が来るとアラーム？
+
+#+begin_src emacs-lisp
+    (leaf org-pomodoro
+      :straight t
+      :require t)
+#+end_src
+
+#+RESULTS:
+: org-pomodoro
+
+**** 参考
++ [[https://fnwiya.hatenablog.com/entry/2016/01/11/203000][emacsでポモドーロテクニック（org-pomodoro） - fnwiya's quine]]
+
+*** org-contrib - Non GNUのorgパッケージ
+
++ 利用するパッケージ
+  * ox-taskjuggler
+    - [[https://taskjuggler.org/index.html][TaskJuggler - A Free and Open Source Project Management Software - About TaskJuggler]]
+    - [[https://orgmode.org/worg/org-tutorials/org-taskjuggler.html][Creating Gantt charts by Exporting to TaskJuggler]]
+
+#+begin_src emacs-lisp
+  (leaf org-contrib
+    :straight t
+    :config
+    (require 'ox-taskjuggler))
+#+end_src
+
+#+RESULTS:
+: org-contrib
+
+*** org-publish
+
+**** 説明
+
+https://chubachi.net/publish
+  index.html
+  project1/
+    index.html
+    image/
+      fig1.jpg
+
+
+**** 設定
+
+- 設定は各プロジェクトで行うことにした
+  - 下は一例
+- 本文以外に画像ファイル等を管理するとき、1ファイル多プロジェクトだと管理しづらい
+
+#+begin_src emacs-lisp :exports none
+  (leaf *org-publish-project-alist
+    :config
+    (setq org-publish-project-alist
+          '(("chubachi.net"
+             :components ("chubachi.net-orgfiles" "chubachi.net-others"))
+
+            ("chubachi.net-orgfiles"
+             :publishing-function org-html-publish-to-html
+             :base-directory "~/Dropbox/Org/publish/chubachi.net/"
+             :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish"
+             :base-extension "org"
+             :recursive t
+             ;; options for html files
+             ;; :exclude "PrivatePage.org" ;; regexp
+             ;; :headline-levels 3
+             ;; :section-numbers nil
+             ;; :with-toc nil
+             ;; :html-head "<link rel=\"stylesheet\" type=\"text/css\"
+                ;;    href=\"https://gongzhitaao.org/orgcss/org.css\"/>"
+             ;;:html-preamble t
+             )
+
+            ("chubachi.net-others"
+             :publishing-function org-publish-attachment
+             :base-directory "~/Dropbox/Org/publish/chubachi.net/"
+             :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish/"
+             :base-extension "jpg\\|gif\\|png|css\\|el"
+             :recursive t))))
+#+end_src
+
+#+RESULTS:
+: *org-publish-project-alist
+
+**** 参考
+- [[https://orgmode.org/manual/Complex-example.html][Complex example (The Org Manual)]]
+
+
++ CSS
+  + [[https://github.com/gongzhitaao/orgcss][GitHub - gongzhitaao/orgcss: Simple and clean CSS for Org-exported HTML]]
+  + [[https://qiita.com/sambatriste/items/2dc9f81cbf1e82d7429a][org-modeのHTMLテーマ - Qiita]]
+  + [[https://github.com/fniessen/org-html-themes][GitHub - fniessen/org-html-themes: How to export Org mode files into awesome HTML in 2 minutes]]
++ Upload
+  + [[https://orgmode.org/manual/Complex-example.html][Complex example (The Org Manual)]]
+
+*** PlantUML
+- 参考
+   - [[https://qiita.com/sambatriste/items/2e01d5aa91903ae72b24][org-modeでUMLを埋め込み(PlantUML) - Qiita]]
+
+#+begin_src emacs-lisp
+;; plantuml.jarへのパスを設定
+(setq org-plantuml-jar-path "~/.emacs.d/lib/plantuml-1.2022.12.jar")
+
+;; org-babelで使用する言語を登録
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((plantuml . t)))
+#+end_src
+
+#+RESULTS:
+
+#+BEGIN_SRC plantuml :file animal.png
+動物 <|-- 犬
+動物 <|-- 猫
+#+END_SRC
+
+#+RESULTS:
+[[file:animal.png]]
+
+*** org-download
+
+- [[https://github.com/abo-abo/org-download][abo-abo/org-download: Drag and drop images to Emacs org-mode]]
+
+#+begin_src emacs-lisp
+  (leaf org-download
+    :straight t
+    :require t
+    :custom (org-download-method . 'attach)
+    :config
+    (setq org-image-actual-width 400) ; width of images (#+ATTR_ORG: 400)
+    (add-hook 'dired-mode-hook 'org-download-enable)
+    (leaf
+      :when (eq system-type 'windows-nt)
+      :custom (org-download-screenshot-method . "magick convert clipboard: %s")))
+#+end_src
+
+#+RESULTS:
+: org-download
+
+** 外部パッケージ
+*** which-key - キーバインドのガイド表示                          :PUBLISHED:
+:PROPERTIES:
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-which-key.html
+:EXPORT_OPTIONS:  toc:nil num:nil
+:END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: which-key - キーバインドのガイド表示
+permalink: /archives/344.html
+published: true
+---
+#+end_export
+
+Emacsでは、コントロールやAltキーを押しながら一文字打って、更にもう一文字打つとコマンドが実行される、という操作が基本です。
+
+このキー操作の組み合わせ、慣れれば手が覚えて、自然に操作できるようになるものです。しかしながら、覚えるまでは大変です。特に初心者にとってはいちいち調べるのもやっかいです。
+
+which-keyパッケージはこの負担を幾分、軽減してくれます。例えば、ファイルを保存するコマンドはC-x C-sです。ですがこれを忘れて、「ファイルを保存するときはC-xを打ってから、何を打つんだっけ？」といったとき、このパッケージが有効です。
+
+C-xを打って入力をやめると、画面にその先に打つ文字とそれに対応したコマンドのリストを表示してくれます。
+
+とても便利！・・・と言いたいところですが、結局はメニューに出てくるコマンドの数そのものが多いので、一覧の中から目的のものを見つけるのも一苦労であったりします。もちろん、選択肢が少ない場合は大助かりです。
+
+なかなかEmacsのキー操作が覚えられないよ、という場合は試してみてください。
+
+#+begin_src emacs-lisp
+  (leaf which-key
+    :doc "Display available keybindings in popup"
+    :req "emacs-24.4"
+    :tag "emacs>=24.4"
+    :url "https://github.com/justbur/emacs-which-key"
+    :added "2021-10-20"
+    :emacs>= 24.4
+    :straight t
+    :config
+    (which-key-mode))
+#+end_src
+
+#+RESULTS:
+: which-key
+*** swap-buffers [C-c b]
+**** 設定
+
+#+begin_src emacs-lisp
+  (leaf swap-buffers
+    :straight t
+    :bind
+    ("C-c b" . swap-buffers)
+    :custom
+    (swap-buffers-qwerty-shortcuts
+     . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
+#+end_src
+
+#+RESULTS:
+: swap-buffers
+
+**** 参考
++ [[http://emacs.rubikitch.com/swap-buffers/][swap-buffers.el : 【多分割対応】ウィンドウを入れ替える新しいコマンド]]
+*** backup-each-save - Emacsで保存するたびに自動でバックアップ     :PUBLISHED:
+:PROPERTIES:
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-backup-each-save.html
+:EXPORT_OPTIONS:  toc:nil num:nil
+:END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: backup-each-save - Emacsで保存するたびに自動でバックアップ
+permalink: /archives/378.html
+published: true
+---
+#+end_export
+
+るびきちさんの[[http://emacs.rubikitch.com/backup-each-save/][こちら]]の記事からです。[[http://emacs.rubikitch.com/real-auto-save/][real-auto-save.el]]はそこまではいらないかな、という感じです。割としょっちゅうC-x C-sを打っている気がするので。
+
+#+begin_src emacs-lisp
+  (leaf backup-each-save
+    :when (not (eq system-type 'windows-nt))
+    :straight t
+    :config
+    ;; バックアップ先
+    (setq backup-each-save-mirror-location "~/.emacs.d/backups")
+    ;; バックアップファイルにつけるsuffix
+    (setq backup-each-save-time-format "%y%m%d_%H%M%S")
+    ;; バックアップするファイルサイズの上限
+    (setq backup-each-save-size-limit 5000000)
+    ;; すべてのファイルをバックアップする
+    (setq backup-each-save-filter-function 'identity)
+    ;; 有効化！
+    (add-hook 'after-save-hook 'backup-each-save))
+#+end_src
+
+#+RESULTS:
+: backup-each-save
+
+*** undo-tree
+   - [[https://elpa.gnu.org/packages/undo-tree.html][GNU ELPA - undo-tree]]
+
+   - オートセーブがうざいのでnilにした
+     - tに戻した
+
+   #+begin_src emacs-lisp
+     (leaf undo-tree
+       :straight t
+       :custom
+       (undo-tree-auto-save-history . t)
+       :config
+       (global-undo-tree-mode))
+   #+end_src
+
+   #+RESULTS:
+   : undo-tree
+
+*** pandoc-mode
+
+- C-c / でメニュー表示
+- http://joostkremers.github.io/pandoc-mode/
+
+#+begin_src emacs-lisp
+  (leaf pandoc-mode
+    :doc "Minor mode for interacting with Pandoc"
+    :req "hydra-0.10.0" "dash-2.10.0"
+    :tag "pandoc" "text"
+    :added "2020-11-24"
+    :url "http://joostkremers.github.io/pandoc-mode/"
+    :straight t
+    :after hydra)
+#+end_src
+
+*** magit [C-x g]
+- EmacsのGit
+- Emacs 28 Windowsではstraight.elでインストールするとエラー
+  #+begin_example
+  Warning (leaf): Error in `magit' block.  Error msg: Could not find package compat. Updating recipe repositories: (org-elpa melpa gnu-elpa-mirror el-get emacsmirror-mirror) with ‘straight-pull-recipe-repositories’ may fix this Disable showing Disable logging
+  #+end_example
+
+#+begin_src emacs-lisp
+  (leaf magit
+    :doc "A Git porcelain inside Emacs."
+    :req "emacs-25.1" "async-20200113" "dash-20200524" "git-commit-20200516" "transient-20200601" "with-editor-20200522"
+    :tag "vc" "tools" "git" "emacs>=25.1"
+    :added "2020-11-30"
+    :emacs>= 25.1
+    ;; :straight t
+    :package t
+    :after git-commit with-editor
+    :bind (("C-x g" . magit-status))
+    )
+#+end_src
+
+#+RESULTS:
+: magit
+
+- [[http://tanehp.ec-net.jp/heppoko-lab/prog/resource/magit/magit_memo.html#%E5%A4%89%E6%9B%B4%E3%82%92%E6%88%BB%E3%81%99][Magit の覚え書き]]
+  - Discard
+
+*** git-gutter
+
+#+begin_src emacs-lisp
+  (leaf git-gutter
+    :straight t
+    ;; :custom
+    ;; (git-gutter:modified-sign . "~")
+    ;; (git-gutter:added-sign    . "+")
+    ;; (git-gutter:deleted-sign  . "-")
+    ;; :custom-face
+    ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
+    ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
+    ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
+    :hook
+    (emacs-startup-hook . global-git-gutter-mode))
+#+end_src
+
+#+RESULTS:
+: git-gutter
+
+*** migemo
+**** Linux
+- .emacs.d/migemo-dictを用意
+  - cmigemoをインストールして
+  - /usr/share/cmigemo/utfg-8/migemo-dictをコピー
+- [[https://github.com/emacs-jp/migemo][emacs-jp/migemo: emacs migemo client]]
+#+begin_src emacs-lisp
+  (leaf migemo
+    :when (eq system-type 'gnu/linux)
+    :straight t
+    :require t
+    :config
+    ;; cmigemo(default)
+    (setq migemo-command "cmigemo")
+    (setq migemo-options '("-q" "--emacs"))
+
+    ;; ruby migemo
+    ;; (setq migemo-command "ruby")
+    ;; (setq migemo-options '("-S" "migemo" "-t" "emacs" "-i" "\a"))
+
+    ;; Set your installed path
+    (setq migemo-dictionary "/usr/share/cmigemo/utf-8/migemo-dict")
+
+    (setq migemo-user-dictionary nil)
+    (setq migemo-regex-dictionary nil)
+    (setq migemo-coding-system 'utf-8-unix)
+    (migemo-init)
+    )
+#+end_src
+
+#+RESULTS:
+: migemo
+
+**** Windows
+- [[https://hangstuck.com/emacs-cmigemo-windows/][Windowsでの Emacsでmigemo を有効にする設定方法 | ハングスタック]]
+- migemoの辞書は絶対パスで参照する
+- その他の変数はデフォルトで動作する
+- とりあえずWindowsで動くようにした
+
+#+begin_src emacs-lisp
+  (leaf migemo
+    :when (and
+           (eq system-type 'windows-nt)
+           (file-exists-p "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict"))
+    :straight t
+    :setq
+    (migemo-dictionary . "C:/Users/yc/lib/cmigemo-default-win64/dict/utf-8/migemo-dict")
+    :config
+    (load-library "migemo")
+    (migemo-init))
+#+end_src
+
+  #+RESULTS:
+  : migemo
+
+*** yasnippet
+- [[https://github.com/joaotavora/yasnippet][joaotavora/yasnippet: A template system for Emacs]]
+- サンプルは次の場所にあるので必要なものは ~/.emacs.d/snippets にコピー
+  - ~/.emacs.d/elpa/yasnippet-snippets-20210910.1959/snippets/
+
+#+begin_src emacs-lisp
+  (leaf yasnippet-snippets
+    :straight t
+    :custom
+    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
+    :hook
+    (emacs-startup-hook . yas-global-mode))
+#+end_src
+
+#+RESULTS:
+: yasnippet-snippets
+
+#+begin_comment
+- :setq を使う場合の注意
+  - :init だと :init -> :setq の順番でNG
+  - :config なら :setq -> :init
+- :require との関係
+  -  :init -> :require -> :setq -> :config
+
+- :require なし
+  - :init -> NG
+
+- マクロ展開
+    #+begin_src
+  (prog1 'yasnippet-snippets
+    (leaf-handler-leaf-path yasnippet-snippets)
+    (leaf-handler-leaf-protect yasnippet-snippets
+      (leaf-handler-package yasnippet-snippets yasnippet-snippets nil)
+      (yas-global-mode 1) ; <- 2
+      (setq yasnippet-snippets-dir "~/.emacs.d/snippets"))) ; <- 1
+    #+end_src
+
+  - :config -> NG
+
+    #+begin_src
+  (prog1 'yasnippet-snippets
+    (leaf-handler-leaf-path yasnippet-snippets)
+    (leaf-handler-leaf-protect yasnippet-snippets
+      (leaf-handler-package yasnippet-snippets yasnippet-snippets nil)
+      (setq yasnippet-snippets-dir "~/.emacs.d/snippets") ; <- 1
+      (yas-global-mode 1))) ; <- 2
+    #+end_src
+
+- :require あり
+
+  - :init -> NG
+
+    #+begin_src
+(prog1 'yasnippet-snippets
+  (leaf-handler-leaf-path yasnippet-snippets)
+  (leaf-handler-leaf-protect yasnippet-snippets
+    (leaf-handler-package yasnippet-snippets yasnippet-snippets nil)
+    (yas-global-mode 1)
+    (require 'yasnippet-snippets)
+    (setq yasnippet-snippets-dir "~/.emacs.d/snippets")))
+    #+end_src
+
+  - :config -> OK
+
+[[https://qiita.com/conao3/items/dc88bdadb0523ef95878][「:prefaceは条件分岐キーワードより先に展開したい」などの順序に関する問題を解決するために、 leaf は整形されたplistを「善い順番」に並び替えます。  その「善い順番」は内部変数のleaf-keywordsの並び順で、 *scratch* で (pl (leaf-available-keywords)) を評価することで得ることができます。]]
+
+    #+begin_src
+(prog1 'yasnippet-snippets
+  (leaf-handler-leaf-path yasnippet-snippets)
+  (leaf-handler-leaf-protect yasnippet-snippets
+    (leaf-handler-package yasnippet-snippets yasnippet-snippets nil)
+    (require 'yasnippet-snippets)
+    (setq yasnippet-snippets-dir "~/.emacs.d/snippets")
+    (yas-global-mode 1)))
+    #+end_src
+#+end_comment
+
+*** yaml-mode
+
+#+begin_src emacs-lisp
+  (leaf yaml-mode :straight t)
+#+end_src
+
+#+RESULTS:
+: yaml-mode
+
++ 参考
+  * [[https://github.com/DarthFennec/highlight-indent-guides][DarthFennec/highlight-indent-guides: Emacs minor mode to highlight indentation]]
+
+*** shell-pop - いつでもどこでもshellを出す                       :PUBLISHED:
+:PROPERTIES:
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-shell-pop.html
+:EXPORT_OPTIONS:  toc:nil num:nil
+:END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: shell-pop - いつでもどこでもshellを出す
+permalink: /archives/254.html
+published: true
+---
+#+end_export
+
+**** 説明
+Emacsで作業中に、shellで作業をしたくなることはよくあります。そのような際に便利な設定です。
+
+**** 設定
+公式[fn:1]ではC-tに割り当てていますが、私は標準のC-tをわりと多用します。なので、C-c sにアサインしました。
+# 私はC-zにしています。ターミナルでEmacsを立ち上げたとき、ちょっとshellで作業をしたいと思ったらC-zでサスペンドします。そのイメージがあるので、shell使いたいな、と思うと勝手に手が反応します。shellを使い終わったら、もう一度C-zで閉じます。
+
+#+begin_src emacs-lisp
+  (leaf shell-pop
+    :straight t
+    :bind
+    ("C-c s" . shell-pop)
+    :custom
+    (shell-pop-shell-type . (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
+    (shell-pop-window-position . "bottom")
+    (setq shell-pop-full-span . t))
+#+end_src
+
+#+RESULTS:
+: shell-pop
+
+# ターミナルはansi-termにしました[fn:2]（6行目）。
+ターミナルはeshellにしました[fn:2]（6行目）。
+また、常に画面の下部に出すようにしています（7行目）。
+ウインドウの幅いっぱいに表示します（87行目）。
+
+[fn:1] [[https://github.com/kyagi/shell-pop-el][kyagi/shell-pop-el: shell-pop.el helps you to use shell easily on Emacs. Only one key action to work.]]
+
+[fn:2] [[https://blog.inouetakuya.info/entry/20110627/1309175529][Emacs のシェルモード比較 - shell、ansi-term、multi-term - 彼女からは、おいちゃんと呼ばれています]]
+
+*** TODO visual-fill-column - 長い行を任意の桁で折り返す          :PUBLISHED:
+:PROPERTIES:
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-visual-fill-column.html
+:EXPORT_OPTIONS:  toc:nil num:nil
+:END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: visual-fill-column - 長い行を任意の桁で折り返す
+permalink: /archives/218.html
+published: false
+---
+#+end_export
+
+**** 長い行を折り返す？折り返さない？
+Emacsでは長い行を折返して表示してくれます。
+
+[[https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line.png]]
+
+行が繋がっていることを示す矢印のアイコンが、画面の左右にいっぱい出ていますね。
+
+この折返しをしなくするには、変数truncate-linesをtに設定します。
+
+#+begin_example
+M-x set-variable
+truncate-lines
+t
+#+end_example
+そうすると、
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-truncate.png
+
+長い文の前の一部分だけ、表示されるようになりました。カーソルを右に移動すれば、全体を読むことができます。プログラミングするときには便利です。
+
+**** 改行で長い行を分割する
+この長い行でM-qを押します（fill-paragraph）。すると、
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-fill-paragraph.png
+
+長い一つの行に、改行が挿入されて複数の行に分割されました。このとき、一つの行の長さは72文字を超えない長さになります。Emacsのヘルプやマニュアルを見るとこのようなスタイルですね。紙に印刷するときも、このスタイルならはみ出て読めなくなることもありません。昔はメールもこんな感じで書くのが普通でした。
+
+**** 一行を分割しないで折返し位置を自由に設定したい
+さて、時は流れて、いまやメールもHTMLで書く時代です（好むと好まざるにかかわらず）。小さな画面のスマートフォンでメールを読むこともあります。そんなとき、72文字ごとに改行がはいると、非常に読みづらくなります。一行は一行のままで、表示をするときには画面のサイズに応じた位置で改行してほしいですよね。
+
+ただし、デフォルトの設定だとウインドウの端で折り返されているため、少し読みにくいと思いませんか？一行は一行のまま、自動で改行してほしい、そのとき、改行する位置を指定したい。こんなときに利用できるパッケージがvisual-fill-columモードです。
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column.png
+
+一行は一行のまま、72文字で折返してくれています。一行の長さが短くなり、多少は読みやすくなってますね。
+
+**** visula-fill-columnのインストール [C-c q]
+パッケージをインストールするには次の通り設定します。
+
+#+begin_src emacs-lisp
+  (leaf visual-fill-column
+    :doc "fill-column for visual-line-mode"
+    :req "emacs-25.1"
+    :tag "emacs>=25.1"
+    :url "https://github.com/joostkremers/visual-fill-column"
+    :added "2021-11-08"
+    :emacs>= 25.1
+    :straight t
+    :after org-mode
+    :hook (org-mode-hook . visual-fill-column-mode)
+    :bind(("C-c q" . visual-fill-column-mode)
+          (:visual-fill-column-mode-map
+           ("C-a" . beginning-of-visual-line)
+           ("C-e" . end-of-visual-line)
+           ("C-k" . kill-visual-line))))
+#+end_src
+
+#+RESULTS:
+: visual-fill-column
+
+C-c qにvisual-fill-column-modeにするキーを割り当てました。M-qでfill-paragraphするアナロジーです。
+
+また、一行を基準に動作する標準のキーを、画面の一行を基準に動作するコマンドに、次の通り置き換えています[fn:1]。
+
+| キー | 説明                        |
+|------+-----------------------------|
+| C-a  | *画面上の* 行の一番先頭に移動 |
+| C-e  | *画面上の* 行の一番末尾に移動 |
+| C-k  | *画面上の* 行を一行削除       |
+
+この設定により、折り返す桁を自由に指定できる上に、画面上の一行を単位として編集できます。
+
+折り返す位置は指定できます。折り返したい桁にカーソルを合わせ、 C-u C-x f を押すと、その位置で改行するようになります。あるいは C-u 50 C-x f のように、桁数を引数に与えてもよいです。なお、設定しただけでは表示は変わりません。何か文字を入力すると、変わります。
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-fill-column-50.png
+
+**** 単語の途中で折り返さないようにするには
+さて、日本語で入力するのであればこのままでもよいのですが、英語の場合、単語の途中で折り返されるのは嫌ですね。そんなときは visual-line-mode を使います。このモードは標準装備です。M-x visual-line-modeで設定できます。
+
+https://ploversky.net/wp-content/uploads/2021/11/emacs-long-line-visual-line-mode.png
+
+単語が途中で改行されないので、見やすくなりました。この行は全て繋がっていますが、矢印のアイコンもでなくなりました。ただし、日本語の文書でこの設定をしてしまうと、逆に見づらいです（日本語には単語の区切り（空白）がないので、逆にどこで改行するか判断しにくい）。
+
+#+begin_comment
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ante nisl, condimentum vitae blandit porttitor, ultricies in enim. Integer sit amet mi tincidunt, blandit metus id, finibus quam. Donec egestas tortor at metus condimentum, at varius magna venenatis. Nullam auctor ipsum quis massa semper, non eleifend quam accumsan. Etiam sed dui nisl. Nulla ac tempus nulla. Nulla facilisi. Cras ligula elit, rutrum in augue volutpat, pharetra tempus metus. Aliquam nibh est, scelerisque sit amet nisi non, aliquam volutpat nibh. Pellentesque consequat dui eros, sed fermentum augue tincidunt eu. Quisque eget tristique massa, eu gravida nunc.
+#+end_comment
+
+**** まとめ
+日本語の場合、
+
+1. truncate-linesはnil（標準のまま）
+2. visual-fill-columnパッケージをインストールして桁数を設定
+
+すると、自由に好きな位置で折返し表示させて編集できるようになります。
+
+英語の場合、追加で
+
+3. visual-line-modeを利用（標準で利用可）
+
+となります。
+
+**** 参考
++ [[https://github.com/joostkremers/visual-fill-column][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
+  * visual-fill-columnパッケージのサイト
++ [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Visual-Line-Mode.html]]
+  * visual-line-modeの説明
+
+[fn:1] orgモードではC-kにorg-kill-lineが割り当てられます。これを上書きすることで弊害がおきるかもしれませんが、未確認です。
+
+**** COMMENT コメント
++ mu4eでメールを書くときに利用する。
++ [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Adaptive-Fill.html][https://www.gnu.org/software/emacs/manual/html_node/elisp/Adaptive-Fill.html]]
+  * Adaptive Fill Modeと組み合わせることも（調査中）
++ [[https://github.com/joostkremers/visual-fill-column#centering-the-text][joostkremers/visual-fill-column: Emacs mode for wrapping visual-line-mode buffers at fill-column.]]
+  * センタリングすることも
+
+*** dired-launch - diredをランチャにする（WSL対応）                :PUBLISHED:
+:PROPERTIES:
+:EXPORT_FILE_NAME: ~/git/ploversky-jekyll/_posts/archives/2022-10-01-dired-launch.html
+:EXPORT_OPTIONS:  toc:nil num:nil
+:END:
+
+#+begin_comment
+First time: C-c C-e C-b C-s h h (Do this here)
+Next  time: C-u C-c C-e         (Do this anyware in the subtree)
+#+end_comment
+
+#+begin_export html
+---
+layout: post
+title: dired-launch - diredをランチャにする（WSL対応）
+permalink: /archives/475.html
+published: true
+---
+#+end_export
+
+diredでWordやExcelのファイルを開くと、謎のXMLファイルが入ったディレクトリのようなもの現れ、しょぼんとすることがありませんか？拡張子がdocxやxslxのファイルは、実はいくつかのXMLファイルをアーカイブしたものです。初期設定のままだと、EmacsはそれらがWordやExcelのファイルであると認識せず、アーカイブの中身を表示するのです。
+
+そこで、 [[https://melpa.org/#/dired-launch][dired-launch]] を導入して、きちんとWordやExcelが起動するように設定しましょう。WSL環境では、 =wslview= コマンド[fn:wslu]をインストールしておくと、Windows側でOfficeアプリを立ち上げられるようになり、便利です。
+
+dired-launchを導入すると、通常通り =dired= を開いてからWordやExcelのファイルを選択して *=J=* を押すと、アプリケーションが起動します。
+
+設定では、WSL環境かどうかを判断し、WSL環境であれば =wslview= でファイルを開くようにしています。そうでなければデフォルトの =mimeopen= コマンドで開きます（インストールされていれば、LibreOfficeが起動します）。
+
+#+begin_src emacs-lisp
+  (leaf dired-launch
+    :straight t
+    :hook (dired-mode-hook . dired-launch-mode)
+    :config
+    (when (and (eq system-type 'gnu/linux)
+               (getenv "WSLENV"))
+      (setq dired-launch-default-launcher '("wslview"))))
+#+end_src
+
+#+RESULTS:
+: dired-launch
+
+[fn:wslu] [[https://github.com/wslutilities/wslu][wslutilities/wslu: A collection of utilities for Windows 10 Linux Subsystems]]
+
+*** google-this - Google検索 [C-c / g]
+
+#+begin_src emacs-lisp
+  (leaf google-this
+    :straight t
+    :config
+    (google-this-mode 1))
+#+end_src
+
+#+RESULTS:
+: google-this
+
+*** region-bindings-mode
++ [[https://tam5917.hatenablog.com/entry/20130129/1359465171][region-bindings-modeの紹介 - 備忘録]]
++ [[https://github.com/magnars/expand-region.el][magnars/expand-region.el: Emacs extension to increase selected region by semantic units.]]
++ [[https://github.com/fgallina/region-bindings-mode][GitHub - fgallina/region-bindings-mode: A minor mode that enables custom bindings when mark is active.]]
+
+#+begin_src emacs-lisp
+    (leaf region-bindings-mode
+      :straight t
+      :require t
+      :config
+      (region-bindings-mode-enable))
+#+end_src
+
+#+RESULTS:
+: region-bindings-mode
+
+*** multiple-cursors
++ [[https://dev.classmethod.jp/articles/emacs-multiple-cursors/][複数カーソルを操作するパッケージ multiple-cursors.el のご紹介 | DevelopersIO]]
+
++ リージョンを選択してカーソルをあわせる
++ region-bindings-modeとともに使うとよい
+
+#+begin_src emacs-lisp
+  (leaf multiple-cursors
+    :straight t
+    :after region-bindings-mode
+    :config
+    (define-key region-bindings-mode-map "e" 'mc/edit-lines)
+    (define-key region-bindings-mode-map "a" 'mc/mark-all-like-this)
+    (define-key region-bindings-mode-map "p" 'mc/mark-previous-like-this)
+    (define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
+    (define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended))
+#+end_src
+
+#+RESULTS:
+: multiple-cursors
+
+*** align - コメントの位置を揃えたりする
+
+#+begin_src emacs-lisp
+  (leaf align
+    :doc "align text to a specific column, by regexp"
+    :tag "builtin"
+    :added "2021-10-30"
+    :after region-bindings-mode
+    :config
+    (define-key region-bindings-mode-map "=" 'align-regexp))
+#+end_src
+
+#+RESULTS:
+: align
+
+** メール/Web
+*** メール送信機能
+**** TODO 説明
+Emacs標準のメール送信機能を利用するための設定です[fn:sending-mail]。
+
+日本語メールを送信するには、[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Language-Environments.html][Language Environments]]が正しく設定されている必要があります。
+
+メールを編集して送信するコマンドは次の通りです。
+
+| C-x m   | メール編集（Messageモード） |
+| C-c C-c | メール送信                  |
+| C-c C-a | ファイルの添付[fn:mime]     |
+
+関連する設定ファイルです。
+
+| ~/.signature | メール署名[fn:signature]            |
+| ~/.authinfo  | smtpサーバ・パスワード[fn:authinfo] |
+| ~/.netrc     | エイリアス                          |
+
+ユーザ名とアカウントを設定します。
+
+#+begin_src emacs-lisp
+  (setq user-full-name "Yoshihide Chubachi")
+  (setq user-mail-address "yc@aiit.ac.jp")
+#+end_src
+
+#+RESULTS:
+: yc@aiit.ac.jp
+
+メールユーザエージェント（mua）をMessageモードにします。
+
+#+begin_src emacs-lisp
+  (setq mail-user-agent 'message-user-agent)
+#+end_src
+
+#+RESULTS:
+: message-user-agent
+
+Messageモードからの送信にsmtpmailを用うように設定します[fn:smtp]。
+- [[https://www.maketecheasier.com/use-email-within-emacs/#setting-up-emacs-to-send-email][How to Use Email within Emacs - Make Tech Easier]]
+
+#+begin_src emacs-lisp
+  (setq message-send-mail-function 'smtpmail-send-it)
+#+end_src
+
+#+RESULTS:
+: smtpmail-send-it
+
+smtpmailの設定をします。
+
+#+begin_src emacs-lisp
+  (setq smtpmail-stream-type 'starttls
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587)
+#+end_src
+
+#+RESULTS:
+: 587
+
+SMTPのパスワードは~/.authinfoで設定します。
+
+なお、Googleで二段階認証を設定している場合、アプリパスワードを生成して設定する必要があります[fn:google-app-password]。
+
+[fn:sending-mail] [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Sending-Mail.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Sending-Mail.html]]
+[fn:signature] mail-signatureがtのとき（ディフォルトでt）、mail-signature-file（標準では~/.singature）が挿入されます
+[fn:authinfo] .authinfoがない場合、初回送信時に自動で作成されます。
+[fn:mime] [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Mail-Misc.html][https://www.gnu.org/software/emacs/manual/html_node/emacs/Mail-Misc.html]]
+[fn:smtp] [[https://www.gnu.org/software/emacs/manual/html_mono/smtpmail.html#How-Mail-Works][https://www.gnu.org/software/emacs/manual/html_mono/smtpmail.html#How-Mail-Works]]
+[fn:google-app-password] [[https://kyopc.at.webry.info/202112/article_1.html][Googleの二段階認証開始後にGoogleメールにPOP3/SMTPアクセスする（mewなど）: kyoはパソコンMaster or Slave?]]
+
+*** shr/eww - Simple HTML Reader
++ 説明
+  * EmacsのWebブラウザに関する設定
+  * ewwはデフォルトだと読みにくいプロポーショナルフォントになる
+  * mu4eではメールを読む際にshrを使う
++ 文献
+  * [[https://www.emacswiki.org/emacs/eww][[Home] eww]]
++ 設定
+  * ewwを標準にするにはbrowse-url-browser-functionを設定する
+  * shr-use-fontsをnilに設定することで、固定幅フォントを使うようになる
+
+#+begin_src emacs-lisp
+  (leaf eww
+    :custom
+    (
+     ;; (browse-url-browser-function . 'eww-browse-url)
+     (shr-use-colors    . nil)
+     (shr-use-fonts     . nil)
+     (shr-image-animate . nil)
+     (shr-width         . 72)
+     (eww-search-prefix . "https://www.google.com/search?q=")
+     )
+    )
+#+end_src
+
+#+RESULTS:
+: eww
+
+*** notmuch - 高速Maildir検索ツール用のインタフェイス
+**** メモ
++ [[https://notmuchmail.org/notmuch-emacs/#index1h1][notmuch-emacs]]
+
++ [[https://notmuchmail.org/notmuch-emacs/#index5h2][After Notmuch is loaded notmuch-init-file (typically ~/.emacs.d/notmuch-config.el) is checked out.]]
+
++ orgのannotationに対応していないかも・・・
++ カスタマイズ変数
+  * '(notmuch-draft-folder "Gmail/drafts")
+    - ドラフトはGmailのdraftsへ
+    - notmuch-fcc-dirs . nil
+  * '(notmuch-fcc-dirs nil)
+    - FCC (file carbon copy) はなしでGmailに任せる
++ inboxかどうかをタグで判断している？+inbox
+  * imapのタグとnotmuchのタグは違う？
++ 新しいメールを受信したら、notmuch newが必要
++ Maildirを移動する方法不明
++ [[https://githubmemory.com/repo/minad/vertico/issues/119][Notmuch.el select tag error: "Tag must be in the form of +'this_tag' or '-that_tag'" - githubmemory]]
+  * Verticoでタグを操作する場合のバグを回避
+
++ [[https://notmuchmail.org/howto/][Index and search emails written in CJK scripts]]
+  + 日本語の場合、XAPIAN_CJK_NGRAM=1
+
++ imapでnewに入ったメールをcurに移すときファイル名に
+  * [[http://cr.yp.to/proto/maildir.html][When you move a file from new to cur, you have to change its name from uniq to uniq:info.]]
+  * P,R,S,T,D,Fのフラグをつける
+  * メーラで開いたとき、Sのフラグがついてnewからcurに移る
++ それとは別に，inboxとunreadのフラグがつく（inboxはnotmuchのスペシャルタグ）
+
+  + たぶんnotmuch newのとき
++ notmuchでInboxを見るには？
+  + search path:/Gmail\/inbox/ <-正規表現
++ notmuchのarchiveとは
+  * inbox tagを削除すること
+  * ファイルの移動は行わない？
++ そもそもGmailのInboxとは？
+  * [[https://www.gmailhelplinenumber.co.uk/gmail-help-desk-number-uk.html][Gmail inbox is that folder in which only the non-archived emails are kept. ]]
+  * Gmail All Mailの一部でアーカイブされていないもの
+  * Gmail上でarchiveにはinboxのメールも表示される
+  * Gmailでinboxをアーカイブしてもローカルのinbox/curにのこり続けるようだ
+    - mbsync で消えそうだけど・・・
+      - mbsnc の設定ぽいなあ
+    - [[https://www.seanh.cc/2021/08/22/backup-fastmail-and-gmail-with-isync/][Expunge Slave        # Expunge deleted messages from the local copy.]]
+    - [[https://www.seanh.cc/2021/08/22/backup-fastmail-and-gmail-with-isync/][The Pipelinedepth 1 slows isync down by preventing it from having multiple IMAP commands in flight at once. This is necessary to prevent isync from hitting Gmail’s bandwidth quotas and triggering this error message:]]
+    - 削除された
+
++ mbsyncを定期的に実行するには
+  - watch -n 180 mbsync -a
+  - [[https://wiki.archlinux.org/title/isync#Calling_mbsync_automatically][With imapnotify]]
+  - WSLではどれがいい？ nohup で
+
++ スレッドモードの操作
+
+| キー | 説明               |
+|------+--------------------|
+| m    | 新規メッセージ     |
+| n    | 次の行             |
+| SPC  | メールを読み進める |
+| M-n  | 次のスレッド       |
+
+**** 設定:notmuch [C-c r]
+
++ [[https://githubmemory.com/repo/minad/vertico/issues/119][Notmuch.el select tag error: "Tag must be in the form of +'this_tag' or '-that_tag'" - githubmemory]]
+  * verticoでタグが入力できない問題を回避する
++ [[https://notmuchmail.org/emacstips/#index5h2][Add a key binding to add/remove/toggle a tag]]
+
++ straight.elだとエラー
+
+#+begin_src emacs-lisp
+  (leaf notmuch
+    ;; :straight t
+    :package t
+    :require t
+    :hook
+    (notmuch-message-mode-hook . visual-fill-column-mode)
+    (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1)))
+    :custom
+    ((notmuch-draft-folder . "/drafts")   ; 編集中のドラフトはローカルのフォルダに
+     (notmuch-fcc-dirs . nil)             ; 送信済みメールはローカルに保存せず
+                                          ; Gmailに任せる
+     (notmuch-search-oldest-first . nil)  ; 検索結果を新しい順でソート
+     (notmuch-saved-searches
+      . '((:name "flagged"    :query "tag:flagged AND NOT tag:deleted"
+                 :key "f" :search-type tree)
+          (:name "inbox"      :query "tag:inbox folder:/Gmail\\/inbox/ AND NOT tag:deleted"
+                 :key "i" :search-type tree)
+          (:name "unread"     :query "tag:unread AND NOT tag:deleted"
+                 :key "u" :search-type tree)
+          (:name "sent"       :query "tag:sent AND NOT tag:deleted"
+                 :key "s" :search-type tree)
+          (:name "drafts"     :query "tag:draft AND NOT tag:deleted"
+                 :key "d" :search-type tree)
+          (:name "Gmal Inbox" :query "folder:/Gmail\\/inbox/"
+                 :key "I" :search-type tree)
+          (:name "Gmal Sent"  :query "folder:/Gmail\\/sent/"
+                 :key "S" :search-type tree)
+          (:name "all mail"   :query "NOT tag:deleted"
+                 :key "a" :search-type tree)))
+     )
+    :bind (("C-c r" . notmuch-hello))
+    :config
+    (advice-add #'notmuch-read-tag-changes
+                :filter-return (lambda (x) (mapcar #'string-trim x))) ; vertico対策
+    :config
+    (define-key notmuch-search-mode-map "f"
+      (lambda ()
+        "toggle flaged tag for message"
+        (interactive)
+        (if (member "flagged" (notmuch-search-get-tags))
+            (notmuch-search-tag (list "-flagged"))
+          (notmuch-search-tag (list "+flagged")))))
+    (define-key notmuch-show-mode-map "f"
+      (lambda ()
+        "toggle flaged tag for message"
+        (interactive)
+        (if (member "flagged" (notmuch-show-get-tags))
+            (notmuch-show-tag (list "-flagged"))
+          (notmuch-show-tag (list "+flagged")))))
+    (define-key notmuch-tree-mode-map "f"
+      (lambda ()
+        "toggle flaged tag for message"
+        (interactive)
+        (if (member "flagged" (notmuch-tree-get-tags))
+            (notmuch-tree-tag (list "-flagged"))
+          (notmuch-tree-tag (list "+flagged"))))))
+#+end_src
+
+#+RESULTS:
+: notmuch
+
+**** WindowsからWSL経由で呼び出す場合
+
+Windowsの場合、notmuch.batという名前でバッチを用意する。
+
+#+begin_example :tangle no
+@echo off
+wsl XAPIAN_CJK_NGRAM=1 notmuch %*
+#+end_example
+
+その際、引数に日本語を引き渡せるようにするために、
+プロセスのコーディングをcp932にする設定が必要。
+
+#+begin_src emacs-lisp :tangle no
+(set-language-environment "Japanese")
+(prefer-coding-system 'utf-8)
+(if (eq system-type 'windows-nt)
+    (setq default-process-coding-system (cons 'utf-8 'cp932)))
+#+end_src
+
+**** ol-notmuch
+:PROPERTIES:
+:ID:       b5355eb7-98ab-4386-86af-1d4fb44baeef
+:END:
+
++ orgのリンクをnotmuchに対応させる
+  - storeはできるけど・・・？
++ [[https://notmuchmail.org/emacstips/][Note the package was renamed from org-notmuch to ol-notmuch in recent versions of org-mode.]]
+
+#+begin_src emacs-lisp
+  (leaf ol-notmuch
+    :package t
+    :require t
+    :after notmuch org)
+#+end_src
+
+#+RESULTS:
+: ol-notmuch
+
+**** consult-notmuch
+notmuchのconsultで検索（結果が多いと落ちるようだ）
+
+#+begin_src emacs-lisp
+  (leaf consult-notmuch
+    ;; :straight (consult-notmuch :type git :host github
+    ;;                            :repo "emacsmirror/consult-notmuch")
+    :package t
+    :after consult notmuch)
+#+end_src
+
+#+RESULTS:
+: consult-notmuch
+
+**** mm-decode - mime関連（メール添付保存ディレクトリ）
+
+メールの添付をダウンロードするときのデフォルトディレクトリ。
+
+#+begin_src emacs-lisp
+  (leaf mm-decode
+    :custom (mm-default-directory . "~/Downloads/"))
+#+end_src
+
+#+RESULTS:
+: mm-decode
+
+**** gnus-alias - notmuchでシグネチャ
+
++ [[https://www.emacswiki.org/emacs/gnus-alias.el][http://github.com/hexmode/gnus-alias/]]
++ [[https://notmuchmail.org/emacstips/][gnus-alias allows you to define multiple identities when using message-mode.]]
+
+#+begin_src emacs-lisp
+  (leaf gnus-alias
+    :straight (gnus-alias :type git :host github
+                          :repo "hexmode/gnus-alias")
+    :config
+    (setq gnus-alias-identity-alist
+          '(("work"
+             nil
+             "中鉢欣秀 <yc@aiit.ac.jp>"
+             nil ;; No organization header
+             nil ;; No extra headers
+             nil ;; No extra body text
+             "~/.signature" ;; My signature
+             ))))
+#+end_src
+
+#+RESULTS:
+: gnus-alias
+
+** OS依存の設定
+*** WSLでWindows側のブラウザを立ち上げる
+
+- WSL側からWindowsを制御するユーテリティ
+  - [[https://github.com/wslutilities/wslu][wslutilities/wslu: A collection of utilities for Windows 10 Linux Subsystems]]
+  - wslviewコマンドを利用する
+
+- Emacsが使うブラウザを設定する
+  - [[https://www.emacswiki.org/emacs/BrowseUrl#h5o-4][[Home] Browse Url]]
+
+- WSLかどうか判断
+  - [[https://qiita.com/miy4/items/acf50a9c0a053b878b56#%E7%92%B0%E5%A2%83%E5%A4%89%E6%95%B0%E3%82%92%E6%8E%A2%E3%81%99][EmacsでWSLを使っている/いないを判断する - Qiita]]
+
+[[help:browse-url-browser-function’s]]
+
+#+begin_src emacs-lisp
+  (leaf *cmd/browser
+    :config
+    (defun cmd/wsl-browser (url &rest ignore)
+      "Browse URL using wslview."
+      (interactive "sURL: ")
+      (shell-command (concat "wslview " "'" url "'")))
+
+    (when (and (eq system-type 'gnu/linux)
+               (getenv "WSLENV"))
+      (setq browse-url-browser-function 'cmd/wsl-browser)
+      (setq browse-url-generic-program "web-browser")))
+#+end_src
+
+#+RESULTS:
+: *cmd/browser
+
+** プログラミング
+
+*** highlight-indent-guides
+**** 説明
+ソースコードを編集するとき、インデントのガイドを表示する。
+
+**** 設定
+#+begin_src emacs-lisp
+  (leaf highlight-indent-guides
+    :straight t
+    :require t
+    :hook
+    ((prog-mode-hook yaml-mode-hook) . highlight-indent-guides-mode)
+    :custom
+    (highlight-indent-guides-auto-enabled . t)
+    (highlight-indent-guides-responsive . t)
+    (highlight-indent-guides-method . 'column);fill)) ;character)) ; column
+    )
+#+end_src
+
+#+RESULTS:
+: highlight-indent-guides
+
+**** 参考
++ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#yaml%E3%81%AE%E9%9A%8E%E5%B1%A4%E6%A7%8B%E9%80%A0%E3%81%AB%E8%B2%A0%E3%81%91%E3%81%AA%E3%81%84----highlight-indent-guides][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
+*** rainbow-delimiters
+**** 説明
+
+#+begin_src emacs-lisp
+  (leaf rainbow-delimiters
+    :straight t
+    :hook
+    (prog-mode-hook . rainbow-delimiters-mode))
+#+end_src
+
+#+RESULTS:
+: rainbow-delimiters
+
+**** 参考
++ [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E6%8B%AC%E5%BC%A7%E3%81%8C%E5%A4%9A%E3%81%84%E3%81%A8%E8%99%B9%E3%81%8C%E3%81%BF%E3%81%88%E3%82%8B----rainbow-delimiters][Emacsモダン化計画 -かわEmacs編- - Qiita]]
+
+*** company - 自動補完
+
++ [[http://misohena.jp/blog/2021-08-08-emacs-company-mode-settings.html][Companyのお節介な補完を抑制する | Misohena Blog]]
+
+#+begin_src emacs-lisp
+  (leaf company
+    :straight t
+    :hook (after-init-hook . global-company-mode)
+    :config
+    (defun my-company-inhibit-idle-begin ()
+      (setq-local company-begin-commands nil))
+    (add-hook 'org-mode-hook #'my-company-inhibit-idle-begin)
+    (add-hook 'text-mode-hook #'my-company-inhibit-idle-begin))
+#+end_src
+
+#+RESULTS:
+: company
+
+*** fly-check [M-n][M-p]
+
+- emacs-lispのドキュメント用のチェック(emacs-lisp-checkdoc)を無効にする。
+
+#+begin_src emacs-lisp
+  (leaf flycheck
+    :doc "On-the-fly syntax checking"
+    :emacs>= 24.3
+    :straight t
+    :bind (("M-n" . flycheck-next-error)
+           ("M-p" . flycheck-previous-error))
+    :custom ((flycheck-emacs-lisp-initialize-packages . t)
+             (flycheck-disabled-checkers . '(emacs-lisp-checkdoc)))
+    :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
+    :config
+    (leaf flycheck-package
+      :doc "A Flycheck checker for elisp package authors"
+      :straight t
+      :config
+      (flycheck-package-setup))
+
+    (leaf flycheck-elsa
+      :doc "Flycheck for Elsa."
+      :emacs>= 25
+      :straight t
+      :config
+      (flycheck-elsa-setup))
+    )
+#+end_src
+
+*** projectile [C-x p]
++ 説明
+  * プロジェクトを扱う
+  * [[https://docs.projectile.mx/projectile/usage.html#basic-usage][Usage :: Projectile]]
+  * C-x p で起動するように設定
+
++ 設定
+
+  #+begin_src emacs-lisp
+    (leaf projectile
+      :straight t
+      :require t
+      :bind ((projectile-mode-map
+              ("C-x p" . projectile-command-map))
+             (projectile-command-map
+              ("b" . consult-project-buffer)))
+      :config
+      (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
+      (projectile-mode 1))
+  #+end_src
+
+  #+RESULTS:
+  : projectile
+
++ 参考
+  * [[https://docs.projectile.mx/projectile/index.html][Projectile :: Projectile]]
+
+*** perspective [C-x C-b] - パースペクティブ
+
+- プリフィックスがBookmark+とかぶっている
+  - C-x x ..
+(defcustom persp-mode-prefix-key (kbd "C-x x")
+  "Prefix key to activate perspective-map."
+
+#+begin_src emacs-lisp
+  (leaf perspective
+    :straight t
+    :require t
+    :custom
+    (persp-mode-prefix-key . "p")
+    :bind (;; (persp-mode-map
+           ;;  ("C-c p" . perspective-map))
+           ("C-x C-b" . persp-list-buffers))
+    :config
+    (persp-mode)
+    (leaf consult
+      :straight t
+      :require t
+      :config
+      (consult-customize consult--source-buffer :hidden t :default nil)
+      (add-to-list 'consult-buffer-sources persp-consult-source)))
+#+end_src
+
+#+RESULTS:
+: perspective
+
+*** COMMENT Bookmark+ - ブックマークの拡張（多機能すぎ）
+:PROPERTIES:
+:CREATED: [2022-03-05 Sat 20:25]
+:ANNOTADED: [[file:~/Dropbox/Org/Memo.org::*orgの走査][orgの走査]]
+:END:
+**** 説明
+- Bookmark+モード
+  - [[https://www.emacswiki.org/emacs/BookmarkPlus#BookmarkAnnotations][[Home] Bookmark Plus]]
+- Bookmark the file you are editing: ‘C-x x m’
+  - ファイルをブックマークする
+- Jump to a bookmark: ‘C-x j j’
+- Tag a file (creates an autofile bookmark): `C-x x t + a’
+- List/edit your bookmarks: ‘C-x r l’
+  - ブックマークリストで、タグを付けたりできるようだ
+- むちゃくちゃ機能が多い・・・
+
+- やりたいこと
+  - elのコードにアノテーションを付けたいq
+  - [[https://www.emacswiki.org/emacs/BookmarkPlus][Bookmark Annotations]]
+
+- [[https://www.emacswiki.org/emacs/BookmarkPlus][Command ‘bookmark-show-annotation’ shows an annotation in read-only mode. You can use ‘C-x C-q’ in the annotation buffer to switch to edit mode (and back again).]]
+
+1. bookmarkをつける
+   - (リージョンを選択し） C-x x m
+
+- bookmark-show-annotation C-x x a s
+  - アノテーションをread-onlyで開く
+  - C-x C-q で編集できる
+  - C-c C-c で保存、C-c C-kでキャンセル
+
+- 最初にアノテーションをつけるようだ
+  - 行にアノテーションをつけるには？
+
+- いろいろ大変なので、annotate.elにする・・・
+
+**** 設定
+
+- (defcustom bmkp-bookmark-map-prefix-keys (list (kbd "C-x x"))
+
+#+begin_src emacs-lisp :tangle no
+  (leaf bookmark+
+    :straight t
+    :require t)
+#+end_src
+
+#+RESULTS:
+: bookmark+
+
+*** coverage - テストのカバレッジ
+
+#+begin_src emacs-lisp
+ (leaf coverage :straight t)
+#+end_src
+
+#+RESULTS:
+: coverage
+
+*** Dockerfileモード
+
+- C-c C-b でbuildを実行する
+- ファイル変数でイメージ名が設定できる
+
+;; ## -*- dockerfile-image-name: "your-image-name-here" -*-
+
+- 通常は警告がでるのでdockerfile-image-nameをsafeに設定する
+
+#+begin_src emacs-lisp
+  (leaf dockerfile-mode :straight t
+    :config
+    ;; Set dockerfile-image-name as safe variable.
+    (put 'dockerfile-image-name 'safe-local-variable #'stringp))
+#+end_src
+
+#+RESULTS:
+: dockerfile-mode
+
+** Emacs Lispプログラミング
+*** paredit - emacs lisp用モード
+
+**** 説明
+- 構造化コードエディタ
+
+**** 設定
+
+#+begin_src emacs-lisp
+  (leaf paredit
+    :straight t
+    :commands enable-paredit-mode
+    :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
+           (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
+           (ielm-mode-hook . enable-paredit-mode)
+           (lisp-mode-hook . enable-paredit-mode)
+           (lisp-interaction-mode-hook . enable-paredit-mode)
+           (scheme-mode-hook . enable-paredit-mode)))
+#+end_src
+
+#+RESULTS:
+: paredit
+
+**** 参考
+- [[https://daregada.sakuraweb.com/paredit_tutorial_ja.html][ParEdit チュートリアル]]
+- [[https://www.emacswiki.org/emacs/ParEdit][[Home] Par Edit]]
+
+*** elisp編集時にoutline-minnor-modee
+
+#+begin_src emacs-lisp
+  (leaf *emacs-lisp-mode-hook
+    :config
+    (add-hook
+     'emacs-lisp-mode-hook
+     'outline-minor-mode))
+#+end_src
+
+#+RESULTS:
+: *emacs-lisp-mode-hook
+
+#+begin_src emacs-lisp :tangle no :results value pp
+;after-save-hook
+emacs-lisp-mode-hook
+;(current-buffer)
+#+end_src
+
+#+RESULTS:
+: (ert--activate-font-lock-keywords outline-minor-mode enable-paredit-mode flycheck-mode)
+
+*** ERTを起動する設定 [C-c t]
+
+#+begin_src emacs-lisp
+  (leaf ert
+    :bind (("C-c t" . cmd/run-ert))
+    :config
+    (defun cmd/run-ert ()
+      (interactive)
+      (eval-buffer)
+      (call-interactively 'ert)))
+#+end_src
+
+#+RESULTS:
+: ert
+
+*** emr - Emacs Refactor
+
+#+begin_src emacs-lisp
+  (leaf emacs-refactor
+    :straight t
+    :bind ((emacs-lisp-mode-map
+            ("M-RET" . emr-show-refactor-menu))))
+#+end_src
+
+#+RESULTS:
+: emacs-refactor
+
+#+begin_src emacs-lisp
+  (leaf popup :straight t)
+#+end_src
+
+#+RESULTS:
+: popup
+
+#+begin_src emacs-lisp
+  (leaf list-utils :straight t)
+#+end_src
+
+#+RESULTS:
+: list-utils
+
+#+begin_src emacs-lisp
+  (leaf iedit :straight t)
+#+end_src
+
+#+RESULTS:
+: iedit
+
+** 未整理
+*** hydra
+
++ [[https://medium.com/@mopemope/hydra-%E3%81%AE%E3%82%B9%E3%82%B9%E3%83%A1-88a4168f945c][Hydra のススメ. みなさん、 Emacs 使ってますか？先日 Emacs 26.1… | by mopemope | Medium]]
+
+#+begin_src emacs-lisp
+(defhydra hydra-zoom (global-map "<f2>")
+  "zoom"
+  ("i" text-scale-increase "in")
+  ("o" text-scale-decrease "out"))
+#+end_src
+
+#+RESULTS:
+: hydra-zoom/body
+*** Wanderlustでgmailを読む
+**** 説明
+- 気合の入った設定
+  - [[https://uwabami.github.io/cc-env/Emacs.html#org2c2abb9b][Emacs の設定 | Youhei SASAKI’s official site]]
+
+Wanderlustが依存するライブラリ
+
+| SEMI | MIMEサポート                                 |
+| APEL | 基礎的な多種の関数群（charactor-encoding等） |
+| FLIM | MIME用符号化（base64エンコーディング等）     |
+
+Wanderlustの内部ライブラリ
+
+| ELMO | IMAP等様々な形式を読むライブラリ |
+
+(defcustom
+  "Fetch threshold."
+  :type '(choice (integer :tag "Threshold (bytes)")
+		 (const :tag "No limitation" nil))
+  :group 'elmo)
+
+- imapでの受信する
+- Wanderlust <=> ELMO <=> GMail
+
+- Mewより更新されている
+- 調査
+  - [[%url][[Home] Wander Lust]]
+    - 2010年で止まっている
+  - [[%url][wanderlust - MELPA]]
+  - [[%url][GitHub - wanderlust/wanderlust: Wanderlust Development Repository]]
+    - ここが最新ぽい
+
+  - ~/Mail/queueディレクトリを作ったら動いた
+  - 設定はここを参照
+    - [[https://github.com/wanderlust/wanderlust/blob/master/samples/ja/dot.wl][wanderlust/dot.wl at master · wanderlust/wanderlust]]
+  - 参考資料
+    - [[https://geolog.mydns.jp/www.geocities.co.jp/maple4estry/wanderlust.html][適当メモ - maple4estry - >> Fedora CORE (2) + emacs + Wanderlust で IMAPを読む]]
+
+- [[https://wanderlust.github.io/wl-docs/wl-ja.html#IMAP-Folder][3.1 IMAP フォルダ]]
+  -
+
+- Cannot open: elmo-network-initialize-session
+  - .elmoを削除してやり直したら消えた
+
+**** 設定
+
+#+begin_src emacs-lisp
+  (leaf wanderlust :straight t
+    :config
+    ;; IMAP
+    (setq elmo-imap4-default-user "yc@aiit.ac.jp"
+          elmo-imap4-default-authenticate-type 'clear
+          elmo-imap4-default-server "imap.gmail.com"
+          elmo-imap4-default-port 993
+          elmo-imap4-default-stream-type 'ssl
+          )
+    ;; For non ascii-characters in folder-names
+    (setq elmo-imap4-use-modified-utf7 t)
+
+    ;; (setq elmo-plugged t)
+    ;; (setq elmo-plugged-condition 'independent)
+
+    ;; メッセージ受信の上限を無限にする
+    (setq elmo-message-fetch-threshold nil)
+
+    ;; SMTP
+    (setq
+     wl-smtp-connection-type   'starttls         ; Use TLS
+     wl-smtp-authenticate-type "login"           ; Authentication type
+     wl-smtp-posting-user      "yc@aiit.ac.jp"   ; Username
+     wl-smtp-posting-server    "smtp.gmail.com"  ; SMTP server
+     wl-smtp-posting-port      587               ; The SMTP port
+
+     wl-local-domain           "aiit.ac.jp"       ; The SMTP server again
+     wl-message-id-domain      "aiit.ac.jp") ; And... Again?
+
+    (setq
+     wl-default-folder "%INBOX"
+     wl-draft-folder   "%[Gmail]/下書き"
+     wl-trash-folder   "%[Gmail]/ゴミ箱"
+
+     wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>"  ; Our From: header field
+     wl-fcc-force-as-read t           ; Mark sent mail (in the wl-fcc folder) as read
+     wl-default-spec "%")             ; For auto-completion
+
+    ;; 隠したいヘッダの設定
+    (setq wl-message-ignored-field-list
+          '("ARC-.*:" "X-.*:" ".*Received.*:"
+            "Authentication-Results:" "MIME-Version:"
+            "List-.*:" "DKIM-.*:"
+            ".*Path:" ".*Id:" "^References:"
+            "^Replied:" "^Errors-To:"
+            "^Lines:" "^Sender:" ".*Host:" "^Xref:"
+            "^Content-Type:" "^Precedence:"
+            "^Status:" "^X-VM-.*:"))
+
+    ;; 表示するヘッダの設定
+    ;; 'wl-message-ignored-field-list' より優先される
+    (setq wl-message-visible-field-list '("^Message-Id:"))
+
+    ;; 大きいメッセージを送信時に分割しない
+    (setq mime-edit-split-message nil)
+
+    (require 'wl-qs)
+    (setq wl-quicksearch-folder "%[Gmail]/すべてのメール")
+
+    (add-to-list 'wl-dispose-folder-alist
+                 '("^%INBOX" . remove))
+    (add-to-list 'wl-dispose-folder-alist
+                 '(".*Junk$" . remove))
+
+    (require 'elmo nil 'noerror)
+    (defun my:wl-summary-jump-to-referer-message ()
+      (interactive)
+      (when (wl-summary-message-number)
+        (if (eq (elmo-folder-type-internal wl-summary-buffer-elmo-folder) 'flag)
+            (progn
+              (let* ((referer (elmo-flag-folder-referrer
+                               wl-summary-buffer-elmo-folder
+                               (wl-summary-message-number)))
+                     (folder (if (> (length referer) 1)
+                                 (completing-read
+                                  (format "Jump to (%s): " (car (car referer)))
+                                  referer
+                                  nil t nil nil (car (car referer)))
+                               (car (car referer)))))
+                (wl-summary-goto-folder-subr folder 'no-sync nil nil t)
+                (wl-summary-jump-to-msg (cdr (assoc folder referer)))))
+          (when (eq (elmo-folder-type wl-summary-last-visited-folder) 'internal)
+            (wl-summary-goto-last-visited-folder)))))
+    (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)
+    )
+#+end_src
+
+#+RESULTS:
+: wanderlust
+
+**** アドレス帳
+
+- アドレスマネージャを起動する
+  - =C-c C-a=
+- [[https://wanderlust.github.io/wl-docs/wl-ja.html#kibaindo-6][Wanderlust – Yet Another Message Interface On Emacsen –]]
+  - xを押すとドラフトが出るはずなのに、出ない・・・
+
+**** クイックサーチ
+
+- GMailを設定してみる
+
+**** Tasks
+- 受信するとき、メッセージ分割をしない
+
+*** Dired Plus
+**** files+
+
+- [[https://www.emacswiki.org/emacs/DiredPlus][If You Use Emacs on MS Windows]]
+
+#+begin_src emacs-lisp
+  (leaf files+
+    :straight t)
+#+end_src
+
+#+RESULTS:
+: files+
+
+**** ls-lisp+
+
+#+begin_src emacs-lisp
+  (leaf ls-lisp+
+    :straight t)
+#+end_src
+
+#+RESULTS:
+: ls-lisp+
+
+**** w32-browser                                                     :FIXME:
+
+- ファイルに関連付けられたWindowsアプリケーションを起動します。
+- dired+と連携する
+- 参照
+  - [[https://www.emacswiki.org/emacs/w32-browser.el][[Home] w32-browser.el]]
+
+#+begin_src emacs-lisp
+  (leaf w32-browser
+    :straight t)
+#+end_src
+
+#+RESULTS:
+: w32-browser
+
+**** Dired Plus
+
+- 参照
+  - [[https://www.emacswiki.org/emacs/DiredPlus][[Home] Dired Plus]]
+  - [[https://taipapamotohus.com/post/dired/#dired-plus][Dired reinforcement | A perfect autumn day]]
+
+#+begin_src emacs-lisp
+  (leaf dired+
+    :straight (dired+ :type git :host github
+                      :repo "emacsmirror/dired-plus"))
+#+end_src
+
+#+RESULTS:
+: dired+
+
+- [[https://www.emacswiki.org/emacs/files%2b.el][[Home] files+.el]]
+- Bookmark+がセットぽい
+
+** 自作パッケージ
+*** org-sync-gtasks
+
+#+begin_src emacs-lisp
+  (leaf org-sync-gtasks
+    ;; :straight (org-sync-gtasks :type git :host github
+    ;;                            :repo "ychubachi/org-sync-gtasks"
+    ;;                            :branch "develop")
+    :init
+    (leaf oauth2 :straight t)
+    :config
+    (setq load-path (cons "~/git/org-sync-gtasks" load-path))
+    (require 'org-sync-gtasks))
+#+end_src
+
+#+RESULTS:
+: org-sync-gtasks
+
+*** org-sync-qiita
+
+#+begin_src emacs-lisp
+  (leaf org-sync-qiita
+    ;; :straight (org-sync-gtasks :type git :host github
+    ;;                            :repo "ychubachi/org-sync-gtasks"
+    ;;                            :branch "develop")
+    :init
+    (leaf request-deferred :straight t)
+    (leaf ox-qmd :straight t)
+    :config
+    (setq load-path (cons "~/git/org-sync-qiita" load-path))
+    (require 'org-sync-qiita))
+#+end_src
+
+#+RESULTS:
+: org-sync-qiita
+
+** おわりに
+*** お約束の記述
+
+#+begin_src emacs-lisp
+(provide 'README)
+
+;; Local Variables:
+;; indent-tabs-mode: nil
+;; byte-compile-warnings: (not cl-functions obsolete)
+;; End:
+
+;;; README.el ends here
+#+end_src
+
+*** 参考文献
+1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
