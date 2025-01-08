@@ -462,13 +462,7 @@
 ,#+begin_src emacs-lisp
 #+end_comment
 
-*** FIXME 余計なヘッダ →削除
-#+begin_src emacs-lisp
-  (leaf Main
-    :disabled nil
-    :init
-#+end_src
-*** メールアドレスの設定
+* メールアドレスの設定
 #+begin_src emacs-lisp
   (leaf Mail-Variables
     :custom
@@ -561,7 +555,7 @@
     #+end_src
 
 
-** FIXME External-Packages
+** TODO leaf関連→early-init.elに
 *** leaf-tree
 
 #+begin_src emacs-lisp
@@ -584,6 +578,7 @@
   (leaf leaf-convert :straight t)
 #+end_src
 
+** 外部パッケージ
 *** インストールするだけパッケージ
 #+begin_src emacs-lisp
   (leaf yaml-mode :straight t)
@@ -663,14 +658,7 @@
           (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
 #+end_src
 
-** FIXME
-
-**** Completion UI
-
-#+begin_src emacs-lisp
-      (leaf CompletionUI
-        :init
-#+end_src
+** Completion UI
 *** vertico
 #+begin_src emacs-lisp
         (leaf vertico
@@ -874,23 +862,22 @@
 *** embark-consult
 
 #+begin_src emacs-lisp
-
-          (leaf embark-consult
-            :doc "Consult users will also want the embark-consult package."
-            :straight t
-            :after (embark consult)
-            ;; :demand t ; only necessary if you have the hook below
-            ;; if you want to have consult previews as you move around an
-            ;; auto-updating embark collect buffer
-            :hook
-            (embark-collect-mode . consult-preview-at-point-mode))
-          ))
+  (leaf embark-consult
+    :doc "Consult users will also want the embark-consult package."
+    :straight t
+    :after (embark consult)
+    ;; :demand t ; only necessary if you have the hook below
+    ;; if you want to have consult previews as you move around an
+    ;; auto-updating embark collect buffer
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode))
+  )
 #+end_src
 
 #+RESULTS:
 : embark-consult
 
-*** メールクライアント
+** メールクライアント
 #+begin_src emacs-lisp
 
       (leaf Mail-Client
@@ -1142,10 +1129,10 @@
                    (lisp-interaction-mode-hook . enable-paredit-mode)
                    (scheme-mode-hook . enable-paredit-mode)))
 #+end_src
-*** headline
+** Global-Bindings
 #+begin_src emacs-lisp
-          (leaf Global-Bindings
-            :init
+  (leaf Global-Bindings
+    :init
 #+end_src
 *** macrostep
 #+begin_src emacs-lisp
@@ -1199,7 +1186,7 @@
                 (call-interactively 'ert))))
 
    #+end_src
-*** headline
+** Emacs-Lisp-Mode-Map
 #+begin_src emacs-lisp
        (leaf Emacs-Lisp-Mode-Map
             :init
@@ -1209,7 +1196,7 @@
             (leaf emacs-refactor
               :straight t
               :bind ((emacs-lisp-mode-map
-                      ("M-RET" . emr-show-refactor-menu)))))))
+                      ("M-RET" . emr-show-refactor-menu))))))
 #+end_src
 ** Global-Key-Bindngs
 #+begin_src emacs-lisp
@@ -1291,22 +1278,7 @@
         ;; End of Global-Key-Bindings
         )
 #+end_src
-*** headline
-#+begin_src emacs-lisp
-
-      (leaf Global-Minnor-Mode
-        :init
-
-
-#+end_src
-*** headline
-#+begin_src emacs-lisp
-
-        )
-
-      (leaf Emacs-Startup-Hook
-        :init
-#+end_src
+** Emacs-Startup-Hook
 *** yasnippet-snippetsの設定
 #+begin_src emacs-lisp
         (leaf yasnippet-snippets
@@ -1332,16 +1304,10 @@
               :hook
               (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
-*** headline
+** FIXME headline
 #+begin_src emacs-lisp
-
-  )
-
-          (leaf TODO:Unorganized
-            :init
-            (leaf Misc
-              :init
-
+  (leaf TODO:Unorganized
+    :init
               #+end_src
 *** 実行時に出る警告を非表示にする
 
@@ -1349,7 +1315,7 @@
   (leaf *warnings
     :custom
     (warning-suppress-types . '(((yasnippet backquote-change))
-                                (org-element-cache)))))
+                                (org-element-cache))))
 #+end_src
 
 #+RESULTS:
