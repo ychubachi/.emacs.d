@@ -589,11 +589,6 @@
 : dired+
 
 ** FIXME Keyboard UI
-
-#+begin_src emacs-lisp
-      (leaf KeyboardUI
-        :init
-    #+end_src
 *** which-key
 #+begin_src emacs-lisp
     (leaf which-key
@@ -869,12 +864,7 @@
 #+RESULTS:
 : embark-consult
 
-** FIXME メールクライアント
-#+begin_src emacs-lisp
-
-      (leaf Mail-Client
-        :init
-    #+end_src
+** メールクライアント
 *** notmuch
 #+begin_src emacs-lisp
     (leaf notmuch
@@ -1065,11 +1055,6 @@
                       (wl-summary-goto-last-visited-folder)))))
 
               (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)
-#+end_src
-** FIXME headline
-#+begin_src emacs-lisp
-              ))
-
 #+end_src
 ** Development
 *** auto-indent-yanked-code (core?)
@@ -2095,11 +2080,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                      :base-extension "jpg\\|gif\\|png|css\\|el"
                      :recursive t)))))
 #+end_src
-** FIXME orgでの編集作業を便利にする
-#+begin_src emacs-lisp
-        (leaf Org-Editing
-          :init
-#+end_src
+** orgでの編集作業を便利にする
 **** org-use-speed-command - ?
 #+begin_src emacs-lisp
           (leaf *org-use-speed-commands
@@ -2128,14 +2109,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                          '("w" . "warning"))
             (add-to-list 'org-structure-template-alist
                          '("f" . "figure")))
-          )
 #+end_src
-*** FIXME その他のOrgの設定
-#+begin_src emacs-lisp
-
-        (leaf Org-Other
-          :init
-          #+end_src
+*** その他のOrgの設定
 **** org-babel - babelで使える言語を登録
 #+begin_src emacs-lisp
   (leaf *org-babel
@@ -2184,18 +2159,20 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
   #+end_src
 **** org-download - ?
 #+begin_src emacs-lisp
-          (leaf org-download
-            :straight t
-            :require t
-            :custom (org-download-method . 'attach)
-            :config
-            (setq org-image-actual-width 400) ; width of images (#+ATTR_ORG: 400)
-            (add-hook 'dired-mode-hook 'org-download-enable)
-            (leaf
-              :when (eq system-type 'windows-nt)
-              :custom (org-download-screenshot-method . "magick convert clipboard: %s")))
-          )
+  (leaf org-download
+    :straight t
+    :require t
+    :custom (org-download-method . 'attach)
+    :config
+    (setq org-image-actual-width 400) ; width of images (#+ATTR_ORG: 400)
+    (add-hook 'dired-mode-hook 'org-download-enable)
+    (leaf
+      :when (eq system-type 'windows-nt)
+      :custom (org-download-screenshot-method . "magick convert clipboard: %s")))
+#+end_src
 
+**** FIXME
+#+begin_src emacs-lisp
   )
 #+end_src
 
