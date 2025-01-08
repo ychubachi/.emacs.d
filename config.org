@@ -1288,13 +1288,7 @@
               :hook
               (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
-** FIXME Unorganized
-#+begin_src emacs-lisp
-  (leaf TODO:Unorganized
-    :init
-    (leaf Misc
-      :init
-              #+end_src
+** Unorganized
 *** 実行時に出る警告を非表示にする
 
 #+begin_src emacs-lisp
@@ -1445,10 +1439,6 @@
               )
 #+end_src
 ** Prog-Mode-Hook
-#+begin_src emacs-lisp
-  (leaf Prog-Mode-Hook
-    :init
-#+end_src
 *** highlight-indent-guides
 #+begin_src emacs-lisp
           (leaf highlight-indent-guides
@@ -1468,8 +1458,10 @@
     :straight t
     :hook
     (prog-mode-hook . rainbow-delimiters-mode))
-
-  ))))
+#+end_src
+** FIXME
+#+begin_src emacs-lisp
+  )
 #+end_src
 ** COMMENT 不使用パッケージ
 #+begin_src emacs-lisp
