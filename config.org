@@ -462,7 +462,7 @@
 ,#+begin_src emacs-lisp
 #+end_comment
 
-* メールアドレスの設定
+*** メールアドレスの設定
 #+begin_src emacs-lisp
   (leaf Mail-Variables
     :custom
@@ -499,11 +499,7 @@
         (version-control . t))
         #+end_src
 
-** FIXME Startup Hook →削除？
-#+begin_src emacs-lisp
-  (leaf Emacs-Startup-Hook
-    :init
-#+end_src
+** TODO Startup Hook → hookを使わずinitでよいのでは？
 *** display-fill-column-indicator
 #+begin_src emacs-lisp
       (leaf display-fill-column-indicator
@@ -528,10 +524,6 @@
     (emacs-startup-hook . midnight-mode))
 #+end_src
 
-** FIXME
-#+begin_src emacs-lisp
-  )
-#+end_src
 ** ??
 *** wdired
 #+begin_src emacs-lisp
