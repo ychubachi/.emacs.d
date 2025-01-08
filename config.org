@@ -869,7 +869,7 @@
 #+RESULTS:
 : embark-consult
 
-** メールクライアント
+** FIXME メールクライアント
 #+begin_src emacs-lisp
 
       (leaf Mail-Client
@@ -1066,13 +1066,16 @@
 
               (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)
 #+end_src
-*** headline
+** FIXME headline
 #+begin_src emacs-lisp
-
               ))
 
+#+end_src
+** FIXME Development
+#+begin_src emacs-lisp
           (leaf Development
             :init
+
 #+end_src
 *** auto-indent-yanked-code (core?)
 #+begin_src emacs-lisp
@@ -1104,7 +1107,7 @@
           ;; Set dockerfile-image-name as safe variable.
           (put 'dockerfile-image-name 'safe-local-variable #'stringp))
   #+end_src
-*** Emacs-Lisp
+** FIXME Emacs-Lisp
 #+begin_src emacs-lisp
         (leaf Emacs-Lisp
           :init
@@ -1130,7 +1133,7 @@
               :straight t
               :bind (("C-c e" . macrostep-expand))) ;; TODO: elisp mode?
 #+end_src
-*** Emacs-Lisp-Mode-Hook
+** FIXME Emacs-Lisp-Mode-Hook
 #+begin_src emacs-lisp
 
           (leaf Emacs-Lisp-Mode-Hook
@@ -1181,7 +1184,7 @@
               :bind ((emacs-lisp-mode-map
                       ("M-RET" . emr-show-refactor-menu))))))
 #+end_src
-** Global-Key-Bindngs
+** FIXME Global-Key-Bindngs
 #+begin_src emacs-lisp
       (leaf Global-Key-Bindings
         :init
@@ -1285,7 +1288,7 @@
               :hook
               (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
-** FIXME headline
+** FIXME Unorganized
 #+begin_src emacs-lisp
   (leaf TODO:Unorganized
     :init
@@ -1304,9 +1307,8 @@
 #+RESULTS:
 : *warnings
 
-*** headline
+*** FIXME headline
 #+begin_src emacs-lisp
-
         (leaf TODO:Move-To-Builtin
           :init
           #+end_src
@@ -1442,10 +1444,13 @@
                )
               )
 #+end_src
-*** headline
+** Prog-Mode-Hook
 #+begin_src emacs-lisp
-        (leaf Prog-Mode-Hook
-          :init
+  (leaf Prog-Mode-Hook
+    :init
+#+end_src
+*** highlight-indent-guides
+#+begin_src emacs-lisp
           (leaf highlight-indent-guides
             :straight t
             :require t
@@ -1629,11 +1634,15 @@
 : ruler-mode
 
 ** TODO Org
-*** Org-Mode全般の設定
 
 #+begin_src emacs-lisp
 (leaf Org-Mode
         :init
+#+end_src
+
+*** Org-Mode全般の設定
+
+#+begin_src emacs-lisp
         (leaf Org-Settings
           :bind
           (("C-c l" . org-store-link)
@@ -1765,7 +1774,7 @@
                                       ":END:"
                                       "\n** %?"))))))))
 #+end_src
-*** OrgのLook-And-Feel
+** FIXME OrgのLook-And-Feel
 #+begin_src emacs-lisp
         (leaf Org-Look-And-Feel
           :init
@@ -1838,7 +1847,7 @@
           )
 
 #+end_src
-*** headline
+** FIXME Org-Documentation
 #+begin_src emacs-lisp
         (leaf Org-Documentation
           :init
@@ -2036,7 +2045,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+begin_src emacs-lisp
           (leaf ox-pandoc :straight t :require t))
 #+end_src
-*** ブログに投稿する
+** FIXME ブログに投稿する
 #+begin_src emacs-lisp
 
         (leaf Org-Publishing
@@ -2124,7 +2133,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                      :base-extension "jpg\\|gif\\|png|css\\|el"
                      :recursive t)))))
 #+end_src
-*** orgでの編集作業を便利にする
+** FIXME orgでの編集作業を便利にする
 #+begin_src emacs-lisp
         (leaf Org-Editing
           :init
@@ -2159,7 +2168,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                          '("f" . "figure")))
           )
 #+end_src
-**** その他のOrgの設定
+*** FIXME その他のOrgの設定
 #+begin_src emacs-lisp
 
         (leaf Org-Other
@@ -2228,7 +2237,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
   )
 #+end_src
 
-**** TODO org-modeとimenuの連携
+**** TODO org-modeとimenuの連携 → leafにする
 
 + org-modeのとき，imenuをメニューバーに追加する
 
