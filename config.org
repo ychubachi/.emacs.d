@@ -469,9 +469,6 @@
     :init
     (leaf Builtin-Packages
       :init
-      (leaf Variables
-        :init
-
 #+end_src
 *** メールアドレスの設定
 #+begin_src emacs-lisp
@@ -489,7 +486,7 @@
 #+RESULTS:
 : Mail-Variables
 
-** vc-hooks
+*** vc-hooks
 #+begin_src emacs-lisp
     (leaf vc-hooks
           :custom
@@ -500,7 +497,7 @@
 #+RESULTS:
 : vc-hooks
 
-*** TODO バックアップのディレクトリとバージョン管理の設定 → no-littering?
+**** TODO バックアップのディレクトリとバージョン管理の設定 → no-littering?
 
 #+begin_src emacs-lisp
   (leaf files
@@ -509,11 +506,6 @@
         (delete-old-versions . t)
         (version-control . t))
         #+end_src
-
-** FIXME
-#+begin_src emacs-lisp
-)
-    #+end_src
 
 ** FIXME Startup Hook →削除？
 #+begin_src emacs-lisp
