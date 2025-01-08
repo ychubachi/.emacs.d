@@ -8,6 +8,7 @@
 ** TODO recentfがおかしい？
 
 ** TODO org-space-treeのキーがgoogle-thisとかぶっている
+** TODO LSP modeを試してみる [[https://qiita.com/tadsan/items/691d53a87a0c2411d77c][最速LSPクライアント lsp-bridgeを使おう #Emacs - Qiita]]
 
 * はじめに
 ** この設定について
@@ -507,7 +508,7 @@
         ))
 
     #+end_src
-** 削除？
+** Startup Hook →削除？
 #+begin_src emacs-lisp
 (leaf Global-Minnor-Mode
       :init)
@@ -515,13 +516,13 @@
     (leaf Emacs-Startup-Hook
       :init
 #+end_src
-** display-fill-column-indicator
+*** display-fill-column-indicator
 #+begin_src emacs-lisp
       (leaf display-fill-column-indicator
         :hook
         (emacs-startup-hook . global-display-fill-column-indicator-mode))
 #+end_src
-** save-place
+*** save-place
 #+begin_src emacs-lisp
       (leaf save-place
         :custom
@@ -529,7 +530,7 @@
         :hook
         (emacs-startup-hook . save-place-mode))
 #+end_src
-** headline
+*** midnight
 #+begin_src emacs-lisp
 
       (leaf midnight
@@ -539,23 +540,20 @@
         :hook
         (emacs-startup-hook . midnight-mode)))
 #+end_src
-** headline
+** ??
+*** wdired
 #+begin_src emacs-lisp
-
-    (leaf Minnor-Mode-Settings
-      :init
-      (leaf wdired
-        :doc "Rename files editing their names in dired buffers"
-        :tag "builtin"
-        :added "2020-11-21"
-        :require t
-        :config
-        (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
-        :bind ((wdired-mode-map
-                ("C-o" . toggle-input-method))))
-      )
+  (leaf wdired
+    :doc "Rename files editing their names in dired buffers"
+    :tag "builtin"
+    :added "2020-11-21"
+    :require t
+    :config
+    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
+    :bind ((wdired-mode-map
+            ("C-o" . toggle-input-method))))
 #+end_src
-** tramp advice
+*** tramp advice
 #+begin_src emacs-lisp
     (leaf Advices
       :init
@@ -566,7 +564,7 @@
 
     #+end_src
 
-*** External-Packages
+** External-Packages
 
 #+begin_src emacs-lisp
     (leaf External-Packages
@@ -587,7 +585,7 @@
 
         (leaf leaf-convert :straight t))
 #+end_src
-** インストールするだけパッケージ
+*** インストールするだけパッケージ
 #+begin_src emacs-lisp
 
       (leaf Install-Only-Packages
@@ -604,13 +602,13 @@
                             :repo "emacsmirror/dired-plus")))
 #+end_src
 
-*** Keyboard UI
+**** Keyboard UI
 
 #+begin_src emacs-lisp
       (leaf KeyboardUI
         :init
     #+end_src
-** which-key
+*** which-key
 #+begin_src emacs-lisp
     (leaf which-key
           :doc "Display available keybindings in popup"
@@ -623,7 +621,7 @@
           :config
           (which-key-mode))
 #+end_src
-** hydra
+*** hydra
 #+begin_src emacs-lisp
         (leaf hydra :straight t
           :init
@@ -667,13 +665,13 @@
         )
 #+end_src
 
-*** Completion UI
+**** Completion UI
 
 #+begin_src emacs-lisp
       (leaf CompletionUI
         :init
 #+end_src
-** vertico
+*** vertico
 #+begin_src emacs-lisp
         (leaf vertico
           :doc "入力補完の候補をTABを押さずとも一覧から選べるようにする"
@@ -686,7 +684,7 @@
           (setq vertico-resize t)
           (setq vertico-cycle t))
 #+end_src
-** orderless
+*** orderless
 #+begin_src emacs-lisp
         (leaf orderless
           :doc "入力補完の際、複数の語句で検索できるようにする"
@@ -698,7 +696,7 @@
                 completion-category-defaults nil
                 completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
-** marginalia
+*** marginalia
 #+begin_src emacs-lisp
         (leaf marginalia
           :doc "入力補完の候補に説明文を表示する"
@@ -708,7 +706,7 @@
           :init
           (marginalia-mode))
   #+end_src
-** embark
+*** embark
 #+begin_src emacs-lisp
         (leaf embark
           :url "https://github.com/oantolin/embark"
@@ -750,7 +748,7 @@
                                   ("o" org-open-at-point))
             (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-map))))
 #+end_src
-** consult
+*** consult
 #+begin_src emacs-lisp
         (leaf consult
           :url "https://github.com/minad/consult"
@@ -873,7 +871,7 @@
   ;;;; 5. No project support
           ;; (setq consult-project-function nil)
 #+end_src
-** embark-consult
+*** embark-consult
 
 #+begin_src emacs-lisp
 
@@ -892,13 +890,13 @@
 #+RESULTS:
 : embark-consult
 
-** メールクライアント
+*** メールクライアント
 #+begin_src emacs-lisp
 
       (leaf Mail-Client
         :init
     #+end_src
-** notmuch
+*** notmuch
 #+begin_src emacs-lisp
     (leaf notmuch
           :when (not (eq system-type 'windows-nt))
@@ -962,14 +960,14 @@
 #+RESULTS:
 : notmuch
 
-** ol-notmuch
+*** ol-notmuch
 #+begin_src emacs-lisp
         (leaf ol-notmuch
           :straight t
           :require t
           :after notmuch org)
   #+end_src
-** consult-notmuch
+*** consult-notmuch
 #+begin_src emacs-lisp
         (leaf consult-notmuch
           :when (not (eq system-type 'windows-nt))
@@ -979,12 +977,12 @@
           :after consult notmuch)
 
 #+end_src
-** mm-decode
+*** mm-decode
 #+begin_src emacs-lisp
         (leaf mm-decode
           :custom (mm-default-directory . "~/Downloads/"))
 #+end_src
-** gnus-alias
+*** gnus-alias
 #+begin_src emacs-lisp
         (leaf gnus-alias
           :straight (gnus-alias :type git :host github
@@ -1001,7 +999,7 @@
                    ))))
 
 #+end_src
-** wanderlust
+*** wanderlust
 #+begin_src emacs-lisp
             (leaf wanderlust :straight t
               :config
@@ -1089,7 +1087,7 @@
 
               (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)
 #+end_src
-** headline
+*** headline
 #+begin_src emacs-lisp
 
               ))
@@ -1097,7 +1095,7 @@
           (leaf Development
             :init
 #+end_src
-** auto-indent-yanked-code (core?)
+*** auto-indent-yanked-code (core?)
 #+begin_src emacs-lisp
             (leaf *auto-indent-yanked-code
               :url "https://www.emacswiki.org/emacs/AutoIndentation"
@@ -1116,23 +1114,23 @@
                                 (indent-region (region-beginning) (region-end) nil)))))))
 
 #+end_src
-** coverage: インストールのみ
+*** coverage: インストールのみ
 #+begin_src emacs-lisp
             (leaf coverage :straight t)
 #+end_src
-** dockerfile-mode
+*** dockerfile-mode
 #+begin_src emacs-lisp
         (leaf dockerfile-mode :straight t
           :config
           ;; Set dockerfile-image-name as safe variable.
           (put 'dockerfile-image-name 'safe-local-variable #'stringp))
   #+end_src
-** Emacs-Lisp
+*** Emacs-Lisp
 #+begin_src emacs-lisp
         (leaf Emacs-Lisp
           :init
 #+end_src
-** paredit
+*** paredit
 #+begin_src emacs-lisp
           (leaf paredit
             :straight t
@@ -1144,12 +1142,12 @@
                    (lisp-interaction-mode-hook . enable-paredit-mode)
                    (scheme-mode-hook . enable-paredit-mode)))
 #+end_src
-** headline
+*** headline
 #+begin_src emacs-lisp
           (leaf Global-Bindings
             :init
 #+end_src
-** macrostep
+*** macrostep
 #+begin_src emacs-lisp
             (leaf macrostep               ; to test leaf macros.
               :doc "interactive macro expander"
@@ -1157,13 +1155,13 @@
               :straight t
               :bind (("C-c e" . macrostep-expand)))) ;; TODO: elisp mode?
 #+end_src
-** Emacs-Lisp-Mode-Hook
+*** Emacs-Lisp-Mode-Hook
 #+begin_src emacs-lisp
 
           (leaf Emacs-Lisp-Mode-Hook
             :init
 #+end_src
-** flycheck
+*** flycheck
 #+begin_src emacs-lisp
             (leaf flycheck
               :doc "On-the-fly syntax checking"
@@ -1189,7 +1187,7 @@
                 (flycheck-elsa-setup)))
 
 #+end_src
-** ertを実行するためのキーバインド
+*** ertを実行するためのキーバインド
 #+begin_src emacs-lisp
             (leaf ert
               ;; TODO: Make it as Emacs-Lisp-Mode binding
@@ -1201,24 +1199,24 @@
                 (call-interactively 'ert))))
 
    #+end_src
-** headline
+*** headline
 #+begin_src emacs-lisp
        (leaf Emacs-Lisp-Mode-Map
             :init
 #+end_src
-** emacs-refactor
+*** emacs-refactor
 #+begin_src emacs-lisp
             (leaf emacs-refactor
               :straight t
               :bind ((emacs-lisp-mode-map
                       ("M-RET" . emr-show-refactor-menu)))))))
 #+end_src
-** Global-Key-Bindngs
+*** Global-Key-Bindngs
 #+begin_src emacs-lisp
       (leaf Global-Key-Bindings
         :init
 #+end_src
-** perspective
+*** perspective
 #+begin_src emacs-lisp
         (leaf perspective
           :straight t
@@ -1239,7 +1237,7 @@
             (add-to-list 'consult-buffer-sources persp-consult-source)))
 
   #+end_src
-** swap-buffer
+*** swap-buffer
 #+begin_src emacs-lisp
         (leaf swap-buffers
           :straight t
@@ -1249,7 +1247,7 @@
           (swap-buffers-qwerty-shortcuts
            . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
 #+end_src
-** magit
+*** magit
 #+begin_src emacs-lisp
         (leaf magit
           :doc "A Git porcelain inside Emacs."
@@ -1262,7 +1260,7 @@
           :after git-commit with-editor
           :bind (("C-x g" . magit-status)))
 #+end_src
-** shell-pop
+*** shell-pop
 #+begin_src emacs-lisp
         (leaf shell-pop
           :straight t
@@ -1273,7 +1271,7 @@
           (shell-pop-window-position . "bottom")
           (setq shell-pop-full-span . t))
 #+end_src
-** visual-fill-column
+*** visual-fill-column
 #+begin_src emacs-lisp
         (leaf visual-fill-column
           :doc "fill-column for visual-line-mode"
@@ -1293,7 +1291,7 @@
         ;; End of Global-Key-Bindings
         )
 #+end_src
-** headline
+*** headline
 #+begin_src emacs-lisp
 
       (leaf Global-Minnor-Mode
@@ -1301,7 +1299,7 @@
 
 
 #+end_src
-** headline
+*** headline
 #+begin_src emacs-lisp
 
         )
@@ -1309,7 +1307,7 @@
       (leaf Emacs-Startup-Hook
         :init
 #+end_src
-** yasnippet-snippetsの設定
+*** yasnippet-snippetsの設定
 #+begin_src emacs-lisp
         (leaf yasnippet-snippets
           :straight t
@@ -1319,7 +1317,7 @@
           (emacs-startup-hook . yas-global-mode))
 
     #+end_src
-** git-gutter
+*** git-gutter
 #+begin_src emacs-lisp
         (leaf git-gutter
               :straight t
@@ -1334,7 +1332,7 @@
               :hook
               (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
-** headline
+*** headline
 #+begin_src emacs-lisp
 
   )
@@ -1345,7 +1343,7 @@
               :init
 
               #+end_src
-** 実行時に出る警告を非表示にする
+*** 実行時に出る警告を非表示にする
 
 #+begin_src emacs-lisp
   (leaf *warnings
@@ -1357,13 +1355,13 @@
 #+RESULTS:
 : *warnings
 
-** headline
+*** headline
 #+begin_src emacs-lisp
 
         (leaf TODO:Move-To-Builtin
           :init
           #+end_src
-** ffap
+*** ffap
 #+begin_src emacs-lisp
           (leaf ffap
             :doc "ポイント位置のファイルやURLを開く"
@@ -1371,7 +1369,7 @@
             :init
             (ffap-bindings))
 #+end_src
-** cmd/browser
+*** cmd/browser
 #+begin_src emacs-lisp
   (leaf *cmd/browser
     :config
@@ -1385,12 +1383,12 @@
       (setq browse-url-browser-function 'cmd/wsl-browser)
       (setq browse-url-generic-program "web-browser")))
 #+end_src
-** headline
+*** headline
 #+begin_src emacs-lisp
   )
 
 #+end_src
-** backup-each-save → no-litteringとかぶる？？
+*** backup-each-save → no-litteringとかぶる？？
 #+begin_src emacs-lisp
             (leaf backup-each-save
               :when (not (eq system-type 'windows-nt))
@@ -1404,7 +1402,7 @@
               (add-hook 'after-save-hook 'backup-each-save)) ; 有効化！
 
 #+end_src
-** pandoc-mode
+*** pandoc-mode
 #+begin_src emacs-lisp
             (leaf pandoc-mode
               :doc "Minor mode for interacting with Pandoc"
@@ -1415,7 +1413,7 @@
               :straight t
               :after hydra)
 #+end_src
-** TODO migemoの設定 → 日本語入力に移動？
+*** TODO migemoの設定 → 日本語入力に移動？
 #+begin_src emacs-lisp
             (leaf migemo
               :when (eq system-type 'gnu/linux)
@@ -1443,7 +1441,7 @@
               (load-library "migemo")
               (migemo-init))
 #+end_src
-** dired-launch
+*** dired-launch
 #+begin_src emacs-lisp
             (leaf dired-launch
               :straight t
@@ -1453,7 +1451,7 @@
                          (getenv "WSLENV"))
                 (setq dired-launch-default-launcher '("wslview"))))
 #+end_src
-** region-bindings-mode
+*** region-bindings-mode
 #+begin_src emacs-lisp
             (leaf region-bindings-mode
               :straight t
@@ -1471,7 +1469,7 @@
               (define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
               (define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended))
 #+end_src
-** align
+*** align
 #+begin_src emacs-lisp
             (leaf align
               :doc "align text to a specific column, by regexp"
@@ -1481,7 +1479,7 @@
               :config
               (define-key region-bindings-mode-map "=" 'align-regexp))
 #+end_src
-** eww
+*** eww
 #+begin_src emacs-lisp
             (leaf eww
               :custom
@@ -1495,7 +1493,7 @@
                )
               )
 #+end_src
-** headline
+*** headline
 #+begin_src emacs-lisp
         (leaf Prog-Mode-Hook
           :init
@@ -1510,14 +1508,16 @@
             (highlight-indent-guides-method . 'column) ;fill)) ;character)) ; column
             )
           #+end_src
-** rainbow-delimiters → なんだっけ？
+*** rainbow-delimiters → なんだっけ？
 #+begin_src emacs-lisp
-          (leaf rainbow-delimiters
-            :straight t
-            :hook
-            (prog-mode-hook . rainbow-delimiters-mode))))))
+  (leaf rainbow-delimiters
+    :straight t
+    :hook
+    (prog-mode-hook . rainbow-delimiters-mode))
+
+  ))))
 #+end_src
-** Disabled
+** COMMENT 不使用パッケージ
 #+begin_src emacs-lisp
   (leaf Disabled
     :disabled t
@@ -1816,12 +1816,12 @@
                                       ":END:"
                                       "\n** %?"))))))))
 #+end_src
-** OrgのLook-And-Feel
+*** OrgのLook-And-Feel
 #+begin_src emacs-lisp
         (leaf Org-Look-And-Feel
           :init
 #+end_src
-*** org-modern
+**** org-modern
 #+begin_src emacs-lisp
           (leaf org-modern
             :disabled nil
@@ -1877,7 +1877,7 @@
             (global-org-modern-mode))
 
 #+end_src
-*** org-superstar
+**** org-superstar
 #+begin_src emacs-lisp
   (leaf org-superstar
             :disabled t
@@ -1889,12 +1889,12 @@
           )
 
 #+end_src
-** headline
+*** headline
 #+begin_src emacs-lisp
         (leaf Org-Documentation
           :init
 #+end_src
-*** org-latex関連 :PUBLISHED:
+**** org-latex関連 :PUBLISHED:
 :PROPERTIES:
 :EXPORT_TITLE: Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版
 :QIITA-ID: 6c1b51b135eca9065902
@@ -1903,7 +1903,7 @@
 :QIITA-URL: https://qiita.com/ychubachi/private/6c1b51b135eca9065902
 :END:
 
-**** はじめに
+***** はじめに
 Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版です。
 
 LaTeXエンジンにはlualatexを使います。
@@ -1924,7 +1924,7 @@ bxjsarticleはjlreqを使うならば不要な気もしますが、一応。
 - LaTeXの文字列部分は別ファイルにするのがよいかもしれない
   - [[http://xahlee.info/emacs/emacs/elisp_read_file_content.html][Elisp: Read File Content as String or List of Lines]]
 
-**** init.elの設定
+***** init.elの設定
 leafを利用して設定しています。
 
 #+begin_src emacs-lisp :noweb yes
@@ -2011,11 +2011,11 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 :EXPORT_OPTIONS: toc:nil
 #+end_example
 
-**** 参考
+***** 参考
 - [[https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:org:latex:start][Org-LaTeX [QumaWiki]]]
 - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
 
-*** COMMENT ox-latex
+**** COMMENT ox-latex
 
 #+begin_src emacs-lisp
           (leaf ox-latex
@@ -2083,17 +2083,17 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
             (org-beamer-frame-default-options . "t"))
 
 #+end_src
-*** ox-pandoc
+**** ox-pandoc
 #+begin_src emacs-lisp
           (leaf ox-pandoc :straight t :require t))
 #+end_src
-** ブログに投稿する
+*** ブログに投稿する
 #+begin_src emacs-lisp
 
         (leaf Org-Publishing
           :init
 #+end_src
-*** org2blog - wordpressに出力
+**** org2blog - wordpressに出力
 #+begin_src emacs-lisp
           (leaf org2blog
             :straight t
@@ -2111,14 +2111,14 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
             (setq org2blog/wp-show-post-in-browser 'show)
             (setq org2blog/wp-use-sourcecode-shortcode t))
 #+end_src
-*** ox-hugo - hugoに出力
+**** ox-hugo - hugoに出力
 #+begin_src emacs-lisp
           (leaf ox-hugo
             :straight t
             :require t
             :after ox)
 #+end_src
-*** ox-zenn - zennに出力
+**** ox-zenn - zennに出力
 #+begin_src emacs-lisp
           (leaf ox-zenn
             :straight t
@@ -2144,7 +2144,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
               :recursive t
               :publishing-function 'org-zenn-publish-to-markdown)))
 #+end_src
-*** org-publishの設定
+**** org-publishの設定
 #+begin_src emacs-lisp
           (leaf org-publish-project-alist
             :config
@@ -2175,19 +2175,19 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                      :base-extension "jpg\\|gif\\|png|css\\|el"
                      :recursive t)))))
 #+end_src
-** orgでの編集作業を便利にする
+*** orgでの編集作業を便利にする
 #+begin_src emacs-lisp
         (leaf Org-Editing
           :init
 #+end_src
-*** org-use-speed-command - ?
+**** org-use-speed-command - ?
 #+begin_src emacs-lisp
           (leaf *org-use-speed-commands
             :config
             (setq org-use-speed-commands
                   (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**")))))
 #+end_src
-*** org-tempo
+**** org-tempo
 #+begin_src emacs-lisp
           (leaf org-tempo
             :require t
@@ -2210,13 +2210,13 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                          '("f" . "figure")))
           )
 #+end_src
-*** その他のOrgの設定
+**** その他のOrgの設定
 #+begin_src emacs-lisp
 
         (leaf Org-Other
           :init
           #+end_src
-*** org-babel - babelで使える言語を登録
+**** org-babel - babelで使える言語を登録
 #+begin_src emacs-lisp
   (leaf *org-babel
     :config
@@ -2230,7 +2230,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
            '((:dir . nil)
              (:results . "value"))))
   #+end_src
-*** COMMENT pomodoroテクニック - 使ってないなー
+**** COMMENT pomodoroテクニック - 使ってないなー
 #+begin_src emacs-lisp
 
   (leaf org-pomodoro
@@ -2238,10 +2238,10 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :require t)
 
 #+end_src
-*** org contribの設定
+**** org contribの設定
 #+begin_src emacs-lisp
 #+end_src
-*** ox-taskjuggler - ?
+**** ox-taskjuggler - ?
 #+begin_src emacs-lisp
           (leaf org-contrib
             :straight t
@@ -2249,7 +2249,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
             (require 'ox-taskjuggler))
 
 #+end_src
-*** org-plantuml - orgでplantumlを使えるようにする
+**** org-plantuml - orgでplantumlを使えるようにする
 #+begin_src emacs-lisp
   (leaf *org-plantuml
             :init
@@ -2262,7 +2262,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
              '((plantuml . t)))
             )
   #+end_src
-*** org-download - ?
+**** org-download - ?
 #+begin_src emacs-lisp
           (leaf org-download
             :straight t
@@ -2279,7 +2279,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
   )
 #+end_src
 
-*** TODO org-modeとimenuの連携
+**** TODO org-modeとimenuの連携
 
 + org-modeのとき，imenuをメニューバーに追加する
 
