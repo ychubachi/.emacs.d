@@ -1071,12 +1071,7 @@
               ))
 
 #+end_src
-** FIXME Development
-#+begin_src emacs-lisp
-          (leaf Development
-            :init
-
-#+end_src
+** Development
 *** auto-indent-yanked-code (core?)
 #+begin_src emacs-lisp
             (leaf *auto-indent-yanked-code
@@ -1107,11 +1102,7 @@
           ;; Set dockerfile-image-name as safe variable.
           (put 'dockerfile-image-name 'safe-local-variable #'stringp))
   #+end_src
-** FIXME Emacs-Lisp
-#+begin_src emacs-lisp
-        (leaf Emacs-Lisp
-          :init
-#+end_src
+** Emacs-Lisp
 *** paredit
 #+begin_src emacs-lisp
           (leaf paredit
@@ -1125,7 +1116,7 @@
                    (scheme-mode-hook . enable-paredit-mode)))
 #+end_src
 ** Global-Bindings
-*** TODO macrostep
+*** TODO macrostep → elispモード関連に移動？
 #+begin_src emacs-lisp
             (leaf macrostep               ; to test leaf macros.
               :doc "interactive macro expander"
@@ -1133,12 +1124,7 @@
               :straight t
               :bind (("C-c e" . macrostep-expand))) ;; TODO: elisp mode?
 #+end_src
-** FIXME Emacs-Lisp-Mode-Hook
-#+begin_src emacs-lisp
-
-          (leaf Emacs-Lisp-Mode-Hook
-            :init
-#+end_src
+** Emacs-Lisp-Mode-Hook
 *** flycheck
 #+begin_src emacs-lisp
             (leaf flycheck
@@ -1167,22 +1153,21 @@
 #+end_src
 *** ertを実行するためのキーバインド
 #+begin_src emacs-lisp
-            (leaf ert
-              ;; TODO: Make it as Emacs-Lisp-Mode binding
-              :bind (("C-c t" . cmd/run-ert))
-              :config
-              (defun cmd/run-ert ()
-                (interactive)
-                (eval-buffer)
-                (call-interactively 'ert))))
-
+  (leaf ert
+    ;; TODO: Make it as Emacs-Lisp-Mode binding
+    :bind (("C-c t" . cmd/run-ert))
+    :config
+    (defun cmd/run-ert ()
+      (interactive)
+      (eval-buffer)
+      (call-interactively 'ert)))
    #+end_src
 *** emacs-refactor
 #+begin_src emacs-lisp
             (leaf emacs-refactor
               :straight t
               :bind ((emacs-lisp-mode-map
-                      ("M-RET" . emr-show-refactor-menu))))))
+                      ("M-RET" . emr-show-refactor-menu))))
 #+end_src
 ** Global-Key-Bindngs
 *** perspective
