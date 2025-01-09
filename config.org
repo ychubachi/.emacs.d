@@ -488,13 +488,13 @@
         #+end_src
 
 *** TODO Startup Hook → hookを使わずinitでよいのでは？
-*** display-fill-column-indicator
+**** display-fill-column-indicator
 #+begin_src emacs-lisp
       (leaf display-fill-column-indicator
         :hook
         (emacs-startup-hook . global-display-fill-column-indicator-mode))
 #+end_src
-*** save-place
+**** save-place
 #+begin_src emacs-lisp
       (leaf save-place
         :custom
@@ -502,7 +502,7 @@
         :hook
         (emacs-startup-hook . save-place-mode))
 #+end_src
-*** midnight
+**** midnight
 #+begin_src emacs-lisp
   (leaf midnight
     :url "https://www.emacswiki.org/emacs/MidnightMode"
@@ -511,8 +511,7 @@
     :hook
     (emacs-startup-hook . midnight-mode))
 #+end_src
-
-*** wdired
+**** wdired
 #+begin_src emacs-lisp
   (leaf wdired
     :doc "Rename files editing their names in dired buffers"
@@ -524,7 +523,8 @@
     :bind ((wdired-mode-map
             ("C-o" . toggle-input-method))))
 #+end_src
-*** tramp advice
+*** advice
+**** tramp advice
 
 #+begin_src emacs-lisp
   (leaf tramp
@@ -1045,34 +1045,59 @@
 ** Development
 *** auto-indent-yanked-code (core?)
 #+begin_src emacs-lisp
-            (leaf *auto-indent-yanked-code
-              :url "https://www.emacswiki.org/emacs/AutoIndentation"
-              :init
-              (dolist (command '(yank yank-pop))
-                (eval `(defadvice ,command (after indent-region activate)
-                         (and (not current-prefix-arg)
-                              (member major-mode '(emacs-lisp-mode lisp-mode
-                                                                   clojure-mode    scheme-mode
-                                                                   haskell-mode    ruby-mode
-                                                                   rspec-mode      python-mode
-                                                                   c-mode          c++-mode
-                                                                   objc-mode       latex-mode
-                                                                   plain-tex-mode))
-                              (let ((mark-even-if-inactive transient-mark-mode))
-                                (indent-region (region-beginning) (region-end) nil)))))))
+  (leaf *auto-indent-yanked-code
+    :url "https://www.emacswiki.org/emacs/AutoIndentation"
+    :init
+    (dolist (command '(yank yank-pop))
+      (eval `(defadvice ,command (after indent-region activate)
+               (and (not current-prefix-arg)
+                    (member major-mode '(emacs-lisp-mode lisp-mode
+                                                         clojure-mode    scheme-mode
+                                                         haskell-mode    ruby-mode
+                                                         rspec-mode      python-mode
+                                                         c-mode          c++-mode
+                                                         objc-mode       latex-mode
+                                                         plain-tex-mode))
+                    (let ((mark-even-if-inactive transient-mark-mode))
+                      (indent-region (region-beginning) (region-end) nil)))))))
 
 #+end_src
-*** coverage: インストールのみ
+*** coverage
 #+begin_src emacs-lisp
-            (leaf coverage :straight t)
+  (leaf coverage :straight t)
 #+end_src
 *** dockerfile-mode
 #+begin_src emacs-lisp
-        (leaf dockerfile-mode :straight t
-          :config
-          ;; Set dockerfile-image-name as safe variable.
-          (put 'dockerfile-image-name 'safe-local-variable #'stringp))
+  (leaf dockerfile-mode :straight t
+    :config
+    ;; Set dockerfile-image-name as safe variable.
+    (put 'dockerfile-image-name 'safe-local-variable #'stringp))
   #+end_src
+** Prog-Mode-Hook
+*** highlight-indent-guides
+#+begin_src emacs-lisp
+  (leaf highlight-indent-guides
+    :straight t
+    :require t
+    :hook
+    ((prog-mode-hook yaml-mode-hook) . highlight-indent-guides-mode)
+    :custom
+    (highlight-indent-guides-auto-enabled . t)
+    (highlight-indent-guides-responsive . t)
+    (highlight-indent-guides-method . 'column) ; fill character column
+    )
+          #+end_src
+
+#+RESULTS:
+: highlight-indent-guides
+
+*** rainbow-delimiters → なんだっけ？
+#+begin_src emacs-lisp
+  (leaf rainbow-delimiters
+    :straight t
+    :hook
+    (prog-mode-hook . rainbow-delimiters-mode))
+#+end_src
 ** Emacs lisp関連
 *** paredit
 #+begin_src emacs-lisp
@@ -1170,7 +1195,7 @@
             (add-to-list 'consult-buffer-sources persp-consult-source)))
 
   #+end_src
-*** swap-buffer
+*** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
 #+begin_src emacs-lisp
         (leaf swap-buffers
           :straight t
@@ -1180,7 +1205,7 @@
           (swap-buffers-qwerty-shortcuts
            . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
 #+end_src
-*** magit
+*** magit [C-x g]
 #+begin_src emacs-lisp
         (leaf magit
           :doc "A Git porcelain inside Emacs."
@@ -1193,7 +1218,7 @@
           :after git-commit with-editor
           :bind (("C-x g" . magit-status)))
 #+end_src
-*** shell-pop
+*** shell-pop [C-c s]
 #+begin_src emacs-lisp
         (leaf shell-pop
           :straight t
@@ -1204,7 +1229,7 @@
           (shell-pop-window-position . "bottom")
           (setq shell-pop-full-span . t))
 #+end_src
-*** visual-fill-column
+*** visual-fill-column [C-q]
 #+begin_src emacs-lisp
         (leaf visual-fill-column
           :doc "fill-column for visual-line-mode"
@@ -1225,28 +1250,27 @@
 ** Emacs-Startup-Hook
 *** yasnippet-snippetsの設定
 #+begin_src emacs-lisp
-        (leaf yasnippet-snippets
-          :straight t
-          :custom
-          (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
-          :hook
-          (emacs-startup-hook . yas-global-mode))
-
+  (leaf yasnippet-snippets
+    :straight t
+    :custom
+    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
+    :hook
+    (emacs-startup-hook . yas-global-mode))
     #+end_src
 *** git-gutter
 #+begin_src emacs-lisp
-        (leaf git-gutter
-              :straight t
-              ;; :custom
-              ;; (git-gutter:modified-sign . "~")
-              ;; (git-gutter:added-sign    . "+")
-              ;; (git-gutter:deleted-sign  . "-")
-              ;; :custom-face
-              ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
-              ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
-              ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
-              :hook
-              (emacs-startup-hook . global-git-gutter-mode))
+  (leaf git-gutter
+        :straight t
+        ;; :custom
+        ;; (git-gutter:modified-sign . "~")
+        ;; (git-gutter:added-sign    . "+")
+        ;; (git-gutter:deleted-sign  . "-")
+        ;; :custom-face
+        ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
+        ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
+        ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
+        :hook
+        (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
 ** 未整理
 *** 実行時に出る警告を非表示にする
@@ -1397,27 +1421,6 @@
                (eww-search-prefix . "https://www.google.com/search?q=")
                )
               )
-#+end_src
-** Prog-Mode-Hook
-*** highlight-indent-guides
-#+begin_src emacs-lisp
-          (leaf highlight-indent-guides
-            :straight t
-            :require t
-            :hook
-            ((prog-mode-hook yaml-mode-hook) . highlight-indent-guides-mode)
-            :custom
-            (highlight-indent-guides-auto-enabled . t)
-            (highlight-indent-guides-responsive . t)
-            (highlight-indent-guides-method . 'column) ;fill)) ;character)) ; column
-            )
-          #+end_src
-*** rainbow-delimiters → なんだっけ？
-#+begin_src emacs-lisp
-  (leaf rainbow-delimiters
-    :straight t
-    :hook
-    (prog-mode-hook . rainbow-delimiters-mode))
 #+end_src
 ** COMMENT 不使用パッケージ
 #+begin_src emacs-lisp
