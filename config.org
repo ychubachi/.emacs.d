@@ -64,7 +64,7 @@
 * 設定
 ** 基本設定
 *** 優先設定
-**** no-littering - .emacs.d/をきれいに保つ
+**** TODO no-littering - .emacs.d/をきれいに保つ
 - すべてのパッケージの前に実行するために、init.elのなるだけ冒頭に設定
   - [[https://github.com/emacscollective/no-littering][emacscollective/no-littering: Help keeping ~/.emacs.d clean]]
 
@@ -430,27 +430,26 @@
 **** 画面の最大・縮小 [<f11>]
 
 #+begin_src emacs-lisp
-(leaf frame
-          :bind ("<f11>" . toggle-frame-maximized))
+(leaf frame :bind ("<f11>" . toggle-frame-maximized))
 #+end_src
 
 #+RESULTS:
 : frame
-
+**** imenu-list
 #+begin_src emacs-lisp
-        (leaf imenu-list
-          :bind (("C-c i" . imenu-list-smart-toggle))
-          :hook
-          (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
+  (leaf imenu-list
+    :bind (("C-c i" . imenu-list-smart-toggle))
+    :hook
+    (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
 
-        (leaf simple
-          :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
+  (leaf simple
+    :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
 #+end_src
 
 #+RESULTS:
 : simple
 
-** TODO 各種設定
+** 各種設定
 *** メールアドレスの設定
 #+begin_src emacs-lisp
   (leaf Mail-Variables
@@ -469,16 +468,16 @@
 
 *** vc-hooks
 #+begin_src emacs-lisp
-    (leaf vc-hooks
-          :custom
-          (vc-follow-symlinks . t)        ; シンボリックリンクの場合、本体を辿る
-          (vc-handled-backends . '(Git))) ; Gitのみ使用
+  (leaf vc-hooks
+        :custom
+        (vc-follow-symlinks . t)        ; シンボリックリンクの場合、本体を辿る
+        (vc-handled-backends . '(Git))) ; Gitのみ使用
     #+end_src
 
 #+RESULTS:
 : vc-hooks
 
-**** TODO バックアップのディレクトリとバージョン管理の設定 → no-littering?
+*** TODO バックアップのディレクトリとバージョン管理の設定 → no-littering?
 
 #+begin_src emacs-lisp
   (leaf files
@@ -488,7 +487,7 @@
         (version-control . t))
         #+end_src
 
-** TODO Startup Hook → hookを使わずinitでよいのでは？
+*** TODO Startup Hook → hookを使わずinitでよいのでは？
 *** display-fill-column-indicator
 #+begin_src emacs-lisp
       (leaf display-fill-column-indicator
@@ -513,7 +512,6 @@
     (emacs-startup-hook . midnight-mode))
 #+end_src
 
-** ??
 *** wdired
 #+begin_src emacs-lisp
   (leaf wdired
@@ -535,8 +533,7 @@
         (let ((vc-handled-backends nil)) ad-do-it)))
     #+end_src
 
-
-** TODO leaf関連→early-init.elに
+*** TODO leaf関連→early-init.elに
 *** leaf-tree
 
 #+begin_src emacs-lisp
@@ -577,7 +574,7 @@
 #+RESULTS:
 : dired+
 
-** FIXME Keyboard UI
+** Keyboard UI
 *** which-key
 #+begin_src emacs-lisp
     (leaf which-key
@@ -1091,6 +1088,8 @@
 #+end_src
 ** Global-Bindings
 *** TODO macrostep → elispモード関連に移動？
++ 新しいレポジトリがある
+  - https://github.com/emacsorphanage/macrostep
 #+begin_src emacs-lisp
             (leaf macrostep               ; to test leaf macros.
               :doc "interactive macro expander"
@@ -1098,6 +1097,10 @@
               :straight t
               :bind (("C-c e" . macrostep-expand))) ;; TODO: elisp mode?
 #+end_src
+
+#+RESULTS:
+: macrostep
+
 ** Emacs-Lisp-Mode-Hook
 *** flycheck
 #+begin_src emacs-lisp
@@ -1243,7 +1246,7 @@
               :hook
               (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
-** Unorganized
+** 未整理
 *** 実行時に出る警告を非表示にする
 
 #+begin_src emacs-lisp
@@ -1569,8 +1572,9 @@
 #+RESULTS:
 : ruler-mode
 
-** TODO Org
-*** Org-Mode全般の設定
+** Org
+*** Orgの基本的な設定
+**** Org-Mode全般の設定
 
 #+begin_src emacs-lisp
         (leaf Org-Settings
@@ -1599,7 +1603,7 @@
           )
 
 #+end_src
-*** org captureのテンプレート
+**** org captureのテンプレート
 #+begin_src emacs-lisp
   (leaf doct
           :straight t
@@ -1704,8 +1708,8 @@
                                       ":END:"
                                       "\n** %?"))))))))
 #+end_src
-** OrgのLook-And-Feel
-*** org-modern
+*** OrgのLook-And-Feel
+**** org-modern
 #+begin_src emacs-lisp
           (leaf org-modern
             :disabled nil
@@ -1761,7 +1765,7 @@
             (global-org-modern-mode))
 
 #+end_src
-*** org-superstar
+**** org-superstar
 #+begin_src emacs-lisp
   (leaf org-superstar
             :disabled t
@@ -1771,8 +1775,8 @@
             (setq org-superstar-headline-bullets-list
                   '("●" "■" "▷" "○"))) ; TODO: org-modernと重複？
 #+end_src
-** Org-Documentation
-**** org-latex関連 :PUBLISHED:
+*** Org-Documentation
+***** org-latex関連 :PUBLISHED:
 :PROPERTIES:
 :EXPORT_TITLE: Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版
 :QIITA-ID: 6c1b51b135eca9065902
@@ -1781,7 +1785,7 @@
 :QIITA-URL: https://qiita.com/ychubachi/private/6c1b51b135eca9065902
 :END:
 
-***** はじめに
+****** はじめに
 Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版です。
 
 LaTeXエンジンにはlualatexを使います。
@@ -1802,7 +1806,7 @@ bxjsarticleはjlreqを使うならば不要な気もしますが、一応。
 - LaTeXの文字列部分は別ファイルにするのがよいかもしれない
   - [[http://xahlee.info/emacs/emacs/elisp_read_file_content.html][Elisp: Read File Content as String or List of Lines]]
 
-***** init.elの設定
+****** init.elの設定
 leafを利用して設定しています。
 
 #+begin_src emacs-lisp :noweb yes
@@ -1889,11 +1893,11 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 :EXPORT_OPTIONS: toc:nil
 #+end_example
 
-***** 参考
+****** 参考
 - [[https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:org:latex:start][Org-LaTeX [QumaWiki]]]
 - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
 
-**** COMMENT ox-latex
+***** COMMENT ox-latex
 
 #+begin_src emacs-lisp
           (leaf ox-latex
@@ -1961,12 +1965,12 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
             (org-beamer-frame-default-options . "t"))
 
 #+end_src
-**** ox-pandoc
+***** ox-pandoc
 #+begin_src emacs-lisp
           (leaf ox-pandoc :straight t :require t)
 #+end_src
-** ブログに投稿する
-**** org2blog - wordpressに出力
+*** ブログに投稿する
+***** org2blog - wordpressに出力
 #+begin_src emacs-lisp
           (leaf org2blog
             :straight t
@@ -1984,14 +1988,14 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
             (setq org2blog/wp-show-post-in-browser 'show)
             (setq org2blog/wp-use-sourcecode-shortcode t))
 #+end_src
-**** ox-hugo - hugoに出力
+***** ox-hugo - hugoに出力
 #+begin_src emacs-lisp
           (leaf ox-hugo
             :straight t
             :require t
             :after ox)
 #+end_src
-**** ox-zenn - zennに出力
+***** ox-zenn - zennに出力
 #+begin_src emacs-lisp
           (leaf ox-zenn
             :straight t
@@ -2017,7 +2021,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
               :recursive t
               :publishing-function 'org-zenn-publish-to-markdown)))
 #+end_src
-**** org-publishの設定
+***** org-publishの設定
 #+begin_src emacs-lisp
   (leaf org-publish-project-alist
     :config
@@ -2048,15 +2052,15 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
              :base-extension "jpg\\|gif\\|png|css\\|el"
              :recursive t))))
 #+end_src
-** orgでの編集作業を便利にする
-**** org-use-speed-command - ?
+*** orgでの編集作業を便利にする
+***** org-use-speed-command - ?
 #+begin_src emacs-lisp
           (leaf *org-use-speed-commands
             :config
             (setq org-use-speed-commands
                   (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**")))))
 #+end_src
-**** org-tempo
+***** org-tempo
 #+begin_src emacs-lisp
           (leaf org-tempo
             :require t
@@ -2078,8 +2082,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
             (add-to-list 'org-structure-template-alist
                          '("f" . "figure")))
 #+end_src
-*** その他のOrgの設定
-**** org-babel - babelで使える言語を登録
+**** その他のOrgの設定
+***** org-babel - babelで使える言語を登録
 #+begin_src emacs-lisp
   (leaf *org-babel
     :config
@@ -2093,7 +2097,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
            '((:dir . nil)
              (:results . "value"))))
   #+end_src
-**** COMMENT pomodoroテクニック - 使ってないなー
+***** COMMENT pomodoroテクニック - 使ってないなー
 #+begin_src emacs-lisp
 
   (leaf org-pomodoro
@@ -2101,10 +2105,10 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :require t)
 
 #+end_src
-**** org contribの設定
+***** org contribの設定
 #+begin_src emacs-lisp
 #+end_src
-**** ox-taskjuggler - ?
+***** ox-taskjuggler - ?
 #+begin_src emacs-lisp
           (leaf org-contrib
             :straight t
@@ -2112,7 +2116,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
             (require 'ox-taskjuggler))
 
 #+end_src
-**** org-plantuml - orgでplantumlを使えるようにする
+***** org-plantuml - orgでplantumlを使えるようにする
 #+begin_src emacs-lisp
   (leaf *org-plantuml
             :init
@@ -2125,7 +2129,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
              '((plantuml . t)))
             )
   #+end_src
-**** org-download - ?
+***** org-download - ?
 #+begin_src emacs-lisp
   (leaf org-download
     :straight t
@@ -2139,7 +2143,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
       :custom (org-download-screenshot-method . "magick convert clipboard: %s")))
 #+end_src
 
-**** TODO org-modeとimenuの連携 → leafにする
+***** TODO org-modeとimenuの連携 → leafにする
 
 + org-modeのとき，imenuをメニューバーに追加する
 
