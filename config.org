@@ -63,9 +63,8 @@
 #+end_src
 
 * 設定
-** 基本設定
-*** 必須設定
-**** DeleteキーとHelpキーの変更
+** 必須設定
+*** DeleteキーとHelpキーの変更
 
 #+begin_src emacs-lisp
   (leaf Help-Keys
@@ -75,15 +74,14 @@
           (global-set-key (kbd "C-^") help-map))
 #+end_src
 
-**** yes/noの選択をy/nに簡略化
+*** yes/noの選択をy/nに簡略化
 
 #+begin_src emacs-lisp
 (leaf Yes-or-no-p
         :init
         (defalias 'yes-or-no-p 'y-or-n-p))
 #+end_src
-
-**** Emacs本体のカスタム変数
+** Emacs本体のカスタム変数
 
 #+begin_src emacs-lisp
   (leaf Emacs-Variables
@@ -103,8 +101,8 @@
      ))
 #+end_src
 
-*** フォント/日本語入力
-**** コーディングシステム
+** 日本語入力
+*** 文字コード
 
 #+begin_src emacs-lisp
 (leaf Coding-System
@@ -114,60 +112,6 @@
         (cond ((eq system-type 'windows-nt)
                (setq default-process-coding-system
                      (cons 'utf-8 'cp932-unix)))))
-#+end_src
-
-**** TODO フォント
-
-- TODO: [[https://qiita.com/query1000/items/4b0b8db872adc1a5e2e9][Emacsで絵文字と他の字の幅を合わせる #font - Qiita]]
-
-#+begin_example
-| mmmm |
-| llll |
-| 日本 |
-| 漢字 |
-| ああ |
-| んん |
-| ￥￥ |
-| \\\\ |
-| 　　   |
-|      |
-
-|abcdefghijkl|
-|ABCDEFGHIJKL|
-|'";:-+=/\~`?|
-|∞≤≥∏∑∫|
-|×±≒≡⊆⊇|  ← GUI だと一部半角になる
-|αβγδεζ|  ← GUI だと半角になる
-|ηθικλμ|  ← GUI だと半角になる
-|ΑΒΓΔΕΖ|  ← GUI だと半角になる
-|ΗΘΙΚΛΜ|  ← GUI だと半角になる
-|日本語の美観|
-|あいうえおか|
-|アイウエオカ|
-|ｱｲｳｴｵｶｷｸｹｺｻｼ|
-
-| hoge                 | hogeghoe | age              |
-|----------------------+----------+------------------|
-| 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
-|----------------------+----------+------------------|
-#+end_example
-
-#+begin_src emacs-lisp
-  (leaf Fonts
-    :doc "フォント設定。C-u C-x = で文字毎に確認できる。"
-    :init
-    ;; ｜あいうえお｜
-    ;; ｜憂鬱な檸檬｜
-    ;; ｜<miilwiim>｜
-    ;; ｜!"#$%&'~{}｜
-    ;; ｜🙆iimmiim>｜
-    (custom-set-faces
-     ;; '(default ((t (:family "Noto Sans"))))
-     ;; '(default ((t (:family "PlemolJP"))))
-     '(default ((t (:family "HackGen"))))
-     ;; '(default ((t (:family "UDEV Gothic NF"))))
-     ;; '(default ((t (:family "FirgeNerd"))))
-     ))
 #+end_src
 
 *** 日本語入力
@@ -243,7 +187,64 @@
 #+RESULTS:
 : mozc-windows
 
-*** グローバルマイナーモード
+**
+
+*** TODO フォント
+
+- TODO: [[https://qiita.com/query1000/items/4b0b8db872adc1a5e2e9][Emacsで絵文字と他の字の幅を合わせる #font - Qiita]]
+
+#+begin_example
+| mmmm |
+| llll |
+| 日本 |
+| 漢字 |
+| ああ |
+| んん |
+| ￥￥ |
+| \\\\ |
+| 　　   |
+|      |
+
+|abcdefghijkl|
+|ABCDEFGHIJKL|
+|'";:-+=/\~`?|
+|∞≤≥∏∑∫|
+|×±≒≡⊆⊇|  ← GUI だと一部半角になる
+|αβγδεζ|  ← GUI だと半角になる
+|ηθικλμ|  ← GUI だと半角になる
+|ΑΒΓΔΕΖ|  ← GUI だと半角になる
+|ΗΘΙΚΛΜ|  ← GUI だと半角になる
+|日本語の美観|
+|あいうえおか|
+|アイウエオカ|
+|ｱｲｳｴｵｶｷｸｹｺｻｼ|
+
+| hoge                 | hogeghoe | age              |
+|----------------------+----------+------------------|
+| 今日もいい天気ですね | お、     | 等幅になった👍 🍺|
+|----------------------+----------+------------------|
+#+end_example
+
+#+begin_src emacs-lisp
+  (leaf Fonts
+    :doc "フォント設定。C-u C-x = で文字毎に確認できる。"
+    :init
+    ;; ｜あいうえお｜
+    ;; ｜憂鬱な檸檬｜
+    ;; ｜<miilwiim>｜
+    ;; ｜!"#$%&'~{}｜
+    ;; ｜🙆iimmiim>｜
+    (custom-set-faces
+     ;; '(default ((t (:family "Noto Sans"))))
+     ;; '(default ((t (:family "PlemolJP"))))
+     '(default ((t (:family "HackGen"))))
+     ;; '(default ((t (:family "UDEV Gothic NF"))))
+     ;; '(default ((t (:family "FirgeNerd"))))
+     ))
+#+end_src
+
+** 基本設定
+** グローバルマイナーモード
 **** TODO recentf
 + startup-hookを使わないようにする
 
@@ -651,45 +652,45 @@
   #+end_src
 *** embark
 #+begin_src emacs-lisp
-        (leaf embark
-          :url "https://github.com/oantolin/embark"
-          :straight t
-          :bind
-          (("M-." . embark-act)        ; アクションの一覧を表示
-           ("C-." . embark-dwim)       ; Do What I Mean デフォルトアクションを実行
-           ("C-^ B" . embark-bindings) ; C-h -> C-^ に
-           )
-          :init
-          (setq prefix-help-command #'embark-prefix-help-command)
-          :config
-          (add-to-list 'display-buffer-alist
-                       '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                         nil
-                         (window-parameters (mode-line-format . none))))
+  (leaf embark
+    :url "https://github.com/oantolin/embark"
+    :straight t
+    :bind
+    (("M-." . embark-act)        ; アクションの一覧を表示
+     ("C-." . embark-dwim)       ; Do What I Mean デフォルトアクションを実行
+     ("C-^ B" . embark-bindings) ; C-h -> C-^ に
+     )
+    :init
+    (setq prefix-help-command #'embark-prefix-help-command)
+    :config
+    (add-to-list 'display-buffer-alist
+                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                   nil
+                   (window-parameters (mode-line-format . none))))
 
-          (leaf FIXME:my-embark-orglink
-            :disabled t                   ; FIXME: embark-define-keymapは古い
-            :after org embark
-            :config
-            (defun my-embark-orglink-at-point ()
-              "Target a link at point of orglink."
-              (save-excursion
-                (let* ((cur (point))
-                       (beg (progn (search-backward "[" nil t) (point)))
-                       (end (progn (search-forward  "]" nil t) (point)))
-                       (str (buffer-substring-no-properties beg end)))
-                  (when (and (<= beg cur) (<= cur end))
-                    (save-match-data
-                      (when (string-match "\\(\\[.+\\]\\)" str)
-                        `(orglink
-                          ,(format "%s" (match-string 1 str))
-                          ,beg . ,end)))))))
-            (add-to-list 'embark-target-finders 'my-embark-orglink-at-point)
-            (embark-define-keymap embark-orglink-map
-                                  "Orglink keymap"
-                                  ("RET" org-open-at-point)
-                                  ("o" org-open-at-point))
-            (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-map))))
+    (leaf FIXME:my-embark-orglink
+      :disabled t                   ; FIXME: embark-define-keymapは古い
+      :after org embark
+      :config
+      (defun my-embark-orglink-at-point ()
+        "Target a link at point of orglink."
+        (save-excursion
+          (let* ((cur (point))
+                 (beg (progn (search-backward "[" nil t) (point)))
+                 (end (progn (search-forward  "]" nil t) (point)))
+                 (str (buffer-substring-no-properties beg end)))
+            (when (and (<= beg cur) (<= cur end))
+              (save-match-data
+                (when (string-match "\\(\\[.+\\]\\)" str)
+                  `(orglink
+                    ,(format "%s" (match-string 1 str))
+                    ,beg . ,end)))))))
+      (add-to-list 'embark-target-finders 'my-embark-orglink-at-point)
+      (embark-define-keymap embark-orglink-map
+                            "Orglink keymap"
+                            ("RET" org-open-at-point)
+                            ("o" org-open-at-point))
+      (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-map))))
 #+end_src
 *** consult
 #+begin_src emacs-lisp
@@ -1093,7 +1094,7 @@
                    (lisp-interaction-mode-hook . enable-paredit-mode)
                    (scheme-mode-hook . enable-paredit-mode)))
 #+end_src
-**** macrostep
+*** macrostep
 
 #+begin_src emacs-lisp
   (leaf macrostep               ; to test leaf macros.
