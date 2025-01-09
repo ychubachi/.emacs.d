@@ -1,15 +1,13 @@
 #+TITLE: config.org
 
 * TODO
-** TODO README.bak.orgから解説文をコピー
-** TODO 自分流にカスタマイズする部分とそうでないところを分ける？
-** TODO recentfがおかしい？
-
-** TODO org-space-treeのキーがgoogle-thisとかぶっている
-** TODO C-c C-x C-l(org-show-all)がきかない
-** TODO LSP modeを試してみる [[https://qiita.com/tadsan/items/691d53a87a0c2411d77c][最速LSPクライアント lsp-bridgeを使おう #Emacs - Qiita]]
-
++ TODO README.bak.orgから解説文をコピー
++ TODO 自分流にカスタマイズする部分とそうでないところを分ける？
++ TODO recentfがおかしい？
++ TODO C-c C-x C-l(org-show-all)がきかない
++ TODO LSP modeを試してみる [[https://qiita.com/tadsan/items/691d53a87a0c2411d77c][最速LSPクライアント lsp-bridgeを使おう #Emacs - Qiita]]
 * はじめに
+[[https://github.com/ychubachi/.emacs.d/blob/main/config.org][.emacs.d/config.org at main · ychubachi/.emacs.d]]
 ** この設定について
 - init.elの実行時、このconfig.orgからconfig.elを生成します。
 - orgのハッケージはinit.el内で最新版に更新しておきます。
