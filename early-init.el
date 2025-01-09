@@ -56,6 +56,22 @@
 
 (leaf org :straight t)
 
+(leaf no-littering :straight t :require t
+        :url "https://github.com/emacscollective/no-littering#usage"
+        :init
+        (let ((dir (no-littering-expand-var-file-name "lock-files/")))
+          (make-directory dir t)
+          (setq lock-file-name-transforms `((".*" ,dir t))))
+
+        (require 'recentf)
+        (add-to-list 'recentf-exclude
+                     (recentf-expand-file-name no-littering-var-directory))
+        (add-to-list 'recentf-exclude
+                     (recentf-expand-file-name no-littering-etc-directory))
+
+        (custom-set-variables '(custom-file
+                                (no-littering-expand-etc-file-name "custom.el"))))
+
 (when (and (fboundp 'startup-redirect-eln-cache)
          (fboundp 'native-comp-available-p)
          (native-comp-available-p))

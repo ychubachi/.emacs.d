@@ -96,7 +96,36 @@
 (leaf org :straight t)
 #+end_src
 
-** ネイティブコンパイルのキャッシュ設定
+** 優先設定
+*** no-littering - .emacs.d/をきれいに保つ
+- すべてのパッケージの前に実行するために、init.elのなるだけ冒頭に設定
+  - [[https://github.com/emacscollective/no-littering][emacscollective/no-littering: Help keeping ~/.emacs.d clean]]
+
++ Lock ファイル
++ recentf用の設定
++ カスタマイズファイルの指定
++ auto-save、backupとundo-treeについて
+  - セキュリティの問題が懸念される
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+    (leaf no-littering :straight t :require t
+            :url "https://github.com/emacscollective/no-littering#usage"
+            :init
+            (let ((dir (no-littering-expand-var-file-name "lock-files/")))
+              (make-directory dir t)
+              (setq lock-file-name-transforms `((".*" ,dir t))))
+
+            (require 'recentf)
+            (add-to-list 'recentf-exclude
+                         (recentf-expand-file-name no-littering-var-directory))
+            (add-to-list 'recentf-exclude
+                         (recentf-expand-file-name no-littering-etc-directory))
+
+            (custom-set-variables '(custom-file
+                                    (no-littering-expand-etc-file-name "custom.el"))))
+#+end_src
+
+*** ネイティブコンパイルのキャッシュ設定
 + no-litteringのための設定
 + Emacs 29以上の際に行うと良いようだ
   + https://github.com/emacscollective/no-littering/blob/master/README.org
@@ -155,7 +184,6 @@
 
 #+RESULTS:
 : modus-themes
-
 
 * フッター
 #+begin_src emacs-lisp :tangle early-init.el
