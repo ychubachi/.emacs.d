@@ -3103,3 +3103,18 @@ Wanderlustの内部ライブラリ
 
 *** 参考文献
 1. [[https://uwabami.github.io/cc-env/Emacs.html][Emacs の設定 | Youhei SASAKI’s official site]]
+
+* 古いinit.elをとりあえず放り込む→ここをorg化していく
+:PROPERTIES:
+:ARCHIVE_TIME: 2025-01-08 水 21:34
+:ARCHIVE_FILE: ~/.emacs.d/config.org
+:ARCHIVE_OLPATH: 設定/各種設定
+:ARCHIVE_CATEGORY: ???
+:END:
+
+#+begin_comment
+下記をコピペしてブロックを区切っていく
+,#+end_src
+,** headline
+,#+begin_src emacs-lisp
+#+end_comment

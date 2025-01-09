@@ -453,15 +453,6 @@
 : simple
 
 ** TODO 各種設定
-*** 古いinit.elをとりあえず放り込む→ここをorg化していく
-
-#+begin_comment
-下記をコピペしてブロックを区切っていく
-,#+end_src
-,** headline
-,#+begin_src emacs-lisp
-#+end_comment
-
 *** メールアドレスの設定
 #+begin_src emacs-lisp
   (leaf Mail-Variables
