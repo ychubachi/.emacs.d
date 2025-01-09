@@ -63,7 +63,7 @@
 #+end_src
 
 * 基本の設定
-** 本体の必須設定
+** 最低限の必須設定
 *** DeleteキーとHelpキーの変更
 
 #+begin_src emacs-lisp
