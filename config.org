@@ -631,7 +631,7 @@
           (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
 #+end_src
 
-** Completion UI
+** ミニバッファ補完UI
 *** vertico
 #+begin_src emacs-lisp
         (leaf vertico
@@ -1073,7 +1073,7 @@
           ;; Set dockerfile-image-name as safe variable.
           (put 'dockerfile-image-name 'safe-local-variable #'stringp))
   #+end_src
-** Emacs-Lisp
+** Emacs lisp関連
 *** paredit
 #+begin_src emacs-lisp
           (leaf paredit
@@ -1086,22 +1086,21 @@
                    (lisp-interaction-mode-hook . enable-paredit-mode)
                    (scheme-mode-hook . enable-paredit-mode)))
 #+end_src
-** Global-Bindings
-*** TODO macrostep → elispモード関連に移動？
-+ 新しいレポジトリがある
-  - https://github.com/emacsorphanage/macrostep
+**** macrostep
+
 #+begin_src emacs-lisp
-            (leaf macrostep               ; to test leaf macros.
-              :doc "interactive macro expander"
-              :url "https://github.com/joddie/macrostep"
-              :straight t
-              :bind (("C-c e" . macrostep-expand))) ;; TODO: elisp mode?
+  (leaf macrostep               ; to test leaf macros.
+    :doc "interactive macro expander"
+    :url "https://github.com/emacsorphanage/macrostep"
+    :straight t
+    :require t ; checked
+    :bind ((:emacs-lisp-mode-map
+            ("C-c e" . macrostep-expand))))
 #+end_src
 
 #+RESULTS:
 : macrostep
 
-** Emacs-Lisp-Mode-Hook
 *** flycheck
 #+begin_src emacs-lisp
             (leaf flycheck
@@ -1126,8 +1125,11 @@
                 :straight t
                 :config
                 (flycheck-elsa-setup)))
-
 #+end_src
+
+#+RESULTS:
+: flycheck
+
 *** ertを実行するためのキーバインド
 #+begin_src emacs-lisp
   (leaf ert
@@ -1141,13 +1143,13 @@
    #+end_src
 *** emacs-refactor
 #+begin_src emacs-lisp
-            (leaf emacs-refactor
-              :straight t
-              :bind ((emacs-lisp-mode-map
-                      ("M-RET" . emr-show-refactor-menu))))
+  (leaf emacs-refactor
+    :straight t
+    :bind ((emacs-lisp-mode-map
+            ("M-RET" . emr-show-refactor-menu))))
 #+end_src
 ** Global-Key-Bindngs
-*** perspective
+*** perspective [C-x C-b]
 #+begin_src emacs-lisp
         (leaf perspective
           :straight t
