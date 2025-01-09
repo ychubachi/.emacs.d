@@ -1,13 +1,14 @@
 #+TITLE: config.org
 
-* TODO
+[[https://github.com/ychubachi/.emacs.d/blob/main/config.org][.emacs.d/config.org at main · ychubachi/.emacs.d]]
+
+* TODO やること
 + TODO README.bak.orgから解説文をコピー
 + TODO 自分流にカスタマイズする部分とそうでないところを分ける？
 + TODO recentfがおかしい？
 + TODO C-c C-x C-l(org-show-all)がきかない
 + TODO LSP modeを試してみる [[https://qiita.com/tadsan/items/691d53a87a0c2411d77c][最速LSPクライアント lsp-bridgeを使おう #Emacs - Qiita]]
 * はじめに
-[[https://github.com/ychubachi/.emacs.d/blob/main/config.org][.emacs.d/config.org at main · ychubachi/.emacs.d]]
 ** この設定について
 - init.elの実行時、このconfig.orgからconfig.elを生成します。
 - orgのハッケージはinit.el内で最新版に更新しておきます。
@@ -169,8 +170,8 @@
      ))
 #+end_src
 
-**** 日本語入力
-
+*** 日本語入力
+**** mozc
 #+begin_src emacs-lisp
   (leaf mozc
     :straight t
@@ -181,7 +182,9 @@
       (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
      (t
       (setq mozc-helper-program-name "mozc_emacs_helper"))))
-
+#+end_src
+**** mozc-im
+#+begin_src emacs-lisp
   (leaf mozc-im
     :straight t
     :require t                        ; Checked
@@ -190,7 +193,9 @@
     :defvar (mozc-candidate-style)
     :init
     (setq mozc-candidate-style 'echo-area))
-
+#+end_src
+**** mozc-cursor-color
+#+begin_src emacs-lisp
   (leaf mozc-cursor-color
     :straight (mozc-cursor-color :type git :host github
                                  :repo "iRi-E/mozc-el-extensions")
@@ -216,11 +221,15 @@
                   :around (lambda (orig-fun &rest args)
                             (let ((mozc-mode mozc-im-mode))
                               (apply orig-fun args))))))
-
+#+end_src
+**** TODO isearch字にIMEの切り替えを有効にする →いらない？
+#+begin_src emacs-lisp
   (leaf isearch
-    :bind ((isearch-mode-map
+    :bind ((:isearch-mode-map
             ("C-o" . isearch-toggle-input-method))))
-
+#+end_src
+**** mozc-windows
+#+begin_src emacs-lisp
   (leaf mozc-windows
     :if (eq system-type 'windows-nt)
     :defun (mozc-session-sendkey)
@@ -229,8 +238,10 @@
                 :after (lambda (&rest args)
                          (when (eq (nth 0 args) 'CreateSession)
                            (mozc-session-sendkey '(Hankaku/Zenkaku))))))
-
 #+end_src
+
+#+RESULTS:
+: mozc-windows
 
 *** グローバルマイナーモード
 **** TODO recentf
@@ -397,6 +408,42 @@
 #+RESULTS:
 | delete-trailing-whitespace |
 
+***** TODO Startup Hook → hookを使わずinitでよいのでは？
+**** display-fill-column-indicator
+#+begin_src emacs-lisp
+      (leaf display-fill-column-indicator
+        :hook
+        (emacs-startup-hook . global-display-fill-column-indicator-mode))
+#+end_src
+**** save-place
+#+begin_src emacs-lisp
+      (leaf save-place
+        :custom
+        (save-place . t)
+        :hook
+        (emacs-startup-hook . save-place-mode))
+#+end_src
+**** midnight
+#+begin_src emacs-lisp
+  (leaf midnight
+    :url "https://www.emacswiki.org/emacs/MidnightMode"
+    :custom
+    ((clean-buffer-list-delay-general . 1))
+    :hook
+    (emacs-startup-hook . midnight-mode))
+#+end_src
+**** TODO wdired
+#+begin_src emacs-lisp
+  (leaf wdired
+    :doc "Rename files editing their names in dired buffers"
+    :tag "builtin"
+    :added "2020-11-21"
+    :require t
+    :config
+    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
+    :bind ((wdired-mode-map
+            ("C-o" . toggle-input-method))))
+#+end_src
 *** グローバルキーバインディング
 **** 画面の最大・縮小 [<f11>]
 
@@ -458,42 +505,6 @@
         (version-control . t))
         #+end_src
 
-*** TODO Startup Hook → hookを使わずinitでよいのでは？
-**** display-fill-column-indicator
-#+begin_src emacs-lisp
-      (leaf display-fill-column-indicator
-        :hook
-        (emacs-startup-hook . global-display-fill-column-indicator-mode))
-#+end_src
-**** save-place
-#+begin_src emacs-lisp
-      (leaf save-place
-        :custom
-        (save-place . t)
-        :hook
-        (emacs-startup-hook . save-place-mode))
-#+end_src
-**** midnight
-#+begin_src emacs-lisp
-  (leaf midnight
-    :url "https://www.emacswiki.org/emacs/MidnightMode"
-    :custom
-    ((clean-buffer-list-delay-general . 1))
-    :hook
-    (emacs-startup-hook . midnight-mode))
-#+end_src
-**** wdired
-#+begin_src emacs-lisp
-  (leaf wdired
-    :doc "Rename files editing their names in dired buffers"
-    :tag "builtin"
-    :added "2020-11-21"
-    :require t
-    :config
-    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
-    :bind ((wdired-mode-map
-            ("C-o" . toggle-input-method))))
-#+end_src
 *** advice
 **** tramp advice
 
