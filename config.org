@@ -617,7 +617,7 @@
     :hook
     (emacs-startup-hook . midnight-mode))
 #+end_src
-*** yasnippet-snippetsの設定 :STARTUP_HOOK:
+*** yasnippet-snippetsの設定                :STARTUP_HOOK:STRAIGHT:PUBLISHED:
 #+begin_src emacs-lisp
   (leaf yasnippet-snippets
     :straight t
@@ -626,7 +626,7 @@
     :hook
     (emacs-startup-hook . yas-global-mode))
     #+end_src
-*** git-gutter :STARTUP_HOOK:
+*** git-gutter                                        :STARTUP_HOOK:STRAIGHT:
 #+begin_src emacs-lisp
   (leaf git-gutter
         :straight t
