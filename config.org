@@ -83,7 +83,7 @@
         (defalias 'yes-or-no-p 'y-or-n-p))
 #+end_src
 *** TODO 本体のカスタム変数
-
+- 本体でないものが含まれてそう
 #+begin_src emacs-lisp
   (leaf Emacs-Variables
     :custom
@@ -565,7 +565,7 @@
 #+RESULTS:
 : embark-consult
 
-* COMMENT Emacs本体の設定
+* COMMENT 標準パッケージの設定
 ** グローバルマイナーモード
 *** TODO startup-hookを使わないようにする
 
@@ -785,36 +785,7 @@
 #+RESULTS:
 | delete-trailing-whitespace |
 
-** フックの設定（Emacs-Startup-Hook）
-*** TODO wdired
-#+begin_src emacs-lisp
-  (leaf wdired
-    :doc "Rename files editing their names in dired buffers"
-    :tag "builtin"
-    :added "2020-11-21"
-    :require t
-    :config
-    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
-    :bind ((wdired-mode-map
-            ("C-o" . toggle-input-method))))
-#+end_src
-** 各種設定
-*** メールアドレスの設定
-#+begin_src emacs-lisp
-  (leaf Mail-Variables
-    :custom
-    ((user-full-name . "Yoshihide Chubachi")
-     (user-mail-address . "yc@aiit.ac.jp")
-     (mail-user-agent quote message-user-agent)
-     (message-send-mail-function quote smtpmail-send-it)
-     (smtpmail-stream-type quote starttls)
-     (smtpmail-smtp-server . "smtp.gmail.com")
-     (smtpmail-smtp-service . 587)))
-    #+end_src
-
-#+RESULTS:
-: Mail-Variables
-
+* COMMENT 各種設定
 *** vc-hooks
 #+begin_src emacs-lisp
   (leaf vc-hooks
@@ -869,6 +840,18 @@
   (leaf leaf-convert :straight t)
 #+end_src
 
+*** TODO wdired
+#+begin_src emacs-lisp
+  (leaf wdired
+    :doc "Rename files editing their names in dired buffers"
+    :tag "builtin"
+    :added "2020-11-21"
+    :require t
+    :config
+    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
+    :bind ((wdired-mode-map
+            ("C-o" . toggle-input-method))))
+#+end_src
 * COMMENT Orgモードの設定
 ** Orgの基本的な設定
 *** Org-Mode全般の設定
@@ -1476,8 +1459,113 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+RESULTS:
 : dired+
+** グローバルキーにより起動するパッケージ
+*** imenu-list [C-c i]
+#+begin_src emacs-lisp
+  (leaf imenu-list
+    :bind (("C-c i" . imenu-list-smart-toggle))
+    :hook
+    (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
+
+  (leaf simple
+    :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
+#+end_src
+
+#+RESULTS:
+: simple
+
+*** perspective [C-x C-b]
+#+begin_src emacs-lisp
+        (leaf perspective
+          :straight t
+          :require t
+          :custom
+          (persp-mode-prefix-key . "p")
+          :bind (;; (persp-mode-map
+                 ;;  ("C-c p" . perspective-map))
+                 ("C-x C-b" . persp-list-buffers))
+          :config
+          (persp-mode)
+
+          (leaf consult                   ; TODO consult?
+            :straight t
+            :require t
+            :config
+            (consult-customize consult--source-buffer :hidden t :default nil)
+            (add-to-list 'consult-buffer-sources persp-consult-source)))
+
+  #+end_src
+*** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
+#+begin_src emacs-lisp
+        (leaf swap-buffers
+          :straight t
+          :bind
+          ("C-c b" . swap-buffers)
+          :custom
+          (swap-buffers-qwerty-shortcuts
+           . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
+#+end_src
+*** TODO magit [C-x g] →バインディングを見直す
+- https://magit.vc/manual/magit/Global-Bindings.html
+#+begin_src emacs-lisp
+        (leaf magit
+          :doc "A Git porcelain inside Emacs."
+          :req "emacs-25.1" "async-20200113" "dash-20200524" "git-commit-20200516" "transient-20200601" "with-editor-20200522"
+          :tag "vc" "tools" "git" "emacs>=25.1"
+          :added "2020-11-30"
+          :emacs>= 25.1
+          ;; :straight t
+          :straight t
+          :after git-commit with-editor
+          :bind (("C-x g" . magit-status)))
+#+end_src
+*** shell-pop [C-c s]
+#+begin_src emacs-lisp
+        (leaf shell-pop
+          :straight t
+          :bind
+          ("C-c s" . shell-pop)
+          :custom
+          (shell-pop-shell-type . (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
+          (shell-pop-window-position . "bottom")
+          (setq shell-pop-full-span . t))
+#+end_src
+*** visual-fill-column [C-q]
+#+begin_src emacs-lisp
+        (leaf visual-fill-column
+          :doc "fill-column for visual-line-mode"
+          :req "emacs-25.1"
+          :tag "emacs>=25.1"
+          :url "https://github.com/joostkremers/visual-fill-column"
+          :added "2021-11-08"
+          :emacs>= 25.1
+          :straight t
+          :after org-mode
+          :hook (org-mode-hook . visual-fill-column-mode)
+          :bind(("C-c q" . visual-fill-column-mode)
+                (:visual-fill-column-mode-map
+                 ("C-a" . beginning-of-visual-line)
+                 ("C-e" . end-of-visual-line)
+                 ("C-k" . kill-visual-line))))
+#+end_src
 
 ** メールクライアント
+*** メールアドレスの設定
+#+begin_src emacs-lisp
+  (leaf Mail-Variables
+    :custom
+    ((user-full-name . "Yoshihide Chubachi")
+     (user-mail-address . "yc@aiit.ac.jp")
+     (mail-user-agent quote message-user-agent)
+     (message-send-mail-function quote smtpmail-send-it)
+     (smtpmail-stream-type quote starttls)
+     (smtpmail-smtp-server . "smtp.gmail.com")
+     (smtpmail-smtp-service . 587)))
+    #+end_src
+
+#+RESULTS:
+: Mail-Variables
+
 *** notmuch
 #+begin_src emacs-lisp
     (leaf notmuch
@@ -1799,95 +1887,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :straight t
     :bind ((emacs-lisp-mode-map
             ("M-RET" . emr-show-refactor-menu))))
-#+end_src
-** グローバルキーにより起動するパッケージ
-*** imenu-list [C-c i]
-#+begin_src emacs-lisp
-  (leaf imenu-list
-    :bind (("C-c i" . imenu-list-smart-toggle))
-    :hook
-    (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
-
-  (leaf simple
-    :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
-#+end_src
-
-#+RESULTS:
-: simple
-
-*** perspective [C-x C-b]
-#+begin_src emacs-lisp
-        (leaf perspective
-          :straight t
-          :require t
-          :custom
-          (persp-mode-prefix-key . "p")
-          :bind (;; (persp-mode-map
-                 ;;  ("C-c p" . perspective-map))
-                 ("C-x C-b" . persp-list-buffers))
-          :config
-          (persp-mode)
-
-          (leaf consult                   ; TODO consult?
-            :straight t
-            :require t
-            :config
-            (consult-customize consult--source-buffer :hidden t :default nil)
-            (add-to-list 'consult-buffer-sources persp-consult-source)))
-
-  #+end_src
-*** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
-#+begin_src emacs-lisp
-        (leaf swap-buffers
-          :straight t
-          :bind
-          ("C-c b" . swap-buffers)
-          :custom
-          (swap-buffers-qwerty-shortcuts
-           . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
-#+end_src
-*** TODO magit [C-x g] →バインディングを見直す
-- https://magit.vc/manual/magit/Global-Bindings.html
-#+begin_src emacs-lisp
-        (leaf magit
-          :doc "A Git porcelain inside Emacs."
-          :req "emacs-25.1" "async-20200113" "dash-20200524" "git-commit-20200516" "transient-20200601" "with-editor-20200522"
-          :tag "vc" "tools" "git" "emacs>=25.1"
-          :added "2020-11-30"
-          :emacs>= 25.1
-          ;; :straight t
-          :straight t
-          :after git-commit with-editor
-          :bind (("C-x g" . magit-status)))
-#+end_src
-*** shell-pop [C-c s]
-#+begin_src emacs-lisp
-        (leaf shell-pop
-          :straight t
-          :bind
-          ("C-c s" . shell-pop)
-          :custom
-          (shell-pop-shell-type . (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
-          (shell-pop-window-position . "bottom")
-          (setq shell-pop-full-span . t))
-#+end_src
-*** visual-fill-column [C-q]
-#+begin_src emacs-lisp
-        (leaf visual-fill-column
-          :doc "fill-column for visual-line-mode"
-          :req "emacs-25.1"
-          :tag "emacs>=25.1"
-          :url "https://github.com/joostkremers/visual-fill-column"
-          :added "2021-11-08"
-          :emacs>= 25.1
-          :straight t
-          :after org-mode
-          :hook (org-mode-hook . visual-fill-column-mode)
-          :bind(("C-c q" . visual-fill-column-mode)
-                (:visual-fill-column-mode-map
-                 ("C-a" . beginning-of-visual-line)
-                 ("C-e" . end-of-visual-line)
-                 ("C-k" . kill-visual-line))))
 #+end_src
 ** 未整理
 *** 実行時に出る警告を非表示にする
