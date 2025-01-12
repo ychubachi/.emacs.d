@@ -198,9 +198,13 @@
     (load-library "migemo")
     (migemo-init))
 #+end_src
-*** TODO フォント
-
-- TODO: [[https://qiita.com/query1000/items/4b0b8db872adc1a5e2e9][Emacsで絵文字と他の字の幅を合わせる #font - Qiita]]
+*** フォント
+- デフォルトのフォントは「Takaoゴシック」
+- HackGenを使用中
+  - [[https://github.com/yuru7/HackGen][yuru7/HackGen: Hack と源柔ゴシックを合成したプログラミングフォント 白源 (はくげん／HackGen)]]
+- カーソルを調べたい文字に合わせ、C-u C-x = で文字毎にフォントを確認できる。
+- TODO: 絵文字を等幅にする方法
+  - [[https://qiita.com/query1000/items/4b0b8db872adc1a5e2e9][Emacsで絵文字と他の字の幅を合わせる #font - Qiita]]
 
 #+begin_example
 | mmmm |
@@ -236,7 +240,7 @@
 
 #+begin_src emacs-lisp
   (leaf Fonts
-    :doc "フォント設定。C-u C-x = で文字毎に確認できる。"
+    :doc "フォント設定"
     :init
     ;; ｜あいうえお｜
     ;; ｜憂鬱な檸檬｜
@@ -244,9 +248,9 @@
     ;; ｜!"#$%&'~{}｜
     ;; ｜🙆iimmiim>｜
     (custom-set-faces
+     '(default ((t (:family "HackGen"))))
      ;; '(default ((t (:family "Noto Sans"))))
      ;; '(default ((t (:family "PlemolJP"))))
-     '(default ((t (:family "HackGen"))))
      ;; '(default ((t (:family "UDEV Gothic NF"))))
      ;; '(default ((t (:family "FirgeNerd"))))
      ))
