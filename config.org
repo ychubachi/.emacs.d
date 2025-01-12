@@ -1,4 +1,5 @@
 #+TITLE: config.org
+#+STARTUP: show2levels
 
 [[https://github.com/ychubachi/.emacs.d/blob/main/config.org][.emacs.d/config.org at main · ychubachi/.emacs.d]]
 
@@ -63,7 +64,7 @@
 #+end_src
 
 * 基本の設定
-** 最低限の必須設定
+** 最低限の設定
 *** DeleteキーとHelpキーの変更
 
 #+begin_src emacs-lisp
@@ -251,7 +252,7 @@
      ))
 #+end_src
 
-* Emacs本体の設定
+* COMMENT Emacs本体の設定
 ** Emacs本体のカスタム変数
 
 #+begin_src emacs-lisp
@@ -275,6 +276,10 @@
 ** グローバルマイナーモード
 *** TODO recentf
 + startup-hookを使わないようにする
+
+#+begin_example
+(global-git-gutter-mode yas-global-mode midnight-mode save-place-mode global-display-fill-column-indicator-mode recentf-mode mozc-im-register-input-method mozc-leim-register-input-method)
+#+end_example
 
 #+begin_src emacs-lisp
   (leaf recentf
@@ -475,29 +480,6 @@
     :bind ((wdired-mode-map
             ("C-o" . toggle-input-method))))
 #+end_src
-** グローバルキーバインディング
-*** 画面の最大・縮小 [<f11>]
-
-#+begin_src emacs-lisp
-(leaf frame :bind ("<f11>" . toggle-frame-maximized))
-#+end_src
-
-#+RESULTS:
-: frame
-*** imenu-list
-#+begin_src emacs-lisp
-  (leaf imenu-list
-    :bind (("C-c i" . imenu-list-smart-toggle))
-    :hook
-    (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
-
-  (leaf simple
-    :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
-#+end_src
-
-#+RESULTS:
-: simple
-
 ** 各種設定
 *** メールアドレスの設定
 #+begin_src emacs-lisp
@@ -569,7 +551,7 @@
   (leaf leaf-convert :straight t)
 #+end_src
 
-* Orgモードの設定
+* COMMENT Orgモードの設定
 ** Orgの基本的な設定
 *** Org-Mode全般の設定
 
@@ -1159,7 +1141,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (add-hook 'org-mode-hook 'imenu-list-minor-mode)
   #+end_src
 
-* 外部パッケージの設定
+* COMMENT 外部パッケージの設定
 ** インストールするだけパッケージ
 #+begin_src emacs-lisp
   (leaf yaml-mode :straight t)
@@ -1776,7 +1758,29 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :bind ((emacs-lisp-mode-map
             ("M-RET" . emr-show-refactor-menu))))
 #+end_src
-** Global-Key-Bindngs
+** グローバルキーバインディング
+*** 画面の最大・縮小 [<f11>]
+
+#+begin_src emacs-lisp
+(leaf frame :bind ("<f11>" . toggle-frame-maximized))
+#+end_src
+
+#+RESULTS:
+: frame
+*** imenu-list [C-c i]
+#+begin_src emacs-lisp
+  (leaf imenu-list
+    :bind (("C-c i" . imenu-list-smart-toggle))
+    :hook
+    (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
+
+  (leaf simple
+    :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
+#+end_src
+
+#+RESULTS:
+: simple
+
 *** perspective [C-x C-b]
 #+begin_src emacs-lisp
         (leaf perspective
@@ -2152,14 +2156,14 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : ruler-mode
 
-* Test-Bed
+* COMMENT Test-Bed
 #+begin_src emacs-lisp
   (leaf Test-Bed
     :init
     ;; Experimental Settings
   )
 #+end_src
-* オリジナルパッケージ
+* COMMENT オリジナルパッケージ
 
 #+begin_src emacs-lisp
   (leaf org-sync-gtasks
@@ -2186,6 +2190,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+RESULTS:
 : org-sync-qiita
+
 
 * フッタの記述
 
