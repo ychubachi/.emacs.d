@@ -278,12 +278,14 @@
 #+end_src
 
 ** グローバルマイナーモード
-*** TODO recentf
-+ startup-hookを使わないようにする
+
+*** TODO startup-hookを使わないようにする
 
 #+begin_example
 (global-git-gutter-mode yas-global-mode midnight-mode save-place-mode global-display-fill-column-indicator-mode recentf-mode mozc-im-register-input-method mozc-leim-register-input-method)
 #+end_example
+
+*** TODO recentf :STARTUP_HOOK:
 
 #+begin_src emacs-lisp
   (leaf recentf
@@ -448,14 +450,13 @@
 #+RESULTS:
 | delete-trailing-whitespace |
 
-**** TODO Startup Hook → hookを使わずinitでよいのでは？
-*** display-fill-column-indicator
+*** display-fill-column-indicator :STARTUP_HOOK:
 #+begin_src emacs-lisp
       (leaf display-fill-column-indicator
         :hook
         (emacs-startup-hook . global-display-fill-column-indicator-mode))
 #+end_src
-*** save-place
+*** save-place :STARTUP_HOOK:
 #+begin_src emacs-lisp
       (leaf save-place
         :custom
@@ -463,7 +464,7 @@
         :hook
         (emacs-startup-hook . save-place-mode))
 #+end_src
-*** midnight
+*** midnight :STARTUP_HOOK:
 #+begin_src emacs-lisp
   (leaf midnight
     :url "https://www.emacswiki.org/emacs/MidnightMode"
@@ -471,6 +472,31 @@
     ((clean-buffer-list-delay-general . 1))
     :hook
     (emacs-startup-hook . midnight-mode))
+#+end_src
+** フックの設定（Emacs-Startup-Hook）
+*** yasnippet-snippetsの設定 :STARTUP_HOOK:
+#+begin_src emacs-lisp
+  (leaf yasnippet-snippets
+    :straight t
+    :custom
+    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
+    :hook
+    (emacs-startup-hook . yas-global-mode))
+    #+end_src
+*** git-gutter :STARTUP_HOOK:
+#+begin_src emacs-lisp
+  (leaf git-gutter
+        :straight t
+        ;; :custom
+        ;; (git-gutter:modified-sign . "~")
+        ;; (git-gutter:added-sign    . "+")
+        ;; (git-gutter:deleted-sign  . "-")
+        ;; :custom-face
+        ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
+        ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
+        ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
+        :hook
+        (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
 *** TODO wdired
 #+begin_src emacs-lisp
@@ -1857,31 +1883,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                  ("C-a" . beginning-of-visual-line)
                  ("C-e" . end-of-visual-line)
                  ("C-k" . kill-visual-line))))
-#+end_src
-** Emacs-Startup-Hook
-*** yasnippet-snippetsの設定
-#+begin_src emacs-lisp
-  (leaf yasnippet-snippets
-    :straight t
-    :custom
-    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
-    :hook
-    (emacs-startup-hook . yas-global-mode))
-    #+end_src
-*** git-gutter
-#+begin_src emacs-lisp
-  (leaf git-gutter
-        :straight t
-        ;; :custom
-        ;; (git-gutter:modified-sign . "~")
-        ;; (git-gutter:added-sign    . "+")
-        ;; (git-gutter:deleted-sign  . "-")
-        ;; :custom-face
-        ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
-        ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
-        ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
-        :hook
-        (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
 ** 未整理
 *** 実行時に出る警告を非表示にする
