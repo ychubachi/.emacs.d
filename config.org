@@ -63,7 +63,7 @@
   ;;; Code:
 #+end_src
 
-* 基本の設定
+* 基本設定
 ** 最低限の設定
 *** DeleteキーとHelpキーの変更
 
@@ -82,6 +82,26 @@
         :init
         (defalias 'yes-or-no-p 'y-or-n-p))
 #+end_src
+*** TODO 本体のカスタム変数
+
+#+begin_src emacs-lisp
+  (leaf Emacs-Variables
+    :custom
+    ((inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
+     (ring-bell-function . 'ignore) ; ベルを鳴らさない
+     (fill-column . 80)             ; 80桁で改行（モードによる）
+     (indent-tabs-mode . nil)       ; インデントの際タブを使わない
+     (byte-compile-warnings
+      . '(not cl-functions obsolete)) ; (require 'cl)を検査しない
+     (epg-pinentry-mode . 'loopback)  ; GnuPGのパスフレーズをミニバッファで
+     (plstore-cache-passphrase-for-symmetric-encryption . t)
+                                            ; パスフレーズをキャッシュ
+     (select-active-regions . 'only) ; リージョン選択時の移動を早くする
+     (dired-dwim-target . t)        ; diredでターゲットを他のdiredバッファに
+     (line-spacing . 0.25)
+     ))
+#+end_src
+
 ** 日本語のための設定
 *** 文字コード
 
@@ -256,29 +276,297 @@
      ))
 #+end_src
 
-* COMMENT Emacs本体の設定
-** Emacs本体のカスタム変数
+** 基本的なのグローバルキーバインディング
+*** ヘルプを表示 [<f1>]
+- 標準で設定済み
+*** 画面の最大・縮小 [<f11>]
 
 #+begin_src emacs-lisp
-  (leaf Emacs-Variables
-    :custom
-    ((inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
-     (ring-bell-function . 'ignore) ; ベルを鳴らさない
-     (fill-column . 80)             ; 80桁で改行（モードによる）
-     (indent-tabs-mode . nil)       ; インデントの際タブを使わない
-     (byte-compile-warnings
-      . '(not cl-functions obsolete)) ; (require 'cl)を検査しない
-     (epg-pinentry-mode . 'loopback)  ; GnuPGのパスフレーズをミニバッファで
-     (plstore-cache-passphrase-for-symmetric-encryption . t)
-                                            ; パスフレーズをキャッシュ
-     (select-active-regions . 'only) ; リージョン選択時の移動を早くする
-     (dired-dwim-target . t)        ; diredでターゲットを他のdiredバッファに
-     (line-spacing . 0.25)
-     ))
+(leaf frame :bind ("<f11>" . toggle-frame-maximized))
 #+end_src
 
-** グローバルマイナーモード
+#+RESULTS:
+: frame
 
+* 各種UI
+** キーボード操作 UI
+*** which-key
+#+begin_src emacs-lisp
+    (leaf which-key
+          :doc "Display available keybindings in popup"
+          :req "emacs-24.4"
+          :tag "emacs>=24.4"
+          :url "https://github.com/justbur/emacs-which-key"
+          :added "2021-10-20"
+          :emacs>= 24.4
+          :straight t
+          :config
+          (which-key-mode))
+#+end_src
+*** hydra
+#+begin_src emacs-lisp
+        (leaf hydra :straight t
+          :init
+          (defhydra hydra-zoom (global-map "<f12>")
+            "zoom"
+            ("i" text-scale-increase "Zoom in")
+            ("o" text-scale-decrease "Zoom out")
+            ("l" global-display-line-numbers-mode "Line number"))
+
+          (defhydra hydra-buffer-menu (:color pink
+                                              :hint nil)
+            "
+  ^Mark^             ^Unmark^           ^Actions^          ^Search
+  ^^^^^^^^-----------------------------------------------------------------
+  _m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
+  _s_: save          _U_: unmark up     _b_: bury          _I_: isearch
+  _d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
+  _D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
+  _~_: modified
+  "
+            ("m" Buffer-menu-mark)
+            ("u" Buffer-menu-unmark)
+            ("U" Buffer-menu-backup-unmark)
+            ("d" Buffer-menu-delete)
+            ("D" Buffer-menu-delete-backwards)
+            ("s" Buffer-menu-save)
+            ("~" Buffer-menu-not-modified)
+            ("x" Buffer-menu-execute)
+            ("b" Buffer-menu-bury)
+            ("g" revert-buffer)
+            ("T" Buffer-menu-toggle-files-only)
+            ("O" Buffer-menu-multi-occur :color blue)
+            ("I" Buffer-menu-isearch-buffers :color blue)
+            ("R" Buffer-menu-isearch-buffers-regexp :color blue)
+            ("c" nil "cancel")
+            ("v" Buffer-menu-select "select" :color blue)
+            ("o" Buffer-menu-other-window "other-window" :color blue)
+            ("q" quit-window "quit" :color blue))
+
+          (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
+#+end_src
+
+** ミニバッファ補完 UI
+*** vertico
+#+begin_src emacs-lisp
+        (leaf vertico
+          :doc "入力補完の候補をTABを押さずとも一覧から選べるようにする"
+          :url "https://github.com/minad/vertico"
+          :straight t
+          :custom
+          (vertico-count . 20)            ; 最大20件まで表示するように
+          :config
+          (vertico-mode)
+          (setq vertico-resize t)
+          (setq vertico-cycle t))
+#+end_src
+*** orderless
+#+begin_src emacs-lisp
+        (leaf orderless
+          :doc "入力補完の際、複数の語句で検索できるようにする"
+          :straight t
+          :init
+          ;; Configure a custom style dispatcher (see the Consult wiki)
+          ;; (setq orderless-style-dispatchers '(+orderless-dispatch))
+          (setq completion-styles '(orderless basic)
+                completion-category-defaults nil
+                completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
+*** marginalia
+#+begin_src emacs-lisp
+        (leaf marginalia
+          :doc "入力補完の候補に説明文を表示する"
+          :straight t
+          :bind (:minibuffer-local-map
+                 ("M-A" . marginalia-cycle))
+          :init
+          (marginalia-mode))
+  #+end_src
+*** embark
+#+begin_src emacs-lisp
+  (leaf embark
+    :url "https://github.com/oantolin/embark"
+    :straight t
+    :bind
+    (("M-." . embark-act)        ; アクションの一覧を表示
+     ("C-." . embark-dwim)       ; Do What I Mean デフォルトアクションを実行
+     ("C-^ B" . embark-bindings) ; C-h -> C-^ に
+     )
+    :init
+    (setq prefix-help-command #'embark-prefix-help-command)
+    :config
+    (add-to-list 'display-buffer-alist
+                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                   nil
+                   (window-parameters (mode-line-format . none))))
+
+    (leaf FIXME:my-embark-orglink
+      :disabled t                   ; FIXME: embark-define-keymapは古い
+      :after org embark
+      :config
+      (defun my-embark-orglink-at-point ()
+        "Target a link at point of orglink."
+        (save-excursion
+          (let* ((cur (point))
+                 (beg (progn (search-backward "[" nil t) (point)))
+                 (end (progn (search-forward  "]" nil t) (point)))
+                 (str (buffer-substring-no-properties beg end)))
+            (when (and (<= beg cur) (<= cur end))
+              (save-match-data
+                (when (string-match "\\(\\[.+\\]\\)" str)
+                  `(orglink
+                    ,(format "%s" (match-string 1 str))
+                    ,beg . ,end)))))))
+      (add-to-list 'embark-target-finders 'my-embark-orglink-at-point)
+      (embark-define-keymap embark-orglink-map
+                            "Orglink keymap"
+                            ("RET" org-open-at-point)
+                            ("o" org-open-at-point))
+      (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-map))))
+#+end_src
+*** consult
+#+begin_src emacs-lisp
+        (leaf consult
+          :url "https://github.com/minad/consult"
+          :doc "Example configuration for Consult"
+          :straight (consult :type git :host github
+                             :repo "minad/consult")
+          :bind (;; C-c bindings in `mode-specific-map'
+                 ("C-c M-x" . consult-mode-command)
+                 ("C-c h" . consult-history)
+                 ("C-c k" . consult-kmacro)
+                 ("C-c m" . consult-man)
+                 ("C-c i" . consult-info)
+                 ([remap Info-search] . consult-info)
+                 ;; C-x bindings in `ctl-x-map'
+                 ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
+                 ("C-x b" . consult-buffer)            ;; orig. switch-to-buffer
+                 ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+                 ("C-x 5 b" . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
+                 ("C-x r b" . consult-bookmark)           ;; orig. bookmark-jump
+                 ("C-x p b" . consult-project-buffer) ;; orig. project-switch-to-buffer
+                 ;; Custom M-# bindings for fast register access
+                 ("M-#" . consult-register-load)
+                 ("M-'" . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
+                 ("C-M-#" . consult-register)
+                 ;; Other custom bindings
+                 ("M-y" . consult-yank-pop) ;; orig. yank-pop
+                 ;; M-g bindings in `goto-map'
+                 ("M-g e" . consult-compile-error)
+                 ("M-g f" . consult-flymake)     ;; Alternative: consult-flycheck
+                 ("M-g g" . consult-goto-line)   ;; orig. goto-line
+                 ("M-g M-g" . consult-goto-line) ;; orig. goto-line
+                 ("M-g o" . consult-outline) ;; Alternative: consult-org-heading
+                 ("M-g m" . consult-mark)
+                 ("M-g k" . consult-global-mark)
+                 ("M-g i" . consult-imenu)
+                 ("M-g I" . consult-imenu-multi)
+                 ;; M-s bindings in `search-map'
+                 ("M-s d" . consult-find)
+                 ("M-s D" . consult-locate)
+                 ("M-s g" . consult-grep)
+                 ("M-s G" . consult-git-grep)
+                 ("M-s r" . consult-ripgrep)
+                 ("M-s l" . consult-line)
+                 ("M-s L" . consult-line-multi)
+                 ("M-s k" . consult-keep-lines)
+                 ("M-s u" . consult-focus-lines)
+                 ;; Isearch integration
+                 ("M-s e" . consult-isearch-history)
+                 (:isearch-mode-map
+                  ("M-e" . consult-isearch-history)   ;; orig. isearch-edit-string
+                  ("M-s e" . consult-isearch-history) ;; orig. isearch-edit-string
+                  ("M-s l" . consult-line) ;; needed by consult-line to detect isearch
+                  ("M-s L" . consult-line-multi) ;; needed by consult-line to detect isearch
+                  )
+                 ;; Minibuffer history
+                 (:minibuffer-local-map
+                  ("M-s" . consult-history) ;; orig. next-matching-history-element
+                  ("M-r" . consult-history)) ;; orig. previous-matching-history-element
+                 )
+
+          ;; Enable autom  atic preview at point in the *Completions* buffer. This is
+          ;; relevant when you use the default completion UI.
+          :hook (completion-list-mode . consult-preview-at-point-mode)
+
+          ;; The :init configuration is always executed (Not lazy)
+          :init
+
+          ;; Optionally configure the register formatting. This improves the register
+          ;; preview for `consult-register', `consult-register-load',
+          ;; `consult-register-store' and the Emacs built-ins.
+          (setq register-preview-delay 0.5
+                register-preview-function #'consult-register-format)
+
+          ;; Optionally tweak the register preview window.
+          ;; This adds thin lines, sorting and hides the mode line of the window.
+          (advice-add #'register-preview :override #'consult-register-window)
+
+          ;; Use Consult to select xref locations with preview
+          (setq xref-show-xrefs-function #'consult-xref
+                xref-show-definitions-function #'consult-xref)
+
+          ;; Configure other variables and modes in the :config section,
+          ;; after lazily loading the package.
+          :config
+
+          ;; Optionally configure preview. The default value
+          ;; is 'any, such that any key triggers the preview.
+          ;; (setq consult-preview-key 'any)
+          ;; (setq consult-preview-key (kbd "M-."))
+          ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+          ;; For some commands and buffer sources it is useful to configure the
+          ;; :preview-key on a per-command basis using the `consult-customize' macro.
+          (consult-customize
+           consult-theme :preview-key '(:debounce 0.2 any)
+           consult-ripgrep consult-git-grep consult-grep
+           consult-bookmark consult-recent-file consult-xref
+           consult--source-bookmark consult--source-recent-file
+           consult--source-project-recent-file
+           :preview-key '(:debounce 0.4 any))
+
+          ;; Optionally configure the narrowing key.
+          ;; Both < and C-+ work reasonably well.
+          (setq consult-narrow-key "<") ;; (kbd "C-+")
+
+          ;; Optionally make narrowing help available in the minibuffer.
+          ;; You may want to use `embark-prefix-help-command' or which-key instead.
+          ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+          ;; By default `consult-project-function' uses `project-root' from project.el.
+          ;; Optionally configure a different project root function.
+  ;;;; 1. project.el (the default) -> Error
+          ;; (setq consult-project-function #'consult--default-project--function)
+  ;;;; 2. vc.el (vc-root-dir)
+          ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+  ;;;; 3. locate-dominating-file
+          ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+  ;;;; 4. projectile.el (projectile-project-root)
+          ;; (autoload 'projectile-project-root "projectile")
+          ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
+  ;;;; 5. No project support
+          ;; (setq consult-project-function nil)
+#+end_src
+*** embark-consult
+
+#+begin_src emacs-lisp
+  (leaf embark-consult
+    :doc "Consult users will also want the embark-consult package."
+    :straight t
+    :after (embark consult)
+    ;; :demand t ; only necessary if you have the hook below
+    ;; if you want to have consult previews as you move around an
+    ;; auto-updating embark collect buffer
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode))
+  )
+#+end_src
+
+#+RESULTS:
+: embark-consult
+
+* COMMENT Emacs本体の設定
+** グローバルマイナーモード
 *** TODO startup-hookを使わないようにする
 
 #+begin_example
@@ -306,6 +594,53 @@
                              (recentf-save-list)))))
 #+end_src
 
+*** display-fill-column-indicator :STARTUP_HOOK:
+#+begin_src emacs-lisp
+      (leaf display-fill-column-indicator
+        :hook
+        (emacs-startup-hook . global-display-fill-column-indicator-mode))
+#+end_src
+*** save-place :STARTUP_HOOK:
+#+begin_src emacs-lisp
+      (leaf save-place
+        :custom
+        (save-place . t)
+        :hook
+        (emacs-startup-hook . save-place-mode))
+#+end_src
+*** midnight :STARTUP_HOOK:
+#+begin_src emacs-lisp
+  (leaf midnight
+    :url "https://www.emacswiki.org/emacs/MidnightMode"
+    :custom
+    ((clean-buffer-list-delay-general . 1))
+    :hook
+    (emacs-startup-hook . midnight-mode))
+#+end_src
+*** yasnippet-snippetsの設定 :STARTUP_HOOK:
+#+begin_src emacs-lisp
+  (leaf yasnippet-snippets
+    :straight t
+    :custom
+    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
+    :hook
+    (emacs-startup-hook . yas-global-mode))
+    #+end_src
+*** git-gutter :STARTUP_HOOK:
+#+begin_src emacs-lisp
+  (leaf git-gutter
+        :straight t
+        ;; :custom
+        ;; (git-gutter:modified-sign . "~")
+        ;; (git-gutter:added-sign    . "+")
+        ;; (git-gutter:deleted-sign  . "-")
+        ;; :custom-face
+        ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
+        ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
+        ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
+        :hook
+        (emacs-startup-hook . global-git-gutter-mode))
+#+end_src
 *** undo-tree
 
 #+begin_src emacs-lisp
@@ -450,54 +785,7 @@
 #+RESULTS:
 | delete-trailing-whitespace |
 
-*** display-fill-column-indicator :STARTUP_HOOK:
-#+begin_src emacs-lisp
-      (leaf display-fill-column-indicator
-        :hook
-        (emacs-startup-hook . global-display-fill-column-indicator-mode))
-#+end_src
-*** save-place :STARTUP_HOOK:
-#+begin_src emacs-lisp
-      (leaf save-place
-        :custom
-        (save-place . t)
-        :hook
-        (emacs-startup-hook . save-place-mode))
-#+end_src
-*** midnight :STARTUP_HOOK:
-#+begin_src emacs-lisp
-  (leaf midnight
-    :url "https://www.emacswiki.org/emacs/MidnightMode"
-    :custom
-    ((clean-buffer-list-delay-general . 1))
-    :hook
-    (emacs-startup-hook . midnight-mode))
-#+end_src
 ** フックの設定（Emacs-Startup-Hook）
-*** yasnippet-snippetsの設定 :STARTUP_HOOK:
-#+begin_src emacs-lisp
-  (leaf yasnippet-snippets
-    :straight t
-    :custom
-    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
-    :hook
-    (emacs-startup-hook . yas-global-mode))
-    #+end_src
-*** git-gutter :STARTUP_HOOK:
-#+begin_src emacs-lisp
-  (leaf git-gutter
-        :straight t
-        ;; :custom
-        ;; (git-gutter:modified-sign . "~")
-        ;; (git-gutter:added-sign    . "+")
-        ;; (git-gutter:deleted-sign  . "-")
-        ;; :custom-face
-        ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
-        ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
-        ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
-        :hook
-        (emacs-startup-hook . global-git-gutter-mode))
-#+end_src
 *** TODO wdired
 #+begin_src emacs-lisp
   (leaf wdired
@@ -1189,282 +1477,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : dired+
 
-** Keyboard UI
-*** which-key
-#+begin_src emacs-lisp
-    (leaf which-key
-          :doc "Display available keybindings in popup"
-          :req "emacs-24.4"
-          :tag "emacs>=24.4"
-          :url "https://github.com/justbur/emacs-which-key"
-          :added "2021-10-20"
-          :emacs>= 24.4
-          :straight t
-          :config
-          (which-key-mode))
-#+end_src
-*** hydra
-#+begin_src emacs-lisp
-        (leaf hydra :straight t
-          :init
-          (defhydra hydra-zoom (global-map "<f12>")
-            "zoom"
-            ("i" text-scale-increase "Zoom in")
-            ("o" text-scale-decrease "Zoom out")
-            ("l" global-display-line-numbers-mode "Line number"))
-
-          (defhydra hydra-buffer-menu (:color pink
-                                              :hint nil)
-            "
-  ^Mark^             ^Unmark^           ^Actions^          ^Search
-  ^^^^^^^^-----------------------------------------------------------------
-  _m_: mark          _u_: unmark        _x_: execute       _R_: re-isearch
-  _s_: save          _U_: unmark up     _b_: bury          _I_: isearch
-  _d_: delete        ^ ^                _g_: refresh       _O_: multi-occur
-  _D_: delete up     ^ ^                _T_: files only: % -28`Buffer-menu-files-only
-  _~_: modified
-  "
-            ("m" Buffer-menu-mark)
-            ("u" Buffer-menu-unmark)
-            ("U" Buffer-menu-backup-unmark)
-            ("d" Buffer-menu-delete)
-            ("D" Buffer-menu-delete-backwards)
-            ("s" Buffer-menu-save)
-            ("~" Buffer-menu-not-modified)
-            ("x" Buffer-menu-execute)
-            ("b" Buffer-menu-bury)
-            ("g" revert-buffer)
-            ("T" Buffer-menu-toggle-files-only)
-            ("O" Buffer-menu-multi-occur :color blue)
-            ("I" Buffer-menu-isearch-buffers :color blue)
-            ("R" Buffer-menu-isearch-buffers-regexp :color blue)
-            ("c" nil "cancel")
-            ("v" Buffer-menu-select "select" :color blue)
-            ("o" Buffer-menu-other-window "other-window" :color blue)
-            ("q" quit-window "quit" :color blue))
-
-          (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
-#+end_src
-
-** ミニバッファ補完UI
-*** vertico
-#+begin_src emacs-lisp
-        (leaf vertico
-          :doc "入力補完の候補をTABを押さずとも一覧から選べるようにする"
-          :url "https://github.com/minad/vertico"
-          :straight t
-          :custom
-          (vertico-count . 20)            ; 最大20件まで表示するように
-          :config
-          (vertico-mode)
-          (setq vertico-resize t)
-          (setq vertico-cycle t))
-#+end_src
-*** orderless
-#+begin_src emacs-lisp
-        (leaf orderless
-          :doc "入力補完の際、複数の語句で検索できるようにする"
-          :straight t
-          :init
-          ;; Configure a custom style dispatcher (see the Consult wiki)
-          ;; (setq orderless-style-dispatchers '(+orderless-dispatch))
-          (setq completion-styles '(orderless basic)
-                completion-category-defaults nil
-                completion-category-overrides '((file (styles partial-completion)))))
-#+end_src
-*** marginalia
-#+begin_src emacs-lisp
-        (leaf marginalia
-          :doc "入力補完の候補に説明文を表示する"
-          :straight t
-          :bind (:minibuffer-local-map
-                 ("M-A" . marginalia-cycle))
-          :init
-          (marginalia-mode))
-  #+end_src
-*** embark
-#+begin_src emacs-lisp
-  (leaf embark
-    :url "https://github.com/oantolin/embark"
-    :straight t
-    :bind
-    (("M-." . embark-act)        ; アクションの一覧を表示
-     ("C-." . embark-dwim)       ; Do What I Mean デフォルトアクションを実行
-     ("C-^ B" . embark-bindings) ; C-h -> C-^ に
-     )
-    :init
-    (setq prefix-help-command #'embark-prefix-help-command)
-    :config
-    (add-to-list 'display-buffer-alist
-                 '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                   nil
-                   (window-parameters (mode-line-format . none))))
-
-    (leaf FIXME:my-embark-orglink
-      :disabled t                   ; FIXME: embark-define-keymapは古い
-      :after org embark
-      :config
-      (defun my-embark-orglink-at-point ()
-        "Target a link at point of orglink."
-        (save-excursion
-          (let* ((cur (point))
-                 (beg (progn (search-backward "[" nil t) (point)))
-                 (end (progn (search-forward  "]" nil t) (point)))
-                 (str (buffer-substring-no-properties beg end)))
-            (when (and (<= beg cur) (<= cur end))
-              (save-match-data
-                (when (string-match "\\(\\[.+\\]\\)" str)
-                  `(orglink
-                    ,(format "%s" (match-string 1 str))
-                    ,beg . ,end)))))))
-      (add-to-list 'embark-target-finders 'my-embark-orglink-at-point)
-      (embark-define-keymap embark-orglink-map
-                            "Orglink keymap"
-                            ("RET" org-open-at-point)
-                            ("o" org-open-at-point))
-      (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-map))))
-#+end_src
-*** consult
-#+begin_src emacs-lisp
-        (leaf consult
-          :url "https://github.com/minad/consult"
-          :doc "Example configuration for Consult"
-          :straight (consult :type git :host github
-                             :repo "minad/consult")
-          :bind (;; C-c bindings in `mode-specific-map'
-                 ("C-c M-x" . consult-mode-command)
-                 ("C-c h" . consult-history)
-                 ("C-c k" . consult-kmacro)
-                 ("C-c m" . consult-man)
-                 ("C-c i" . consult-info)
-                 ([remap Info-search] . consult-info)
-                 ;; C-x bindings in `ctl-x-map'
-                 ("C-x M-:" . consult-complex-command) ;; orig. repeat-complex-command
-                 ("C-x b" . consult-buffer)            ;; orig. switch-to-buffer
-                 ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-                 ("C-x 5 b" . consult-buffer-other-frame) ;; orig. switch-to-buffer-other-frame
-                 ("C-x r b" . consult-bookmark)           ;; orig. bookmark-jump
-                 ("C-x p b" . consult-project-buffer) ;; orig. project-switch-to-buffer
-                 ;; Custom M-# bindings for fast register access
-                 ("M-#" . consult-register-load)
-                 ("M-'" . consult-register-store) ;; orig. abbrev-prefix-mark (unrelated)
-                 ("C-M-#" . consult-register)
-                 ;; Other custom bindings
-                 ("M-y" . consult-yank-pop) ;; orig. yank-pop
-                 ;; M-g bindings in `goto-map'
-                 ("M-g e" . consult-compile-error)
-                 ("M-g f" . consult-flymake)     ;; Alternative: consult-flycheck
-                 ("M-g g" . consult-goto-line)   ;; orig. goto-line
-                 ("M-g M-g" . consult-goto-line) ;; orig. goto-line
-                 ("M-g o" . consult-outline) ;; Alternative: consult-org-heading
-                 ("M-g m" . consult-mark)
-                 ("M-g k" . consult-global-mark)
-                 ("M-g i" . consult-imenu)
-                 ("M-g I" . consult-imenu-multi)
-                 ;; M-s bindings in `search-map'
-                 ("M-s d" . consult-find)
-                 ("M-s D" . consult-locate)
-                 ("M-s g" . consult-grep)
-                 ("M-s G" . consult-git-grep)
-                 ("M-s r" . consult-ripgrep)
-                 ("M-s l" . consult-line)
-                 ("M-s L" . consult-line-multi)
-                 ("M-s k" . consult-keep-lines)
-                 ("M-s u" . consult-focus-lines)
-                 ;; Isearch integration
-                 ("M-s e" . consult-isearch-history)
-                 (:isearch-mode-map
-                  ("M-e" . consult-isearch-history)   ;; orig. isearch-edit-string
-                  ("M-s e" . consult-isearch-history) ;; orig. isearch-edit-string
-                  ("M-s l" . consult-line) ;; needed by consult-line to detect isearch
-                  ("M-s L" . consult-line-multi) ;; needed by consult-line to detect isearch
-                  )
-                 ;; Minibuffer history
-                 (:minibuffer-local-map
-                  ("M-s" . consult-history) ;; orig. next-matching-history-element
-                  ("M-r" . consult-history)) ;; orig. previous-matching-history-element
-                 )
-
-          ;; Enable autom  atic preview at point in the *Completions* buffer. This is
-          ;; relevant when you use the default completion UI.
-          :hook (completion-list-mode . consult-preview-at-point-mode)
-
-          ;; The :init configuration is always executed (Not lazy)
-          :init
-
-          ;; Optionally configure the register formatting. This improves the register
-          ;; preview for `consult-register', `consult-register-load',
-          ;; `consult-register-store' and the Emacs built-ins.
-          (setq register-preview-delay 0.5
-                register-preview-function #'consult-register-format)
-
-          ;; Optionally tweak the register preview window.
-          ;; This adds thin lines, sorting and hides the mode line of the window.
-          (advice-add #'register-preview :override #'consult-register-window)
-
-          ;; Use Consult to select xref locations with preview
-          (setq xref-show-xrefs-function #'consult-xref
-                xref-show-definitions-function #'consult-xref)
-
-          ;; Configure other variables and modes in the :config section,
-          ;; after lazily loading the package.
-          :config
-
-          ;; Optionally configure preview. The default value
-          ;; is 'any, such that any key triggers the preview.
-          ;; (setq consult-preview-key 'any)
-          ;; (setq consult-preview-key (kbd "M-."))
-          ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
-          ;; For some commands and buffer sources it is useful to configure the
-          ;; :preview-key on a per-command basis using the `consult-customize' macro.
-          (consult-customize
-           consult-theme :preview-key '(:debounce 0.2 any)
-           consult-ripgrep consult-git-grep consult-grep
-           consult-bookmark consult-recent-file consult-xref
-           consult--source-bookmark consult--source-recent-file
-           consult--source-project-recent-file
-           :preview-key '(:debounce 0.4 any))
-
-          ;; Optionally configure the narrowing key.
-          ;; Both < and C-+ work reasonably well.
-          (setq consult-narrow-key "<") ;; (kbd "C-+")
-
-          ;; Optionally make narrowing help available in the minibuffer.
-          ;; You may want to use `embark-prefix-help-command' or which-key instead.
-          ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
-
-          ;; By default `consult-project-function' uses `project-root' from project.el.
-          ;; Optionally configure a different project root function.
-  ;;;; 1. project.el (the default) -> Error
-          ;; (setq consult-project-function #'consult--default-project--function)
-  ;;;; 2. vc.el (vc-root-dir)
-          ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-  ;;;; 3. locate-dominating-file
-          ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
-  ;;;; 4. projectile.el (projectile-project-root)
-          ;; (autoload 'projectile-project-root "projectile")
-          ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
-  ;;;; 5. No project support
-          ;; (setq consult-project-function nil)
-#+end_src
-*** embark-consult
-
-#+begin_src emacs-lisp
-  (leaf embark-consult
-    :doc "Consult users will also want the embark-consult package."
-    :straight t
-    :after (embark consult)
-    ;; :demand t ; only necessary if you have the hook below
-    ;; if you want to have consult previews as you move around an
-    ;; auto-updating embark collect buffer
-    :hook
-    (embark-collect-mode . consult-preview-at-point-mode))
-  )
-#+end_src
-
-#+RESULTS:
-: embark-consult
-
 ** メールクライアント
 *** notmuch
 #+begin_src emacs-lisp
@@ -1788,15 +1800,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :bind ((emacs-lisp-mode-map
             ("M-RET" . emr-show-refactor-menu))))
 #+end_src
-** グローバルキーバインディング
-*** 画面の最大・縮小 [<f11>]
-
-#+begin_src emacs-lisp
-(leaf frame :bind ("<f11>" . toggle-frame-maximized))
-#+end_src
-
-#+RESULTS:
-: frame
+** グローバルキーにより起動するパッケージ
 *** imenu-list [C-c i]
 #+begin_src emacs-lisp
   (leaf imenu-list
@@ -1842,7 +1846,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
           (swap-buffers-qwerty-shortcuts
            . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
 #+end_src
-*** magit [C-x g]
+*** TODO magit [C-x g] →バインディングを見直す
+- https://magit.vc/manual/magit/Global-Bindings.html
 #+begin_src emacs-lisp
         (leaf magit
           :doc "A Git porcelain inside Emacs."
