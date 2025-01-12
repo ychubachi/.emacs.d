@@ -82,7 +82,7 @@
         :init
         (defalias 'yes-or-no-p 'y-or-n-p))
 #+end_src
-*** TODO 本体のカスタム変数
+** TODO 本体のカスタム変数
 - 本体でないものが含まれてそう
 #+begin_src emacs-lisp
   (leaf Emacs-Variables
