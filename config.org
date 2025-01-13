@@ -4,11 +4,12 @@
 [[https://github.com/ychubachi/.emacs.d/blob/main/config.org][.emacs.d/config.org at main · ychubachi/.emacs.d]]
 
 * TODO やること
-+ TODO README.bak.orgから解説文をコピー
-+ TODO 自分流にカスタマイズする部分とそうでないところを分ける？
-+ TODO recentfがおかしい？
-+ TODO C-c C-x C-l(org-show-all)がきかない
-+ TODO LSP modeを試してみる [[https://qiita.com/tadsan/items/691d53a87a0c2411d77c][最速LSPクライアント lsp-bridgeを使おう #Emacs - Qiita]]
++ README.bak.orgから解説文をコピー
++ 自分流にカスタマイズする部分とそうでないところを分ける？
++ recentfがおかしい？
++ C-c C-x C-l(org-show-all)がきかない
++ LSP modeを試してみる [[https://qiita.com/tadsan/items/691d53a87a0c2411d77c][最速LSPクライアント lsp-bridgeを使おう #Emacs - Qiita]]
++ [[https://github.com/misohena/org-cmenu][misohena/org-cmenu: Context Sensitive Menu for Emacs Org Mode]]
 * はじめに
 ** この設定について
 - init.elの実行時、このconfig.orgからconfig.elを生成します。
@@ -257,6 +258,7 @@
 
 * Emacs本体の設定
 ** TODO カスタマイズ変数
+*** misc
 - 本体でないものが含まれてそう
 #+begin_src emacs-lisp
   (leaf Emacs-Variables
@@ -275,6 +277,16 @@
      (line-spacing . 0.25)
      ))
 #+end_src
+*** vc-hooks                                                         :CUSTOM:
+#+begin_src emacs-lisp
+  (leaf vc-hooks
+        :custom
+        (vc-follow-symlinks . t)        ; シンボリックリンクの場合、本体を辿る
+        (vc-handled-backends . '(Git))) ; Gitのみ使用
+    #+end_src
+
+#+RESULTS:
+: vc-hooks
 
 ** グローバルキーバインディング
 *** ヘルプを表示 [<f1>]
@@ -288,7 +300,7 @@
 #+RESULTS:
 : frame
 
-** TODO グローバルマイナーモード
+** グローバルマイナーモード
 - 外部パッケージない？
 *** TODO startup-hookを使わないようにする
 
@@ -507,6 +519,22 @@
 
 #+RESULTS:
 | delete-trailing-whitespace |
+
+** アドバイス
+*** tramp                                                            :ADVICE:
+** マイナーモード
+*** wdired                                                      :MINNOR_MODE:
+#+begin_src emacs-lisp
+  (leaf wdired
+    :doc "Rename files editing their names in dired buffers"
+    :tag "builtin"
+    :added "2020-11-21"
+    :require t
+    :config
+    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
+    :bind ((wdired-mode-map
+            ("C-o" . toggle-input-method))))
+#+end_src
 
 * 各種UI
 ** キーボード操作 UI
@@ -785,72 +813,6 @@
 #+RESULTS:
 : embark-consult
 
-* COMMENT 各種設定
-*** vc-hooks                                                         :CUSTOM:
-#+begin_src emacs-lisp
-  (leaf vc-hooks
-        :custom
-        (vc-follow-symlinks . t)        ; シンボリックリンクの場合、本体を辿る
-        (vc-handled-backends . '(Git))) ; Gitのみ使用
-    #+end_src
-
-#+RESULTS:
-: vc-hooks
-
-*** TODO バックアップのディレクトリとバージョン管理の設定 → no-littering? :CUSTOM:
-
-#+begin_src emacs-lisp
-  (leaf files
-        :custom
-        (backup-directory-alist . '(("." . ".backup~")))
-        (delete-old-versions . t)
-        (version-control . t))
-        #+end_src
-
-*** tramp                                                            :ADVICE:
-
-#+begin_src emacs-lisp
-  (leaf tramp
-      :config
-      (defadvice tramp-sh-handle-vc-registered (around tramp-sh-handle-vc-registered activate)
-        (let ((vc-handled-backends nil)) ad-do-it)))
-    #+end_src
-
-*** TODO leaf関連→early-init.elに
-*** leaf-tree
-
-#+begin_src emacs-lisp
-  (leaf leaf-tree
-    :straight t
-    :custom (imenu-list-position . 'left)
-    :defun (leaf-tree-mode)
-    :init
-    (defun my/enable-init-el-minor-mode ()
-      (when (equal
-             (buffer-file-name)
-             (expand-file-name "~/.emacs.d/init.el"))
-        (leaf-tree-mode t)))
-    (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
-#+end_src
-
-*** leaf-convert
-
-#+begin_src emacs-lisp
-  (leaf leaf-convert :straight t)
-#+end_src
-
-*** TODO wdired                                                 :MINNOR_MODE:
-#+begin_src emacs-lisp
-  (leaf wdired
-    :doc "Rename files editing their names in dired buffers"
-    :tag "builtin"
-    :added "2020-11-21"
-    :require t
-    :config
-    (define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
-    :bind ((wdired-mode-map
-            ("C-o" . toggle-input-method))))
-#+end_src
 * COMMENT Orgモードの設定
 ** Orgの基本的な設定
 *** Org-Mode全般の設定
@@ -1441,7 +1403,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (add-hook 'org-mode-hook 'imenu-list-minor-mode)
   #+end_src
 
-* COMMENT 外部パッケージの設定
+* 外部パッケージの設定
 ** インストールするだけパッケージ
 #+begin_src emacs-lisp
   (leaf yaml-mode :straight t)
@@ -1459,6 +1421,21 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : dired+
 ** グローバルキーにより起動するパッケージ
+*** TODO [#A] magit [C-x g]
+- recommended されているキーバインディングはC-c 名前空間を利用している
+  - https://magit.vc/manual/magit/Global-Bindings.html
+
+#+begin_src emacs-lisp
+  (leaf magit
+    :doc "A Git porcelain inside Emacs."
+    :req "emacs-25.1" "async-20200113" "dash-20200524" "git-commit-20200516" "transient-20200601" "with-editor-20200522"
+    :tag "vc" "tools" "git" "emacs>=25.1"
+    :added "2020-11-30"
+    :emacs>= 25.1
+    :straight t
+    :after git-commit with-editor
+    :bind (("C-x g" . magit-status)))
+#+end_src
 *** imenu-list [C-c i]
 #+begin_src emacs-lisp
   (leaf imenu-list
@@ -1496,27 +1473,13 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
   #+end_src
 *** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
 #+begin_src emacs-lisp
-        (leaf swap-buffers
-          :straight t
-          :bind
-          ("C-c b" . swap-buffers)
-          :custom
-          (swap-buffers-qwerty-shortcuts
-           . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
-#+end_src
-*** TODO magit [C-x g] →バインディングを見直す
-- https://magit.vc/manual/magit/Global-Bindings.html
-#+begin_src emacs-lisp
-        (leaf magit
-          :doc "A Git porcelain inside Emacs."
-          :req "emacs-25.1" "async-20200113" "dash-20200524" "git-commit-20200516" "transient-20200601" "with-editor-20200522"
-          :tag "vc" "tools" "git" "emacs>=25.1"
-          :added "2020-11-30"
-          :emacs>= 25.1
-          ;; :straight t
-          :straight t
-          :after git-commit with-editor
-          :bind (("C-x g" . magit-status)))
+  (leaf swap-buffers
+    :straight t
+    :bind
+    ("C-c b" . swap-buffers)
+    :custom
+    (swap-buffers-qwerty-shortcuts
+     . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
 #+end_src
 *** shell-pop [C-c s]
 #+begin_src emacs-lisp
@@ -1548,8 +1511,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                  ("C-k" . kill-visual-line))))
 #+end_src
 
-** メールクライアント
-*** メールアドレスの設定
+* COMMENT メールクライアント
+** メールアドレスの設定
 #+begin_src emacs-lisp
   (leaf Mail-Variables
     :custom
@@ -1565,7 +1528,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : Mail-Variables
 
-*** notmuch
+** notmuch
 #+begin_src emacs-lisp
     (leaf notmuch
           :when (not (eq system-type 'windows-nt))
@@ -1629,14 +1592,14 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : notmuch
 
-*** ol-notmuch
+** ol-notmuch
 #+begin_src emacs-lisp
         (leaf ol-notmuch
           :straight t
           :require t
           :after notmuch org)
   #+end_src
-*** consult-notmuch
+** consult-notmuch
 #+begin_src emacs-lisp
         (leaf consult-notmuch
           :when (not (eq system-type 'windows-nt))
@@ -1646,12 +1609,12 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
           :after consult notmuch)
 
 #+end_src
-*** mm-decode
+** mm-decode
 #+begin_src emacs-lisp
         (leaf mm-decode
           :custom (mm-default-directory . "~/Downloads/"))
 #+end_src
-*** gnus-alias
+** gnus-alias
 #+begin_src emacs-lisp
         (leaf gnus-alias
           :straight (gnus-alias :type git :host github
@@ -1668,7 +1631,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                    ))))
 
 #+end_src
-*** wanderlust
+** wanderlust
 #+begin_src emacs-lisp
             (leaf wanderlust :straight t
               :config
@@ -1756,7 +1719,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
               (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)
 #+end_src
-** Development
+* COMMENT 開発用
+** 全般
 *** auto-indent-yanked-code (core?)
 #+begin_src emacs-lisp
   (leaf *auto-indent-yanked-code
@@ -1887,8 +1851,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :bind ((emacs-lisp-mode-map
             ("M-RET" . emr-show-refactor-menu))))
 #+end_src
-** 未整理
-*** 実行時に出る警告を非表示にする
+* COMMENT 未整理
+** 実行時に出る警告を非表示にする
 
 #+begin_src emacs-lisp
   (leaf *warnings
@@ -1900,12 +1864,12 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : *warnings
 
-*** FIXME headline
+** FIXME headline
 #+begin_src emacs-lisp
         (leaf TODO:Move-To-Builtin
           :init
           #+end_src
-*** ffap
+** ffap
 #+begin_src emacs-lisp
           (leaf ffap
             :doc "ポイント位置のファイルやURLを開く"
@@ -1913,7 +1877,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
             :init
             (ffap-bindings))
 #+end_src
-*** cmd/browser
+** cmd/browser
 #+begin_src emacs-lisp
   (leaf *cmd/browser
     :config
@@ -1927,12 +1891,12 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
       (setq browse-url-browser-function 'cmd/wsl-browser)
       (setq browse-url-generic-program "web-browser")))
 #+end_src
-*** headline
+** headline
 #+begin_src emacs-lisp
   )
 
 #+end_src
-*** backup-each-save → no-litteringとかぶる？？
+** backup-each-save → no-litteringとかぶる？？
 #+begin_src emacs-lisp
             (leaf backup-each-save
               :when (not (eq system-type 'windows-nt))
@@ -1946,7 +1910,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
               (add-hook 'after-save-hook 'backup-each-save)) ; 有効化！
 
 #+end_src
-*** pandoc-mode
+** pandoc-mode
 #+begin_src emacs-lisp
             (leaf pandoc-mode
               :doc "Minor mode for interacting with Pandoc"
@@ -1957,7 +1921,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
               :straight t
               :after hydra)
 #+end_src
-*** dired-launch
+** dired-launch
 #+begin_src emacs-lisp
             (leaf dired-launch
               :straight t
@@ -1967,7 +1931,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                          (getenv "WSLENV"))
                 (setq dired-launch-default-launcher '("wslview"))))
 #+end_src
-*** region-bindings-mode
+** region-bindings-mode
 #+begin_src emacs-lisp
             (leaf region-bindings-mode
               :straight t
@@ -1985,7 +1949,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
               (define-key region-bindings-mode-map "n" 'mc/mark-next-like-this)
               (define-key region-bindings-mode-map "m" 'mc/mark-more-like-this-extended))
 #+end_src
-*** align
+** align
 #+begin_src emacs-lisp
             (leaf align
               :doc "align text to a specific column, by regexp"
@@ -1995,7 +1959,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
               :config
               (define-key region-bindings-mode-map "=" 'align-regexp))
 #+end_src
-*** eww
+** eww
 #+begin_src emacs-lisp
             (leaf eww
               :custom
