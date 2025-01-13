@@ -63,9 +63,8 @@
   ;;; Code:
 #+end_src
 
-* 基本設定
-** 最低限の設定
-*** DeleteキーとHelpキーの変更
+* 最低限の設定
+** DeleteキーとHelpキーの変更
 
 #+begin_src emacs-lisp
   (leaf Help-Keys
@@ -75,35 +74,15 @@
           (global-set-key (kbd "C-^") help-map))
 #+end_src
 
-*** yes/noの選択をy/nに簡略化
+** yes/noの選択をy/nに簡略化
 
 #+begin_src emacs-lisp
 (leaf Yes-or-no-p
         :init
         (defalias 'yes-or-no-p 'y-or-n-p))
 #+end_src
-** TODO 本体のカスタム変数
-- 本体でないものが含まれてそう
-#+begin_src emacs-lisp
-  (leaf Emacs-Variables
-    :custom
-    ((inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
-     (ring-bell-function . 'ignore) ; ベルを鳴らさない
-     (fill-column . 80)             ; 80桁で改行（モードによる）
-     (indent-tabs-mode . nil)       ; インデントの際タブを使わない
-     (byte-compile-warnings
-      . '(not cl-functions obsolete)) ; (require 'cl)を検査しない
-     (epg-pinentry-mode . 'loopback)  ; GnuPGのパスフレーズをミニバッファで
-     (plstore-cache-passphrase-for-symmetric-encryption . t)
-                                            ; パスフレーズをキャッシュ
-     (select-active-regions . 'only) ; リージョン選択時の移動を早くする
-     (dired-dwim-target . t)        ; diredでターゲットを他のdiredバッファに
-     (line-spacing . 0.25)
-     ))
-#+end_src
-
-** 日本語のための設定
-*** 文字コード
+* 日本語のための設定
+** 文字コード
 
 #+begin_src emacs-lisp
 (leaf Coding-System
@@ -115,8 +94,8 @@
                      (cons 'utf-8 'cp932-unix)))))
 #+end_src
 
-*** 日本語入力
-**** mozc
+** 日本語入力
+*** mozc
 #+begin_src emacs-lisp
   (leaf mozc
     :straight t
@@ -128,7 +107,7 @@
      (t
       (setq mozc-helper-program-name "mozc_emacs_helper"))))
 #+end_src
-**** mozc-im
+*** mozc-im
 #+begin_src emacs-lisp
   (leaf mozc-im
     :straight t
@@ -139,7 +118,7 @@
     :init
     (setq mozc-candidate-style 'echo-area))
 #+end_src
-**** mozc-cursor-color
+*** mozc-cursor-color
 #+begin_src emacs-lisp
   (leaf mozc-cursor-color
     :straight (mozc-cursor-color :type git :host github
@@ -167,7 +146,7 @@
                             (let ((mozc-mode mozc-im-mode))
                               (apply orig-fun args))))))
 #+end_src
-**** mozc-windows
+*** mozc-windows
 #+begin_src emacs-lisp
   (leaf mozc-windows
     :if (eq system-type 'windows-nt)
@@ -184,13 +163,13 @@
 
 **
 
-**** TODO isearch字にIMEの切り替えを有効にする →いらない？
+*** TODO isearch字にIMEの切り替えを有効にする →いらない？
 #+begin_src emacs-lisp
   (leaf isearch
     :bind ((:isearch-mode-map
             ("C-o" . isearch-toggle-input-method))))
 #+end_src
-**** migemo
+*** migemo
 #+begin_src emacs-lisp
   (leaf migemo
     :when (eq system-type 'gnu/linux)
@@ -218,7 +197,7 @@
     (load-library "migemo")
     (migemo-init))
 #+end_src
-*** フォント
+** フォント
 - デフォルトのフォントは「Takaoゴシック」
 - HackGenを使用中
   - [[https://github.com/yuru7/HackGen][yuru7/HackGen: Hack と源柔ゴシックを合成したプログラミングフォント 白源 (はくげん／HackGen)]]
@@ -276,7 +255,28 @@
      ))
 #+end_src
 
-** 基本的なのグローバルキーバインディング
+* Emacs本体の設定
+** TODO カスタマイズ変数
+- 本体でないものが含まれてそう
+#+begin_src emacs-lisp
+  (leaf Emacs-Variables
+    :custom
+    ((inhibit-startup-screen . t)   ; スタートアップスクリーンを非表示
+     (ring-bell-function . 'ignore) ; ベルを鳴らさない
+     (fill-column . 80)             ; 80桁で改行（モードによる）
+     (indent-tabs-mode . nil)       ; インデントの際タブを使わない
+     (byte-compile-warnings
+      . '(not cl-functions obsolete)) ; (require 'cl)を検査しない
+     (epg-pinentry-mode . 'loopback)  ; GnuPGのパスフレーズをミニバッファで
+     (plstore-cache-passphrase-for-symmetric-encryption . t)
+                                            ; パスフレーズをキャッシュ
+     (select-active-regions . 'only) ; リージョン選択時の移動を早くする
+     (dired-dwim-target . t)        ; diredでターゲットを他のdiredバッファに
+     (line-spacing . 0.25)
+     ))
+#+end_src
+
+** グローバルキーバインディング
 *** ヘルプを表示 [<f1>]
 - 標準で設定済み
 *** 画面の最大・縮小 [<f11>]
@@ -287,6 +287,226 @@
 
 #+RESULTS:
 : frame
+
+** TODO グローバルマイナーモード
+- 外部パッケージない？
+*** TODO startup-hookを使わないようにする
+
+#+begin_example
+(global-git-gutter-mode yas-global-mode midnight-mode save-place-mode global-display-fill-column-indicator-mode recentf-mode mozc-im-register-input-method mozc-leim-register-input-method)
+#+end_example
+
+*** TODO recentf :STARTUP_HOOK:
+
+#+begin_src emacs-lisp
+  (leaf recentf
+            :custom
+            (recentf-max-menu-items  . 500)
+            (recentf-max-saved-items . 2000)
+            (recentf-auto-cleanup    . 'never)
+            (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS"
+                                 "^/sudo:" "/straight"))
+            :hook
+            (emacs-startup-hook . recentf-mode)
+            :defun (recentf-save-list)
+            :defvar (recentf-exclude)
+            :config
+            (run-at-time nil (* 5 60)
+                         (lambda ()
+                           (let ((save-silently t)) ; FIXME
+                             (recentf-save-list)))))
+#+end_src
+
+*** display-fill-column-indicator :STARTUP_HOOK:
+#+begin_src emacs-lisp
+      (leaf display-fill-column-indicator
+        :hook
+        (emacs-startup-hook . global-display-fill-column-indicator-mode))
+#+end_src
+*** save-place :STARTUP_HOOK:
+#+begin_src emacs-lisp
+      (leaf save-place
+        :custom
+        (save-place . t)
+        :hook
+        (emacs-startup-hook . save-place-mode))
+#+end_src
+*** midnight :STARTUP_HOOK:
+#+begin_src emacs-lisp
+  (leaf midnight
+    :url "https://www.emacswiki.org/emacs/MidnightMode"
+    :custom
+    ((clean-buffer-list-delay-general . 1))
+    :hook
+    (emacs-startup-hook . midnight-mode))
+#+end_src
+*** yasnippet-snippetsの設定                :STARTUP_HOOK:STRAIGHT:PUBLISHED:
+#+begin_src emacs-lisp
+  (leaf yasnippet-snippets
+    :straight t
+    :custom
+    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
+    :hook
+    (emacs-startup-hook . yas-global-mode))
+    #+end_src
+*** git-gutter                                        :STARTUP_HOOK:STRAIGHT:
+#+begin_src emacs-lisp
+  (leaf git-gutter
+        :straight t
+        ;; :custom
+        ;; (git-gutter:modified-sign . "~")
+        ;; (git-gutter:added-sign    . "+")
+        ;; (git-gutter:deleted-sign  . "-")
+        ;; :custom-face
+        ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
+        ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
+        ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
+        :hook
+        (emacs-startup-hook . global-git-gutter-mode))
+#+end_src
+*** undo-tree
+
+#+begin_src emacs-lisp
+(leaf undo-tree
+          :doc "https://elpa.gnu.org/packages/undo-tree.html"
+          :straight t
+          :require t                          ; Checked
+          :bind ("C-z" . undo-tree-undo)
+          :custom
+          (undo-tree-auto-save-history . t)
+          (undo-tree-visualizer-diff . t)
+          :init
+          ;; (defadvice undo-tree-make-history-save-file-name
+          ;;     (after undo-tree activate)
+          ;;   (setq ad-return-value (concat ad-return-value ".gz")))
+          (global-undo-tree-mode))
+#+end_src
+
+*** auto-revert
+
+#+begin_src emacs-lisp
+  (leaf auto-revert
+    :custom
+    (auto-revert-interval . 1)      ; 再読み込みの間隔
+    (auto-revert-verbose . nil)     ; 再読込の際、メッセージを非表示
+    (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
+    :init
+    (global-auto-revert-mode 1))
+#+end_src
+
+*** savehist
+
+#+begin_src emacs-lisp
+(leaf savehist
+          ;; Persist history over Emacs restarts.
+          ;; Vertico sorts by history position.
+          :init
+          (savehist-mode 1))
+#+end_src
+
+*** show-paren
+
+#+begin_src emacs-lisp
+(leaf show-paren-mode
+          :custom
+          (show-paren-style . 'mixed)
+          :init
+          (show-paren-mode 1))
+#+end_src
+
+*** goto-addr
+
+#+begin_src emacs-lisp
+  (leaf goto-addr
+            :doc "Toggle Goto-Address mode in all buffers."
+            :url "https://www.gnu.org/software/emacs/manual/html_node/emacs/Goto-Address-mode.html"
+            :init
+            ;; You can follow the URL by typing C-c RET
+            (global-goto-address-mode 1))
+#+end_src
+
+*** whitespace - 空白文字の可視化
+- [[https://yanqirenshi.hatenablog.com/entry/2016/07/03/Emacs%3A_whitespace_%E3%81%A7%E4%BD%99%E5%88%86%E3%81%AA%E7%A9%BA%E7%99%BD/%E3%82%BF%E3%83%96%E3%81%AB%E8%89%B2%E3%81%A5%E3%81%91][Emacs: whitespace で余分な空白/タブに色づけ - ほんとのこと知りたいだけなのに。]]
+  - M-x list-faces-display で設定する色の種類と色を確認できます。
+  - 設定する色は M-x list-colors-display で確認する感じ。
+- 色はテーマのデフォルトのままにしておく。
+
+　　　ああ全角　　　　　←全角　あいうえお
+あいうえお　漢字
+
+#+begin_src emacs-lisp
+  (leaf whitespace
+    :init
+    (setq whitespace-style
+          '(
+            face                  ; faceで可視化
+            trailing              ; 行末
+            tabs                  ; タブ
+            spaces                ; スペース
+            space-mark            ; 表示のマッピング
+            tab-mark
+            ))
+    (setq whitespace-display-mappings
+          '(
+            (space-mark ?\u3000 [?□])
+            (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+            ))
+    (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+    (setq whitespace-space-regexp "\\(\u3000+\\)")
+    ;; (set-face-attribute 'whitespace-trailing nil
+    ;;                     :foreground nil
+    ;;                     :background "DarkOrange1"
+    ;;                     :underline nil)
+    ;; (set-face-attribute 'whitespace-tab nil
+    ;;                     :foreground "DarkOrange1"
+    ;;                     :background nil
+    ;;                     :underline nil)
+    ;; (set-face-attribute 'whitespace-space nil
+    ;;                     :foreground "DarkOrange1"
+    ;;                     :background nil
+    ;;                     :underline nil)
+  (global-whitespace-mode t))
+#+end_src
+
+#+RESULTS:
+: whitespace
+
+*** TODO outline-mode
+
+#+begin_src emacs-lisp
+  (leaf outline-mode
+    :defvar (outline-mode-prefix-map)
+    :custom
+    :init
+    (require 'outline)
+    (eval-after-load "outline"
+      '(require 'foldout))
+    (add-hook 'outline-minor-mode-hook
+              (lambda () (local-set-key
+                          "\C-c\C-o"
+                          outline-mode-prefix-map)))
+    ;; (setq outline-regexp ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (") ; "  ("を追加
+    ;; (outline-minor-mode 1) ; TODO: outline-mode is not GLOBAL minnor mode
+    )
+#+end_src
+
+*** COMMENT outline-magic
+
+#+begin_src emacs-lisp
+(leaf outline-magic :straight t
+          :init
+          (define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle))
+#+end_src
+
+** フック
+*** 保存時、不要な空白を削除（before-save-hook）
+
+#+begin_src emacs-lisp
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
+
+#+RESULTS:
+| delete-trailing-whitespace |
 
 * 各種UI
 ** キーボード操作 UI
@@ -565,228 +785,8 @@
 #+RESULTS:
 : embark-consult
 
-* COMMENT 標準パッケージの設定
-** グローバルマイナーモード
-*** TODO startup-hookを使わないようにする
-
-#+begin_example
-(global-git-gutter-mode yas-global-mode midnight-mode save-place-mode global-display-fill-column-indicator-mode recentf-mode mozc-im-register-input-method mozc-leim-register-input-method)
-#+end_example
-
-*** TODO recentf :STARTUP_HOOK:
-
-#+begin_src emacs-lisp
-  (leaf recentf
-            :custom
-            (recentf-max-menu-items  . 500)
-            (recentf-max-saved-items . 2000)
-            (recentf-auto-cleanup    . 'never)
-            (recentf-exclude . '("/recentf" "COMMIT_EDITMSG" "/.?TAGS"
-                                 "^/sudo:" "/straight"))
-            :hook
-            (emacs-startup-hook . recentf-mode)
-            :defun (recentf-save-list)
-            :defvar (recentf-exclude)
-            :config
-            (run-at-time nil (* 5 60)
-                         (lambda ()
-                           (let ((save-silently t)) ; FIXME
-                             (recentf-save-list)))))
-#+end_src
-
-*** display-fill-column-indicator :STARTUP_HOOK:
-#+begin_src emacs-lisp
-      (leaf display-fill-column-indicator
-        :hook
-        (emacs-startup-hook . global-display-fill-column-indicator-mode))
-#+end_src
-*** save-place :STARTUP_HOOK:
-#+begin_src emacs-lisp
-      (leaf save-place
-        :custom
-        (save-place . t)
-        :hook
-        (emacs-startup-hook . save-place-mode))
-#+end_src
-*** midnight :STARTUP_HOOK:
-#+begin_src emacs-lisp
-  (leaf midnight
-    :url "https://www.emacswiki.org/emacs/MidnightMode"
-    :custom
-    ((clean-buffer-list-delay-general . 1))
-    :hook
-    (emacs-startup-hook . midnight-mode))
-#+end_src
-*** yasnippet-snippetsの設定                :STARTUP_HOOK:STRAIGHT:PUBLISHED:
-#+begin_src emacs-lisp
-  (leaf yasnippet-snippets
-    :straight t
-    :custom
-    (yasnippet-snippets-dir . "~/.emacs.d/etc/yasnippet/snippets")
-    :hook
-    (emacs-startup-hook . yas-global-mode))
-    #+end_src
-*** git-gutter                                        :STARTUP_HOOK:STRAIGHT:
-#+begin_src emacs-lisp
-  (leaf git-gutter
-        :straight t
-        ;; :custom
-        ;; (git-gutter:modified-sign . "~")
-        ;; (git-gutter:added-sign    . "+")
-        ;; (git-gutter:deleted-sign  . "-")
-        ;; :custom-face
-        ;; (git-gutter:modified . ((t (:background "#f1fa8c"))))
-        ;; (git-gutter:added    . ((t (:background "#50fa7b"))))
-        ;; (git-gutter:deleted  . ((t (:background "#ff79c6"))))
-        :hook
-        (emacs-startup-hook . global-git-gutter-mode))
-#+end_src
-*** undo-tree
-
-#+begin_src emacs-lisp
-(leaf undo-tree
-          :doc "https://elpa.gnu.org/packages/undo-tree.html"
-          :straight t
-          :require t                          ; Checked
-          :bind ("C-z" . undo-tree-undo)
-          :custom
-          (undo-tree-auto-save-history . t)
-          (undo-tree-visualizer-diff . t)
-          :init
-          ;; (defadvice undo-tree-make-history-save-file-name
-          ;;     (after undo-tree activate)
-          ;;   (setq ad-return-value (concat ad-return-value ".gz")))
-          (global-undo-tree-mode))
-#+end_src
-
-*** auto-revert
-
-#+begin_src emacs-lisp
-  (leaf auto-revert
-    :custom
-    (auto-revert-interval . 1)      ; 再読み込みの間隔
-    (auto-revert-verbose . nil)     ; 再読込の際、メッセージを非表示
-    (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
-    :init
-    (global-auto-revert-mode 1))
-#+end_src
-
-*** savehist
-
-#+begin_src emacs-lisp
-(leaf savehist
-          ;; Persist history over Emacs restarts.
-          ;; Vertico sorts by history position.
-          :init
-          (savehist-mode 1))
-#+end_src
-
-*** show-paren
-
-#+begin_src emacs-lisp
-(leaf show-paren-mode
-          :custom
-          (show-paren-style . 'mixed)
-          :init
-          (show-paren-mode 1))
-#+end_src
-
-*** goto-addr
-
-#+begin_src emacs-lisp
-  (leaf goto-addr
-            :doc "Toggle Goto-Address mode in all buffers."
-            :url "https://www.gnu.org/software/emacs/manual/html_node/emacs/Goto-Address-mode.html"
-            :init
-            ;; You can follow the URL by typing C-c RET
-            (global-goto-address-mode 1))
-#+end_src
-
-*** whitespace - 空白文字の可視化
-- [[https://yanqirenshi.hatenablog.com/entry/2016/07/03/Emacs%3A_whitespace_%E3%81%A7%E4%BD%99%E5%88%86%E3%81%AA%E7%A9%BA%E7%99%BD/%E3%82%BF%E3%83%96%E3%81%AB%E8%89%B2%E3%81%A5%E3%81%91][Emacs: whitespace で余分な空白/タブに色づけ - ほんとのこと知りたいだけなのに。]]
-  - M-x list-faces-display で設定する色の種類と色を確認できます。
-  - 設定する色は M-x list-colors-display で確認する感じ。
-- 色はテーマのデフォルトのままにしておく。
-
-　　　ああ全角　　　　　←全角　あいうえお
-あいうえお　漢字
-
-#+begin_src emacs-lisp
-  (leaf whitespace
-    :init
-    (setq whitespace-style
-          '(
-            face                  ; faceで可視化
-            trailing              ; 行末
-            tabs                  ; タブ
-            spaces                ; スペース
-            space-mark            ; 表示のマッピング
-            tab-mark
-            ))
-    (setq whitespace-display-mappings
-          '(
-            (space-mark ?\u3000 [?□])
-            (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
-            ))
-    (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
-    (setq whitespace-space-regexp "\\(\u3000+\\)")
-    ;; (set-face-attribute 'whitespace-trailing nil
-    ;;                     :foreground nil
-    ;;                     :background "DarkOrange1"
-    ;;                     :underline nil)
-    ;; (set-face-attribute 'whitespace-tab nil
-    ;;                     :foreground "DarkOrange1"
-    ;;                     :background nil
-    ;;                     :underline nil)
-    ;; (set-face-attribute 'whitespace-space nil
-    ;;                     :foreground "DarkOrange1"
-    ;;                     :background nil
-    ;;                     :underline nil)
-  (global-whitespace-mode t))
-#+end_src
-
-#+RESULTS:
-: whitespace
-
-*** TODO outline-mode
-
-#+begin_src emacs-lisp
-  (leaf outline-mode
-    :defvar (outline-mode-prefix-map)
-    :custom
-    :init
-    (require 'outline)
-    (eval-after-load "outline"
-      '(require 'foldout))
-    (add-hook 'outline-minor-mode-hook
-              (lambda () (local-set-key
-                          "\C-c\C-o"
-                          outline-mode-prefix-map)))
-    ;; (setq outline-regexp ";;;\\(;* [^ \\t\\n]\\|###autoload\\)\\|(\\|  (") ; "  ("を追加
-    ;; (outline-minor-mode 1) ; TODO: outline-mode is not GLOBAL minnor mode
-    )
-#+end_src
-
-*** COMMENT outline-magic
-
-#+begin_src emacs-lisp
-(leaf outline-magic :straight t
-          :init
-          (define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle))
-#+end_src
-
-** フックの設定（before-save-hook）
-*** 保存時、不要な空白を削除
-
-#+begin_src emacs-lisp
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-#+end_src
-
-#+RESULTS:
-| delete-trailing-whitespace |
-
 * COMMENT 各種設定
-*** vc-hooks
+*** vc-hooks                                                         :CUSTOM:
 #+begin_src emacs-lisp
   (leaf vc-hooks
         :custom
@@ -797,7 +797,7 @@
 #+RESULTS:
 : vc-hooks
 
-*** TODO バックアップのディレクトリとバージョン管理の設定 → no-littering?
+*** TODO バックアップのディレクトリとバージョン管理の設定 → no-littering? :CUSTOM:
 
 #+begin_src emacs-lisp
   (leaf files
@@ -807,8 +807,7 @@
         (version-control . t))
         #+end_src
 
-*** advice
-**** tramp advice
+*** tramp                                                            :ADVICE:
 
 #+begin_src emacs-lisp
   (leaf tramp
@@ -840,7 +839,7 @@
   (leaf leaf-convert :straight t)
 #+end_src
 
-*** TODO wdired
+*** TODO wdired                                                 :MINNOR_MODE:
 #+begin_src emacs-lisp
   (leaf wdired
     :doc "Rename files editing their names in dired buffers"
