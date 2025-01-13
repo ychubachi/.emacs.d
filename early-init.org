@@ -88,6 +88,29 @@
       (straight-use-package 'leaf-keywords)
       (leaf-keywords-init)))
 #+end_src
+
+** leaf-tree
+
+#+begin_src emacs-lisp
+  (leaf leaf-tree :tangle "early-init.el"
+    :straight t
+    :custom (imenu-list-position . 'left)
+    :defun (leaf-tree-mode)
+    :init
+    (defun my/enable-init-el-minor-mode ()
+      (when (equal
+             (buffer-file-name)
+             (expand-file-name "~/.emacs.d/init.el"))
+        (leaf-tree-mode t)))
+    (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
+#+end_src
+
+** leaf-convert
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+  (leaf leaf-convert :straight t)
+#+end_src
+
 ** orgパッケージを最新にする
 + orgパッケージを最新バージョンに更新する
 + init.elでconfig.orgをタングルする前に行う
@@ -123,6 +146,16 @@
             (custom-set-variables '(custom-file
                                     (no-littering-expand-etc-file-name "custom.el"))))
 #+end_src
+
+** COMMENT TODO バックアップのディレクトリとバージョン管理の設定     :CUSTOM:
+
+#+begin_src emacs-lisp "early-init.el"
+  (leaf files
+        :custom
+        (backup-directory-alist . '(("." . ".backup~")))
+        (delete-old-versions . t)
+        (version-control . t))
+        #+end_src
 
 ** ネイティブコンパイルのキャッシュ設定
 + no-litteringのための設定

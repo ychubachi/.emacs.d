@@ -54,6 +54,8 @@
     (straight-use-package 'leaf-keywords)
     (leaf-keywords-init)))
 
+(leaf leaf-convert :straight t)
+
 (leaf org :straight t)
 
 (leaf no-littering :straight t :require t
