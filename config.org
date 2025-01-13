@@ -1363,6 +1363,24 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+RESULTS:
 : dired+
+** グローバルマイナーモード
+*** minions - マイナーモードの表示をコンパクトにする
+
+- [[https://github.com/tarsius/minions][tarsius/minions: A minor-mode menu for the mode line]]
+
+#+begin_src emacs-lisp
+  (leaf minions
+    :straight t
+    :require t
+    :config
+    (minions-mode 1)
+    (setq minions-mode-line-lighter "[+]")
+    (global-set-key [S-down-mouse-3] 'minions-minor-modes-menu))
+#+end_src
+
+#+RESULTS:
+: minions
+
 ** グローバルキーにより起動するパッケージ
 *** [#A] magit [C-x g]
 - recommended されているキーバインディングはC-c 名前空間を利用している
@@ -1379,41 +1397,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :after git-commit with-editor
     :bind (("C-x g" . magit-status)))
 #+end_src
-*** imenu-list [C-c i]
-#+begin_src emacs-lisp
-  (leaf imenu-list
-    :bind (("C-c i" . imenu-list-smart-toggle))
-    :hook
-    (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
-
-  (leaf simple
-    :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
-#+end_src
-
-#+RESULTS:
-: simple
-
-*** perspective [C-x C-b]
-#+begin_src emacs-lisp
-        (leaf perspective
-          :straight t
-          :require t
-          :custom
-          (persp-mode-prefix-key . "p")
-          :bind (;; (persp-mode-map
-                 ;;  ("C-c p" . perspective-map))
-                 ("C-x C-b" . persp-list-buffers))
-          :config
-          (persp-mode)
-
-          (leaf consult                   ; TODO consult?
-            :straight t
-            :require t
-            :config
-            (consult-customize consult--source-buffer :hidden t :default nil)
-            (add-to-list 'consult-buffer-sources persp-consult-source)))
-
-  #+end_src
 *** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
 #+begin_src emacs-lisp
   (leaf swap-buffers
@@ -1435,27 +1418,20 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
           (shell-pop-window-position . "bottom")
           (setq shell-pop-full-span . t))
 #+end_src
-*** COMMENT visual-fill-column [C-c q]
+** フックを設定するパッケージ
+*** emacs-dashboard
+- [[https://github.com/emacs-dashboard/emacs-dashboard][emacs-dashboard/emacs-dashboard: An extensible emacs dashboard]]
 
 #+begin_src emacs-lisp
-  (leaf visual-fill-column
-    :doc "fill-column for visual-line-mode"
-    :req "emacs-25.1"
-    :tag "emacs>=25.1"
-    :url "https://github.com/joostkremers/visual-fill-column"
-    :added "2021-11-08"
-    :emacs>= 25.1
+  (leaf dashboard
+    :require t
     :straight t
-    :hook (org-mode-hook . visual-fill-column-mode)
-    :bind(("C-c q" . visual-fill-column-mode)
-          (:visual-fill-column-mode-map
-           ("C-a" . beginning-of-visual-line)
-           ("C-e" . end-of-visual-line)
-           ("C-k" . kill-visual-line))))
+    :config
+    (dashboard-setup-startup-hook))
 #+end_src
 
 #+RESULTS:
-: visual-fill-column
+: dashboard
 
 * COMMENT メールクライアント
 ** メールアドレスの設定
@@ -1798,6 +1774,63 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
             ("M-RET" . emr-show-refactor-menu))))
 #+end_src
 * COMMENT 未整理
+** COMMENT visual-fill-column [C-c q]
+
+#+begin_src emacs-lisp
+  (leaf visual-fill-column
+    :doc "fill-column for visual-line-mode"
+    :req "emacs-25.1"
+    :tag "emacs>=25.1"
+    :url "https://github.com/joostkremers/visual-fill-column"
+    :added "2021-11-08"
+    :emacs>= 25.1
+    :straight t
+    :hook (org-mode-hook . visual-fill-column-mode)
+    :bind(("C-c q" . visual-fill-column-mode)
+          (:visual-fill-column-mode-map
+           ("C-a" . beginning-of-visual-line)
+           ("C-e" . end-of-visual-line)
+           ("C-k" . kill-visual-line))))
+#+end_src
+
+#+RESULTS:
+: visual-fill-column
+
+** COMMENT imenu-list [C-c i]
+#+begin_src emacs-lisp
+  (leaf imenu-list
+    :bind (("C-c i" . imenu-list-smart-toggle))
+    :hook
+    (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
+
+  (leaf simple
+    :bind ("M-SPC" . cycle-spacing)) ; Not working when ALT-SPC is typed.
+#+end_src
+
+#+RESULTS:
+: simple
+
+** COMMENT perspective [C-x C-b]
+#+begin_src emacs-lisp
+  (leaf perspective
+    :straight t
+    :require t
+    :custom
+    (persp-mode-prefix-key . "p")
+    :bind (;; (persp-mode-map
+           ;;  ("C-c p" . perspective-map))
+           ("C-x C-b" . persp-list-buffers))
+    :config
+    (persp-mode)
+
+    (leaf consult                   ; TODO consult?
+      :straight t
+      :require t
+      :config
+      (consult-customize consult--source-buffer :hidden t :default nil)
+      (add-to-list 'consult-buffer-sources persp-consult-source)))
+
+  #+end_src
 ** 実行時に出る警告を非表示にする
 
 #+begin_src emacs-lisp
@@ -2012,23 +2045,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+RESULTS:
 : moody
-
-*** minions - マイナーモードの表示をコンパクトにする
-
-- [[https://github.com/tarsius/minions][tarsius/minions: A minor-mode menu for the mode line]]
-
-#+begin_src emacs-lisp
-  (leaf minions
-    :straight t
-    :require t
-    :config
-    (minions-mode 1)
-    (setq minions-mode-line-lighter "[+]")
-    (global-set-key [S-down-mouse-3] 'minions-minor-modes-menu))
-#+end_src
-
-#+RESULTS:
-: minions
 
 *** beacon - バッファを切り替えたときビーコンを表示する
 **** 設定
