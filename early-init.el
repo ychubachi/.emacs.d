@@ -79,4 +79,6 @@
  (convert-standard-filename
   (expand-file-name  "var/eln-cache/" user-emacs-directory))))
 
+(load-theme 'misterioso)
+
 ;;; early-init.el ends here
