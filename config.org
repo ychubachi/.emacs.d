@@ -1363,8 +1363,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+RESULTS:
 : dired+
-** グローバルマイナーモード
-*** minions - マイナーモードの表示をコンパクトにする
+** minions - マイナーモードの表示をコンパクトにする            :MINNOR_MODE:
 
 - [[https://github.com/tarsius/minions][tarsius/minions: A minor-mode menu for the mode line]]
 
@@ -1381,8 +1380,47 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : minions
 
-** グローバルキーにより起動するパッケージ
-*** [#A] magit [C-x g]
+** projectile [C-c p]                                          :MINNOR_MODE:
+
+#+begin_src emacs-lisp
+  (leaf projectile
+    :straight t
+    :require t
+    :bind ((projectile-mode-map
+            ("C-c p" . projectile-command-map))
+           (projectile-command-map
+            ("b" . consult-project-buffer)))
+    :config
+    (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
+    (projectile-mode 1))
+#+end_src
+
+#+RESULTS:
+: projectile
+** perspective [C-x C-b] - バッファをグループ化して切り替える  :MINNOR_MODE:
+
+- [[https://github.com/nex3/perspective-el][nex3/perspective-el: Perspectives for Emacs.]]
+- persp-modeと共用はできない
+
+#+begin_src emacs-lisp
+  (leaf perspective
+    :straight t
+    :config
+    (global-set-key (kbd "C-x C-b") 'persp-list-buffers)
+    (customize-set-variable 'persp-mode-prefix-key (kbd "C-c M-p"))
+    (persp-mode))
+#+end_src
+
+#+RESULTS:
+: perspective
+
+- 一行目がエラーになるけど？
+#+begin_src emacs-lisp
+  ;; (consult-customize consult--source-buffer :hidden t :default nil)
+  (add-to-list 'consult-buffer-sources persp-consult-source)
+#+end_src
+
+** [#A] magit [C-x g]
 - recommended されているキーバインディングはC-c 名前空間を利用している
   - https://magit.vc/manual/magit/Global-Bindings.html
 
@@ -1397,7 +1435,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :after git-commit with-editor
     :bind (("C-x g" . magit-status)))
 #+end_src
-*** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
+** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
 #+begin_src emacs-lisp
   (leaf swap-buffers
     :straight t
@@ -1407,7 +1445,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (swap-buffers-qwerty-shortcuts
      . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
 #+end_src
-*** shell-pop [C-c s]
+** shell-pop [C-c s]
 #+begin_src emacs-lisp
         (leaf shell-pop
           :straight t
@@ -1418,8 +1456,47 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
           (shell-pop-window-position . "bottom")
           (setq shell-pop-full-span . t))
 #+end_src
-** フックを設定するパッケージ
-*** emacs-dashboard
+* UI/ダッシュボード関連
+** page-break-line
+- [[https://github.com/purcell/page-break-lines][purcell/page-break-lines: Emacs: display ugly ^L page breaks as tidy horizontal lines]]
+  - emacs-dashboardが使用
+- orgで使うとtoo long
+  - truncate-linesがnilだから？
+
+#+begin_src emacs-lisp
+  (leaf page-break-lines
+    :straight t
+    :require t)
+#+end_src
+
+#+RESULTS:
+: page-break-lines
+
+** all-the-icons - 各種アイコンを利用できるようにする
+
+- [[https://github.com/domtronn/all-the-icons.el][GitHub - domtronn/all-the-icons.el: A utility package to collect various Icon Fonts and propertize them within Emacs.]]
+
+- パッケージ導入後、 M-x all-the-icons-install-fonts でOSにフォントを
+  インストールする
+
+#+begin_src emacs-lisp
+  (leaf all-the-icons :straight t)
+#+end_src
+
+#+RESULTS:
+: all-the-icons
+
+** COMMENT nerd-icons - all-the-iconsより多くのアイコンを利用できるようにする
+- インストールできない
+
+#+begin_src emacs-lisp
+(leaf nerd-icons :straight t)
+#+end_src
+
+#+RESULTS:
+: nerd-icons
+
+** emacs-dashboard
 - [[https://github.com/emacs-dashboard/emacs-dashboard][emacs-dashboard/emacs-dashboard: An extensible emacs dashboard]]
 
 #+begin_src emacs-lisp
@@ -1810,27 +1887,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : simple
 
-** COMMENT perspective [C-x C-b]
-#+begin_src emacs-lisp
-  (leaf perspective
-    :straight t
-    :require t
-    :custom
-    (persp-mode-prefix-key . "p")
-    :bind (;; (persp-mode-map
-           ;;  ("C-c p" . perspective-map))
-           ("C-x C-b" . persp-list-buffers))
-    :config
-    (persp-mode)
-
-    (leaf consult                   ; TODO consult?
-      :straight t
-      :require t
-      :config
-      (consult-customize consult--source-buffer :hidden t :default nil)
-      (add-to-list 'consult-buffer-sources persp-consult-source)))
-
-  #+end_src
 ** 実行時に出る警告を非表示にする
 
 #+begin_src emacs-lisp
@@ -1953,6 +2009,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
               )
 #+end_src
 ** COMMENT 不使用パッケージ
+
 #+begin_src emacs-lisp
   (leaf Disabled
     :disabled t
@@ -1966,16 +2023,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
         :hook
         (emacs-startup-hook . global-display-line-numbers-mode)))
 
-    (leaf projectile
-      :straight t
-      :require t
-      :bind ((projectile-mode-map
-              ("C-x p" . projectile-command-map))
-             (projectile-command-map
-              ("b" . consult-project-buffer)))
-      :config
-      (setq projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
-      (projectile-mode 1))
 
     (leaf blackout :straight t)
 
@@ -2065,20 +2112,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 + [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E3%82%82%E3%81%86%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E8%A6%8B%E5%A4%B1%E3%82%8F%E3%81%AA%E3%81%84----beacon][Emacsモダン化計画 -かわEmacs編- - Qiita]]
 
 *
-*** all-the-icons - 各種アイコンを利用できるようにする
-
-- [[https://github.com/domtronn/all-the-icons.el][GitHub - domtronn/all-the-icons.el: A utility package to collect various Icon Fonts and propertize them within Emacs.]]
-
-- パッケージ導入後、 M-x all-the-icons-install-fonts でOSにフォントを
-  インストールする
-
-#+begin_src emacs-lisp
-  (leaf all-the-icons :straight t)
-#+end_src
-
-#+RESULTS:
-: all-the-icons
-
 *** COMMENT ruler-mode - ルラーを表示する
 
 #+begin_src emacs-lisp
