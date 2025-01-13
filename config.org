@@ -1,5 +1,5 @@
 #+TITLE: config.org
-#+STARTUP: show2levels
+#+STARTUP: show2levels indent
 
 [[https://github.com/ychubachi/.emacs.d/blob/main/config.org][.emacs.d/config.org at main · ychubachi/.emacs.d]]
 
@@ -814,8 +814,8 @@
 : embark-consult
 
 * Orgモードの設定
-** Orgの基本的な設定
-*** Org-Mode全般の設定
+** Orgの設定
+*** Orgの基本的な設定
 
 #+begin_src emacs-lisp
   (leaf Org-Settings
@@ -837,18 +837,19 @@
     (org-startup-truncated . nil)
     (org-return-follows-link  . t)          ; RET/C-mでリンクを開く
     (org-agenda-start-with-follow-mode . t) ; アジェンダで関連するorgファイルを開く
-    (org-ellipsis . "↴")                  ; ▽,…,▼, ↴, ⬎, ⤷, ⋱
+    (org-ellipsis . "↴")                   ; ▽,…,▼, ↴, ⬎, ⤷, ⋱
     (org-export-with-sub-superscripts . nil) ; A^x B_z のような添字の処理をしない
     ;; (org-agenda-remove-tags . t)             ; アジェンダにタグを表示しない
     (org-id-link-to-org-use-id . 'create-if-interactive-and-no-custom-id)
     )
-
 #+end_src
 
 #+RESULTS:
 : Org-Settings
 
-*** org captureのテンプレート
+*** org capture - キャプチャーするときのテンプレート
+- [[https://orgmode.org/manual/Capture.html][Capture (The Org Manual)]]
+
 #+begin_src emacs-lisp
   (leaf doct
           :straight t
@@ -953,7 +954,7 @@
                                       ":END:"
                                       "\n** %?"))))))))
 #+end_src
-*** org-babel - babelで使える言語を登録
+*** org-babel - babelのための設定
 #+begin_src emacs-lisp
   (leaf *org-babel
     :config
@@ -996,6 +997,28 @@
       :custom (org-download-screenshot-method . "magick convert clipboard: %s")))
 #+end_src
 
+*** org-tempo - begin_...を簡単に
+#+begin_src emacs-lisp
+  (leaf org-tempo
+    :require t
+    :config
+    (add-to-list 'org-structure-template-alist
+                 '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist
+                 '("sh" . "src bash"))
+    (add-to-list 'org-structure-template-alist
+                 '("rb" . "src ruby :results output"))
+    (add-to-list 'org-structure-template-alist
+                 '("j"  . "src java :results output"))
+    (add-to-list 'org-structure-template-alist
+                 '("py" . "src python :results output"))
+    (add-to-list 'org-structure-template-alist
+                 '("n" . "note"))
+    (add-to-list 'org-structure-template-alist
+                 '("w" . "warning"))
+    (add-to-list 'org-structure-template-alist
+                 '("f" . "figure")))
+#+end_src
 *** org-use-speed-command - ?
 #+begin_src emacs-lisp
   (leaf *org-use-speed-commands
@@ -1007,130 +1030,21 @@
 #+RESULTS:
 : *org-use-speed-commands
 
-*** org-tempo
-#+begin_src emacs-lisp
-          (leaf org-tempo
-            :require t
-            :config
-            (add-to-list 'org-structure-template-alist
-                         '("el" . "src emacs-lisp"))
-            (add-to-list 'org-structure-template-alist
-                         '("sh" . "src bash"))
-            (add-to-list 'org-structure-template-alist
-                         '("rb" . "src ruby :results output"))
-            (add-to-list 'org-structure-template-alist
-                         '("j"  . "src java :results output"))
-            (add-to-list 'org-structure-template-alist
-                         '("py" . "src python :results output"))
-            (add-to-list 'org-structure-template-alist
-                         '("n" . "note"))
-            (add-to-list 'org-structure-template-alist
-                         '("w" . "warning"))
-            (add-to-list 'org-structure-template-alist
-                         '("f" . "figure")))
-#+end_src
-** COMMENT 未使用
-*** pomodoroテクニック - 使ってないなー
-#+begin_src emacs-lisp
-
-  (leaf org-pomodoro
-    :straight t
-    :require t)
-
-#+end_src
-*** ox-taskjuggler - ?
-#+begin_src emacs-lisp
-  (leaf org-contrib
-    :straight t
-    :config
-    (require 'ox-taskjuggler))
-#+end_src
-*** org-modeとimenuの連携 → leafにする
-
-+ org-modeのとき，imenuをメニューバーに追加する
-
-+ 参照
-  - [[https://orgmode.org/manual/Cooperation.html][Cooperation (The Org Manual)]]
-
-#+begin_src emacs-lisp
-  (add-hook 'org-mode-hook
-            (lambda () (imenu-add-to-menubar "Imenu")))
-  (setq org-imenu-depth 3)
-#+end_src
-
-+ org-modeのとき，imenu-list-minor-modeにする
-
-  #+begin_src emacs-lisp
-    (add-hook 'org-mode-hook 'imenu-list-minor-mode)
-  #+end_src
-
-** COMMENT OrgのLook-And-Feel
-*** org-modern
-#+begin_src emacs-lisp
-  (leaf org-modern
-    :disabled nil
-    :url "https://github.com/minad/org-modern"
-    :straight t
-    :custom
-    ;;  dashが全角で表示されるので修正
-    ((org-modern-list . '((?+ . "◦") (?- . "-") (?* . "•")))
-     (org-modern-star . '("■"
-                          ".◆"
-                          "..●"
-                          "...＊"
-                          "....＋"))) ; ■
-    :init
-    ;; Add frame borders and window dividers
-    (modify-all-frames-parameters
-     '((right-divider-width . 10)
-       (internal-border-width . 10)))
-    (dolist (face '(window-divider
-                    window-divider-first-pixel
-                    window-divider-last-pixel))
-      (face-spec-reset-face face)
-      (set-face-foreground face (face-attribute 'default :background)))
-    (set-face-background 'fringe (face-attribute 'default :background))
-
-    ;; (setq org-modern-star '("🟩" "🟣" "🔶" "◎" "○" "※"))
-    ;; (setq org-modern-star '("■" "◆" "◎" "○" "§" "¶"))
-    ;; (setq org-modern-star '("🟧" "🔶" "🟠" "🔸" "§" "¶"))
-
-
-    (setq
-     ;; Edit settings
-     org-auto-align-tags nil ; Non-nil keeps tags aligned when modifying headlines.
-     org-tags-column 0
-     org-catch-invisible-edits 'show-and-error
-     org-special-ctrl-a/e t
-
-     ;; Org styling, hide markup etc.
-     org-hide-emphasis-markers t
-     org-pretty-entities t
-     ;; org-ellipsis "…"
-
-     ;; Agenda styling
-     org-agenda-tags-column 0
-     org-agenda-block-separator ?─
-     org-agenda-time-grid
-     '((daily today require-timed)
-       (800 1000 1200 1400 1600 1800 2000)
-       " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-     org-agenda-current-time-string
-     "⭠ now ─────────────────────────────────────────────────"
-     )
-    (global-org-modern-mode))
-
-#+end_src
 *** org-superstar
+- [[https://github.com/integral-dw/org-superstar-mode][GitHub - integral-dw/org-superstar-mode: Make org-mode stars a little more super]]
 #+begin_src emacs-lisp
   (leaf org-superstar
-            :disabled t
-            :straight t
-            :config
-            (add-hook 'org-mode-hook (lambda nil (org-superstar-mode 1)))
-            (setq org-superstar-headline-bullets-list
-                  '("●" "■" "▷" "○"))) ; TODO: org-modernと重複？
+    :disabled nil
+    :straight t
+    :config
+    (add-hook 'org-mode-hook (lambda nil (org-superstar-mode 1)))
+    (setq org-superstar-headline-bullets-list
+          '("●" "■" "▷" "○"))) ; TODO: org-modernと重複？
 #+end_src
+
+#+RESULTS:
+: org-superstar
+
 ** COMMENT Orgによる文書作成
 **** org-latex関連 :PUBLISHED:
 :PROPERTIES:
@@ -1339,6 +1253,98 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
              :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish/"
              :base-extension "jpg\\|gif\\|png|css\\|el"
              :recursive t))))
+#+end_src
+** COMMENT 未使用
+*** pomodoroテクニック - 使ってないなー
+#+begin_src emacs-lisp
+
+  (leaf org-pomodoro
+    :straight t
+    :require t)
+
+#+end_src
+*** ox-taskjuggler - ?
+#+begin_src emacs-lisp
+  (leaf org-contrib
+    :straight t
+    :config
+    (require 'ox-taskjuggler))
+#+end_src
+*** org-modeとimenuの連携 → leafにする
+
++ org-modeのとき，imenuをメニューバーに追加する
+
++ 参照
+  - [[https://orgmode.org/manual/Cooperation.html][Cooperation (The Org Manual)]]
+
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook
+            (lambda () (imenu-add-to-menubar "Imenu")))
+  (setq org-imenu-depth 3)
+#+end_src
+
++ org-modeのとき，imenu-list-minor-modeにする
+
+  #+begin_src emacs-lisp
+    (add-hook 'org-mode-hook 'imenu-list-minor-mode)
+  #+end_src
+
+*** COMMENT org-modern
+- C-c C-x C-wで切り取ったあと，yankするとヘッドラインのレベルが乱れる
+#+begin_src emacs-lisp
+  (leaf org-modern
+    :disabled nil
+    :url "https://github.com/minad/org-modern"
+    :straight t
+    :custom
+    ;;  dashが全角で表示されるので修正
+    ((org-modern-list . '((?+ . "◦") (?- . "-") (?* . "•")))
+     (org-modern-star . '("■"
+                          ".◆"
+                          "..●"
+                          "...＊"
+                          "....＋"))) ; ■
+    :init
+    ;; Add frame borders and window dividers
+    (modify-all-frames-parameters
+     '((right-divider-width . 10)
+       (internal-border-width . 10)))
+    (dolist (face '(window-divider
+                    window-divider-first-pixel
+                    window-divider-last-pixel))
+      (face-spec-reset-face face)
+      (set-face-foreground face (face-attribute 'default :background)))
+    (set-face-background 'fringe (face-attribute 'default :background))
+
+    ;; (setq org-modern-star '("🟩" "🟣" "🔶" "◎" "○" "※"))
+    ;; (setq org-modern-star '("■" "◆" "◎" "○" "§" "¶"))
+    ;; (setq org-modern-star '("🟧" "🔶" "🟠" "🔸" "§" "¶"))
+
+
+    (setq
+     ;; Edit settings
+     org-auto-align-tags nil ; Non-nil keeps tags aligned when modifying headlines.
+     org-tags-column 0
+     org-catch-invisible-edits 'show-and-error
+     org-special-ctrl-a/e t
+
+     ;; Org styling, hide markup etc.
+     org-hide-emphasis-markers t
+     org-pretty-entities t
+     ;; org-ellipsis "…"
+
+     ;; Agenda styling
+     org-agenda-tags-column 0
+     org-agenda-block-separator ?─
+     org-agenda-time-grid
+     '((daily today require-timed)
+       (800 1000 1200 1400 1600 1800 2000)
+       " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+     org-agenda-current-time-string
+     "⭠ now ─────────────────────────────────────────────────"
+     )
+    (global-org-modern-mode))
+
 #+end_src
 * 外部パッケージの設定
 ** インストールするだけパッケージ
