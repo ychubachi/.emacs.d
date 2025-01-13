@@ -54,6 +54,8 @@
     (straight-use-package 'leaf-keywords)
     (leaf-keywords-init)))
 
+(leaf leaf-convert :straight t)
+
 (leaf org :straight t)
 
 (leaf no-littering :straight t :require t
@@ -78,5 +80,7 @@
 (startup-redirect-eln-cache
  (convert-standard-filename
   (expand-file-name  "var/eln-cache/" user-emacs-directory))))
+
+(load-theme 'misterioso)
 
 ;;; early-init.el ends here

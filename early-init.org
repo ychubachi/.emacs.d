@@ -1,6 +1,6 @@
 #+TITLE: early-init.el.el
 #+AUTHOR: Yoshihide Chubachi
-
+#+STARTUP: show2levels
 
 #+begin_comment
 + early-init.elを生成するには C-c C-v t (org-babel-tangle) を実行
@@ -88,6 +88,29 @@
       (straight-use-package 'leaf-keywords)
       (leaf-keywords-init)))
 #+end_src
+
+** leaf-tree
+
+#+begin_src emacs-lisp
+  (leaf leaf-tree :tangle "early-init.el"
+    :straight t
+    :custom (imenu-list-position . 'left)
+    :defun (leaf-tree-mode)
+    :init
+    (defun my/enable-init-el-minor-mode ()
+      (when (equal
+             (buffer-file-name)
+             (expand-file-name "~/.emacs.d/init.el"))
+        (leaf-tree-mode t)))
+    (add-hook 'find-file-hook 'my/enable-init-el-minor-mode))
+#+end_src
+
+** leaf-convert
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+  (leaf leaf-convert :straight t)
+#+end_src
+
 ** orgパッケージを最新にする
 + orgパッケージを最新バージョンに更新する
 + init.elでconfig.orgをタングルする前に行う
@@ -96,8 +119,7 @@
 (leaf org :straight t)
 #+end_src
 
-** 優先設定
-*** no-littering - .emacs.d/をきれいに保つ
+** no-littering - .emacs.d/をきれいに保つ
 - すべてのパッケージの前に実行するために、init.elのなるだけ冒頭に設定
   - [[https://github.com/emacscollective/no-littering][emacscollective/no-littering: Help keeping ~/.emacs.d clean]]
 
@@ -125,7 +147,17 @@
                                     (no-littering-expand-etc-file-name "custom.el"))))
 #+end_src
 
-*** ネイティブコンパイルのキャッシュ設定
+** COMMENT TODO バックアップのディレクトリとバージョン管理の設定     :CUSTOM:
+
+#+begin_src emacs-lisp "early-init.el"
+  (leaf files
+        :custom
+        (backup-directory-alist . '(("." . ".backup~")))
+        (delete-old-versions . t)
+        (version-control . t))
+        #+end_src
+
+** ネイティブコンパイルのキャッシュ設定
 + no-litteringのための設定
 + Emacs 29以上の際に行うと良いようだ
   + https://github.com/emacscollective/no-littering/blob/master/README.org
@@ -141,49 +173,16 @@
 
 #+RESULTS:
 
-** COMMENT Look & Feel
-*** COMMENT wombat
+** Emacs テーマ
+- [[https://emacsthemes.com/][A GNU Emacs Themes Gallery]]
+- [[https://aoe-tk.hatenablog.com/entry/20130210/1360506829][Emacs24に最初から同梱されているテーマ - AOEの日記]]
+
 #+begin_src emacs-lisp :tangle "early-init.el"
-(load-theme 'wombat)
+(load-theme 'misterioso)
 #+end_src
 
 #+RESULTS:
 : t
-
-*** modus-themes
-#+begin_src emacs-lisp :tangle "early-init.el"
-  (leaf modus-themes
-    :disabled nil
-    :straight t                     ; omit this to use the built-in themes
-    :custom
-    (modus-themes-italic-constructs . nil)
-    (modus-themes-bold-constructs . nil)
-    (modus-themes-region . '(bg-only no-extend))
-    (modus-themes-org-blocks . 'gray-background) ; {nil,'gray-background,'tinted-background}
-    (modus-themes-subtle-line-numbers . t)
-    (modus-themes-mode-line . '(moody borderless (padding . 0) (height . 0.9)))
-    (modus-themes-syntax . '(yellow-comments green-strings))
-    (modus-themes-hl-line . '(underline accented)) ;'(underline accented)
-    (modus-themes-paren-match . '(intense underline))
-    ;; (modus-themes-headings . ; this is an alist: read the manual or its doc string
-    ;;                        ;; https://typescale.com/ 1.125 - Major Second
-    ;;                        '((1 . (bold 1.802))
-    ;;                          (2 . (regular 1.602))
-    ;;                          (3 . (bold 1.424))
-    ;;                          (4 . (regular 1.266))
-    ;;                          (5 . (reqular 1.125))
-    ;;                          (t . (regular))))
-    :init
-    (require-theme 'modus-themes)
-    ;; Load the theme of your choice:
-    (load-theme 'modus-operandi :no-confirm)
-    ;; (load-theme 'modus-vivendi :no-confirm)
-    :bind
-    ("<f5>" . modus-themes-toggle))
-#+end_src
-
-#+RESULTS:
-: modus-themes
 
 * フッター
 #+begin_src emacs-lisp :tangle early-init.el
