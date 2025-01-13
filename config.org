@@ -1435,24 +1435,27 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
           (shell-pop-window-position . "bottom")
           (setq shell-pop-full-span . t))
 #+end_src
-*** visual-fill-column [C-q]
+*** COMMENT visual-fill-column [C-c q]
+
 #+begin_src emacs-lisp
-        (leaf visual-fill-column
-          :doc "fill-column for visual-line-mode"
-          :req "emacs-25.1"
-          :tag "emacs>=25.1"
-          :url "https://github.com/joostkremers/visual-fill-column"
-          :added "2021-11-08"
-          :emacs>= 25.1
-          :straight t
-          :after org-mode
-          :hook (org-mode-hook . visual-fill-column-mode)
-          :bind(("C-c q" . visual-fill-column-mode)
-                (:visual-fill-column-mode-map
-                 ("C-a" . beginning-of-visual-line)
-                 ("C-e" . end-of-visual-line)
-                 ("C-k" . kill-visual-line))))
+  (leaf visual-fill-column
+    :doc "fill-column for visual-line-mode"
+    :req "emacs-25.1"
+    :tag "emacs>=25.1"
+    :url "https://github.com/joostkremers/visual-fill-column"
+    :added "2021-11-08"
+    :emacs>= 25.1
+    :straight t
+    :hook (org-mode-hook . visual-fill-column-mode)
+    :bind(("C-c q" . visual-fill-column-mode)
+          (:visual-fill-column-mode-map
+           ("C-a" . beginning-of-visual-line)
+           ("C-e" . end-of-visual-line)
+           ("C-k" . kill-visual-line))))
 #+end_src
+
+#+RESULTS:
+: visual-fill-column
 
 * COMMENT メールクライアント
 ** メールアドレスの設定
