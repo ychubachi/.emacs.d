@@ -1364,7 +1364,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : dired+
 ** グローバルキーにより起動するパッケージ
-*** TODO [#A] magit [C-x g]
+*** [#A] magit [C-x g]
 - recommended されているキーバインディングはC-c 名前空間を利用している
   - https://magit.vc/manual/magit/Global-Bindings.html
 
