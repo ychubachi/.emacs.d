@@ -1482,8 +1482,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
           (shell-pop-window-position . "bottom")
           (setq shell-pop-full-span . t))
 #+end_src
-* UI/ダッシュボード関連
-** page-break-line
+** page-break-line - 水平線を描く
 - [[https://github.com/purcell/page-break-lines][purcell/page-break-lines: Emacs: display ugly ^L page breaks as tidy horizontal lines]]
   - emacs-dashboardが使用
 - orgで使うとtoo long
@@ -1522,7 +1521,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : nerd-icons
 
-** emacs-dashboard
+** emacs-dashboard - 起動画面をダッシュボードにする
 - [[https://github.com/emacs-dashboard/emacs-dashboard][emacs-dashboard/emacs-dashboard: An extensible emacs dashboard]]
 
 #+begin_src emacs-lisp
@@ -1535,6 +1534,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+RESULTS:
 : dashboard
+
 
 * COMMENT メールクライアント
 ** メールアドレスの設定
