@@ -1030,7 +1030,7 @@
 #+RESULTS:
 : *org-use-speed-commands
 
-*** org-superstar
+*** org-superstar - orgの星をスーパースターにする
 - [[https://github.com/integral-dw/org-superstar-mode][GitHub - integral-dw/org-superstar-mode: Make org-mode stars a little more super]]
 #+begin_src emacs-lisp
   (leaf org-superstar
@@ -1401,6 +1401,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 - [[https://github.com/nex3/perspective-el][nex3/perspective-el: Perspectives for Emacs.]]
 - persp-modeと共用はできない
+- consultの設定がうまくいかない
 
 #+begin_src emacs-lisp
   (leaf perspective
@@ -1409,6 +1410,9 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (global-set-key (kbd "C-x C-b") 'persp-list-buffers)
     (customize-set-variable 'persp-mode-prefix-key (kbd "C-c M-p"))
     (persp-mode))
+
+  ;; (consult-customize consult--source-buffer :hidden t :default nil)
+  ;; (add-to-list 'consult-buffer-sources persp-consult-source)
 #+end_src
 
 #+RESULTS:
@@ -1416,8 +1420,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 - 一行目がエラーになるけど？
 #+begin_src emacs-lisp
-  ;; (consult-customize consult--source-buffer :hidden t :default nil)
-  (add-to-list 'consult-buffer-sources persp-consult-source)
 #+end_src
 
 ** [#A] magit [C-x g]
@@ -1426,13 +1428,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+begin_src emacs-lisp
   (leaf magit
-    :doc "A Git porcelain inside Emacs."
-    :req "emacs-25.1" "async-20200113" "dash-20200524" "git-commit-20200516" "transient-20200601" "with-editor-20200522"
-    :tag "vc" "tools" "git" "emacs>=25.1"
-    :added "2020-11-30"
-    :emacs>= 25.1
     :straight t
-    :after git-commit with-editor
     :bind (("C-x g" . magit-status)))
 #+end_src
 ** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
