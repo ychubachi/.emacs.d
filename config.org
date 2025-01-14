@@ -1017,8 +1017,11 @@
     (add-to-list 'org-structure-template-alist
                  '("w" . "warning"))
     (add-to-list 'org-structure-template-alist
-                 '("f" . "figure")))
+                 '("f" . "figure"))
+    (add-to-list 'org-structure-template-alist
+                 '("ai" . "ai")))
 #+end_src
+
 *** org-use-speed-command - ?
 #+begin_src emacs-lisp
   (leaf *org-use-speed-commands
@@ -1354,6 +1357,25 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (global-org-modern-mode))
 
 #+end_src
+** org-ai - orgでai
+
+- ~/.authinfo に APIキー
+
+#+begin_src emacs-lisp
+  (leaf org-ai
+    :straight (org-ai :type git :host github :repo "rksm/org-ai"
+                      :local-repo "org-ai"
+                      :files ("*.el" "README.md" "snippets"))
+    :hook (org-mode-hook . org-ai-mode)
+    :init
+    (org-ai-global-mode))
+#+end_src
+
+#+RESULTS:
+: org-ai
+
+こんにちは
+
 * 外部パッケージの設定
 ** インストールするだけパッケージ
 #+begin_src emacs-lisp
