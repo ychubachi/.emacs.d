@@ -1032,6 +1032,11 @@
 
 *** org-superstar - orgの星をスーパースターにする
 - [[https://github.com/integral-dw/org-superstar-mode][GitHub - integral-dw/org-superstar-mode: Make org-mode stars a little more super]]
+
++ plus
+  - minus
+    * star
+
 #+begin_src emacs-lisp
   (leaf org-superstar
     :disabled nil
@@ -1039,7 +1044,10 @@
     :config
     (add-hook 'org-mode-hook (lambda nil (org-superstar-mode 1)))
     (setq org-superstar-headline-bullets-list
-          '("●" "■" "▷" "○"))) ; TODO: org-modernと重複？
+          '("●" "■" "▷" "○"))
+    (setq org-superstar-item-bullet-alist ; (*,+,-)
+          ;; '((42 . 8226) (43 . 10148) (45 . 8211)))
+          '((42 . 8226) (43 . 10148) (45 . 65517))))
 #+end_src
 
 #+RESULTS:
