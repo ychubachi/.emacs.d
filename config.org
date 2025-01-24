@@ -858,12 +858,24 @@
           :config
           (setq org-capture-templates
                 (doct '(("Memo" :keys "m"
-                         :empty-lines-after 1
                          :file "~/Dropbox/Org/Memo.org"
+                         ; :empty-lines-before 1
+                         :empty-lines-after 1
                          :datetree t
                          :unnarrowed nil       ; t
                          :jump-to-captured nil ;
-                         :empty-lines-before 1
+                         :template ("* %?"
+                                    ":PROPERTIES:"
+                                    ":CREATED: %U"
+                                    ":LINK: %a"
+                                    ":END:"))
+                        ("Memo (unarrowed)" :keys "M"
+                         :file "~/Dropbox/Org/Memo.org"
+                         ; :empty-lines-before 1
+                         :empty-lines-after 1
+                         :datetree t
+                         :unnarrowed t
+                         :jump-to-captured t
                          :template ("* %?"
                                     ":PROPERTIES:"
                                     ":CREATED: %U"
@@ -954,6 +966,10 @@
                                       ":END:"
                                       "\n** %?"))))))))
 #+end_src
+
+#+RESULTS:
+: doct
+
 *** org-babel - babelのための設定
 #+begin_src emacs-lisp
   (leaf *org-babel
@@ -1534,7 +1550,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+RESULTS:
 : dashboard
-
 
 * COMMENT メールクライアント
 ** メールアドレスの設定
@@ -2183,7 +2198,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+RESULTS:
 : org-sync-qiita
-
 
 * フッタの記述
 
