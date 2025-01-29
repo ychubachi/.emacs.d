@@ -205,7 +205,9 @@
 - カーソルを調べたい文字に合わせ、C-u C-x = で文字毎にフォントを確認できる。
 - TODO: 絵文字を等幅にする方法
   - [[https://qiita.com/query1000/items/4b0b8db872adc1a5e2e9][Emacsで絵文字と他の字の幅を合わせる #font - Qiita]]
-
+- TODO: HackGen Nerdにする
+  - [[https://github.com/yuru7/HackGen][GitHub - yuru7/HackGen: Hack と源柔ゴシックを合成したプログラミングフォント 白源 (はくげん／HackGen)]]
+*** 表示サンプル
 #+begin_example
 | mmmm |
 | llll |
