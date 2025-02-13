@@ -1077,7 +1077,26 @@
 #+RESULTS:
 : org-superstar
 
-** COMMENT Orgによる文書作成
+*** org-ai - orgでai
+
+- ~/.authinfo に APIキー
+
+#+begin_src emacs-lisp
+  (leaf org-ai
+    :straight (org-ai :type git :host github :repo "rksm/org-ai"
+                      :local-repo "org-ai"
+                      :files ("*.el" "README.md" "snippets"))
+    :hook (org-mode-hook . org-ai-mode)
+    :init
+    (org-ai-global-mode))
+#+end_src
+
+#+RESULTS:
+: org-ai
+
+こんにちは
+
+** Orgによる文書作成
 **** org-latex関連 :PUBLISHED:
 :PROPERTIES:
 :EXPORT_TITLE: Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版
@@ -1378,25 +1397,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (global-org-modern-mode))
 
 #+end_src
-** org-ai - orgでai
-
-- ~/.authinfo に APIキー
-
-#+begin_src emacs-lisp
-  (leaf org-ai
-    :straight (org-ai :type git :host github :repo "rksm/org-ai"
-                      :local-repo "org-ai"
-                      :files ("*.el" "README.md" "snippets"))
-    :hook (org-mode-hook . org-ai-mode)
-    :init
-    (org-ai-global-mode))
-#+end_src
-
-#+RESULTS:
-: org-ai
-
-こんにちは
-
 * 外部パッケージの設定
 ** インストールするだけパッケージ
 #+begin_src emacs-lisp
