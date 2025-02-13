@@ -1556,6 +1556,29 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : dashboard
 
+* 自作関数
+** cmd/browser - WSLからWindows側のWeb Browserを起動する
+
+- テスト
+  - [[https://www.gnu.org/software/emacs/][GNU Emacs - GNU Project]]
+
+#+begin_src emacs-lisp
+  (leaf *cmd/browser
+    :config
+    (defun cmd/wsl-browser (url &rest ignore)
+      "Browse URL using wslview."
+      (interactive "sURL: ")
+      (shell-command (concat "wslview " "'" url "'")))
+
+    (when (and (eq system-type 'gnu/linux)
+               (getenv "WSLENV"))
+      (setq browse-url-browser-function 'cmd/wsl-browser)
+      (setq browse-url-generic-program "web-browser")))
+#+end_src
+
+#+RESULTS:
+: *cmd/browser
+
 * COMMENT メールクライアント
 ** メールアドレスの設定
 #+begin_src emacs-lisp
@@ -1957,20 +1980,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
             :url "https://ayatakesi.github.io/emacs/25.1/FFAP.html"
             :init
             (ffap-bindings))
-#+end_src
-** cmd/browser
-#+begin_src emacs-lisp
-  (leaf *cmd/browser
-    :config
-    (defun cmd/wsl-browser (url &rest ignore)
-      "Browse URL using wslview."
-      (interactive "sURL: ")
-      (shell-command (concat "wslview " "'" url "'")))
-
-    (when (and (eq system-type 'gnu/linux)
-               (getenv "WSLENV"))
-      (setq browse-url-browser-function 'cmd/wsl-browser)
-      (setq browse-url-generic-program "web-browser")))
 #+end_src
 ** headline
 #+begin_src emacs-lisp
