@@ -1109,6 +1109,9 @@
 ***** はじめに
 Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版です。
 
+org-export-dispatch (C-c C-e) で起動するメニューに Export to LaTeX
+(l) が追加されます。
+
 LaTeXエンジンにはlualatexを使います。
 Orgがエクスポートする際に標準で利用するLaTeXパッケージとの相性がよく、日本語を扱うために追加する設定も少なくて済みます。upLaTeXを利用するときのようにdvipdfmxやpxjahyper関連の設定は要りません。漢字コードもはなからUTF-8です。
 
@@ -1222,6 +1225,10 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+begin_src emacs-lisp
   (leaf ox-pandoc :straight t :require t)
 #+end_src
+
+#+RESULTS:
+: ox-pandoc
+
 ** COMMENT Blogに投稿する
 **** org2blog - wordpressに出力
 #+begin_src emacs-lisp
