@@ -1097,7 +1097,7 @@
 こんにちは
 
 ** Orgによる文書作成
-**** org-latex関連 :PUBLISHED:
+*** org-latex関連                                              :PUBLISHED:
 :PROPERTIES:
 :EXPORT_TITLE: Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版
 :QIITA-ID: 6c1b51b135eca9065902
@@ -1106,7 +1106,7 @@
 :QIITA-URL: https://qiita.com/ychubachi/private/6c1b51b135eca9065902
 :END:
 
-***** はじめに
+**** はじめに
 Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版です。
 
 org-export-dispatch (C-c C-e) で起動するメニューに Export to LaTeX
@@ -1130,7 +1130,7 @@ bxjsarticleはjlreqを使うならば不要な気もしますが、一応。
 - LaTeXの文字列部分は別ファイルにするのがよいかもしれない
   - [[http://xahlee.info/emacs/emacs/elisp_read_file_content.html][Elisp: Read File Content as String or List of Lines]]
 
-***** init.elの設定
+**** init.elの設定
 leafを利用して設定しています。
 
 #+begin_src emacs-lisp :noweb yes
@@ -1217,11 +1217,11 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 :EXPORT_OPTIONS: toc:nil
 #+end_example
 
-***** 参考
+**** 参考
 - [[https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:org:latex:start][Org-LaTeX [QumaWiki]]]
 - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
 
-**** ox-pandoc
+*** ox-pandoc
 #+begin_src emacs-lisp
   (leaf ox-pandoc :straight t :require t)
 #+end_src
