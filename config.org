@@ -3,6 +3,11 @@
 
 [[https://github.com/ychubachi/.emacs.d/blob/main/config.org][.emacs.d/config.org at main · ychubachi/.emacs.d]]
 
+#+begin_comment
++ このファイルは init.el の中で org-babel-load-file で読み込まれる
++ 確認用にconfig.elを生成するには C-c C-v f を実行
+#+end_comment
+
 * TODO やること
 + README.bak.orgから解説文をコピー
 + 自分流にカスタマイズする部分とそうでないところを分ける？
@@ -64,8 +69,9 @@
   ;;; Code:
 #+end_src
 
-* 最低限の設定
-** DeleteキーとHelpキーの変更
+* 基本設定
+** 最低限の設定
+*** DeleteキーとHelpキーの変更
 
 #+begin_src emacs-lisp
   (leaf Help-Keys
@@ -75,15 +81,15 @@
           (global-set-key (kbd "C-^") help-map))
 #+end_src
 
-** yes/noの選択をy/nに簡略化
+*** yes/noの選択をy/nに簡略化
 
 #+begin_src emacs-lisp
 (leaf Yes-or-no-p
         :init
         (defalias 'yes-or-no-p 'y-or-n-p))
 #+end_src
-* 日本語のための設定
-** 文字コード
+** 日本語のための設定
+*** 文字コード
 
 #+begin_src emacs-lisp
 (leaf Coding-System
@@ -95,8 +101,8 @@
                      (cons 'utf-8 'cp932-unix)))))
 #+end_src
 
-** 日本語入力
-*** mozc
+*** 日本語入力
+**** mozc
 #+begin_src emacs-lisp
   (leaf mozc
     :straight t
@@ -108,7 +114,7 @@
      (t
       (setq mozc-helper-program-name "mozc_emacs_helper"))))
 #+end_src
-*** mozc-im
+**** mozc-im
 #+begin_src emacs-lisp
   (leaf mozc-im
     :straight t
@@ -119,7 +125,7 @@
     :init
     (setq mozc-candidate-style 'echo-area))
 #+end_src
-*** mozc-cursor-color
+**** mozc-cursor-color
 #+begin_src emacs-lisp
   (leaf mozc-cursor-color
     :straight (mozc-cursor-color :type git :host github
@@ -147,7 +153,7 @@
                             (let ((mozc-mode mozc-im-mode))
                               (apply orig-fun args))))))
 #+end_src
-*** mozc-windows
+**** mozc-windows
 #+begin_src emacs-lisp
   (leaf mozc-windows
     :if (eq system-type 'windows-nt)
@@ -164,13 +170,13 @@
 
 **
 
-*** TODO isearch字にIMEの切り替えを有効にする →いらない？
+**** TODO isearch字にIMEの切り替えを有効にする →いらない？
 #+begin_src emacs-lisp
   (leaf isearch
     :bind ((:isearch-mode-map
             ("C-o" . isearch-toggle-input-method))))
 #+end_src
-*** migemo
+**** migemo
 #+begin_src emacs-lisp
   (leaf migemo
     :when (eq system-type 'gnu/linux)
@@ -198,7 +204,7 @@
     (load-library "migemo")
     (migemo-init))
 #+end_src
-** フォント
+*** フォント
 - デフォルトのフォントは「Takaoゴシック」
 - HackGenを使用中
   - [[https://github.com/yuru7/HackGen][yuru7/HackGen: Hack と源柔ゴシックを合成したプログラミングフォント 白源 (はくげん／HackGen)]]
@@ -206,7 +212,7 @@
 - TODO: 絵文字を等幅にする方法
   - [[https://qiita.com/query1000/items/4b0b8db872adc1a5e2e9][Emacsで絵文字と他の字の幅を合わせる #font - Qiita]]
 
-*** 表示サンプル
+**** 表示サンプル
 #+begin_example
 | mmmm |
 | llll |
@@ -239,7 +245,7 @@
 |----------------------+----------+------------------|
 #+end_example
 
-*** 設定
+**** 設定
 #+begin_src emacs-lisp
   (leaf Fonts
     :doc "フォント設定"
@@ -261,9 +267,10 @@
 #+RESULTS:
 : Fonts
 
-* Emacs本体の設定
-** TODO カスタマイズ変数
-*** misc
+* 応用設定
+** Emacs本体の設定
+*** TODO カスタマイズ変数
+**** misc
 - 本体でないものが含まれてそう
 #+begin_src emacs-lisp
   (leaf Emacs-Variables
@@ -282,7 +289,7 @@
      (line-spacing . 0.25)
      ))
 #+end_src
-*** vc-hooks                                                         :CUSTOM:
+**** vc-hooks                                                       :CUSTOM:
 #+begin_src emacs-lisp
   (leaf vc-hooks
         :custom
@@ -293,10 +300,10 @@
 #+RESULTS:
 : vc-hooks
 
-** グローバルキーバインディング
-*** ヘルプを表示 [<f1>]
+*** グローバルキーバインディング
+**** ヘルプを表示 [<f1>]
 - 標準で設定済み
-*** 画面の最大・縮小 [<f11>]
+**** 画面の最大・縮小 [<f11>]
 
 #+begin_src emacs-lisp
 (leaf frame :bind ("<f11>" . toggle-frame-maximized))
@@ -305,15 +312,15 @@
 #+RESULTS:
 : frame
 
-** グローバルマイナーモード
+*** グローバルマイナーモード
 - 外部パッケージない？
-*** TODO startup-hookを使わないようにする
+**** TODO startup-hookを使わないようにする
 
 #+begin_example
 (global-git-gutter-mode yas-global-mode midnight-mode save-place-mode global-display-fill-column-indicator-mode recentf-mode mozc-im-register-input-method mozc-leim-register-input-method)
 #+end_example
 
-*** TODO recentf :STARTUP_HOOK:
+**** TODO recentf                                             :STARTUP_HOOK:
 
 #+begin_src emacs-lisp
   (leaf recentf
@@ -334,13 +341,13 @@
                              (recentf-save-list)))))
 #+end_src
 
-*** display-fill-column-indicator :STARTUP_HOOK:
+**** display-fill-column-indicator                            :STARTUP_HOOK:
 #+begin_src emacs-lisp
       (leaf display-fill-column-indicator
         :hook
         (emacs-startup-hook . global-display-fill-column-indicator-mode))
 #+end_src
-*** save-place :STARTUP_HOOK:
+**** save-place                                               :STARTUP_HOOK:
 #+begin_src emacs-lisp
       (leaf save-place
         :custom
@@ -348,7 +355,7 @@
         :hook
         (emacs-startup-hook . save-place-mode))
 #+end_src
-*** midnight :STARTUP_HOOK:
+**** midnight                                                 :STARTUP_HOOK:
 #+begin_src emacs-lisp
   (leaf midnight
     :url "https://www.emacswiki.org/emacs/MidnightMode"
@@ -357,7 +364,7 @@
     :hook
     (emacs-startup-hook . midnight-mode))
 #+end_src
-*** yasnippet-snippetsの設定                :STARTUP_HOOK:STRAIGHT:PUBLISHED:
+**** yasnippet-snippetsの設定              :STARTUP_HOOK:STRAIGHT:PUBLISHED:
 #+begin_src emacs-lisp
   (leaf yasnippet-snippets
     :straight t
@@ -366,7 +373,7 @@
     :hook
     (emacs-startup-hook . yas-global-mode))
     #+end_src
-*** git-gutter                                        :STARTUP_HOOK:STRAIGHT:
+**** git-gutter                                      :STARTUP_HOOK:STRAIGHT:
 #+begin_src emacs-lisp
   (leaf git-gutter
         :straight t
@@ -381,7 +388,7 @@
         :hook
         (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
-*** undo-tree
+**** undo-tree
 
 #+begin_src emacs-lisp
 (leaf undo-tree
@@ -399,7 +406,7 @@
           (global-undo-tree-mode))
 #+end_src
 
-*** auto-revert
+**** auto-revert
 
 #+begin_src emacs-lisp
   (leaf auto-revert
@@ -411,7 +418,7 @@
     (global-auto-revert-mode 1))
 #+end_src
 
-*** savehist
+**** savehist
 
 #+begin_src emacs-lisp
 (leaf savehist
@@ -421,7 +428,7 @@
           (savehist-mode 1))
 #+end_src
 
-*** show-paren
+**** show-paren
 
 #+begin_src emacs-lisp
 (leaf show-paren-mode
@@ -431,7 +438,7 @@
           (show-paren-mode 1))
 #+end_src
 
-*** goto-addr
+**** goto-addr
 
 #+begin_src emacs-lisp
   (leaf goto-addr
@@ -442,7 +449,7 @@
             (global-goto-address-mode 1))
 #+end_src
 
-*** whitespace - 空白文字の可視化
+**** whitespace - 空白文字の可視化
 - [[https://yanqirenshi.hatenablog.com/entry/2016/07/03/Emacs%3A_whitespace_%E3%81%A7%E4%BD%99%E5%88%86%E3%81%AA%E7%A9%BA%E7%99%BD/%E3%82%BF%E3%83%96%E3%81%AB%E8%89%B2%E3%81%A5%E3%81%91][Emacs: whitespace で余分な空白/タブに色づけ - ほんとのこと知りたいだけなのに。]]
   - M-x list-faces-display で設定する色の種類と色を確認できます。
   - 設定する色は M-x list-colors-display で確認する感じ。
@@ -488,7 +495,7 @@
 #+RESULTS:
 : whitespace
 
-*** TODO outline-mode
+**** TODO outline-mode
 
 #+begin_src emacs-lisp
   (leaf outline-mode
@@ -507,7 +514,7 @@
     )
 #+end_src
 
-*** COMMENT outline-magic
+**** COMMENT outline-magic
 
 #+begin_src emacs-lisp
 (leaf outline-magic :straight t
@@ -515,8 +522,8 @@
           (define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle))
 #+end_src
 
-** フック
-*** 保存時、不要な空白を削除（before-save-hook）
+*** フック
+**** 保存時、不要な空白を削除（before-save-hook）
 
 #+begin_src emacs-lisp
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -525,10 +532,10 @@
 #+RESULTS:
 | delete-trailing-whitespace |
 
-** アドバイス
-*** tramp                                                            :ADVICE:
-** マイナーモード
-*** wdired                                                      :MINNOR_MODE:
+*** アドバイス
+**** tramp                                                          :ADVICE:
+*** マイナーモード
+**** wdired                                                    :MINNOR_MODE:
 #+begin_src emacs-lisp
   (leaf wdired
     :doc "Rename files editing their names in dired buffers"
@@ -541,9 +548,9 @@
             ("C-o" . toggle-input-method))))
 #+end_src
 
-* 各種UI
-** キーボード操作 UI
-*** which-key
+** 各種UI
+*** キーボード操作 UI
+**** which-key
 #+begin_src emacs-lisp
     (leaf which-key
           :doc "Display available keybindings in popup"
@@ -556,7 +563,7 @@
           :config
           (which-key-mode))
 #+end_src
-*** hydra
+**** hydra
 #+begin_src emacs-lisp
         (leaf hydra :straight t
           :init
@@ -599,8 +606,8 @@
           (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
 #+end_src
 
-** ミニバッファ補完 UI
-*** vertico
+*** ミニバッファ補完 UI
+**** vertico
 #+begin_src emacs-lisp
         (leaf vertico
           :doc "入力補完の候補をTABを押さずとも一覧から選べるようにする"
@@ -613,7 +620,7 @@
           (setq vertico-resize t)
           (setq vertico-cycle t))
 #+end_src
-*** orderless
+**** orderless
 #+begin_src emacs-lisp
         (leaf orderless
           :doc "入力補完の際、複数の語句で検索できるようにする"
@@ -625,7 +632,7 @@
                 completion-category-defaults nil
                 completion-category-overrides '((file (styles partial-completion)))))
 #+end_src
-*** marginalia
+**** marginalia
 #+begin_src emacs-lisp
         (leaf marginalia
           :doc "入力補完の候補に説明文を表示する"
@@ -635,7 +642,7 @@
           :init
           (marginalia-mode))
   #+end_src
-*** embark
+**** embark
 #+begin_src emacs-lisp
   (leaf embark
     :url "https://github.com/oantolin/embark"
@@ -677,7 +684,7 @@
                             ("o" org-open-at-point))
       (add-to-list 'embark-keymap-alist '(orglink . embark-orglink-map))))
 #+end_src
-*** consult
+**** consult
 #+begin_src emacs-lisp
         (leaf consult
           :url "https://github.com/minad/consult"
@@ -800,7 +807,7 @@
   ;;;; 5. No project support
           ;; (setq consult-project-function nil)
 #+end_src
-*** embark-consult
+**** embark-consult
 
 #+begin_src emacs-lisp
   (leaf embark-consult
@@ -818,9 +825,9 @@
 #+RESULTS:
 : embark-consult
 
-* Orgモードの設定
-** Orgの設定
-*** Orgの基本的な設定
+** Orgモードの設定
+*** Orgの設定
+**** Orgの基本的な設定
 
 #+begin_src emacs-lisp
   (leaf Org-Settings
@@ -832,7 +839,8 @@
     (org-directory . "~/Dropbox/Org/")
     (org-default-notes-file . "~/Dropbox/Org/Notebook.org")
     (org-agenda-files . '("~/Dropbox/Org/"))
-    (org-refile-targets . '((org-agenda-files :tag . "REFILE")))
+    (org-refile-targets . '((org-agenda-files :tag . "REFILE")
+                            (nil :tag . "REFILE")))
 
     (org-todo-keyword-faces
      . '(("NEXT" . (:foreground "blue" :underline t))
@@ -852,7 +860,7 @@
 #+RESULTS:
 : Org-Settings
 
-*** org capture - キャプチャーするときのテンプレート
+**** org capture - キャプチャーするときのテンプレート
 - [[https://orgmode.org/manual/Capture.html][Capture (The Org Manual)]]
 
 #+begin_src emacs-lisp
@@ -975,7 +983,7 @@
 #+RESULTS:
 : doct
 
-*** org-babel - babelのための設定
+**** org-babel - babelのための設定
 #+begin_src emacs-lisp
   (leaf *org-babel
     :config
@@ -989,7 +997,7 @@
            '((:dir . nil)
              (:results . "value"))))
   #+end_src
-*** org-plantuml - orgでplantumlを使えるようにする
+**** org-plantuml - orgでplantumlを使えるようにする
 #+begin_src emacs-lisp
   (leaf *org-plantuml
     :init
@@ -1002,7 +1010,7 @@
      '((plantuml . t)))
     )
 #+end_src
-*** org-download - イメージファイルをorgにドラッグ＆ドロップする
+**** org-download - イメージファイルをorgにドラッグ＆ドロップする
 [[https://github.com/abo-abo/org-download][abo-abo/org-download: Drag and drop images to Emacs org-mode]]
 
 #+begin_src emacs-lisp
@@ -1018,7 +1026,7 @@
       :custom (org-download-screenshot-method . "magick convert clipboard: %s")))
 #+end_src
 
-*** org-tempo - begin_...を簡単に
+**** org-tempo - begin_...を簡単に
 #+begin_src emacs-lisp
   (leaf org-tempo
     :require t
@@ -1043,7 +1051,7 @@
                  '("ai" . "ai")))
 #+end_src
 
-*** org-use-speed-command - ?
+**** org-use-speed-command - ?
 #+begin_src emacs-lisp
   (leaf *org-use-speed-commands
     :config
@@ -1054,7 +1062,7 @@
 #+RESULTS:
 : *org-use-speed-commands
 
-*** org-superstar - orgの星をスーパースターにする
+**** org-superstar - orgの星をスーパースターにする
 - [[https://github.com/integral-dw/org-superstar-mode][GitHub - integral-dw/org-superstar-mode: Make org-mode stars a little more super]]
 
 + plus
@@ -1077,7 +1085,7 @@
 #+RESULTS:
 : org-superstar
 
-*** org-ai - orgでai
+**** org-ai - orgでai
 
 - ~/.authinfo に APIキー
 
@@ -1096,8 +1104,8 @@
 
 こんにちは
 
-** Orgによる文書作成
-*** org-latex関連                                              :PUBLISHED:
+*** Orgによる文書作成
+**** org-latex関連                                               :PUBLISHED:
 :PROPERTIES:
 :EXPORT_TITLE: Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版
 :QIITA-ID: 6c1b51b135eca9065902
@@ -1106,7 +1114,7 @@
 :QIITA-URL: https://qiita.com/ychubachi/private/6c1b51b135eca9065902
 :END:
 
-**** はじめに
+***** はじめに
 Emacsのorg-modeからLaTeX経由でPDFを作れるようにする設定（2022年）版です。
 
 org-export-dispatch (C-c C-e) で起動するメニューに Export to LaTeX
@@ -1130,7 +1138,7 @@ bxjsarticleはjlreqを使うならば不要な気もしますが、一応。
 - LaTeXの文字列部分は別ファイルにするのがよいかもしれない
   - [[http://xahlee.info/emacs/emacs/elisp_read_file_content.html][Elisp: Read File Content as String or List of Lines]]
 
-**** init.elの設定
+***** init.elの設定
 leafを利用して設定しています。
 
 #+begin_src emacs-lisp :noweb yes
@@ -1217,11 +1225,11 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 :EXPORT_OPTIONS: toc:nil
 #+end_example
 
-**** 参考
+***** 参考
 - [[https://www-he.scphys.kyoto-u.ac.jp/member/shotakaha/dokuwiki/doku.php?id=toolbox:emacs:org:latex:start][Org-LaTeX [QumaWiki]]]
 - [[https://taipapamotohus.com/post/org-mode_paper_3/][Emacsのorg-modeで論文を書く（その3：org-modeとbibtexとreftexの連携による文献引用の自動化） | A perfect autumn day]]
 
-*** ox-pandoc
+**** ox-pandoc
 #+begin_src emacs-lisp
   (leaf ox-pandoc :straight t :require t)
 #+end_src
@@ -1229,183 +1237,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : ox-pandoc
 
-** COMMENT Blogに投稿する
-**** org2blog - wordpressに出力
-#+begin_src emacs-lisp
-  (leaf org2blog
-    :straight t
-    :config
-    (require 'auth-source)
-    (let* ((credentials (auth-source-user-and-password "ploversky.net"))
-           (username (nth 0 credentials))
-           (password (nth 1 credentials))
-           (config `("plover"
-                     :url "https://ploversky.net/xmlrpc.php"
-                     :username ,username
-                     :password ,password)))
-      (setq org2blog/wp-blog-alist `(,config)))
-    (setq org2blog/wp-image-upload t)
-    (setq org2blog/wp-show-post-in-browser 'show)
-    (setq org2blog/wp-use-sourcecode-shortcode t))
-#+end_src
-**** ox-hugo - hugoに出力
-#+begin_src emacs-lisp
-          (leaf ox-hugo
-            :straight t
-            :require t
-            :after ox)
-#+end_src
-**** ox-zenn - zennに出力
-#+begin_src emacs-lisp
-          (leaf ox-zenn
-            :straight t
-            :after org
-            :require t ox-publish
-            :defun zenn/f-parent org-publish
-            :defvar org-publish-project-alist
-            :preface
-            (defvar zenn/org-dir "~/git/zenn-content")
-            (defun zenn/org-publish (arg)
-              "Publish zenn blog files."
-              (interactive "P")
-              (let ((force (or (equal '(4) arg) (equal '(64) arg)))
-                    (async (or (equal '(16) arg) (equal '(64) arg))))
-                (org-publish "zenn" arg force async)))
-            :config
-            (setf
-             (alist-get "zenn" org-publish-project-alist nil nil #'string=)
-             (list
-              :base-directory (expand-file-name "" zenn/org-dir)
-              :base-extension "org"
-              :publishing-directory (expand-file-name "../" zenn/org-dir)
-              :recursive t
-              :publishing-function 'org-zenn-publish-to-markdown)))
-#+end_src
-**** org-publishの設定
-#+begin_src emacs-lisp
-  (leaf org-publish-project-alist
-    :config
-    (setq org-publish-project-alist
-          '(("chubachi.net"
-             :components ("chubachi.net-orgfiles" "chubachi.net-others"))
-
-            ("chubachi.net-orgfiles"
-             :publishing-function org-html-publish-to-html
-             :base-directory "~/Dropbox/Org/publish/chubachi.net/"
-             :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish"
-             :base-extension "org"
-             :recursive t
-             ;; options for html files
-             ;; :exclude "PrivatePage.org" ;; regexp
-             ;; :headline-levels 3
-             ;; :section-numbers nil
-             ;; :with-toc nil
-             ;; :html-head "<link rel=\"stylesheet\" type=\"text/css\"
-             ;;    href=\"https://gongzhitaao.org/orgcss/org.css\"/>"
-             ;;:html-preamble t
-             )
-
-            ("chubachi.net-others"
-             :publishing-function org-publish-attachment
-             :base-directory "~/Dropbox/Org/publish/chubachi.net/"
-             :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish/"
-             :base-extension "jpg\\|gif\\|png|css\\|el"
-             :recursive t))))
-#+end_src
-** COMMENT 未使用
-*** pomodoroテクニック - 使ってないなー
-#+begin_src emacs-lisp
-
-  (leaf org-pomodoro
-    :straight t
-    :require t)
-
-#+end_src
-*** ox-taskjuggler - ?
-#+begin_src emacs-lisp
-  (leaf org-contrib
-    :straight t
-    :config
-    (require 'ox-taskjuggler))
-#+end_src
-*** org-modeとimenuの連携 → leafにする
-
-+ org-modeのとき，imenuをメニューバーに追加する
-
-+ 参照
-  - [[https://orgmode.org/manual/Cooperation.html][Cooperation (The Org Manual)]]
-
-#+begin_src emacs-lisp
-  (add-hook 'org-mode-hook
-            (lambda () (imenu-add-to-menubar "Imenu")))
-  (setq org-imenu-depth 3)
-#+end_src
-
-+ org-modeのとき，imenu-list-minor-modeにする
-
-  #+begin_src emacs-lisp
-    (add-hook 'org-mode-hook 'imenu-list-minor-mode)
-  #+end_src
-
-*** COMMENT org-modern
-- C-c C-x C-wで切り取ったあと，yankするとヘッドラインのレベルが乱れる
-#+begin_src emacs-lisp
-  (leaf org-modern
-    :disabled nil
-    :url "https://github.com/minad/org-modern"
-    :straight t
-    :custom
-    ;;  dashが全角で表示されるので修正
-    ((org-modern-list . '((?+ . "◦") (?- . "-") (?* . "•")))
-     (org-modern-star . '("■"
-                          ".◆"
-                          "..●"
-                          "...＊"
-                          "....＋"))) ; ■
-    :init
-    ;; Add frame borders and window dividers
-    (modify-all-frames-parameters
-     '((right-divider-width . 10)
-       (internal-border-width . 10)))
-    (dolist (face '(window-divider
-                    window-divider-first-pixel
-                    window-divider-last-pixel))
-      (face-spec-reset-face face)
-      (set-face-foreground face (face-attribute 'default :background)))
-    (set-face-background 'fringe (face-attribute 'default :background))
-
-    ;; (setq org-modern-star '("🟩" "🟣" "🔶" "◎" "○" "※"))
-    ;; (setq org-modern-star '("■" "◆" "◎" "○" "§" "¶"))
-    ;; (setq org-modern-star '("🟧" "🔶" "🟠" "🔸" "§" "¶"))
-
-
-    (setq
-     ;; Edit settings
-     org-auto-align-tags nil ; Non-nil keeps tags aligned when modifying headlines.
-     org-tags-column 0
-     org-catch-invisible-edits 'show-and-error
-     org-special-ctrl-a/e t
-
-     ;; Org styling, hide markup etc.
-     org-hide-emphasis-markers t
-     org-pretty-entities t
-     ;; org-ellipsis "…"
-
-     ;; Agenda styling
-     org-agenda-tags-column 0
-     org-agenda-block-separator ?─
-     org-agenda-time-grid
-     '((daily today require-timed)
-       (800 1000 1200 1400 1600 1800 2000)
-       " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-     org-agenda-current-time-string
-     "⭠ now ─────────────────────────────────────────────────"
-     )
-    (global-org-modern-mode))
-
-#+end_src
-* 外部パッケージの設定
-** インストールするだけパッケージ
+** 外部パッケージの設定
+*** インストールするだけパッケージ
 #+begin_src emacs-lisp
   (leaf yaml-mode :straight t)
   (leaf popup :straight t)
@@ -1421,7 +1254,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+RESULTS:
 : dired+
-** minions - マイナーモードの表示をコンパクトにする            :MINNOR_MODE:
+*** minions - マイナーモードの表示をコンパクトにする            :MINNOR_MODE:
 
 - [[https://github.com/tarsius/minions][tarsius/minions: A minor-mode menu for the mode line]]
 
@@ -1438,7 +1271,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : minions
 
-** projectile [C-c p]                                          :MINNOR_MODE:
+*** projectile [C-c p]                                          :MINNOR_MODE:
 
 #+begin_src emacs-lisp
   (leaf projectile
@@ -1455,7 +1288,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
 #+RESULTS:
 : projectile
-** perspective [C-x C-b] - バッファをグループ化して切り替える  :MINNOR_MODE:
+*** perspective [C-x C-b] - バッファをグループ化して切り替える  :MINNOR_MODE:
 
 - [[https://github.com/nex3/perspective-el][nex3/perspective-el: Perspectives for Emacs.]]
 - persp-modeと共用はできない
@@ -1480,7 +1313,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+begin_src emacs-lisp
 #+end_src
 
-** [#A] magit [C-x g]
+*** [#A] magit [C-x g]
 - recommended されているキーバインディングはC-c 名前空間を利用している
   - https://magit.vc/manual/magit/Global-Bindings.html
 
@@ -1489,7 +1322,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :straight t
     :bind (("C-x g" . magit-status)))
 #+end_src
-** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
+*** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
 #+begin_src emacs-lisp
   (leaf swap-buffers
     :straight t
@@ -1499,7 +1332,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (swap-buffers-qwerty-shortcuts
      . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
 #+end_src
-** shell-pop [C-c s]
+*** shell-pop [C-c s]
 #+begin_src emacs-lisp
         (leaf shell-pop
           :straight t
@@ -1510,7 +1343,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
           (shell-pop-window-position . "bottom")
           (setq shell-pop-full-span . t))
 #+end_src
-** page-break-line - 水平線を描く
+*** page-break-line - 水平線を描く
 - [[https://github.com/purcell/page-break-lines][purcell/page-break-lines: Emacs: display ugly ^L page breaks as tidy horizontal lines]]
   - emacs-dashboardが使用
 - orgで使うとtoo long
@@ -1525,7 +1358,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : page-break-lines
 
-** all-the-icons - 各種アイコンを利用できるようにする
+*** all-the-icons - 各種アイコンを利用できるようにする
 
 - [[https://github.com/domtronn/all-the-icons.el][GitHub - domtronn/all-the-icons.el: A utility package to collect various Icon Fonts and propertize them within Emacs.]]
 
@@ -1539,17 +1372,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : all-the-icons
 
-** COMMENT nerd-icons - all-the-iconsより多くのアイコンを利用できるようにする
-- インストールできない
-
-#+begin_src emacs-lisp
-(leaf nerd-icons :straight t)
-#+end_src
-
-#+RESULTS:
-: nerd-icons
-
-** emacs-dashboard - 起動画面をダッシュボードにする
+*** emacs-dashboard - 起動画面をダッシュボードにする
 - [[https://github.com/emacs-dashboard/emacs-dashboard][emacs-dashboard/emacs-dashboard: An extensible emacs dashboard]]
 
 #+begin_src emacs-lisp
@@ -1563,8 +1386,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : dashboard
 
-* 自作関数
-** cmd/browser - WSLからWindows側のWeb Browserを起動する
+** 自作関数
+*** cmd/browser - WSLからWindows側のWeb Browserを起動する
 
 - テスト
   - [[https://www.gnu.org/software/emacs/][GNU Emacs - GNU Project]]
@@ -1586,347 +1409,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : *cmd/browser
 
-* COMMENT メールクライアント
-** メールアドレスの設定
-#+begin_src emacs-lisp
-  (leaf Mail-Variables
-    :custom
-    ((user-full-name . "Yoshihide Chubachi")
-     (user-mail-address . "yc@aiit.ac.jp")
-     (mail-user-agent quote message-user-agent)
-     (message-send-mail-function quote smtpmail-send-it)
-     (smtpmail-stream-type quote starttls)
-     (smtpmail-smtp-server . "smtp.gmail.com")
-     (smtpmail-smtp-service . 587)))
-    #+end_src
-
-#+RESULTS:
-: Mail-Variables
-
-** notmuch
-#+begin_src emacs-lisp
-    (leaf notmuch
-          :when (not (eq system-type 'windows-nt))
-          :straight t
-          :require t
-          :hook
-          (notmuch-message-mode-hook . visual-fill-column-mode)
-          (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1)))
-          :custom
-          ((notmuch-draft-folder . "/drafts") ; 編集中のドラフトはローカルのフォルダに
-           (notmuch-fcc-dirs . nil)           ; 送信済みメールはローカルに保存せず
-                                          ; Gmailに任せる
-           (notmuch-search-oldest-first . nil) ; 検索結果を新しい順でソート
-           (notmuch-saved-searches
-            . '((:name "flagged"    :query "tag:flagged AND NOT tag:deleted"
-                       :key "f" :search-type tree)
-                (:name "inbox"      :query "tag:inbox folder:/Gmail\\/inbox/ AND NOT tag:deleted"
-                       :key "i" :search-type tree)
-                (:name "unread"     :query "tag:unread AND NOT tag:deleted"
-                       :key "u" :search-type tree)
-                (:name "sent"       :query "tag:sent AND NOT tag:deleted"
-                       :key "s" :search-type tree)
-                (:name "drafts"     :query "tag:draft AND NOT tag:deleted"
-                       :key "d" :search-type tree)
-                (:name "Gmal Inbox" :query "folder:/Gmail\\/inbox/"
-                       :key "I" :search-type tree)
-                (:name "Gmal Sent"  :query "folder:/Gmail\\/sent/"
-                       :key "S" :search-type tree)
-                (:name "all mail"   :query "NOT tag:deleted"
-                       :key "a" :search-type tree)))
-           )
-          :bind (("C-c r" . notmuch-hello))
-          :config
-          (advice-add #'notmuch-read-tag-changes
-                      :filter-return (lambda (x) (mapcar #'string-trim x))) ; vertico対策
-          :config
-          (define-key notmuch-search-mode-map "f"
-            (lambda ()
-              "toggle flaged tag for message"
-              (interactive)
-              (if (member "flagged" (notmuch-search-get-tags))
-                  (notmuch-search-tag (list "-flagged"))
-                (notmuch-search-tag (list "+flagged")))))
-          (define-key notmuch-show-mode-map "f"
-            (lambda ()
-              "toggle flaged tag for message"
-              (interactive)
-              (if (member "flagged" (notmuch-show-get-tags))
-                  (notmuch-show-tag (list "-flagged"))
-                (notmuch-show-tag (list "+flagged")))))
-          (define-key notmuch-tree-mode-map "f"
-            (lambda ()
-              "toggle flaged tag for message"
-              (interactive)
-              (if (member "flagged" (notmuch-tree-get-tags))
-                  (notmuch-tree-tag (list "-flagged"))
-                (notmuch-tree-tag (list "+flagged"))))))
-
-  #+end_src
-
-#+RESULTS:
-: notmuch
-
-** ol-notmuch
-#+begin_src emacs-lisp
-        (leaf ol-notmuch
-          :straight t
-          :require t
-          :after notmuch org)
-  #+end_src
-** consult-notmuch
-#+begin_src emacs-lisp
-        (leaf consult-notmuch
-          :when (not (eq system-type 'windows-nt))
-          ;; :straight (consult-notmuch :type git :host github
-          ;;                            :repo "emacsmirror/consult-notmuch")
-          :straight t
-          :after consult notmuch)
-
-#+end_src
-** mm-decode
-#+begin_src emacs-lisp
-        (leaf mm-decode
-          :custom (mm-default-directory . "~/Downloads/"))
-#+end_src
-** gnus-alias
-#+begin_src emacs-lisp
-        (leaf gnus-alias
-          :straight (gnus-alias :type git :host github
-                                :repo "hexmode/gnus-alias")
-          :config
-          (setq gnus-alias-identity-alist
-                '(("work"
-                   nil
-                   "中鉢欣秀 <yc@aiit.ac.jp>"
-                   nil            ;; No organization header
-                   nil            ;; No extra headers
-                   nil            ;; No extra body text
-                   "~/.signature" ;; My signature
-                   ))))
-
-#+end_src
-** wanderlust
-#+begin_src emacs-lisp
-            (leaf wanderlust :straight t
-              :config
-              ;; IMAP
-              (setq elmo-imap4-default-user "yc@aiit.ac.jp"
-                    elmo-imap4-default-authenticate-type 'clear
-                    elmo-imap4-default-server "imap.gmail.com"
-                    elmo-imap4-default-port 993
-                    elmo-imap4-default-stream-type 'ssl
-                    )
-              ;; For non ascii-characters in folder-names
-              (setq elmo-imap4-use-modified-utf7 t)
-
-              ;; (setq elmo-plugged t)
-              ;; (setq elmo-plugged-condition 'independent)
-
-              ;; メッセージ受信の上限を無限にする
-              (setq elmo-message-fetch-threshold nil)
-
-              ;; SMTP
-              (setq
-               wl-smtp-connection-type   'starttls        ; Use TLS
-               wl-smtp-authenticate-type "login"          ; Authentication type
-               wl-smtp-posting-user      "yc@aiit.ac.jp"  ; Username
-               wl-smtp-posting-server    "smtp.gmail.com" ; SMTP server
-               wl-smtp-posting-port      587              ; The SMTP port
-
-               wl-local-domain           "aiit.ac.jp"  ; The SMTP server again
-               wl-message-id-domain      "aiit.ac.jp") ; And... Again?
-
-              (setq
-               wl-default-folder "%INBOX"
-               wl-draft-folder   "%[Gmail]/下書き"
-               wl-trash-folder   "%[Gmail]/ゴミ箱"
-
-               wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>" ; Our From: header field
-               wl-fcc-force-as-read t  ; Mark sent mail (in the wl-fcc folder) as read
-               wl-default-spec "%")    ; For auto-completion
-
-              ;; 隠したいヘッダの設定
-              (setq wl-message-ignored-field-list
-                    '("ARC-.*:" "X-.*:" ".*Received.*:"
-                      "Authentication-Results:" "MIME-Version:"
-                      "List-.*:" "DKIM-.*:"
-                      ".*Path:" ".*Id:" "^References:"
-                      "^Replied:" "^Errors-To:"
-                      "^Lines:" "^Sender:" ".*Host:" "^Xref:"
-                      "^Content-Type:" "^Precedence:"
-                      "^Status:" "^X-VM-.*:"))
-
-              ;; 表示するヘッダの設定
-              ;; 'wl-message-ignored-field-list' より優先される
-              (setq wl-message-visible-field-list '("^Message-Id:"))
-
-              ;; 大きいメッセージを送信時に分割しない
-              (setq mime-edit-split-message nil)
-
-              (require 'wl-qs)
-              (setq wl-quicksearch-folder "%[Gmail]/すべてのメール")
-
-              (add-to-list 'wl-dispose-folder-alist
-                           '("^%INBOX" . remove))
-              (add-to-list 'wl-dispose-folder-alist
-                           '(".*Junk$" . remove))
-
-              (require 'elmo nil 'noerror)
-              (defun my:wl-summary-jump-to-referer-message ()
-                (interactive)
-                (when (wl-summary-message-number)
-                  (if (eq (elmo-folder-type-internal wl-summary-buffer-elmo-folder) 'flag)
-                      (progn
-                        (let* ((referer (elmo-flag-folder-referrer
-                                         wl-summary-buffer-elmo-folder
-                                         (wl-summary-message-number)))
-                               (folder (if (> (length referer) 1)
-                                           (completing-read
-                                            (format "Jump to (%s): " (car (car referer)))
-                                            referer
-                                            nil t nil nil (car (car referer)))
-                                         (car (car referer)))))
-                          (wl-summary-goto-folder-subr folder 'no-sync nil nil t)
-                          (wl-summary-jump-to-msg (cdr (assoc folder referer)))))
-                    (when (eq (elmo-folder-type wl-summary-last-visited-folder) 'internal)
-                      (wl-summary-goto-last-visited-folder)))))
-
-              (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)
-#+end_src
-* COMMENT 開発用
-** 全般
-*** auto-indent-yanked-code (core?)
-#+begin_src emacs-lisp
-  (leaf *auto-indent-yanked-code
-    :url "https://www.emacswiki.org/emacs/AutoIndentation"
-    :init
-    (dolist (command '(yank yank-pop))
-      (eval `(defadvice ,command (after indent-region activate)
-               (and (not current-prefix-arg)
-                    (member major-mode '(emacs-lisp-mode lisp-mode
-                                                         clojure-mode    scheme-mode
-                                                         haskell-mode    ruby-mode
-                                                         rspec-mode      python-mode
-                                                         c-mode          c++-mode
-                                                         objc-mode       latex-mode
-                                                         plain-tex-mode))
-                    (let ((mark-even-if-inactive transient-mark-mode))
-                      (indent-region (region-beginning) (region-end) nil)))))))
-
-#+end_src
-*** coverage
-#+begin_src emacs-lisp
-  (leaf coverage :straight t)
-#+end_src
-*** dockerfile-mode
-#+begin_src emacs-lisp
-  (leaf dockerfile-mode :straight t
-    :config
-    ;; Set dockerfile-image-name as safe variable.
-    (put 'dockerfile-image-name 'safe-local-variable #'stringp))
-  #+end_src
-** Prog-Mode-Hook
-*** highlight-indent-guides
-#+begin_src emacs-lisp
-  (leaf highlight-indent-guides
-    :straight t
-    :require t
-    :hook
-    ((prog-mode-hook yaml-mode-hook) . highlight-indent-guides-mode)
-    :custom
-    (highlight-indent-guides-auto-enabled . t)
-    (highlight-indent-guides-responsive . t)
-    (highlight-indent-guides-method . 'column) ; fill character column
-    )
-          #+end_src
-
-#+RESULTS:
-: highlight-indent-guides
-
-*** rainbow-delimiters → なんだっけ？
-#+begin_src emacs-lisp
-  (leaf rainbow-delimiters
-    :straight t
-    :hook
-    (prog-mode-hook . rainbow-delimiters-mode))
-#+end_src
-** Emacs lisp関連
-*** paredit
-#+begin_src emacs-lisp
-          (leaf paredit
-            :straight t
-            :commands enable-paredit-mode
-            :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
-                   (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
-                   (ielm-mode-hook . enable-paredit-mode)
-                   (lisp-mode-hook . enable-paredit-mode)
-                   (lisp-interaction-mode-hook . enable-paredit-mode)
-                   (scheme-mode-hook . enable-paredit-mode)))
-#+end_src
-*** macrostep
-
-#+begin_src emacs-lisp
-  (leaf macrostep               ; to test leaf macros.
-    :doc "interactive macro expander"
-    :url "https://github.com/emacsorphanage/macrostep"
-    :straight t
-    :require t ; checked
-    :bind ((:emacs-lisp-mode-map
-            ("C-c e" . macrostep-expand))))
-#+end_src
-
-#+RESULTS:
-: macrostep
-
-*** flycheck
-#+begin_src emacs-lisp
-            (leaf flycheck
-              :doc "On-the-fly syntax checking"
-              :emacs>= 24.3
-              :straight t
-              :bind (("M-n" . flycheck-next-error)
-                     ("M-p" . flycheck-previous-error))
-              :custom ((flycheck-emacs-lisp-initialize-packages . t)
-                       (flycheck-disabled-checkers . '(emacs-lisp-checkdoc)))
-              :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
-              :config
-              (leaf flycheck-package
-                :doc "A Flycheck checker for elisp package authors"
-                :straight t
-                :config
-                (flycheck-package-setup))
-
-              (leaf flycheck-elsa
-                :doc "Flycheck for Elsa."
-                :emacs>= 25
-                :straight t
-                :config
-                (flycheck-elsa-setup)))
-#+end_src
-
-#+RESULTS:
-: flycheck
-
-*** ertを実行するためのキーバインド
-#+begin_src emacs-lisp
-  (leaf ert
-    ;; TODO: Make it as Emacs-Lisp-Mode binding
-    :bind (("C-c t" . cmd/run-ert))
-    :config
-    (defun cmd/run-ert ()
-      (interactive)
-      (eval-buffer)
-      (call-interactively 'ert)))
-   #+end_src
-*** emacs-refactor
-#+begin_src emacs-lisp
-  (leaf emacs-refactor
-    :straight t
-    :bind ((emacs-lisp-mode-map
-            ("M-RET" . emr-show-refactor-menu))))
-#+end_src
-* COMMENT 未整理
+* COMMENT 未整理                                                    :REFILE:
 ** COMMENT visual-fill-column [C-c q]
 
 #+begin_src emacs-lisp
@@ -2185,14 +1668,532 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : ruler-mode
 
-* COMMENT Test-Bed
+** COMMENT nerd-icons - all-the-iconsより多くのアイコンを利用できるようにする
+- インストールできない
+
 #+begin_src emacs-lisp
-  (leaf Test-Bed
-    :init
-    ;; Experimental Settings
-  )
+(leaf nerd-icons :straight t)
 #+end_src
-* COMMENT オリジナルパッケージ
+
+#+RESULTS:
+: nerd-icons
+
+** COMMENT 開発用
+*** 全般
+**** auto-indent-yanked-code (core?)
+#+begin_src emacs-lisp
+  (leaf *auto-indent-yanked-code
+    :url "https://www.emacswiki.org/emacs/AutoIndentation"
+    :init
+    (dolist (command '(yank yank-pop))
+      (eval `(defadvice ,command (after indent-region activate)
+               (and (not current-prefix-arg)
+                    (member major-mode '(emacs-lisp-mode lisp-mode
+                                                         clojure-mode    scheme-mode
+                                                         haskell-mode    ruby-mode
+                                                         rspec-mode      python-mode
+                                                         c-mode          c++-mode
+                                                         objc-mode       latex-mode
+                                                         plain-tex-mode))
+                    (let ((mark-even-if-inactive transient-mark-mode))
+                      (indent-region (region-beginning) (region-end) nil)))))))
+
+#+end_src
+**** coverage
+#+begin_src emacs-lisp
+  (leaf coverage :straight t)
+#+end_src
+**** dockerfile-mode
+#+begin_src emacs-lisp
+  (leaf dockerfile-mode :straight t
+    :config
+    ;; Set dockerfile-image-name as safe variable.
+    (put 'dockerfile-image-name 'safe-local-variable #'stringp))
+  #+end_src
+*** Prog-Mode-Hook
+**** highlight-indent-guides
+#+begin_src emacs-lisp
+  (leaf highlight-indent-guides
+    :straight t
+    :require t
+    :hook
+    ((prog-mode-hook yaml-mode-hook) . highlight-indent-guides-mode)
+    :custom
+    (highlight-indent-guides-auto-enabled . t)
+    (highlight-indent-guides-responsive . t)
+    (highlight-indent-guides-method . 'column) ; fill character column
+    )
+          #+end_src
+
+#+RESULTS:
+: highlight-indent-guides
+
+**** rainbow-delimiters → なんだっけ？
+#+begin_src emacs-lisp
+  (leaf rainbow-delimiters
+    :straight t
+    :hook
+    (prog-mode-hook . rainbow-delimiters-mode))
+#+end_src
+*** Emacs lisp関連
+**** paredit
+#+begin_src emacs-lisp
+          (leaf paredit
+            :straight t
+            :commands enable-paredit-mode
+            :hook ((emacs-lisp-mode-hook . enable-paredit-mode)
+                   (eval-expression-minibuffer-setup-hook . enable-paredit-mode)
+                   (ielm-mode-hook . enable-paredit-mode)
+                   (lisp-mode-hook . enable-paredit-mode)
+                   (lisp-interaction-mode-hook . enable-paredit-mode)
+                   (scheme-mode-hook . enable-paredit-mode)))
+#+end_src
+**** macrostep
+
+#+begin_src emacs-lisp
+  (leaf macrostep               ; to test leaf macros.
+    :doc "interactive macro expander"
+    :url "https://github.com/emacsorphanage/macrostep"
+    :straight t
+    :require t ; checked
+    :bind ((:emacs-lisp-mode-map
+            ("C-c e" . macrostep-expand))))
+#+end_src
+
+#+RESULTS:
+: macrostep
+
+**** flycheck
+#+begin_src emacs-lisp
+            (leaf flycheck
+              :doc "On-the-fly syntax checking"
+              :emacs>= 24.3
+              :straight t
+              :bind (("M-n" . flycheck-next-error)
+                     ("M-p" . flycheck-previous-error))
+              :custom ((flycheck-emacs-lisp-initialize-packages . t)
+                       (flycheck-disabled-checkers . '(emacs-lisp-checkdoc)))
+              :hook (emacs-lisp-mode-hook lisp-interaction-mode-hook)
+              :config
+              (leaf flycheck-package
+                :doc "A Flycheck checker for elisp package authors"
+                :straight t
+                :config
+                (flycheck-package-setup))
+
+              (leaf flycheck-elsa
+                :doc "Flycheck for Elsa."
+                :emacs>= 25
+                :straight t
+                :config
+                (flycheck-elsa-setup)))
+#+end_src
+
+#+RESULTS:
+: flycheck
+
+**** ertを実行するためのキーバインド
+#+begin_src emacs-lisp
+  (leaf ert
+    ;; TODO: Make it as Emacs-Lisp-Mode binding
+    :bind (("C-c t" . cmd/run-ert))
+    :config
+    (defun cmd/run-ert ()
+      (interactive)
+      (eval-buffer)
+      (call-interactively 'ert)))
+   #+end_src
+**** emacs-refactor
+#+begin_src emacs-lisp
+  (leaf emacs-refactor
+    :straight t
+    :bind ((emacs-lisp-mode-map
+            ("M-RET" . emr-show-refactor-menu))))
+#+end_src
+** COMMENT メールクライアント
+*** メールアドレスの設定
+#+begin_src emacs-lisp
+  (leaf Mail-Variables
+    :custom
+    ((user-full-name . "Yoshihide Chubachi")
+     (user-mail-address . "yc@aiit.ac.jp")
+     (mail-user-agent quote message-user-agent)
+     (message-send-mail-function quote smtpmail-send-it)
+     (smtpmail-stream-type quote starttls)
+     (smtpmail-smtp-server . "smtp.gmail.com")
+     (smtpmail-smtp-service . 587)))
+    #+end_src
+
+#+RESULTS:
+: Mail-Variables
+
+*** notmuch
+#+begin_src emacs-lisp
+    (leaf notmuch
+          :when (not (eq system-type 'windows-nt))
+          :straight t
+          :require t
+          :hook
+          (notmuch-message-mode-hook . visual-fill-column-mode)
+          (notmuch-message-mode-hook . (lambda () (auto-fill-mode -1)))
+          :custom
+          ((notmuch-draft-folder . "/drafts") ; 編集中のドラフトはローカルのフォルダに
+           (notmuch-fcc-dirs . nil)           ; 送信済みメールはローカルに保存せず
+                                          ; Gmailに任せる
+           (notmuch-search-oldest-first . nil) ; 検索結果を新しい順でソート
+           (notmuch-saved-searches
+            . '((:name "flagged"    :query "tag:flagged AND NOT tag:deleted"
+                       :key "f" :search-type tree)
+                (:name "inbox"      :query "tag:inbox folder:/Gmail\\/inbox/ AND NOT tag:deleted"
+                       :key "i" :search-type tree)
+                (:name "unread"     :query "tag:unread AND NOT tag:deleted"
+                       :key "u" :search-type tree)
+                (:name "sent"       :query "tag:sent AND NOT tag:deleted"
+                       :key "s" :search-type tree)
+                (:name "drafts"     :query "tag:draft AND NOT tag:deleted"
+                       :key "d" :search-type tree)
+                (:name "Gmal Inbox" :query "folder:/Gmail\\/inbox/"
+                       :key "I" :search-type tree)
+                (:name "Gmal Sent"  :query "folder:/Gmail\\/sent/"
+                       :key "S" :search-type tree)
+                (:name "all mail"   :query "NOT tag:deleted"
+                       :key "a" :search-type tree)))
+           )
+          :bind (("C-c r" . notmuch-hello))
+          :config
+          (advice-add #'notmuch-read-tag-changes
+                      :filter-return (lambda (x) (mapcar #'string-trim x))) ; vertico対策
+          :config
+          (define-key notmuch-search-mode-map "f"
+            (lambda ()
+              "toggle flaged tag for message"
+              (interactive)
+              (if (member "flagged" (notmuch-search-get-tags))
+                  (notmuch-search-tag (list "-flagged"))
+                (notmuch-search-tag (list "+flagged")))))
+          (define-key notmuch-show-mode-map "f"
+            (lambda ()
+              "toggle flaged tag for message"
+              (interactive)
+              (if (member "flagged" (notmuch-show-get-tags))
+                  (notmuch-show-tag (list "-flagged"))
+                (notmuch-show-tag (list "+flagged")))))
+          (define-key notmuch-tree-mode-map "f"
+            (lambda ()
+              "toggle flaged tag for message"
+              (interactive)
+              (if (member "flagged" (notmuch-tree-get-tags))
+                  (notmuch-tree-tag (list "-flagged"))
+                (notmuch-tree-tag (list "+flagged"))))))
+
+  #+end_src
+
+#+RESULTS:
+: notmuch
+
+*** ol-notmuch
+#+begin_src emacs-lisp
+        (leaf ol-notmuch
+          :straight t
+          :require t
+          :after notmuch org)
+  #+end_src
+*** consult-notmuch
+#+begin_src emacs-lisp
+        (leaf consult-notmuch
+          :when (not (eq system-type 'windows-nt))
+          ;; :straight (consult-notmuch :type git :host github
+          ;;                            :repo "emacsmirror/consult-notmuch")
+          :straight t
+          :after consult notmuch)
+
+#+end_src
+*** mm-decode
+#+begin_src emacs-lisp
+        (leaf mm-decode
+          :custom (mm-default-directory . "~/Downloads/"))
+#+end_src
+*** gnus-alias
+#+begin_src emacs-lisp
+        (leaf gnus-alias
+          :straight (gnus-alias :type git :host github
+                                :repo "hexmode/gnus-alias")
+          :config
+          (setq gnus-alias-identity-alist
+                '(("work"
+                   nil
+                   "中鉢欣秀 <yc@aiit.ac.jp>"
+                   nil            ;; No organization header
+                   nil            ;; No extra headers
+                   nil            ;; No extra body text
+                   "~/.signature" ;; My signature
+                   ))))
+
+#+end_src
+*** wanderlust
+#+begin_src emacs-lisp
+            (leaf wanderlust :straight t
+              :config
+              ;; IMAP
+              (setq elmo-imap4-default-user "yc@aiit.ac.jp"
+                    elmo-imap4-default-authenticate-type 'clear
+                    elmo-imap4-default-server "imap.gmail.com"
+                    elmo-imap4-default-port 993
+                    elmo-imap4-default-stream-type 'ssl
+                    )
+              ;; For non ascii-characters in folder-names
+              (setq elmo-imap4-use-modified-utf7 t)
+
+              ;; (setq elmo-plugged t)
+              ;; (setq elmo-plugged-condition 'independent)
+
+              ;; メッセージ受信の上限を無限にする
+              (setq elmo-message-fetch-threshold nil)
+
+              ;; SMTP
+              (setq
+               wl-smtp-connection-type   'starttls        ; Use TLS
+               wl-smtp-authenticate-type "login"          ; Authentication type
+               wl-smtp-posting-user      "yc@aiit.ac.jp"  ; Username
+               wl-smtp-posting-server    "smtp.gmail.com" ; SMTP server
+               wl-smtp-posting-port      587              ; The SMTP port
+
+               wl-local-domain           "aiit.ac.jp"  ; The SMTP server again
+               wl-message-id-domain      "aiit.ac.jp") ; And... Again?
+
+              (setq
+               wl-default-folder "%INBOX"
+               wl-draft-folder   "%[Gmail]/下書き"
+               wl-trash-folder   "%[Gmail]/ゴミ箱"
+
+               wl-from "Yoshihide Chubachi <yc@aiit.ac.jp>" ; Our From: header field
+               wl-fcc-force-as-read t  ; Mark sent mail (in the wl-fcc folder) as read
+               wl-default-spec "%")    ; For auto-completion
+
+              ;; 隠したいヘッダの設定
+              (setq wl-message-ignored-field-list
+                    '("ARC-.*:" "X-.*:" ".*Received.*:"
+                      "Authentication-Results:" "MIME-Version:"
+                      "List-.*:" "DKIM-.*:"
+                      ".*Path:" ".*Id:" "^References:"
+                      "^Replied:" "^Errors-To:"
+                      "^Lines:" "^Sender:" ".*Host:" "^Xref:"
+                      "^Content-Type:" "^Precedence:"
+                      "^Status:" "^X-VM-.*:"))
+
+              ;; 表示するヘッダの設定
+              ;; 'wl-message-ignored-field-list' より優先される
+              (setq wl-message-visible-field-list '("^Message-Id:"))
+
+              ;; 大きいメッセージを送信時に分割しない
+              (setq mime-edit-split-message nil)
+
+              (require 'wl-qs)
+              (setq wl-quicksearch-folder "%[Gmail]/すべてのメール")
+
+              (add-to-list 'wl-dispose-folder-alist
+                           '("^%INBOX" . remove))
+              (add-to-list 'wl-dispose-folder-alist
+                           '(".*Junk$" . remove))
+
+              (require 'elmo nil 'noerror)
+              (defun my:wl-summary-jump-to-referer-message ()
+                (interactive)
+                (when (wl-summary-message-number)
+                  (if (eq (elmo-folder-type-internal wl-summary-buffer-elmo-folder) 'flag)
+                      (progn
+                        (let* ((referer (elmo-flag-folder-referrer
+                                         wl-summary-buffer-elmo-folder
+                                         (wl-summary-message-number)))
+                               (folder (if (> (length referer) 1)
+                                           (completing-read
+                                            (format "Jump to (%s): " (car (car referer)))
+                                            referer
+                                            nil t nil nil (car (car referer)))
+                                         (car (car referer)))))
+                          (wl-summary-goto-folder-subr folder 'no-sync nil nil t)
+                          (wl-summary-jump-to-msg (cdr (assoc folder referer)))))
+                    (when (eq (elmo-folder-type wl-summary-last-visited-folder) 'internal)
+                      (wl-summary-goto-last-visited-folder)))))
+
+              (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)
+#+end_src
+** COMMENT Blogに投稿する
+**** org2blog - wordpressに出力
+#+begin_src emacs-lisp
+  (leaf org2blog
+    :straight t
+    :config
+    (require 'auth-source)
+    (let* ((credentials (auth-source-user-and-password "ploversky.net"))
+           (username (nth 0 credentials))
+           (password (nth 1 credentials))
+           (config `("plover"
+                     :url "https://ploversky.net/xmlrpc.php"
+                     :username ,username
+                     :password ,password)))
+      (setq org2blog/wp-blog-alist `(,config)))
+    (setq org2blog/wp-image-upload t)
+    (setq org2blog/wp-show-post-in-browser 'show)
+    (setq org2blog/wp-use-sourcecode-shortcode t))
+#+end_src
+**** ox-hugo - hugoに出力
+#+begin_src emacs-lisp
+          (leaf ox-hugo
+            :straight t
+            :require t
+            :after ox)
+#+end_src
+**** ox-zenn - zennに出力
+#+begin_src emacs-lisp
+          (leaf ox-zenn
+            :straight t
+            :after org
+            :require t ox-publish
+            :defun zenn/f-parent org-publish
+            :defvar org-publish-project-alist
+            :preface
+            (defvar zenn/org-dir "~/git/zenn-content")
+            (defun zenn/org-publish (arg)
+              "Publish zenn blog files."
+              (interactive "P")
+              (let ((force (or (equal '(4) arg) (equal '(64) arg)))
+                    (async (or (equal '(16) arg) (equal '(64) arg))))
+                (org-publish "zenn" arg force async)))
+            :config
+            (setf
+             (alist-get "zenn" org-publish-project-alist nil nil #'string=)
+             (list
+              :base-directory (expand-file-name "" zenn/org-dir)
+              :base-extension "org"
+              :publishing-directory (expand-file-name "../" zenn/org-dir)
+              :recursive t
+              :publishing-function 'org-zenn-publish-to-markdown)))
+#+end_src
+**** org-publishの設定
+#+begin_src emacs-lisp
+  (leaf org-publish-project-alist
+    :config
+    (setq org-publish-project-alist
+          '(("chubachi.net"
+             :components ("chubachi.net-orgfiles" "chubachi.net-others"))
+
+            ("chubachi.net-orgfiles"
+             :publishing-function org-html-publish-to-html
+             :base-directory "~/Dropbox/Org/publish/chubachi.net/"
+             :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish"
+             :base-extension "org"
+             :recursive t
+             ;; options for html files
+             ;; :exclude "PrivatePage.org" ;; regexp
+             ;; :headline-levels 3
+             ;; :section-numbers nil
+             ;; :with-toc nil
+             ;; :html-head "<link rel=\"stylesheet\" type=\"text/css\"
+             ;;    href=\"https://gongzhitaao.org/orgcss/org.css\"/>"
+             ;;:html-preamble t
+             )
+
+            ("chubachi.net-others"
+             :publishing-function org-publish-attachment
+             :base-directory "~/Dropbox/Org/publish/chubachi.net/"
+             :publishing-directory "/scpx:chubachi@chubachi.sakura.ne.jp:~/www/chubachi.net/publish/"
+             :base-extension "jpg\\|gif\\|png|css\\|el"
+             :recursive t))))
+#+end_src
+** COMMENT 未使用
+*** pomodoroテクニック - 使ってないなー
+#+begin_src emacs-lisp
+
+  (leaf org-pomodoro
+    :straight t
+    :require t)
+
+#+end_src
+*** ox-taskjuggler - ?
+#+begin_src emacs-lisp
+  (leaf org-contrib
+    :straight t
+    :config
+    (require 'ox-taskjuggler))
+#+end_src
+*** org-modeとimenuの連携 → leafにする
+
++ org-modeのとき，imenuをメニューバーに追加する
+
++ 参照
+  - [[https://orgmode.org/manual/Cooperation.html][Cooperation (The Org Manual)]]
+
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook
+            (lambda () (imenu-add-to-menubar "Imenu")))
+  (setq org-imenu-depth 3)
+#+end_src
+
++ org-modeのとき，imenu-list-minor-modeにする
+
+  #+begin_src emacs-lisp
+    (add-hook 'org-mode-hook 'imenu-list-minor-mode)
+  #+end_src
+
+*** COMMENT org-modern
+- C-c C-x C-wで切り取ったあと，yankするとヘッドラインのレベルが乱れる
+#+begin_src emacs-lisp
+  (leaf org-modern
+    :disabled nil
+    :url "https://github.com/minad/org-modern"
+    :straight t
+    :custom
+    ;;  dashが全角で表示されるので修正
+    ((org-modern-list . '((?+ . "◦") (?- . "-") (?* . "•")))
+     (org-modern-star . '("■"
+                          ".◆"
+                          "..●"
+                          "...＊"
+                          "....＋"))) ; ■
+    :init
+    ;; Add frame borders and window dividers
+    (modify-all-frames-parameters
+     '((right-divider-width . 10)
+       (internal-border-width . 10)))
+    (dolist (face '(window-divider
+                    window-divider-first-pixel
+                    window-divider-last-pixel))
+      (face-spec-reset-face face)
+      (set-face-foreground face (face-attribute 'default :background)))
+    (set-face-background 'fringe (face-attribute 'default :background))
+
+    ;; (setq org-modern-star '("🟩" "🟣" "🔶" "◎" "○" "※"))
+    ;; (setq org-modern-star '("■" "◆" "◎" "○" "§" "¶"))
+    ;; (setq org-modern-star '("🟧" "🔶" "🟠" "🔸" "§" "¶"))
+
+
+    (setq
+     ;; Edit settings
+     org-auto-align-tags nil ; Non-nil keeps tags aligned when modifying headlines.
+     org-tags-column 0
+     org-catch-invisible-edits 'show-and-error
+     org-special-ctrl-a/e t
+
+     ;; Org styling, hide markup etc.
+     org-hide-emphasis-markers t
+     org-pretty-entities t
+     ;; org-ellipsis "…"
+
+     ;; Agenda styling
+     org-agenda-tags-column 0
+     org-agenda-block-separator ?─
+     org-agenda-time-grid
+     '((daily today require-timed)
+       (800 1000 1200 1400 1600 1800 2000)
+       " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+     org-agenda-current-time-string
+     "⭠ now ─────────────────────────────────────────────────"
+     )
+    (global-org-modern-mode))
+
+#+end_src
+** COMMENT 自作パッケージ
 
 #+begin_src emacs-lisp
   (leaf org-sync-gtasks
@@ -2220,15 +2221,70 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : org-sync-qiita
 
+* Test-Bed
+** Org-roam
+
+Orgを利用し始めて随分たつが、情報が上手に整理されたり、組織化されたりする気がしない。以前ちらっといじった [[https://www.orgroam.com/][Org-roam]] に再入門してみる。
+
+- [[https://github.com/org-roam/org-roam][GitHub - org-roam/org-roam: Rudimentary Roam replica with Org-mode]]
+
+- browse-url-galeon-program が voidだと怒られる
+  - helm-bibtexに関連するみたいだ
+  - とりあえずFIXMEのようにした
+- リンクを作る
+  - [[id:9e55bb51-fd13-4a28-acee-825ae8d07f7b][Org-roam]]
+- IDの同期は起動時にフォルダをスキャンするようだ
+
+#+begin_src emacs-lisp
+  (leaf org-roam :straight t
+    :init
+    (setq browse-url-galeon-program nil) ; FIXME
+    (setq browse-url-netscape-program nil) ; FIXME
+    :custom
+    (org-roam-directory . "~/Dropbox/Org/Roam")
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n g" . org-roam-graph)
+           ("C-c n i" . org-roam-node-insert)
+           ("C-c n c" . org-roam-capture)
+           ;; Dailies
+           ("C-c n j" . org-roam-dailies-capture-today))
+    :config
+    ;; (message "org-roam :config")
+    (org-roam-db-autosync-mode)
+    (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+    (org-roam-db-autosync-mode)[[id:15c4cac2-e75f-4131-96b1-1f9c4ff9a409][ほげ]]
+    ;; If using org-roam-protocol
+    (require 'org-roam-protocol))
+#+end_src
+
+#+RESULTS:
+: org-roam
+
+- org-roam-uiも入れてみる
+  - [[id:90586f3d-1f6e-49b8-8a6f-2141dd823522][org-roam-ui]]
+  - [[id:d528d350-5f80-409c-8c53-61ece0fd1593][test]]
+
+#+begin_src emacs-lisp
+  (leaf org-roam-ui :straight t
+    :after org-roam
+  ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+  ;;         a hookable mode anymore, you're advised to pick something yourself
+  ;;         if you don't care about startup time, use
+  ;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+#+end_src
+
+#+RESULTS:
+: org-roam-ui
+
 * フッタの記述
 
 #+begin_src emacs-lisp
 (provide 'config)
-
-;; Local Variables:
-;; indent-tabs-mode: nil
-;; byte-compile-warnings: (not cl-functions obsolete)
-;; End:
-
 ;;; config.el ends here
 #+end_src
