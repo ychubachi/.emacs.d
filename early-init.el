@@ -72,7 +72,9 @@
                      (recentf-expand-file-name no-littering-etc-directory))
 
         (custom-set-variables '(custom-file
-                                (no-littering-expand-etc-file-name "custom.el"))))
+                                (no-littering-expand-etc-file-name "custom.el")))
+
+        (no-littering-theme-backups))
 
 (when (and (fboundp 'startup-redirect-eln-cache)
          (fboundp 'native-comp-available-p)
