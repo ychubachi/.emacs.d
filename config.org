@@ -103,6 +103,10 @@
 
 *** 日本語入力
 **** mozc
+- WSLではWindowsのGoogle IMEを利用する
+- WSL以外でのことはあとで考えよう
+  - mozc_emacs_helper.sh を作ればよいか。
+
 #+begin_src emacs-lisp
   (leaf mozc
     :straight t
@@ -110,10 +114,16 @@
     :init
     (cond
      ((eq system-type 'windows-nt)
-      (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper.exe"))
+      ;; helperのVer 1.13
+      (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper-1.13.exe"))
      (t
-      (setq mozc-helper-program-name "mozc_emacs_helper"))))
+      ;; helperのVer 2.31
+      (setq mozc-helper-program-name "mozc_emacs_helper.sh"))))
 #+end_src
+
+#+RESULTS:
+: mozc
+
 **** mozc-im
 #+begin_src emacs-lisp
   (leaf mozc-im
