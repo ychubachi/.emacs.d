@@ -82,4 +82,5 @@ org-roam.db
 /var/
 /org-persist/
 
-config.el
+*.el
+/backup/
