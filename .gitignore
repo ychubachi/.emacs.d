@@ -84,3 +84,4 @@ org-roam.db
 
 *.el
 /backup/
+*.org_archive
