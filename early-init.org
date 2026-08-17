@@ -4,6 +4,7 @@
 
 #+begin_comment
 + early-init.elを生成するには C-c C-v t (org-babel-tangle) を実行
+- 保存時に自動的にTangleするようにしてみた
 #+end_comment
 
 * あらまし
@@ -62,7 +63,7 @@
   (setq package-enable-at-startup nil)
 #+end_src
 
-** 起動時の画面の白飛びを防ぐ
+** COMMENT 起動時の画面の白飛びを防ぐ
 
 #+begin_src emacs-lisp :tangle "early-init.el"
   ;; 起動時の画面の白飛びを防ぐ
@@ -74,3 +75,7 @@
 #+begin_src emacs-lisp :tangle early-init.el
 ;;; early-init.el ends here
 #+end_src
+
+# Local Variables:
+# eval: (add-hook 'after-save-hook (lambda () (when (y-or-n-p "Tangle early-init.org?") (org-babel-tangle))) nil t)
+# End:
