@@ -861,7 +861,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : ox-pandoc
 
-* COMMENT TODO 応用設定
+* TODO 応用設定
 ** Emacs本体の設定
 *** TODO カスタマイズ変数
 **** misc
@@ -1091,7 +1091,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     )
 #+end_src
 
-**** COMMENT outline-magic
+**** outline-magic
 
 #+begin_src emacs-lisp
 (use-package outline-magic :straight t
@@ -1574,8 +1574,8 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : *cmd/browser
 
-* COMMENT 未整理                                                    :REFILE:
-** COMMENT visual-fill-column [C-c q]
+* 未整理                                                    :REFILE:
+** visual-fill-column [C-c q]
 
 #+begin_src emacs-lisp
   (use-package visual-fill-column
@@ -1597,7 +1597,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : visual-fill-column
 
-** COMMENT imenu-list [C-c i]
+** imenu-list [C-c i]
 #+begin_src emacs-lisp
   (use-package imenu-list
     :bind (("C-c i" . imenu-list-smart-toggle))
@@ -1611,7 +1611,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : simple
 
-** COMMENT 実行時に出る警告を非表示にする
+** 実行時に出る警告を非表示にする
 
 #+begin_src emacs-lisp
   (use-package *warnings
@@ -1718,7 +1718,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                )
               )
 #+end_src
-** COMMENT 不使用パッケージ
+** 不使用パッケージ
 
 #+begin_src emacs-lisp
   (use-package Disabled
@@ -1822,7 +1822,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 + [[https://qiita.com/Ladicle/items/feb5f9dce9adf89652cf#%E3%82%82%E3%81%86%E3%82%AB%E3%83%BC%E3%82%BD%E3%83%AB%E3%82%92%E8%A6%8B%E5%A4%B1%E3%82%8F%E3%81%AA%E3%81%84----beacon][Emacsモダン化計画 -かわEmacs編- - Qiita]]
 
 *
-*** COMMENT ruler-mode - ルラーを表示する
+*** ruler-mode - ルラーを表示する
 
 #+begin_src emacs-lisp
   (use-package ruler-mode
@@ -1833,7 +1833,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : ruler-mode
 
-** COMMENT nerd-icons - all-the-iconsより多くのアイコンを利用できるようにする
+** nerd-icons - all-the-iconsより多くのアイコンを利用できるようにする
 - インストールできない
 
 #+begin_src emacs-lisp
@@ -1843,7 +1843,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : nerd-icons
 
-** COMMENT 開発用
+** 開発用
 *** 全般
 **** auto-indent-yanked-code (core?)
 #+begin_src emacs-lisp
@@ -1975,7 +1975,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :bind ((emacs-lisp-mode-map
             ("M-RET" . emr-show-refactor-menu))))
 #+end_src
-** COMMENT メールクライアント
+** メールクライアント
 *** メールアドレスの設定
 #+begin_src emacs-lisp
   (use-package Mail-Variables
@@ -2183,7 +2183,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
               (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)
 #+end_src
-** COMMENT Blogに投稿する
+** Blogに投稿する
 **** org2blog - wordpressに出力
 #+begin_src emacs-lisp
   (use-package org2blog
@@ -2266,7 +2266,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
              :base-extension "jpg\\|gif\\|png|css\\|el"
              :recursive t))))
 #+end_src
-** COMMENT 未使用
+** 未使用
 *** pomodoroテクニック - 使ってないなー
 #+begin_src emacs-lisp
 
@@ -2301,7 +2301,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (add-hook 'org-mode-hook 'imenu-list-minor-mode)
   #+end_src
 
-*** COMMENT org-modern
+*** org-modern
 - C-c C-x C-wで切り取ったあと，yankするとヘッドラインのレベルが乱れる
 #+begin_src emacs-lisp
   (use-package org-modern
@@ -2358,7 +2358,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (global-org-modern-mode))
 
 #+end_src
-** COMMENT 自作パッケージ
+** 自作パッケージ
 
 #+begin_src emacs-lisp
   (use-package org-sync-gtasks
@@ -2386,7 +2386,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : org-sync-qiita
 
-* COMMENT Test-Bed
+* Test-Bed
 ** Org-roam
 
 Orgを利用し始めて随分たつが、情報が上手に整理されたり、組織化されたりする気がしない。以前ちらっといじった [[https://www.orgroam.com/][Org-roam]] に再入門してみる。
@@ -2460,6 +2460,6 @@ Orgを利用し始めて随分たつが、情報が上手に整理されたり�
 + C-c C-x C-l(org-show-all)がきかない
 + LSP modeを試してみる [[https://qiita.com/tadsan/items/691d53a87a0c2411d77c][最速LSPクライアント lsp-bridgeを使おう #Emacs - Qiita]]
 + [[https://github.com/misohena/org-cmenu][misohena/org-cmenu: Context Sensitive Menu for Emacs Org Mode]]
-# Local Variables:
-# eval: (add-hook 'after-save-hook (lambda () (when (y-or-n-p "Tangle init.org?") (org-babel-tangle))) nil t)
-# End:
+## Local Variables:
+## eval: (add-hook 'after-save-hook (lambda () (when (y-or-n-p "Tangle init.org?") (org-babel-tangle))) nil t)
+## End:
