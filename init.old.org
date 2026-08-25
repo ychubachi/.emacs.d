@@ -1,6 +1,6 @@
 #+TITLE: config.el
 #+AUTHOR: Yoshihide Chubachi
-#+PROPERTY: header-args :tangle "init.el"
+#+PROPERTY: header-args :tangle "init.old.el"
 
 #+begin_comment
 #+end_comment
@@ -34,7 +34,7 @@
 
 * ヘッダー - コピーライトのコメントを生成します
 
-#+begin_src emacs-lisp :tangle "init.el"
+#+begin_src emacs-lisp
   ;;; init.el --- My init.el  -*- lexical-binding: t; -*-
   ;; Copyright (C) 2022-2026 Yoshihide Chubachi
 
@@ -63,7 +63,7 @@
 * 初期化 - パッケージマネージャ等を初期化してOrgを最新版にする
 ** elpaca/use-package - パッケージマネージャーの初期化
 
-#+begin_src emacs-lisp :tangle "init.el"
+#+begin_src emacs-lisp
   (defvar elpaca-installer-version 0.12)
   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
   (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -105,20 +105,20 @@
 #+end_src
 
 - Windowsではsymlinkを使わないようにする
-#+begin_src emacs-lisp :tangle "init.el"
+#+begin_src emacs-lisp
   (when (eq system-type 'windows-nt)
     (elpaca-no-symlink-mode))
 #+end_src
 
 - elpacaとuse-packageを連携させる
-#+begin_src emacs-lisp :tangle "init.el"
+#+begin_src emacs-lisp
   (elpaca elpaca-use-package
     (elpaca-use-package-mode)
     (setq use-package-always-ensure t))
 #+end_src
 
 ** no-littering - Emacsが内部で作成するファイルの保存先の整理
-#+begin_src emacs-lisp :tangle "init.el"
+#+begin_src emacs-lisp
   (use-package no-littering
     :ensure (:wait t)
     :demand t
@@ -139,7 +139,7 @@
 * 設定本体 - Emacsの内部パッケージの設定を行う
 ** COMMENT TODO バックアップのディレクトリとバージョン管理の設定     :CUSTOM:
 
-#+begin_src emacs-lisp "init.el"
+#+begin_src emacs-lisp
   (use-package emacs
     :ensure nil
     :custom
@@ -153,7 +153,7 @@
 + Emacs 29以上の際に行うと良いようだ
   + https://github.com/emacscollective/no-littering/blob/master/README.org
 
-#+Begin_src emacs-lisp :tangle init.el
+#+Begin_src emacs-lisp
   (when (and (fboundp 'startup-redirect-eln-cache)
            (fboundp 'native-comp-available-p)
            (native-comp-available-p))
@@ -297,7 +297,7 @@
   (use-package mozc-im
     :after mozc
     :demand t
-    :bind 
+    :bind
     (("C-o" . toggle-input-method))
     :init
     (message "Mozc init")
@@ -417,7 +417,7 @@ GitHubから直接インストールして設定する
 - [[https://emacsthemes.com/][A GNU Emacs Themes Gallery]]
 - [[https://aoe-tk.hatenablog.com/entry/20130210/1360506829][Emacs24に最初から同梱されているテーマ - AOEの日記]]
 
-#+begin_src emacs-lisp :tangle "init.el"
+#+begin_src emacs-lisp
 (load-theme 'misterioso)
 #+end_src
 
@@ -425,7 +425,7 @@ GitHubから直接インストールして設定する
 : t
 
 * 応用設定 - 外部パッケージのインストールと初期化
-** undo-tree 
+** undo-tree
 
 #+begin_src emacs-lisp
   (use-package undo-tree
@@ -459,7 +459,7 @@ GitHubから直接インストールして設定する
      '(("NEXT" . (:foreground "blue" :underline t))
        ("DONE" . (:foreground "pale green"))))
     (org-todo-keywords '((sequence "TODO" "NEXT" "|" "DONE" "SOMEDAY")))
-    
+
     (org-startup-indented t)
     (org-startup-truncated nil)
     (org-return-follows-link  t)          ; RET/C-mでリンクを開く
@@ -476,14 +476,13 @@ GitHubから直接インストールして設定する
   (use-package org-sidebar
     :bind ("C-c s" . org-sidebar-tree)
     :custom
-    (org-sidebar-tree-side 'left))    
+    (org-sidebar-tree-side 'left))
 #+end_src
 
 #+RESULTS:
 : [nil 27265 30541 382546 nil elpaca-process-queues nil nil 0 nil]
 
 ** COMMENT Org関連パッケージの設定
-**** 
 **** org capture - キャプチャーするときのテンプレート
 - [[https://orgmode.org/manual/Capture.html][Capture (The Org Manual)]]
 
@@ -2448,7 +2447,7 @@ Orgを利用し始めて随分たつが、情報が上手に整理されたり�
 : org-roam-ui
 
 * フッター
-#+begin_src emacs-lisp :tangle "init.el"
+#+begin_src emacs-lisp
   (provide 'init.el)
   ;;; init.el ends here
 #+end_src
@@ -2460,6 +2459,3 @@ Orgを利用し始めて随分たつが、情報が上手に整理されたり�
 + C-c C-x C-l(org-show-all)がきかない
 + LSP modeを試してみる [[https://qiita.com/tadsan/items/691d53a87a0c2411d77c][最速LSPクライアント lsp-bridgeを使おう #Emacs - Qiita]]
 + [[https://github.com/misohena/org-cmenu][misohena/org-cmenu: Context Sensitive Menu for Emacs Org Mode]]
-## Local Variables:
-## eval: (add-hook 'after-save-hook (lambda () (when (y-or-n-p "Tangle init.org?") (org-babel-tangle))) nil t)
-## End:

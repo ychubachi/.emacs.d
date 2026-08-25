@@ -82,7 +82,6 @@ org-roam.db
 /var/
 /org-persist/
 
-*.el
 /backup/
 *.org_archive
 elpaca/
