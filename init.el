@@ -1,5 +1,5 @@
 ;;; init.el --- My init.el  -*- lexical-binding: t; -*-
-;; Copyright (C) 2022-2025 Yoshihide Chubachi
+;; Copyright (C) 2022-2026 Yoshihide Chubachi
 
 ;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
 
@@ -18,74 +18,33 @@
 
 ;;; Commentary:
 
-;; このファイルはinit.orgから手動生成する。先にearly-init.elが読まれる。
+;; lisp/
+;; ├── init-core.el ; package, use-package, encoding
+;; ├── init-ui.el ; theme, font, modeline
+;; ├── init-editing.el ; whitespace, electric-pair
+;; ├── init-completion.el ; vertico, orderless, corfu
+;; ├── init-vcs.el ; magit, diff-hl
+;; ├── init-org.el ; org-mode
+;; ├── init-evil.el
+;; ├── init-mozc.el
+;; └── init-programming.el ; lsp, treesit, eglot
 
 ;;; Code:
 
-(eval-and-compile
-  ;; (prog1 "package"
-  ;;   (customize-set-variable
-  ;;    'package-archives '(("org" . "https://orgmode.org/elpa/")
-  ;;                        ("melpa" . "https://melpa.org/packages/")
-  ;;                        ("gnu" . "https://elpa.gnu.org/packages/")))
-  ;;   (package-initialize))
+(add-to-list 'load-path
+	     (expand-file-name "lisp" user-emacs-directory))
 
-  (prog1 "straight.el"
-    (defvar straight-repository-branch "master")
-    (defvar straight-check-for-modifications '(find-when-checking))
-    (defvar bootstrap-version)
-    (let ((bootstrap-file
-           (expand-file-name
-            "straight/repos/straight.el/bootstrap.el"
-            (or (bound-and-true-p straight-base-dir)
-                user-emacs-directory)))
-          (bootstrap-version 7))
-      (unless (file-exists-p bootstrap-file)
-        (with-current-buffer
-            (url-retrieve-synchronously
-             "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-             'silent 'inhibit-cookies)
-          (goto-char (point-max))
-          (eval-print-last-sexp)))
-      (load bootstrap-file nil 'nomessage)))
+(require 'init-package); パッケージ（elpaca）の設定
+(require 'init-core) ; Orgの初期化、Emacs本体の設定
+(require 'init-japanese) ; mozcの設定
+(require 'init-files) ; ファイル操作関係
+(require 'init-ui) ; テーマの設定（のみ）
+(require 'init-completion) ; 補完機能
+(require 'init-editing)
+(require 'init-programming)
+(require 'init-org)
+(require 'init-misc)
 
-  (prog1 "leaf"
-    (straight-use-package 'leaf)
-    (straight-use-package 'leaf-keywords)
-    (leaf-keywords-init)))
-
-(leaf leaf-convert :straight t)
-
-(leaf org :straight t)
-
-(leaf no-littering :straight t :require t
-        :url "https://github.com/emacscollective/no-littering#usage"
-        :init
-        (let ((dir (no-littering-expand-var-file-name "lock-files/")))
-          (make-directory dir t)
-          (setq lock-file-name-transforms `((".*" ,dir t))))
-
-        (require 'recentf)
-        (add-to-list 'recentf-exclude
-                     (recentf-expand-file-name no-littering-var-directory))
-        (add-to-list 'recentf-exclude
-                     (recentf-expand-file-name no-littering-etc-directory))
-
-        (custom-set-variables '(custom-file
-                                (no-littering-expand-etc-file-name "custom.el")))
-
-        (no-littering-theme-backups))
-
-(when (and (fboundp 'startup-redirect-eln-cache)
-         (fboundp 'native-comp-available-p)
-         (native-comp-available-p))
-(startup-redirect-eln-cache
- (convert-standard-filename
-  (expand-file-name  "var/eln-cache/" user-emacs-directory))))
-
-(load-theme 'misterioso)
-
-(org-babel-load-file (expand-file-name "config.org" user-emacs-directory))
-
-(provide 'init.el)
+(message "init.el loaded")
+(provide 'init)
 ;;; init.el ends here

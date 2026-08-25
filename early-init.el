@@ -22,13 +22,27 @@
 
 ;;; Code:
 
-;; 起動時にガベージコレクションのしきい値を大きくして高速化
+;;; 起動時にガベージコレクションのしきい値を大きくして高速化
 (setq gc-cons-threshold 100000000)
 
 (setq package-enable-at-startup nil)
+;;; 起動時にフルスクリーンしアイコン（タスクバー）を消す
+(cond
+ ;; --------------------------------------------------
+ ;; 1. Windows の場合
+ ;; --------------------------------------------------
+ ((eq system-type 'windows-nt)
+  (menu-bar-mode 1)                                ; メニューバーを表示
+  (tool-bar-mode -1)
+  (add-to-list 'default-frame-alist '(undecorated . nil)) ; タイトルバーを表示
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))) ; 画面最大化
 
-;; 起動時の画面の白飛びを防ぐ
-(add-to-list 'initial-frame-alist '(background-color . "#000000"))
-(add-to-list 'default-frame-alist '(background-color . "#000000"))
+ ;; --------------------------------------------------
+ ;; 2. Linux の場合
+ ;; --------------------------------------------------
+ ((eq system-type 'gnu/linux)
+  (menu-bar-mode 1)                                ; メニューバーを表示
+  (add-to-list 'default-frame-alist '(undecorated . nil)) ; タイトルバーを表示
+  (add-to-list 'default-frame-alist '(fullscreen . maximized)))) ; 画面最大化
 
 ;;; early-init.el ends here
