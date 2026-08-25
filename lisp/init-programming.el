@@ -28,6 +28,29 @@
     ;; Linux向けの特有設定があればここに記述
     nil)))
 
+;;;; diff-hl - diffをわかり易く表示
+(use-package diff-hl
+  :ensure t
+  :init
+  (global-diff-hl-mode 1)
+  :hook
+  ((dired-mode . diff-hl-dired-mode)         ; Dired でも変更状態を表示
+   (magit-pre-refresh . diff-hl-magit-pre-refresh)
+   (magit-post-refresh . diff-hl-magit-post-refresh)) ; Magit 操作後に即座に表示を同期
+  :bind
+  (("C-c v n" . diff-hl-next-hunk)           ; 次の変更箇所へジャンプ
+   ("C-c v p" . diff-hl-previous-hunk)       ; 前の変更箇所へジャンプ
+   ("C-c v d" . diff-hl-diff-goto-hunk)      ; 該当箇所の diff を開く
+   ("C-c v r" . diff-hl-revert-hunk)         ; カーソル位置の変更を元に戻す
+   ("C-c v s" . diff-hl-stage-current-hunk)) ; カーソル位置の変更のみをステージング
+  :config
+  ;; フリンジの見た目を少し太く・見やすく調整（お好みで）
+  ;; (setq diff-hl-draw-borders nil)
+
+  ;; フリンジがない環境（ターミナル等）や Flymake/Flycheck とフリンジが衝突する場合はマージン表示へ自動切替
+  (unless (display-graphic-p)
+    (diff-hl-margin-mode 1)))
+
 ;;;; Syntax check
 
 (use-package flymake
