@@ -27,14 +27,13 @@
 
 (setq package-enable-at-startup nil)
 ;;; 起動時にフルスクリーンしアイコン（タスクバー）を消す
-;; (add-to-list 'default-frame-alist '(fullscreen . fullboth))
-;; (tool-bar-mode -1)
 (cond
  ;; --------------------------------------------------
  ;; 1. Windows の場合
  ;; --------------------------------------------------
  ((eq system-type 'windows-nt)
   (menu-bar-mode 1)                                ; メニューバーを表示
+  (tool-bar-mode -1)
   (add-to-list 'default-frame-alist '(undecorated . nil)) ; タイトルバーを表示
   (add-to-list 'default-frame-alist '(fullscreen . maximized))) ; 画面最大化
 
