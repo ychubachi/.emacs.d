@@ -42,6 +42,7 @@
 (require 'init-completion) ; 補完機能
 (require 'init-editing)
 (require 'init-programming)
+(require 'init-org)
 (require 'init-misc)
 
 (message "init.el loaded")
