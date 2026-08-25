@@ -98,9 +98,24 @@
 
 ;;;; 括弧を色分け
 
+;; テーマによって色が設定されていない場合がある
 (use-package rainbow-delimiters
-  :hook
-  (prog-mode . rainbow-delimiters-mode))
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode)
+  :config
+  ;; 各階層（1〜9）の色を明示的に指定する例
+  (set-face-foreground 'rainbow-delimiters-depth-1-face "#E06C75") ; 赤
+  (set-face-foreground 'rainbow-delimiters-depth-2-face "#98C379") ; 緑
+  (set-face-foreground 'rainbow-delimiters-depth-3-face "#E5C07B") ; 黄
+  (set-face-foreground 'rainbow-delimiters-depth-4-face "#61AFEF") ; 青
+  (set-face-foreground 'rainbow-delimiters-depth-5-face "#C678DD") ; 紫
+  (set-face-foreground 'rainbow-delimiters-depth-6-face "#56B6C2") ; シアン
+  (set-face-foreground 'rainbow-delimiters-depth-7-face "#D19A66") ; オレンジ
+  (set-face-foreground 'rainbow-delimiters-depth-8-face "#BE5046") ; 濃赤
+  (set-face-foreground 'rainbow-delimiters-depth-9-face "#ABB2BF") ; グレー
+  ;; 不整合エラーの括弧を強調
+  (set-face-attribute 'rainbow-delimiters-unmatched-face nil
+                      :foreground "#FFFFFF" :background "#E06C75" :weight 'bold))
 
 ;;;; マクロ展開
 
