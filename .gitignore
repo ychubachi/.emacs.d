@@ -83,3 +83,6 @@ org-roam.db
 /org-persist/
 
 config.el
+/elpaca/
+*.org_archive
+/tutorial/
