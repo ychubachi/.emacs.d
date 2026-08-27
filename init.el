@@ -40,10 +40,11 @@
 (require 'init-files) ; ファイル操作関係
 (require 'init-ui) ; テーマの設定（のみ）
 (require 'init-completion) ; 補完機能
-(require 'init-editing)
-(require 'init-programming)
-(require 'init-org)
-(require 'init-misc)
+
+(require 'init-org) ; Orgモード用設定
+(require 'init-editing) ; テキスト編集全般
+(require 'init-programming) ; プログラミング全般
+(require 'init-misc) ; その他・テスト中
 
 (message "init.el loaded")
 (provide 'init)
