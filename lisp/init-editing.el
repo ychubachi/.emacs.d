@@ -21,3 +21,26 @@
   (setq TeX-parse-self t))
 
 (provide 'init-editing)
+
+;;; agent-shell - AI(Gemini)
+
+(use-package agent-shell
+  :config
+  ;; --- 認証方法の設定（以下のいずれかを選択） ---
+
+  ;; パターンA: Google API キーを使う場合
+  (setq agent-shell-google-authentication
+        (agent-shell-google-make-authentication
+         :api-key (getenv "GEMINI_API_KEY"))) ; 環境変数や文字列・関数で指定可能
+
+  ;; パターンB: Google アカウントログイン (OAuth) を使う場合
+  ;; (setq agent-shell-google-authentication
+  ;;       (agent-shell-google-make-authentication :login t))
+
+  ;; パターンC: Vertex AI を使う場合
+  ;; (setq agent-shell-google-authentication
+  ;;       (agent-shell-google-make-authentication :vertex-ai t))
+
+  ;; デフォルトのエージェントを Gemini に固定したい場合（任意）
+  (setq agent-shell-preferred-agent-config
+        (agent-shell-google-make-gemini-config)))
