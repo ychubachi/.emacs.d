@@ -26,7 +26,7 @@
 ;; ├── init-vcs.el ; magit, diff-hl
 ;; ├── init-org.el ; org-mode
 ;; ├── init-evil.el
-;; ├── init-mozc.el
+;; ├── init-japanese.el
 ;; └── init-programming.el ; lsp, treesit, eglot
 
 ;;; Code:
