@@ -90,6 +90,7 @@
 ;;;; カッコの対応関係
 ;; M-sがconsultの検索のデフォルトプリフィックスと重なるのでconsult側で対応
 (use-package paredit
+;;  :ensure nil
   :hook
   ((emacs-lisp-mode . enable-paredit-mode)
    (lisp-mode . enable-paredit-mode)
