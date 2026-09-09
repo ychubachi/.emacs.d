@@ -1,3 +1,4 @@
+;;; 言語環境と文字コードを設定する
 (use-package emacs
   :ensure nil
   :config
@@ -7,34 +8,37 @@
 	 (setq default-process-coding-system
 	       (cons 'utf-8 'cp932-unix)))))
 
+;;; 文字フォントを設定する
+;; Ubuntuの場合、~/.fontsに必要なフォントを入れて
+;; # fc-cache -fv
+;; を実行
+
+;; ｜あいうえお｜
+;; ｜憂鬱な檸檬｜
+;; ｜<miilwiim>｜
+;; ｜!"#$%&'~{}｜
+;; ｜🙆iimmiim>｜
 (use-package emacs
   :ensure nil
   :config
-  ;; ｜あいうえお｜
-  ;; ｜憂鬱な檸檬｜
-  ;; ｜<miilwiim>｜
-  ;; ｜!"#$%&'~{}｜
-  ;; ｜🙆iimmiim>｜
   (custom-set-faces
-   '(default ((t (:family "HackGen"))))
-   ;; '(default ((t (:family "Noto Sans"))))
-   ;; '(default ((t (:family "PlemolJP"))))
-   ;; '(default ((t (:family "UDEV Gothic NF"))))
-   ;; '(default ((t (:family "FirgeNerd"))))
+   '(default ((t (:family "HackGen")))) ;; (x-list-fonts "HackGen") で確認可能
    ))
 
+;;; 日本語変換用ヘルパーの呼び出し設定
+;; WSL(Ubuntu) から利用する場合:
+;; - mozc_emacs_helper.sh を作成し、Windows側のexeを呼び出す
 (use-package mozc
   :demand t
   :config
   (cond
    ((eq system-type 'windows-nt)
-    ;; helperのVer 1.13
-    ;; (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper-1.13.exe"))
     (setq mozc-helper-program-name "~/Dropbox/bin/mozc_emacs_helper-2.31.exe"))
    (t
     ;; helperのVer 2.31
     (setq mozc-helper-program-name "mozc_emacs_helper.sh"))))
 
+;;; Mozcの設定
 (use-package mozc-im
   :after mozc
   :demand t
