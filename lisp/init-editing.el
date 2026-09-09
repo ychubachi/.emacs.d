@@ -31,7 +31,9 @@
   ;; パターンA: Google API キーを使う場合
   (setq agent-shell-google-authentication
         (agent-shell-google-make-authentication
-         :api-key (getenv "GEMINI_API_KEY"))) ; 環境変数や文字列・関数で指定可能
+         :api-key (lambda () % 起動時に直接環境変数を探しにいくのではなく、関数（lambda）として渡すことで、実際にAPIキーが必要になったタイミングでこの処理が実行される
+                    (or (getenv "GEMINI_API_KEY")
+                        (setenv "GEMINI_API_KEY" (read-passwd "GEMINI_API_KEY: ")))))) ; 環境変数がない場合はプロンプトで入力
 
   ;; パターンB: Google アカウントログイン (OAuth) を使う場合
   ;; (setq agent-shell-google-authentication
