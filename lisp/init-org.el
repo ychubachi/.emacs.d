@@ -1,7 +1,7 @@
 ;;; init-org.el
 ;;; org - 本体の設定
 (use-package org
-  :ensure nil                           ; 既にダウンロード済
+  :ensure nil                           ; 既に最新版をダウンロード済
   :bind
   (("C-c a" . org-agenda)               ; アジェンダビューを開く
    ("C-c c" . org-capture)              ; クイックメモ・タスク記録
@@ -52,10 +52,10 @@
      (shell . t))))
 
 ;;; doct - org-captureの設定
-  (use-package doct
-          :straight t
-          ;;recommended: defer until calling doct
-                                          ;:commands (doct)
+(use-package doct
+  :after org
+  ;;recommended: defer until calling doct
+                                        ;:commands (doct)
           :config
           (setq org-capture-templates
                 (doct '(("Memo" :keys "m"
