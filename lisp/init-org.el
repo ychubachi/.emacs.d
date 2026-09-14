@@ -27,17 +27,10 @@
   ;; (org-ellipsis "↴")                   ; ▽,…,▼, ↴, ⬎, ⤷, ⋱
   ;; (org-agenda-remove-tags t)             ; アジェンダにタグを表示しない
 
-  ;; TODO ステートの管理
+  ;; TODOステートの管理
   (org-todo-keywords
    '((sequence "TODO(t)" "WAITING(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
   (org-log-done 'time)                  ; タスク完了時に完了日時を自動記録
-
-  ;; ;; 4. Org Capture テンプレート (C-c c で即座にメモ・タスク作成)
-  ;; (org-capture-templates
-  ;;  '(("t" "Todo" entry (file+headline "~/org/inbox.org" "Tasks")
-  ;;     "* TODO %?\n  作成日時: %U\n  %a\n  %i" :empty-lines 1)
-  ;;    ("m" "Quick Memo" entry (file+headline "~/org/inbox.org" "Memos")
-  ;;     "* %?\n  記録日時: %U\n  %i" :empty-lines 1)))
 
   ;; ソースコードブロック (Org Babel) の設定
   (org-src-fontify-natively t) ; コードブロック内を各メジャーモードの色でハイライト
@@ -63,8 +56,8 @@
                                         ; :empty-lines-before 1
                  :empty-lines-after 1
                  :datetree t
-                 :unnarrowed nil       ; t
-                 :jump-to-captured nil ;
+                 :unnarrowed nil        ; t
+                 :jump-to-captured nil  ;
                  :template ("* %?"
                             ":PROPERTIES:"
                             ":CREATED: %U"
@@ -166,6 +159,17 @@
                               ":EXPORT_DATE: %U"
                               ":END:"
                               "\n** %?"))))))))
+
+;;; org-reverse-datetree - 日付を降順にする
+;; https://github.com/akirak/org-reverse-datetree
+(use-package org-reverse-datetree
+  :config
+  (setq-default org-reverse-datetree-level-formats
+              '("%Y"                    ; year
+                (lambda (time) (format-time-string "%Y-%m %B" (org-reverse-datetree-monday time))) ; month
+                "%Y W%W"                ; week
+                "%Y-%m-%d %A"           ; date
+                )))
 
 ;;; org-sidebar - Orgの構造をサイドバーに表示
 (use-package org-sidebar

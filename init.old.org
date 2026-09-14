@@ -777,18 +777,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
         :hook
         (emacs-startup-hook . global-git-gutter-mode))
 #+end_src
-**** auto-revert
-
-#+begin_src emacs-lisp
-  (use-package auto-revert
-    :custom
-    (auto-revert-interval . 1)      ; 再読み込みの間隔
-    (auto-revert-verbose . nil)     ; 再読込の際、メッセージを非表示
-    (auto-revert-check-vc-info . t) ; VCで更新があった場合、自動で更新
-    :init
-    (global-auto-revert-mode 1))
-#+end_src
-
 **** savehist
 
 #+begin_src emacs-lisp
@@ -892,16 +880,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
           :init
           (define-key outline-minor-mode-map (kbd "<tab>") 'outline-cycle))
 #+end_src
-
-*** フック
-**** 保存時、不要な空白を削除（before-save-hook）
-
-#+begin_src emacs-lisp
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-#+end_src
-
-#+RESULTS:
-| delete-trailing-whitespace |
 
 *** アドバイス
 **** tramp                                                          :ADVICE:

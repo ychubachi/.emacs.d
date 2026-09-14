@@ -16,14 +16,6 @@
   :ensure (:wait t)  ;; Block until the updated Org package is ready
   )
 
-;;; 最低限必要なEmacs本体の設定
-;;;; C-hをBSにする
-;; (keyboard-translate ?\C-h ?\C-?)
-(global-set-key (kbd "C-h") #'delete-backward-char)
-
-;;;; yos/noをy/nに変更する
-(defalias 'yes-or-no-p 'y-or-n-p)
-
 ;;; Emacs本体の設定
 ;;;; Emacsの組み込み変数を初期化する
 (use-package emacs
@@ -31,6 +23,11 @@
   :custom
   ;; startup
   (inhibit-startup-screen t)
+
+  ;; auto-revert
+  (auto-revert-interval 1)      ; 再読み込みの間隔
+  (auto-revert-verbose nil)     ; 再読込の際、メッセージを非表示
+  (auto-revert-check-vc-info t) ; VCで更新があった場合、自動で更新
 
   ;; ui
   (ring-bell-function #'ignore)
@@ -60,11 +57,6 @@
   (smtpmail-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-service 587)
 
-  ;; warnings TODO
-  ;; (warning-suppress-types
-  ;;  '(((yasnippet backquote-change))
-  ;;    (org-element-cache)))
-
   :bind
   ("M-SPC" . cycle-spacing)
 
@@ -76,7 +68,14 @@
   ;; (keyboard-translate ?\C-h ?\C-?)
 
   ;; ffap
-  (ffap-bindings))
+  (ffap-bindings)
+
+  :init
+  ;; (keyboard-translate ?\C-h ?\C-?)
+  (global-set-key (kbd "C-h") #'delete-backward-char) ; C-hをBSにする
+  (defalias 'yes-or-no-p 'y-or-n-p) ; yos/noをy/nに変更する
+  (global-auto-revert-mode 1)
+  )
 
 ;;;; undo-tree - C-zでUndoするようにする
 (use-package undo-tree
