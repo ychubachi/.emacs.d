@@ -163,13 +163,7 @@
 ;;; org-reverse-datetree - 日付を降順にする
 ;; https://github.com/akirak/org-reverse-datetree
 (use-package org-reverse-datetree
-  :config
-  (setq-default org-reverse-datetree-level-formats
-              '("%Y"                    ; year
-                (lambda (time) (format-time-string "%Y-%m %B" (org-reverse-datetree-monday time))) ; month
-                "%Y W%W"                ; week
-                "%Y-%m-%d %A"           ; date
-                )))
+  :after org)
 
 ;;; org-sidebar - Orgの構造をサイドバーに表示
 (use-package org-sidebar
