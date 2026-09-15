@@ -18,7 +18,7 @@
 
 ;;; Commentary:
 
-;; このファイルはearly-init.orgから手動で生成します（C-c C-v C-t）。
+;; early-init.elはinit.elよりも前に実行される
 
 ;;; Code:
 
@@ -27,13 +27,15 @@
 
 (setq package-enable-at-startup nil)
 ;;; 起動時にフルスクリーンしアイコン（タスクバー）を消す
+;; TODO なぜ2つにわける？
 (cond
  ;; --------------------------------------------------
  ;; 1. Windows の場合
  ;; --------------------------------------------------
  ((eq system-type 'windows-nt)
-  (menu-bar-mode 1)                                ; メニューバーを表示
+  (menu-bar-mode 1)                     ; メニューバーを表示
   (tool-bar-mode -1)
+  (tab-bar-mode) ;
   (add-to-list 'default-frame-alist '(undecorated . nil)) ; タイトルバーを表示
   (add-to-list 'default-frame-alist '(fullscreen . maximized))) ; 画面最大化
 
@@ -41,7 +43,9 @@
  ;; 2. Linux の場合
  ;; --------------------------------------------------
  ((eq system-type 'gnu/linux)
-  (menu-bar-mode 1)                                ; メニューバーを表示
+  (menu-bar-mode 1)                     ; メニューバーを表示
+  (tool-bar-mode -1)                    ; ツールバー（アイコン）を非表示
+  (tab-bar-mode) ;
   (add-to-list 'default-frame-alist '(undecorated . nil)) ; タイトルバーを表示
   (add-to-list 'default-frame-alist '(fullscreen . maximized)))) ; 画面最大化
 

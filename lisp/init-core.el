@@ -75,10 +75,6 @@
 
   (global-auto-revert-mode 1)
   (ffap-bindings) ; ffap（ポイント位置のファイルを探す）を有効にする
-
-  ;; (menu-bar-mode -1) ; メニューバーを非表示
-  (tool-bar-mode -1) ; ツールバー（アイコン）を非表示
-  (tab-bar-mode) ;
   )
 
 ;;;; undo-tree - C-zでUndoするようにする
