@@ -1,5 +1,5 @@
-;;; 最初期に実施するべき処理
-;;;; no-littering - Emacsのバックアップファイルや一時ファイルをまとめる
+;;; 最初期に実施するパッケージの導入・初期化
+;;;; no-littering - Emacsのバックアップファイルや一時ファイルを整理する
 (use-package no-littering
   :ensure (:wait t)
   :demand t
@@ -17,9 +17,10 @@
   )
 
 ;;; Emacs本体の設定
-;;;; Emacsの組み込み変数を初期化する
+;;;; Emacsの組み込み機能を初期化する
 (use-package emacs
   :ensure nil
+;;;;; custom
   :custom
   ;; startup
   (inhibit-startup-screen t)
@@ -57,24 +58,27 @@
   (smtpmail-smtp-server "smtp.gmail.com")
   (smtpmail-smtp-service 587)
 
+;;;;; bind
   :bind
   ("M-SPC" . cycle-spacing)
 
+;;;;; hook
   :hook
   (before-save . delete-trailing-whitespace)
 
-  :config
-  ;; TODO C-h -> Backspace
-  ;; (keyboard-translate ?\C-h ?\C-?)
-
-  ;; ffap
-  (ffap-bindings)
-
+;;;;; init
   :init
   ;; (keyboard-translate ?\C-h ?\C-?)
   (global-set-key (kbd "C-h") #'delete-backward-char) ; C-hをBSにする
+
   (defalias 'yes-or-no-p 'y-or-n-p) ; yos/noをy/nに変更する
+
   (global-auto-revert-mode 1)
+  (ffap-bindings) ; ffap（ポイント位置のファイルを探す）を有効にする
+
+  ;; (menu-bar-mode -1) ; メニューバーを非表示
+  (tool-bar-mode -1) ; ツールバー（アイコン）を非表示
+  (tab-bar-mode) ;
   )
 
 ;;;; undo-tree - C-zでUndoするようにする
