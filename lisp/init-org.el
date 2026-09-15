@@ -180,4 +180,24 @@
   (add-to-list 'org-structure-template-alist
                '("ai" . "ai")))
 
+;;; クリップボードのMarkdownテキストをOrg-mode形式に変換して貼り付け
+
+(defun my/paste-markdown-as-org ()
+  "クリップボードのMarkdownテキストをOrg-mode形式に変換して貼り付けます。"
+  (interactive)
+  (let ((markdown-text (gui-get-selection 'CLIPBOARD 'STRING)))
+    (if markdown-text
+        (with-temp-buffer
+          (insert markdown-text)
+          (call-process-region (point-min) (point-max) "pandoc" t t nil "-f" "markdown" "-t" "org")
+          (let ((org-text (buffer-string)))
+            (insert-into-buffer (current-buffer) (point) (point) org-text)
+            (kill-new org-text) ; オプション: クリップボードの中身もOrgに置き換える
+            (yank)))
+      (message "クリップボードが空か、テキストではありません。"))))
+
+;; 好きなキーバインドを割り当て（例: C-c C-x M-g）
+(define-key org-mode-map (kbd "C-c C-x M-g") 'my/paste-markdown-as-org)
+
+;;; フッター
 (provide 'init-org)
