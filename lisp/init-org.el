@@ -44,32 +44,22 @@
      (python . t)
      (shell . t))))
 
+;;; org-reverse-datetree - キャプチャする際の日付を降順にする
+;; https://github.com/akirak/org-reverse-datetree
+(use-package org-reverse-datetree
+  :after org)
+
 ;;; doct - org-captureの設定
 (use-package doct
-  :after org
+  :after org org-reverse-datetree
   ;;recommended: defer until calling doct
                                         ;:commands (doct)
   :config
   (setq org-capture-templates
         (doct '(("Memo" :keys "m"
                  :file "~/Dropbox/Org/Memo.org"
-                                        ; :empty-lines-before 1
+                 :function org-reverse-datetree-goto-date-in-file
                  :empty-lines-after 1
-                 :datetree t
-                 :unnarrowed nil        ; t
-                 :jump-to-captured nil  ;
-                 :template ("* %?"
-                            ":PROPERTIES:"
-                            ":CREATED: %U"
-                            ":LINK: %a"
-                            ":END:"))
-                ("Memo (unarrowed)" :keys "M"
-                 :file "~/Dropbox/Org/Memo.org"
-                                        ; :empty-lines-before 1
-                 :empty-lines-after 1
-                 :datetree t
-                 :unnarrowed t
-                 :jump-to-captured t
                  :template ("* %?"
                             ":PROPERTIES:"
                             ":CREATED: %U"
@@ -77,8 +67,8 @@
                             ":END:"))
                 ("Todo" :keys "t"
                  :file "~/Dropbox/Org/Memo.org"
-                 :datetree t
-                 :empty-lines-before 1
+                 :function org-reverse-datetree-goto-date-in-file
+                 :empty-lines-after 1
                  :template ("* TODO %?"
                             ":PROPERTIES:"
                             ":CREATED: %U"
@@ -88,7 +78,6 @@
                  :prepend t
                  :empty-lines-after 1
                  :file "~/Dropbox/Org/Notebook.org"
-                 :unnarrowed t
                  :template ("* %^{Description}"
                             ":PROPERTIES:"
                             ":CREATED: %T"
@@ -159,11 +148,6 @@
                               ":EXPORT_DATE: %U"
                               ":END:"
                               "\n** %?"))))))))
-
-;;; org-reverse-datetree - 日付を降順にする
-;; https://github.com/akirak/org-reverse-datetree
-(use-package org-reverse-datetree
-  :after org)
 
 ;;; org-sidebar - Orgの構造をサイドバーに表示
 (use-package org-sidebar
