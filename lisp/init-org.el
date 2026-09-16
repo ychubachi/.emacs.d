@@ -180,6 +180,21 @@
   (add-to-list 'org-structure-template-alist
                '("ai" . "ai")))
 
+;;; org-preview-mode
+;; https://github.com/jakebox/org-preview-html
+
+(use-package org-preview-html
+  :commands (org-preview-html-mode)
+  :custom
+  ;; プレビューの表示形式 ('eww または 'xwidget)
+  (org-preview-html-viewer 'eww)
+  ;; 更新タイミング ('save, 'export, 'timer, 'manual, 'instant)
+  (org-preview-html-refresh-configuration 'save)
+  ;; 'timer 設定時の更新間隔 (秒)
+  (org-preview-html-timer-interval 2)
+  :bind
+  (:map org-mode-map
+        ("C-c C-p" . org-preview-html-mode)))
 
 ;;; TODO: クリップボードのMarkdownテキストをOrg-mode形式に変換して貼り付け
 
