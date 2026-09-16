@@ -196,6 +196,62 @@
   (:map org-mode-map
         ("C-c C-p" . org-preview-html-mode)))
 
+;;; ox-latex - LaTeXエクスポート設定
+
+;; #+TITLE: 日本語PDF出力テスト
+;; #+AUTHOR: あなたの名前
+;; #+LATEX_CLASS: bxjsarticle
+;; #+LATEX_CLASS_OPTIONS: [a4paper,11pt]
+
+;; 🚀 PDFの出力方法（キーバインド）
+;; 1. Orgファイルを開いた状態で C-c C-e を押して、エクスポートディスパッチャーを開きます。
+;; 2. l (Export to LaTeX) を選択します。
+;; 3. p (As PDF file) を押してPDFを生成、または o (As PDF file and open) を押して生成後にビューアで開きます。
+
+(use-package ox-latex
+  :ensure nil
+  :after org
+  :custom
+  ;; デフォルトのLaTeXコンパイラを lualatex に指定
+  (org-latex-compiler "lualatex")
+  ;; PDF生成プロセスを latexmk + lualatex に設定
+  (org-latex-pdf-process
+   '("latexmk -lualatex -interaction=nonstopmode -output-directory=%o %f"))
+  ;; デフォルトの文書クラスを bxjsarticle に設定
+  (org-latex-default-class "bxjsarticle")
+  :config
+  ;; 日本語向け文書クラス（bxjsarticle）の設定
+  (add-to-list 'org-latex-classes
+               '("bxjsarticle"
+                 "\\documentclass[lualatex,ja=standard]{bxjsarticle}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  ;; 日本語向け文書クラス（ltjsarticle）の設定
+  (add-to-list 'org-latex-classes
+               '("ltjsarticle"
+                 "\\documentclass[11pt]{ltjsarticle}
+[NO-DEFAULT-PACKAGES]
+[PACKAGES]
+[EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  ;; 日本語の途中で改行してもPDF出力時に余分な半角スペースが入らないようにする
+  (defun my/org-latex-filter-nospace-japanese (text backend info)
+    (when (org-export-derived-backend-p backend 'latex)
+      (replace-regexp-in-string "\\([ぁ-んーァ-ヶー一-龠]\\)\n\\([ぁ-んーァ-ヶー一-龠]\\)" "\\1\\2" text)))
+  (add-to-list 'org-export-filter-paragraph-functions 'my/org-latex-filter-nospace-japanese))
+
 ;;; TODO: クリップボードのMarkdownテキストをOrg-mode形式に変換して貼り付け
 
 ;; (defun my/paste-markdown-as-org ()
