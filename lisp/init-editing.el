@@ -79,4 +79,10 @@
    ("C-<"         . mc/mark-previous-like-this)
    ("C-c C-<"     . mc/mark-all-like-this)))
 
+;;; swap-buffers - 隣のウィンドウとバッファを入れ替え
+(use-package swap-buffers
+  :ensure t
+  :bind
+  ("C-c b" . swap-buffers))
+
 (provide 'init-editing)
