@@ -503,7 +503,7 @@ GitHubから直接インストールして設定する
 #+RESULTS:
 : org-superstar
 
-**** org-ai - orgでai
+**** COMMENT org-ai - orgでai
 
 - ~/.authinfo に APIキー
 
@@ -744,7 +744,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
         :hook
         (emacs-startup-hook . save-place-mode))
 #+end_src
-**** midnight                                                 :STARTUP_HOOK:
+**** COMMENT midnight
 #+begin_src emacs-lisp
   (use-package midnight
     :url "https://www.emacswiki.org/emacs/MidnightMode"
@@ -762,7 +762,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :hook
     (emacs-startup-hook . yas-global-mode))
     #+end_src
-**** git-gutter                                      :STARTUP_HOOK:STRAIGHT:
+**** COMMENT git-gutter
 #+begin_src emacs-lisp
   (use-package git-gutter
         :straight t
@@ -787,7 +787,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
           (savehist-mode 1))
 #+end_src
 
-**** show-paren
+**** COMMENT show-paren
 
 #+begin_src emacs-lisp
 (use-package show-paren-mode
@@ -854,7 +854,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : whitespace
 
-**** TODO outline-mode
+**** COMMENT TODO outline-mode
 
 #+begin_src emacs-lisp
   (use-package outline-mode
@@ -873,7 +873,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     )
 #+end_src
 
-**** outline-magic
+**** COMMENT outline-magic
 
 #+begin_src emacs-lisp
 (use-package outline-magic :straight t
@@ -1178,15 +1178,15 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 *** インストールするだけパッケージ
 #+begin_src emacs-lisp
   (use-package yaml-mode :straight t)
-  (use-package popup :straight t)
-  (use-package list-utils :straight t)
-  (use-package iedit :straight t)
-  (use-package files+ :straight t)
-  (use-package ls-lisp+ :straight t)
-  (use-package w32-browser :straight t)
-  (use-package dired+
-    :straight (dired+ :type git :host github
-                      :repo "emacsmirror/dired-plus"))
+  ;; (use-package popup :straight t)
+  ;; (use-package list-utils :straight t)
+  ;; (use-package iedit :straight t)
+  ;; (use-package files+ :straight t)
+  ;; (use-package ls-lisp+ :straight t)
+  ;; (use-package w32-browser :straight t)
+  ;; (use-package dired+
+  ;;   :straight (dired+ :type git :host github
+  ;;                     :repo "emacsmirror/dired-plus"))
 #+end_src
 
 #+RESULTS:
@@ -1490,7 +1490,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
                )
               )
 #+end_src
-** 不使用パッケージ
+** COMMENT 不使用パッケージ
 
 #+begin_src emacs-lisp
   (use-package Disabled
@@ -1700,7 +1700,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+RESULTS:
 : macrostep
 
-**** flycheck
+**** COMMENT flycheck
 #+begin_src emacs-lisp
             (use-package flycheck
               :doc "On-the-fly syntax checking"
@@ -1747,7 +1747,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     :bind ((emacs-lisp-mode-map
             ("M-RET" . emr-show-refactor-menu))))
 #+end_src
-** メールクライアント
+** COMMENT メールクライアント
 *** メールアドレスの設定
 #+begin_src emacs-lisp
   (use-package Mail-Variables
@@ -1955,7 +1955,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 
               (define-key wl-summary-mode-map "=" 'my:wl-summary-jump-to-referer-message)
 #+end_src
-** Blogに投稿する
+** COMMENT Blogに投稿する
 **** org2blog - wordpressに出力
 #+begin_src emacs-lisp
   (use-package org2blog
@@ -2038,7 +2038,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
              :base-extension "jpg\\|gif\\|png|css\\|el"
              :recursive t))))
 #+end_src
-** 未使用
+** COMMENT 未使用
 *** pomodoroテクニック - 使ってないなー
 #+begin_src emacs-lisp
 
@@ -2130,7 +2130,7 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
     (global-org-modern-mode))
 
 #+end_src
-** 自作パッケージ
+** COMMENT 自作パッケージ
 
 #+begin_src emacs-lisp
   (use-package org-sync-gtasks
