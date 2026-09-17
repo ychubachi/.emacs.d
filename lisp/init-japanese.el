@@ -25,7 +25,7 @@
    '(default ((t (:family "HackGen")))) ;; (x-list-fonts "HackGen") で確認可能
    ))
 
-;;; 日本語変換用ヘルパーの呼び出し設定
+;;; mozc - 日本語変換用ヘルパーの呼び出し設定
 ;; WSL(Ubuntu) から利用する場合:
 ;; - mozc_emacs_helper.sh を作成し、Windows側のexeを呼び出す
 (use-package mozc
@@ -38,36 +38,22 @@
     ;; helperのVer 2.31
     (setq mozc-helper-program-name "mozc_emacs_helper.sh"))))
 
-;;; Mozcの設定
+;;; mozc-im - インプット方式の設定
 (use-package mozc-im
   :after mozc
   :demand t
   :bind
   (("C-o" . toggle-input-method))
   :init
-  (setq default-input-method "japanese-mozc-im"))
+  (setq default-input-method "japanese-mozc-im")
 
-;;; TODO
-;; (use-package mozc-cursor-color
-;;   :elpaca (mozc-cursor-color :host github :repo "iRi-E/mozc-el-extensions" :files ("mozc-cursor-color.el"))
-;;   :demand t
-;;   :after mozc-im
-;;   :hook (after-init . mozc-cursor-color-setup)
-;;   :config
-;;   ;; 入力状態に応じたカーソル色の設定（カラーコードや色名で指定）
-;;   (setq mozc-cursor-color-alist
-;;         '((direct . "white")     ; 英語入力（IME OFF）の時の色
-;;           (hiragana . "cyan")    ; ひらがな入力（IME ON）の時の色
-;;           (read-only . "red")))) ; 読み取り専用バッファの時の色
-
-;; (use-package emacs
-;;   :ensure nil
-;;   :if (eq system-type 'windows-nt)
-;;   ;; :defun (mozc-session-sendkey)
-;;   :config
-;;   (advice-add 'mozc-session-execute-command
-;;               :after (lambda (&rest args)
-;;                        (when (eq (nth 0 args) 'CreateSession)
-;;                          (mozc-session-sendkey '(Hankaku/Zenkaku))))))
+  ;; モードによってカーソルの色を変える
+  (defvar my/cursor-color-japanese "cyan")
+  (defvar my/cursor-color-default (frame-parameter nil 'cursor-color))
+  (add-hook 'input-method-activate-hook
+            (lambda () (set-cursor-color my/cursor-color-japanese)))
+  (add-hook 'input-method-deactivate-hook
+            (lambda () (set-cursor-color my/cursor-color-default)))
+  )
 
 (provide 'init-japanese)
