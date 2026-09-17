@@ -1137,6 +1137,9 @@
 ;;       (vc-follow-symlinks . t)        ; シンボリックリンクの場合、本体を辿る
 ;;       (vc-handled-backends . '(Git))) ; Gitのみ使用
 
-
+;;; free-keys - 空いているキーバインドを確認する
+(use-package free-keys
+  :ensure t
+  :commands free-keys)
 
 (provide 'init-misc)
