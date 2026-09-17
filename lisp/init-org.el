@@ -316,5 +316,16 @@
   (when (eq system-type 'windows-nt)
     (setq org-download-screenshot-method "magick convert clipboard: %s")))
 
+;;; ob-plantuml - PlantUMLによる図表生成
+(use-package ob-plantuml
+  :ensure nil ; org-babel 内蔵の plantuml 統合を使用
+  :after org
+  :config
+  ;; plantuml.jarへのパスを設定
+  (setq org-plantuml-jar-path (expand-file-name "lib/plantuml-1.2022.12.jar" user-emacs-directory))
+  ;; org-babelで使用する言語を登録
+  (add-to-list 'org-babel-load-languages '(plantuml . t))
+  (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
+
 ;;; フッター
 (provide 'init-org)
