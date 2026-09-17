@@ -58,4 +58,16 @@
   :ensure t
   :after yasnippet)
 
+;;; shell-pop - ポップアップ型シェルバッファ
+
+(use-package shell-pop
+  :ensure t
+  :bind
+  (("C-c z" . shell-pop))
+  :custom
+  (shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda () (ansi-term shell-pop-term-shell))))
+  (shell-pop-window-position "bottom")
+  (shell-pop-window-size 30)
+  (shell-pop-full-span t))
+
 (provide 'init-editing)
