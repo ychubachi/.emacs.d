@@ -269,6 +269,12 @@
       (replace-regexp-in-string "\\([ぁ-んーァ-ヶー一-龠]\\)\n\\([ぁ-んーァ-ヶー一-龠]\\)" "\\1\\2" text)))
   (add-to-list 'org-export-filter-paragraph-functions 'my/org-latex-filter-nospace-japanese))
 
+;; (use-package ox-beamer
+;;   :after ox-latex
+;;   :custom
+;;   (org-beamer-outline-frame-title . "目次")
+;;   (org-beamer-frame-default-options . "t"))
+
 ;;; 自作：GitプロジェクトをGitHub Pagesにパブリッシュする
 
 ;; src/ パブリッシュしたいOrgファイル一式
@@ -296,6 +302,29 @@
                :publishing-function org-html-publish-to-html
                :recursive t)))
       (org-publish-project project-name))))
+
+;;; ox-html - デフォルトでスタイルシートをつける
+
+(with-eval-after-load 'ox-html
+  ;; デフォルトの HTML ヘッダーに OrgCSS を指定
+  (setq org-html-head
+        "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://gongzhitaao.org/orgcss/org.css\" />
+<style>body { font-family: \"Hiragino Sans\", \"Meiryo\", sans-serif !important; }</style>")
+  ;; Emacs 標準の組み込みスタイル（インラインCSS）を出力しないようにする
+  (setq org-html-head-include-default-style nil))
+
+;;; org-exportするときに日本語で改行したときの空白を削除する
+(with-eval-after-load 'ox
+  (defun my/org-export-remove-cjk-spaces (text backend info)
+    "全角文字（日本語）間に挟まった改行とそれに伴う半角スペースを削除する"
+    (when (org-export-derived-backend-p backend 'html)
+      (let ((cjk "\\(?:\\cc\\|\\ck\\|\\ch\\|\\cA\\|\\cK\\|\\cC\\|\\cH\\)"))
+        (replace-regexp-in-string
+         (format "\\(%s\\)\n[ \t]*\\(%s\\)" cjk cjk)
+         "\\1\\2" text))))
+
+  (add-to-list 'org-export-filter-plain-text-functions
+               'my/org-export-remove-cjk-spaces))
 
 ;;; TODO: クリップボードのMarkdownテキストをOrg-mode形式に変換して貼り付け
 

@@ -560,65 +560,71 @@ bxjsarticleはjlreqを使うならば不要な気もしますが、一応。
 use-packageを利用して設定しています。
 
 #+begin_src emacs-lisp :noweb yes
-  (use-package ox-latex
+(use-package ox-latex
+  :require t
+  :custom
+  (org-latex-compiler      . "lualatex")
+  (org-latex-pdf-process   . '("latexmk -f -gg -pvc- -%latex %f"))
+  (org-latex-default-class . "jlreq")
+  (org-latex-hyperref-template
+   . "\\hypersetup{\n pdfauthor={%a},\n pdftitle={%t},\n pdfkeywords={%k},pdfsubject={%d},\n pdfcreator={%c},\n pdflang={Japanese},\n colorlinks={true},linkcolor={blue}\n}\n")
+  (org-latex-listings . 'minted)
+  (org-latex-minted-options
+   . '(("frame" "lines")
+       ("framesep=2mm")
+       ("linenos=true")
+       ("baselinestretch=1.2")
+       ("fontsize=\\footnotesize")
+       ("breaklines")))
+  :config
+  (add-to-list
+   'org-latex-classes
+   '("jlreq"
+     "\\documentclass{jlreq}"
+     ("\\section{%s}"       . "\\section*{%s}")
+     ("\\subsection{%s}"    . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+  (add-to-list
+   'org-latex-classes
+   '("jlreq-tate"
+     "\\documentclass[tate]{jlreq}"
+     ("\\section{%s}"       . "\\section*{%s}")
+     ("\\subsection{%s}"    . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+  (add-to-list
+   'org-latex-classes
+   '("bxjsarticle"
+     "\\documentclass{bxjsarticle}\n\\usepackage{luatexja}"
+     ("\\section{%s}"       . "\\section*{%s}")
+     ("\\subsection{%s}"    . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+  (add-to-list
+   'org-latex-classes
+   '("beamer"
+     "\\documentclass[presentation]{beamer}\n\\usepackage{luatexja}\n\\renewcommand\\kanjifamilydefault{\\gtdefault}"
+     ("\\section{%s}"       . "\\section*{%s}")
+     ("\\subsection{%s}"    . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+  (add-to-list 'org-latex-packages-alist
+               "\\usepackage{minted}" t)
+
+  ;; 日本語の途中で改行してもPDF出力時に余分な半角スペースが入らないようにする
+  (defun my/org-latex-filter-nospace-japanese (text backend info)
+    (when (org-export-derived-backend-p backend 'latex)
+      (replace-regexp-in-string "\\([ぁ-んーァ-ヶー一-龠]\\)\n\\([ぁ-んーァ-ヶー一-龠]\\)" "\\1\\2" text)))
+  (add-to-list 'org-export-filter-paragraph-functions 'my/org-latex-filter-nospace-japanese)
+
+  (use-package ox-beamer
     :require t
     :custom
-    (org-latex-compiler      . "lualatex")
-    (org-latex-pdf-process   . '("latexmk -f -gg -pvc- -%latex %f"))
-    (org-latex-default-class . "jlreq")
-    (org-latex-hyperref-template
-     . "\\hypersetup{\n pdfauthor={%a},\n pdftitle={%t},\n pdfkeywords={%k},pdfsubject={%d},\n pdfcreator={%c},\n pdflang={Japanese},\n colorlinks={true},linkcolor={blue}\n}\n")
-    (org-latex-listings . 'minted)
-    (org-latex-minted-options
-     . '(("frame" "lines")
-         ("framesep=2mm")
-         ("linenos=true")
-         ("baselinestretch=1.2")
-         ("fontsize=\\footnotesize")
-         ("breaklines")))
-    :config
-    (add-to-list
-     'org-latex-classes
-     '("jlreq"
-       "\\documentclass{jlreq}"
-       ("\\section{%s}"       . "\\section*{%s}")
-       ("\\subsection{%s}"    . "\\subsection*{%s}")
-       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-       ("\\paragraph{%s}"     . "\\paragraph*{%s}")
-       ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
-    (add-to-list
-     'org-latex-classes
-     '("jlreq-tate"
-       "\\documentclass[tate]{jlreq}"
-       ("\\section{%s}"       . "\\section*{%s}")
-       ("\\subsection{%s}"    . "\\subsection*{%s}")
-       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-       ("\\paragraph{%s}"     . "\\paragraph*{%s}")
-       ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
-    (add-to-list
-     'org-latex-classes
-     '("bxjsarticle"
-       "\\documentclass{bxjsarticle}\n\\usepackage{luatexja}"
-       ("\\section{%s}"       . "\\section*{%s}")
-       ("\\subsection{%s}"    . "\\subsection*{%s}")
-       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-       ("\\paragraph{%s}"     . "\\paragraph*{%s}")
-       ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
-    (add-to-list
-     'org-latex-classes
-     '("beamer"
-       "\\documentclass[presentation]{beamer}\n\\usepackage{luatexja}\n\\renewcommand\\kanjifamilydefault{\\gtdefault}"
-       ("\\section{%s}"       . "\\section*{%s}")
-       ("\\subsection{%s}"    . "\\subsection*{%s}")
-       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-    (add-to-list 'org-latex-packages-alist
-                 "\\usepackage{minted}" t)
-
-    (use-package ox-beamer
-      :require t
-      :custom
-      (org-beamer-outline-frame-title . "目次")
-      (org-beamer-frame-default-options . "t")))
+    (org-beamer-outline-frame-title . "目次")
+    (org-beamer-frame-default-options . "t")))
 #+end_src
 
 #+RESULTS:
@@ -1250,15 +1256,6 @@ jlreqを使う場合、次の通りヘッドラインにプロパティを付け
 #+begin_src emacs-lisp
 #+end_src
 
-*** [#A] magit [C-x g]
-- recommended されているキーバインディングはC-c 名前空間を利用している
-  - https://magit.vc/manual/magit/Global-Bindings.html
-
-#+begin_src emacs-lisp
-  (use-package magit
-    :straight t
-    :bind (("C-x g" . magit-status)))
-#+end_src
 *** swap-buffer [C-c b] - 今居るバッファと他のバッファを入れ替える
 #+begin_src emacs-lisp
   (use-package swap-buffers

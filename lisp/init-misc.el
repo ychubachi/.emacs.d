@@ -448,15 +448,6 @@
 ;;   (swap-buffers-qwerty-shortcuts
 ;;    . '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
 
-;; (use-package shell-pop
-
-;;   :bind
-;;   ("C-c s" . shell-pop)
-;;   :custom
-;;   (shell-pop-shell-type . (quote ("eshell" "*eshell*" (lambda nil (eshell shell-pop-term-shell)))))
-;;   (shell-pop-window-position . "bottom")
-;;   (setq shell-pop-full-span . t))
-
 ;; (use-package page-break-lines
 
 ;;   :require t)
