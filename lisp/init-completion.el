@@ -191,32 +191,34 @@
 
 ;;; Cape - Corfu用の補完ソース
 ;; Abbrev (または abbr.) は、英語の abbreviation（省略、略語、短縮形）の略
+;; C-c p は projectile のために空ける
 
 (use-package cape
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
   ;; Press C-c p ? to for help.
-  :bind ("C-c p" . cape-prefix-map) ;; Alternative key: M-<tab>, M-p, M-+
+  ;; :bind ("C-c p" . cape-prefix-map) ;; Alternative key: M-<tab>, M-p, M-+
+  :bind ("M-<tab>" . cape-prefix-map) ;; Alternative key: M-<tab>, M-p, M-+
   ;; Alternatively bind Cape commands individually.
   ;; :bind (("C-c p d" . cape-dabbrev)
   ;;        ("C-c p h" . cape-history)
   ;;        ("C-c p f" . cape-file)
   ;;        ...)
   :custom
-  (corfu-auto t)                 ; 自動で補完候補をポップアップ
-  (corfu-auto-delay 0.0)         ; 遅延なし
-  (corfu-auto-prefix 1)          ; 1文字入力で発動
+  (corfu-auto t)                        ; 自動で補完候補をポップアップ
+  (corfu-auto-delay 0.0)                ; 遅延なし
+  (corfu-auto-prefix 1)                 ; 1文字入力で発動
   :init
   ;; Add to the global default value of `completion-at-point-functions' which is
   ;; used by `completion-at-point'.  The order of the functions matters, the
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
   (add-hook 'completion-at-point-functions #'cape-dabbrev) ; 開いているバッファの単語補完
-  (add-hook 'completion-at-point-functions #'cape-file) ; ファイルパス補完
+  (add-hook 'completion-at-point-functions #'cape-file)    ; ファイルパス補完
   (add-hook 'completion-at-point-functions #'cape-history) ; ミニバッファ履歴補完
   (add-hook 'completion-at-point-functions #'cape-symbol) ; Emacs Lispシンボル補完
   (add-hook 'completion-at-point-functions #'cape-elisp-block) ; OrgやMarkdown中のElispコード補完
   (add-hook 'completion-at-point-functions #'cape-keyword) ; プログラミング言語の予約語補完
-  (add-hook 'completion-at-point-functions #'cape-dict) ; 辞書による英単語補完
+  (add-hook 'completion-at-point-functions #'cape-dict)  ; 辞書による英単語補完
   (add-hook 'completion-at-point-functions #'cape-emoji) ; 絵文字補完
   :config
   ;; LaTeX（TeX）モード専用の設定
@@ -224,8 +226,8 @@
             (lambda ()
               ;; TeXの数式・コマンド補完を最優先にする
               (add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;            記述済みのキーワードをあいまい補完する設定（お好みで）
-  ;;            (add-to-list 'completion-at-point-functions #'cape-keyword))
+              ;;            記述済みのキーワードをあいまい補完する設定（お好みで）
+              ;;            (add-to-list 'completion-at-point-functions #'cape-keyword))
               )
             )
   )
