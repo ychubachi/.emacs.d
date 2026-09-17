@@ -154,16 +154,28 @@
   :ensure t)
 
 ;;;; projectile - プロジェクト管理
+;; cofu の バインディングと重なっていたため、cofu側を変更
+
 (use-package projectile
   :ensure t
+  :init
+  (projectile-mode +1)
   :bind (:map projectile-mode-map
-         ("C-c p" . projectile-command-map)
-         :map projectile-command-map
-         ("b" . consult-project-buffer))
+              ("C-c p" . projectile-command-map)
+              ("C-c p s" . consult-ripgrep))
   :custom
   (projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
   :config
-  (projectile-mode 1))
+  (setq projectile-completion-system 'default)
+  (setq projectile-indexing-method 'alien)
+  (setq projectile-enable-caching t)
+  ;; ripgrep がインストールされている場合に優先使用
+  (when (executable-find "rg")
+    (setq projectile-generic-command "rg --files --hidden --glob '!.git'"))
+  )
+
+;;;; consult-projectile
+(use-package consult-projectile :ensure t :after projectile)
 
 ;;;; perspective - バッファをグループ化して切り替える
 (use-package perspective
