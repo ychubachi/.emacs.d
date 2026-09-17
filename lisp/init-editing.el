@@ -20,8 +20,6 @@
   (setq TeX-auto-save t)
   (setq TeX-parse-self t))
 
-(provide 'init-editing)
-
 ;;; agent-shell - AI(Gemini)
 
 (use-package agent-shell
@@ -46,3 +44,5 @@
   ;; デフォルトのエージェントを Gemini に固定したい場合（任意）
   (setq agent-shell-preferred-agent-config
         (agent-shell-google-make-gemini-config)))
+
+(provide 'init-editing)
