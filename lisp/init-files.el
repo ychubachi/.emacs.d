@@ -8,6 +8,7 @@
   (recentf-max-menu-items 100)
   (recentf-max-saved-items 1000)
   (recentf-auto-cleanup 'never)
+  (recentf-exclude '("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:" "/elpaca"))
 
   :config
   (run-at-time nil (* 5 60)
