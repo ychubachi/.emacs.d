@@ -70,11 +70,13 @@
   :init
   ;; (keyboard-translate ?\C-h ?\C-?)
   (global-set-key (kbd "C-h") #'delete-backward-char) ; C-hをBSにする
+  (global-set-key (kbd "C-^") help-map) ; C-hの代わりにC-^をヘルプマップにする
 
   (defalias 'yes-or-no-p 'y-or-n-p) ; yos/noをy/nに変更する
 
   (global-auto-revert-mode 1)
   (ffap-bindings) ; ffap（ポイント位置のファイルを探す）を有効にする
+  (global-goto-address-mode 1) ; バッファ内のすべてのURLやメールアドレスを自動でリンク化（クリック可能に）
   )
 
 ;;;; undo-tree - C-zでUndoするようにする
