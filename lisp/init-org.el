@@ -269,6 +269,34 @@
       (replace-regexp-in-string "\\([ぁ-んーァ-ヶー一-龠]\\)\n\\([ぁ-んーァ-ヶー一-龠]\\)" "\\1\\2" text)))
   (add-to-list 'org-export-filter-paragraph-functions 'my/org-latex-filter-nospace-japanese))
 
+;;; 自作：GitプロジェクトをGitHub Pagesにパブリッシュする
+
+;; src/ パブリッシュしたいOrgファイル一式
+;; public/ HTMLファイルのパブリッシュ先
+
+;; orgファイルを開いて M-x my/org-publish-current-sight を実行
+
+(use-package ox-publish
+  :ensure nil
+  :after org
+  :config
+  (defun my/org-publish-current-site ()
+    "開いているファイルの Git ルートを取得し、./src から ./public にパブリッシュする"
+    (interactive)
+    (let* ((root (or (vc-root-dir) default-directory))
+           (src (expand-file-name "src/" root))
+           (public (expand-file-name "public/" root))
+           ;; ルートのパスからフォルダ名（例: "lecture-prog_mid"）のみを取得
+           (site-name (file-name-nondirectory (directory-file-name root)))
+           (project-name (concat "auto-site-" site-name)))
+      (setq org-publish-project-alist
+            `((,project-name
+               :base-directory ,src
+               :publishing-directory ,public
+               :publishing-function org-html-publish-to-html
+               :recursive t)))
+      (org-publish-project project-name))))
+
 ;;; TODO: クリップボードのMarkdownテキストをOrg-mode形式に変換して貼り付け
 
 ;; (defun my/paste-markdown-as-org ()
