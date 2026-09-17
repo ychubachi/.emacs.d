@@ -165,4 +165,14 @@
   :config
   (projectile-mode 1))
 
+;;;; perspective - バッファをグループ化して切り替える
+(use-package perspective
+  :ensure t
+  :bind
+  (("C-x C-b" . persp-list-buffers))
+  :custom
+  (persp-mode-prefix-key (kbd "C-c M-p"))
+  :config
+  (persp-mode 1))
+
 (provide 'init-programming)
