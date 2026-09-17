@@ -212,39 +212,56 @@
   :ensure nil
   :after org
   :custom
-  ;; デフォルトのLaTeXコンパイラを lualatex に指定
-  (org-latex-compiler "lualatex")
-  ;; PDF生成プロセスを latexmk + lualatex に設定
-  (org-latex-pdf-process
-   '("latexmk -lualatex -interaction=nonstopmode -output-directory=%o %f"))
-  ;; デフォルトの文書クラスを bxjsarticle に設定
-  (org-latex-default-class "bxjsarticle")
+  (org-latex-compiler      "lualatex")
+  (org-latex-pdf-process   '("latexmk -f -gg -pvc- -%latex %f"))
+  (org-latex-default-class "jlreq")
+  (org-latex-hyperref-template
+   "\\hypersetup{\n pdfauthor={%a},\n pdftitle={%t},\n pdfkeywords={%k},pdfsubject={%d},\n pdfcreator={%c},\n pdflang={Japanese},\n colorlinks={true},linkcolor={blue}\n}\n")
+  (org-latex-listings 'minted)
+  (org-latex-minted-options
+   '(("frame" "lines")
+     ("framesep=2mm")
+     ("linenos=true")
+     ("baselinestretch=1.2")
+     ("fontsize=\\footnotesize")
+     ("breaklines")))
   :config
-  ;; 日本語向け文書クラス（bxjsarticle）の設定
-  (add-to-list 'org-latex-classes
-               '("bxjsarticle"
-                 "\\documentclass[lualatex,ja=standard]{bxjsarticle}
-[NO-DEFAULT-PACKAGES]
-[PACKAGES]
-[EXTRA]"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-  ;; 日本語向け文書クラス（ltjsarticle）の設定
-  (add-to-list 'org-latex-classes
-               '("ltjsarticle"
-                 "\\documentclass[11pt]{ltjsarticle}
-[NO-DEFAULT-PACKAGES]
-[PACKAGES]
-[EXTRA]"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list
+   'org-latex-classes
+   '("jlreq"
+     "\\documentclass{jlreq}"
+     ("\\section{%s}"       . "\\section*{%s}")
+     ("\\subsection{%s}"    . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+  (add-to-list
+   'org-latex-classes
+   '("jlreq-tate"
+     "\\documentclass[tate]{jlreq}"
+     ("\\section{%s}"       . "\\section*{%s}")
+     ("\\subsection{%s}"    . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+  (add-to-list
+   'org-latex-classes
+   '("bxjsarticle"
+     "\\documentclass{bxjsarticle}\n\\usepackage{luatexja}"
+     ("\\section{%s}"       . "\\section*{%s}")
+     ("\\subsection{%s}"    . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}"     . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}"  . "\\subparagraph*{%s}")))
+  (add-to-list
+   'org-latex-classes
+   '("beamer"
+     "\\documentclass[presentation]{beamer}\n\\usepackage{luatexja}\n\\renewcommand\\kanjifamilydefault{\\gtdefault}"
+     ("\\section{%s}"       . "\\section*{%s}")
+     ("\\subsection{%s}"    . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+  (add-to-list 'org-latex-packages-alist
+               "\\usepackage{minted}" t)
 
   ;; 日本語の途中で改行してもPDF出力時に余分な半角スペースが入らないようにする
   (defun my/org-latex-filter-nospace-japanese (text backend info)
