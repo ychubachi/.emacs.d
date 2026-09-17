@@ -327,5 +327,28 @@
   (add-to-list 'org-babel-load-languages '(plantuml . t))
   (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
 
+;;; ---------------------------------------------------------
+;;; 移さなくて良いもの（コメントアウト）
+;;; ---------------------------------------------------------
+;; ;; 見出し位置での1キーナビゲーション（慣れないと意図しない誤動作を起こしやすいため不要）
+;; (setq org-use-speed-commands
+;;       (lambda () (and (looking-at org-outline-regexp) (looking-back "^\**"))))
+
+;; ;; クリップボードのMarkdownを自動でOrg形式に変換して貼り付け（外部コマンド `pandoc` に依存するため不要）
+;; (defun my/paste-markdown-as-org ()
+;;   "クリップボードのMarkdownテキストをOrg-mode形式に変換して貼り付けます。"
+;;   (interactive)
+;;   (let ((markdown-text (gui-get-selection 'CLIPBOARD 'STRING)))
+;;     (if markdown-text
+;;         (with-temp-buffer
+;;           (insert markdown-text)
+;;           (call-process-region (point-min) (point-max) "pandoc" t t nil "-f" "markdown" "-t" "org")
+;;           (let ((org-text (buffer-string)))
+;;             (insert-into-buffer (current-buffer) (point) (point) org-text)
+;;             (kill-new org-text)
+;;             (yank)))
+;;       (message "クリップボードが空か、テキストではありません。"))))
+;; (define-key org-mode-map (kbd "C-c C-x M-g") 'my/paste-markdown-as-org)
+
 ;;; フッター
 (provide 'init-org)
