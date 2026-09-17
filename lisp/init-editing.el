@@ -45,4 +45,17 @@
   (setq agent-shell-preferred-agent-config
         (agent-shell-google-make-gemini-config)))
 
+;;; yasnippet - テンプレート挿入機能
+(use-package yasnippet
+  :ensure t
+  :diminish yas-minor-mode
+  :custom
+  (yas-snippet-dirs (list (expand-file-name "etc/yasnippet/snippets" user-emacs-directory)))
+  :hook
+  (after-init . yas-global-mode))
+
+(use-package yasnippet-snippets
+  :ensure t
+  :after yasnippet)
+
 (provide 'init-editing)
