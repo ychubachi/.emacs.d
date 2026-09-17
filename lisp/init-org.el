@@ -305,5 +305,16 @@
         "⭠ now ─────────────────────────────────────────────────")
   (global-org-modern-mode 1))
 
+;;; org-download - 画像のドラッグ＆ドロップ挿入
+(use-package org-download
+  :ensure t
+  :custom
+  (org-download-method 'attach)
+  :config
+  (setq org-image-actual-width 400)
+  (add-hook 'dired-mode-hook #'org-download-enable)
+  (when (eq system-type 'windows-nt)
+    (setq org-download-screenshot-method "magick convert clipboard: %s")))
+
 ;;; フッター
 (provide 'init-org)
