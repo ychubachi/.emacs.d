@@ -153,4 +153,16 @@
 (use-package yaml-mode
   :ensure t)
 
+;;;; projectile - プロジェクト管理
+(use-package projectile
+  :ensure t
+  :bind (:map projectile-mode-map
+         ("C-c p" . projectile-command-map)
+         :map projectile-command-map
+         ("b" . consult-project-buffer))
+  :custom
+  (projectile-project-search-path '("~/.emacs.d/" ("~/git" . 1)))
+  :config
+  (projectile-mode 1))
+
 (provide 'init-programming)
