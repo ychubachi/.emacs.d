@@ -70,4 +70,13 @@
   (shell-pop-window-size 30)
   (shell-pop-full-span t))
 
+;;; multiple-cursors - 複数カーソル同時編集
+(use-package multiple-cursors
+  :ensure t
+  :bind
+  (("C-S-c C-S-c" . mc/edit-lines)
+   ("C->"         . mc/mark-next-like-this)
+   ("C-<"         . mc/mark-previous-like-this)
+   ("C-c C-<"     . mc/mark-all-like-this)))
+
 (provide 'init-editing)
