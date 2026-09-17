@@ -271,5 +271,39 @@
 ;; ;; 好きなキーバインドを割り当て（例: C-c C-x M-g）
 ;; (define-key org-mode-map (kbd "C-c C-x M-g") 'my/paste-markdown-as-org)
 
+;;; org-modern - Org-modeの見た目を近代的に
+(use-package org-modern
+  :ensure t
+  :custom
+  (org-modern-list '((?+ . "◦") (?- . "-") (?* . "•")))
+  (org-modern-star '("■" ".◆" "..●" "...＊" "....＋"))
+  :config
+  ;; 余白と境界線の設定
+  (modify-all-frames-parameters
+   '((right-divider-width . 10)
+     (internal-border-width . 10)))
+  (dolist (face '(window-divider
+                  window-divider-first-pixel
+                  window-divider-last-pixel))
+    (face-spec-reset-face face)
+    (set-face-foreground face (face-attribute 'default :background)))
+  (set-face-background 'fringe (face-attribute 'default :background))
+
+  (setq org-auto-align-tags nil
+        org-tags-column 0
+        org-catch-invisible-edits 'show-and-error
+        org-special-ctrl-a/e t
+        org-hide-emphasis-markers t
+        org-pretty-entities t
+        org-agenda-tags-column 0
+        org-agenda-block-separator ?─
+        org-agenda-time-grid
+        '((daily today require-timed)
+          (800 1000 1200 1400 1600 1800 2000)
+          " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+        org-agenda-current-time-string
+        "⭠ now ─────────────────────────────────────────────────")
+  (global-org-modern-mode 1))
+
 ;;; フッター
 (provide 'init-org)
