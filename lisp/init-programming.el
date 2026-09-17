@@ -149,4 +149,8 @@
        'safe-local-variable
        #'stringp))
 
+;;;; yaml-mode - YAMLファイルの編集
+(use-package yaml-mode
+  :ensure t)
+
 (provide 'init-programming)
