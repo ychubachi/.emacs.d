@@ -45,6 +45,12 @@
   (shell-pop-window-size 30)
   (shell-pop-full-span t))
 
+;;; pandoc-mode - Pandoc経由の文書変換
+(use-package pandoc-mode
+  :ensure t
+  :after hydra
+  :commands pandoc-mode)
+
 ;;; multiple-cursors - 複数カーソル同時編集
 (use-package multiple-cursors
   :ensure t

@@ -33,22 +33,26 @@ README.org
 + ox-taskjuggler — 見出しが「?」で用途不明
 + org2blog(WordPress) / ox-hugo — 現行のキャプチャ運用に見当たらない
 
-** 取り入れたほうが良い
-+ TODO migemo — ローマ字での日本語インクリメンタルサーチ（init-japanese.el向け、要cmigemo）
-+ TODO hydra — ズームやBuffer-menu用の素早い操作（init-editing.el向け）
-+ TODO minions — モードライン表示のコンパクト化（init-ui.el向け）
-+ TODO beacon — ウィンドウ/カーソル移動時の点滅表示（init-ui.el向け）
-+ TODO visual-fill-column — org-modeでの折返し表示（init-org.el向け）
-+ TODO WSL連携(cmd/wsl-browser, dired-launch) — 現在もWSL2環境なので有効化する価値あり（init-files.el向け）
-+ TODO swap-buffersのDvorak対応 — ace-windowは既にDvorak対応済みだがswap-buffersは未対応（init-editing.el向け）
-+ TODO ewwの見た目設定 — org-preview-html-viewerでeww採用済みなので閲覧性向上に価値あり
-+ TODO 警告抑制設定(yasnippet/org-element-cache) — 起動時ノイズ削減（init-core.el向け）
-+ TODO vc-handled-backends '(Git) — Git以外のVCバックエンド検出省略で軽量化
+** 取り入れたほうが良い（2026-09-23 対応）
++ TODO migemo — ローマ字での日本語インクリメンタルサーチ（init-japanese.el向け）。要cmigemo(apt)導入、未対応
++ hydra — ズームやBuffer-menu用の素早い操作。init-editing.elに導入済み
++ minions — モードライン表示のコンパクト化。init-ui.elに導入済み
++ beacon — ウィンドウ/カーソル移動時の点滅表示。init-ui.elに導入済み
++ visual-fill-column — org-modeでの折返し表示。init-org.elに導入済み
++ WSL連携(cmd/wsl-browser, dired-launch) — init-files.elに設定は導入済み。実行にはwslu(wslview)のapt導入が必要（本人の判断で保留中）
++ swap-buffersのDvorak対応 — init-editing.elに導入済み
++ ewwの見た目設定 — init-org.elに導入済み
++ 警告抑制設定(yasnippet/org-element-cache) — init-core.elに導入済み
++ vc-handled-backends '(Git) — init-files.elに導入済み
 
-** 要確認
-+ FIXME notmuch/wanderlust/gnus-alias等のメールクライアント一式 — 今もEmacsでメールを読み書きしているか
-+ FIXME ox-zenn / Blog投稿系 — Zennへの投稿を今も行うか（init-org.elにキャプチャテンプレートは残存）
-+ FIXME org-sync-gtasks / org-sync-qiita(自作パッケージ) — Google Tasks/Qiita同期を今も使っているか
-+ FIXME pandoc-mode / ox-pandoc — Pandoc経由の変換を使うか
-+ FIXME nerd-icons / all-the-icons — 旧ファイルに「インストールできない」との記録あり、環境問題が解消しているか
-+ FIXME user-mail-addressの食い違い — 旧ファイルはyc@aiit.ac.jp、現行init-core.elはyoshihide.chubachi@gmail.comのまま。所属変更の可能性があり要確認
+** 要確認（本人に確認済み）
++ notmuch/wanderlust/gnus-alias等のメールクライアント一式 — 使わないとのことで削除済み
++ ox-zenn / Blog投稿系 — 使わないとのことで削除済み（init-org.elのZennキャプチャテンプレートも削除）
++ org-sync-gtasks / org-sync-qiita(自作パッケージ) — 使わないとのことで削除済み
++ org-roam / org-roam-ui — 「今後使ってみたい」とのことでinit-org.elに正式導入済み（`C-c n l/f/g/i/c/j`）
++ pandoc-mode / ox-pandoc — 使っているとのことでinit-editing.elに導入済み
++ nerd-icons / all-the-icons — 導入見送り、削除済み
++ user-mail-addressの食い違い — 確認の結果、現行init-core.elの yoshihide.chubachi@gmail.com のままでよいとのこと。対応不要
+
+** 要確認（未回答・保留）
++ FIXME chubachi.net向けpublish設定(SCP経由) — 「いちおう残してください」とのことで、init-misc.elにコメントアウトのまま保持（init-org.elのmy/org-publish-current-siteとは別方式）

@@ -121,22 +121,7 @@
                  :empty-lines-after 1
                  :unnarrowed t
                  :children
-                 (("ploversky@zenn.dev" :keys "z"
-                   :file "~/git/ploversky-zenn.dev/plaversky@zenn.dev.org"
-                   :headline   "記事"
-                   :todo-state "TODO"
-                   :export_file_name (lambda () (concat (format-time-string "%Y%m%d-%H%M%S")))
-                   :template ("* %{todo-state} %^{Description}"
-                              ":PROPERTIES:"
-                              ":CREATED: %T"
-                              ":EXPORT_FILE_NAME: articles/%{export_file_name}"
-                              ":EXPORT_GFM_TAGS: blog"
-                              ":EXPORT_GFM_CUSTOM_FRONT_MATTER: :emoji 👩‍💻"
-                              ":EXPORT_GFM_CUSTOM_FRONT_MATTER+: :type tech"
-                              ":EXPORT_GFM_CUSTOM_FRONT_MATTER+: :published false"
-                              ":END:"
-                              "\n* %?"))
-                  ("blog.chubachi.net"  :keys "b"
+                 (("blog.chubachi.net"  :keys "b"
                    :file "~/git/ychubachi.github.io/blog.chubachi.net.org"
                    :headline   "Blog"
                    :todo-state "TODO"
@@ -344,6 +329,33 @@
 
 ;; ;; 好きなキーバインドを割り当て（例: C-c C-x M-g）
 ;; (define-key org-mode-map (kbd "C-c C-x M-g") 'my/paste-markdown-as-org)
+
+;;; org-roam - 個人知識ベース（Zettelkasten）
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory "~/Dropbox/Org/Roam")
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  (org-roam-db-autosync-mode)
+  (setq org-roam-node-display-template
+        (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (require 'org-roam-protocol))
+
+;;; org-roam-ui - org-roamをグラフ表示するWeb UI
+(use-package org-roam-ui
+  :ensure t
+  :after org-roam
+  :custom
+  (org-roam-ui-sync-theme t)
+  (org-roam-ui-follow t)
+  (org-roam-ui-update-on-save t)
+  (org-roam-ui-open-on-start t))
 
 ;;; org-modern - Org-modeの見た目を近代的に
 (use-package org-modern
