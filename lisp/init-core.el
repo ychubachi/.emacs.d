@@ -42,6 +42,9 @@
   ;; byte-compile
   (byte-compile-warnings '(not cl-functions obsolete))
 
+  ;; warnings
+  (warning-suppress-types '((yasnippet backquote-change) (org-element-cache)))
+
   ;; GnuPG
   (epg-pinentry-mode 'loopback)
   (plstore-cache-passphrase-for-symmetric-encryption t)

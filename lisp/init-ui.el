@@ -1,6 +1,22 @@
 ;;; テーマの設定
 (load-theme 'misterioso)
 
+;;; minions - マイナーモード表示をコンパクトにする
+(use-package minions
+  :ensure t
+  :config
+  (minions-mode 1)
+  (setq minions-mode-line-lighter "[+]")
+  (global-set-key [S-down-mouse-3] 'minions-minor-modes-menu))
+
+;;; beacon - バッファ・ウィンドウ切り替え時にカーソル位置を点滅表示
+(use-package beacon
+  :ensure t
+  :custom
+  (beacon-blink-when-focused nil)
+  :config
+  (beacon-mode 1))
+
 ;; ;;; dashboard - Emacs起動時にダッシュボードを表示する
 ;; ;; 起動が遅い
 ;; (use-package dashboard

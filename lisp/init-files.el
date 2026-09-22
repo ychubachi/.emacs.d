@@ -49,6 +49,12 @@
   ;; シンボリックリンクを自動で辿る
   (vc-follow-symlinks t))
 
+;;; vc-hooks
+(use-package vc-hooks
+  :ensure nil
+  :custom
+  (vc-handled-backends '(Git))) ; Gitのみ使用
+
 ;;; dired
 (use-package dired
   :ensure nil
@@ -64,25 +70,28 @@
   (:map dired-mode-map
         ("r" . wdired-change-to-wdired-mode)))
 
-;; ;;; WSL環境でリンクをクリックした時に、Windows側のブラウザで開く設定
-;; (use-package emacs
-;;   :ensure nil
-;;   :config
-;;   (defun cmd/wsl-browser (url &rest _ignore)
-;;     "Browse URL using wslview."
-;;     (interactive "sURL: ")
-;;     (shell-command (concat "wslview " "'" url "'")))
+;;; WSL環境でリンクをクリックした時に、Windows側のブラウザで開く設定
+;; wslview (wsluパッケージ) が必要: sudo apt install wslu
+(use-package emacs
+  :ensure nil
+  :config
+  (defun cmd/wsl-browser (url &rest _ignore)
+    "Browse URL using wslview."
+    (interactive "sURL: ")
+    (shell-command (concat "wslview " "'" url "'")))
 
-;;   (when (and (eq system-type 'gnu/linux)
-;;              (getenv "WSLENV"))
-;;     (setq browse-url-browser-function 'cmd/wsl-browser)))
+  (when (and (eq system-type 'gnu/linux)
+             (getenv "WSLENV"))
+    (setq browse-url-browser-function 'cmd/wsl-browser)))
 
-;; ;;; Dired上で `J` を押すと、Windows側の既定のアプリ（Word、PDF、画像など）で開く
-;; (use-package dired-launch
-;;   :hook (dired-mode-hook . dired-launch-mode)
-;;   :config
-;;   (when (and (eq system-type 'gnu/linux)
-;;              (getenv "WSLENV"))
-;;     (setq dired-launch-default-launcher '("wslview"))))
+;;; Dired上で `J` を押すと、Windows側の既定のアプリ（Word、PDF、画像など）で開く
+;; wslview (wsluパッケージ) が必要: sudo apt install wslu
+(use-package dired-launch
+  :ensure t
+  :hook (dired-mode . dired-launch-mode)
+  :config
+  (when (and (eq system-type 'gnu/linux)
+             (getenv "WSLENV"))
+    (setq dired-launch-default-launcher '("wslview"))))
 
 (provide 'init-files)

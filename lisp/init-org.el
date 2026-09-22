@@ -390,6 +390,26 @@
   (when (eq system-type 'windows-nt)
     (setq org-download-screenshot-method "magick convert clipboard: %s")))
 
+;;; visual-fill-column - org-modeでの折返し表示
+(use-package visual-fill-column
+  :ensure t
+  :hook (org-mode . visual-fill-column-mode)
+  :bind (("C-c q" . visual-fill-column-mode)
+         (:map visual-fill-column-mode-map
+               ("C-a" . beginning-of-visual-line)
+               ("C-e" . end-of-visual-line)
+               ("C-k" . kill-visual-line))))
+
+;;; eww - org-preview-html-viewerで使うewwの見た目設定
+(use-package eww
+  :ensure nil
+  :custom
+  (shr-use-colors nil)
+  (shr-use-fonts nil)
+  (shr-image-animate nil)
+  (shr-width 72)
+  (eww-search-prefix "https://www.google.com/search?q="))
+
 ;;; ob-plantuml - PlantUMLによる図表生成
 (use-package ob-plantuml
   :ensure nil ; org-babel 内蔵の plantuml 統合を使用
