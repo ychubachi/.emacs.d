@@ -60,4 +60,16 @@
   :bind
   ("C-c b" . swap-buffers))
 
+;;; ace-window - ウィンドウにラベルを表示して素早く移動・操作する
+(use-package ace-window
+  :ensure t
+  :bind
+  ("M-o" . ace-window)
+  :custom
+  (aw-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n)) ; Dvorak配列のホームポジション（QWERTYのa s d f g h j k lと同じ物理キー）
+  (aw-scope 'frame)
+  (aw-background t)
+  :custom-face
+  (aw-leading-char-face ((t (:height 3.0 :foreground "red")))))
+
 (provide 'init-editing)
