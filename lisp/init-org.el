@@ -422,6 +422,11 @@
   (shr-width 72)
   (eww-search-prefix "https://www.google.com/search?q="))
 
+;;; ox-pandoc - Pandoc経由のOrgエクスポート
+(use-package ox-pandoc
+  :ensure t
+  :after org)
+
 ;;; ob-plantuml - PlantUMLによる図表生成
 (use-package ob-plantuml
   :ensure nil ; org-babel 内蔵の plantuml 統合を使用

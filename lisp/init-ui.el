@@ -1,6 +1,11 @@
 ;;; テーマの設定
 (load-theme 'misterioso)
 
+;;; frame - 画面の最大化をトグル
+(use-package frame
+  :ensure nil
+  :bind ("<f11>" . toggle-frame-maximized))
+
 ;;; minions - マイナーモード表示をコンパクトにする
 (use-package minions
   :ensure t
