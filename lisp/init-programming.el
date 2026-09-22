@@ -127,19 +127,6 @@
   (:map emacs-lisp-mode-map
         ("C-c e" . macrostep-expand)))
 
-;;;; ERT
-
-(use-package ert
-  :ensure nil
-  :bind
-  (("C-c t" . cmd/run-ert))
-
-  :config
-  (defun cmd/run-ert ()
-    (interactive)
-    (eval-buffer)
-    (call-interactively #'ert)))
-
 ;;; その他
 ;;;; Dockerfile
 
