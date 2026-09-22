@@ -8,3 +8,47 @@ README.org
 + Emacsの設定ファイルです
 + init.elは [[FILE:init.org][init.org]] から生成します
 + init.elは config.org を読み込みます
+
+* init.old.org の整理 (2026-09-22)
+[[FILE:init.old.org][init.old.org]]（旧org-babel形式の設定ファイル、現在は不使用）の内容を、現行の lisp/*.el と照合して選別した結果。
+
+** 不要（現行設定で既にカバー済み・時代遅れ）
++ org-superstar — org-modern(init-org.el)に統合済みで重複
++ emacs-dashboard / page-break-lines / all-the-icons(ダッシュボード用) — init-ui.elで「起動が遅い」と明記の上不採用済み
++ flycheck系 — flymake + eglot(init-programming.el)に統一済み
++ git-gutter — diff-hlに置き換え済み
++ outline-mode / outline-magic — outliパッケージに置き換え済み
++ show-paren-modeの明示設定 — Emacs28+で標準有効
++ backup-each-save — no-litteringと機能重複
++ region-bindings-mode — multiple-cursorsで代替済み、alignも組み込みで足りる
++ ffap / goto-addr / wdired / savehist / save-place / recentf — init-core.el/init-files.elに移植済み
++ vertico/orderless/marginalia/embark/consult/which-key — init-completion.elに完全移植済み
++ 旧corfu下書き — 正式版がinit-completion.elに導入済み
++ mozc/mozc-im/mozc-popup — init-japanese.elに移植済み
++ isearch内IME切替 — 「いらない？」と書いてCOMMENT化されていたもの
++ auto-indent-yanked-code — 古いdefadvice手法
++ coverage — 用途不明のまま放置されていたもの
++ emacs-refactor — 保守が停滞気味のパッケージ
++ org-pomodoro — 「使ってないなー」と明記されていたもの
++ ox-taskjuggler — 見出しが「?」で用途不明
++ org2blog(WordPress) / ox-hugo — 現行のキャプチャ運用に見当たらない
+
+** 取り入れたほうが良い
++ TODO migemo — ローマ字での日本語インクリメンタルサーチ（init-japanese.el向け、要cmigemo）
++ TODO hydra — ズームやBuffer-menu用の素早い操作（init-editing.el向け）
++ TODO minions — モードライン表示のコンパクト化（init-ui.el向け）
++ TODO beacon — ウィンドウ/カーソル移動時の点滅表示（init-ui.el向け）
++ TODO visual-fill-column — org-modeでの折返し表示（init-org.el向け）
++ TODO WSL連携(cmd/wsl-browser, dired-launch) — 現在もWSL2環境なので有効化する価値あり（init-files.el向け）
++ TODO swap-buffersのDvorak対応 — ace-windowは既にDvorak対応済みだがswap-buffersは未対応（init-editing.el向け）
++ TODO ewwの見た目設定 — org-preview-html-viewerでeww採用済みなので閲覧性向上に価値あり
++ TODO 警告抑制設定(yasnippet/org-element-cache) — 起動時ノイズ削減（init-core.el向け）
++ TODO vc-handled-backends '(Git) — Git以外のVCバックエンド検出省略で軽量化
+
+** 要確認
++ FIXME notmuch/wanderlust/gnus-alias等のメールクライアント一式 — 今もEmacsでメールを読み書きしているか
++ FIXME ox-zenn / Blog投稿系 — Zennへの投稿を今も行うか（init-org.elにキャプチャテンプレートは残存）
++ FIXME org-sync-gtasks / org-sync-qiita(自作パッケージ) — Google Tasks/Qiita同期を今も使っているか
++ FIXME pandoc-mode / ox-pandoc — Pandoc経由の変換を使うか
++ FIXME nerd-icons / all-the-icons — 旧ファイルに「インストールできない」との記録あり、環境問題が解消しているか
++ FIXME user-mail-addressの食い違い — 旧ファイルはyc@aiit.ac.jp、現行init-core.elはyoshihide.chubachi@gmail.comのまま。所属変更の可能性があり要確認
