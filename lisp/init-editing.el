@@ -64,7 +64,7 @@
 (use-package ace-window
   :ensure t
   :bind
-  ("M-o" . ace-window)
+  ("C-x o" . ace-window)
   :custom
   (aw-keys '(?a ?o ?e ?u ?i ?d ?h ?t ?n)) ; Dvorak配列のホームポジション（QWERTYのa s d f g h j k lと同じ物理キー）
   (aw-scope 'frame)
