@@ -27,7 +27,8 @@
 ;; ├── init-org.el ; org-mode
 ;; ├── init-evil.el
 ;; ├── init-japanese.el
-;; └── init-programming.el ; lsp, treesit, eglot
+;; ├── init-programming.el ; lsp, treesit, eglot
+;; └── init-ai.el ; AI関連の設定
 
 ;;; Code:
 
@@ -44,6 +45,8 @@
 (require 'init-org) ; Orgモード用設定
 (require 'init-editing) ; テキスト編集全般
 (require 'init-programming) ; プログラミング全般
+(require 'init-ai) ; AI関連の設定
+
 (require 'init-misc) ; その他・テスト中
 
 (message "init.el loaded")

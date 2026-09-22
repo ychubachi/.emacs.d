@@ -20,31 +20,6 @@
   (setq TeX-auto-save t)
   (setq TeX-parse-self t))
 
-;;; agent-shell - AI(Gemini)
-
-(use-package agent-shell
-  :config
-  ;; --- 認証方法の設定（以下のいずれかを選択） ---
-
-  ;; パターンA: Google API キーを使う場合
-  (setq agent-shell-google-authentication
-        (agent-shell-google-make-authentication
-         :api-key (lambda () % 起動時に直接環境変数を探しにいくのではなく、関数（lambda）として渡すことで、実際にAPIキーが必要になったタイミングでこの処理が実行される
-                    (or (getenv "GEMINI_API_KEY")
-                        (setenv "GEMINI_API_KEY" (read-passwd "GEMINI_API_KEY: ")))))) ; 環境変数がない場合はプロンプトで入力
-
-  ;; パターンB: Google アカウントログイン (OAuth) を使う場合
-  ;; (setq agent-shell-google-authentication
-  ;;       (agent-shell-google-make-authentication :login t))
-
-  ;; パターンC: Vertex AI を使う場合
-  ;; (setq agent-shell-google-authentication
-  ;;       (agent-shell-google-make-authentication :vertex-ai t))
-
-  ;; デフォルトのエージェントを Gemini に固定したい場合（任意）
-  (setq agent-shell-preferred-agent-config
-        (agent-shell-google-make-gemini-config)))
-
 ;;; yasnippet - テンプレート挿入機能
 (use-package yasnippet
   :ensure t
