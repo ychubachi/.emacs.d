@@ -1,3 +1,27 @@
+;;; init-package.el --- パッケージ管理（elpaca）  -*- lexical-binding: t; -*-
+;; Copyright (C) 2022-2026 Yoshihide Chubachi
+
+;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; elpacaの導入と、他の設定より先に読み込む必要があるパッケージ。
+
+;;; Code:
+
 ;;; elpaca
 (defvar elpaca-installer-version 0.12)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -45,4 +69,22 @@
   (elpaca-use-package-mode)
   (setq use-package-always-ensure t))
 
+;;; no-littering - Emacsのバックアップファイルや一時ファイルを整理する
+(use-package no-littering
+  :ensure (:wait t)
+  :demand t
+  :config
+  (setq auto-save-file-name-transforms
+        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+  (setq backup-directory-alist
+        `(("." . ,(no-littering-expand-var-file-name "backup/"))))
+  ;; Theme standard backups and undo-tree history locations
+  (no-littering-theme-backups))
+
+;;; org - Orgモードの最新版を利用する
+(use-package org
+  :ensure (:wait t)  ;; Block until the updated Org package is ready
+  )
+
 (provide 'init-package)
+;;; init-package.el ends here

@@ -1,3 +1,27 @@
+;;; init-completion.el --- 補完機能の設定  -*- lexical-binding: t; -*-
+;; Copyright (C) 2022-2026 Yoshihide Chubachi
+
+;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; ミニバッファ補完（vertico等）とバッファ内補完（corfu/cape）の設定。
+
+;;; Code:
+
 ;;; Completion UI
 ;;; Vertico - ミニバッファ補完
 ;;"入力補完の候補をTABを押さずとも一覧から選べるようにする
@@ -157,6 +181,11 @@
   ;;        (shell-mode . corfu-mode)
   ;;        (eshell-mode . corfu-mode))
 
+  :custom
+  (corfu-auto t)                        ; 自動で補完候補をポップアップ
+  (corfu-auto-delay 0.0)                ; 遅延なし
+  (corfu-auto-prefix 1)                 ; 1文字入力で発動
+
   :init
 
   ;; Recommended: Enable Corfu globally.  Recommended since many modes provide
@@ -204,10 +233,6 @@
   ;;        ("C-c p h" . cape-history)
   ;;        ("C-c p f" . cape-file)
   ;;        ...)
-  :custom
-  (corfu-auto t)                        ; 自動で補完候補をポップアップ
-  (corfu-auto-delay 0.0)                ; 遅延なし
-  (corfu-auto-prefix 1)                 ; 1文字入力で発動
   :init
   ;; Add to the global default value of `completion-at-point-functions' which is
   ;; used by `completion-at-point'.  The order of the functions matters, the
@@ -233,4 +258,5 @@
             )
   )
 
-  (provide 'init-completion)
+(provide 'init-completion)
+;;; init-completion.el ends here
