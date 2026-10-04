@@ -699,7 +699,17 @@
 
 ;;;; org-sidebar - Orgの構造をサイドバーに表示
 (use-package org-sidebar
-  :bind ("C-c t" . org-sidebar-tree)
+  ;; org-mode-mapでのバインドがglobal-mapより優先されるので、
+  ;; org-modeではC-c oでimenu-listの代わりにこちらが使われる。
+  :bind (:map org-mode-map
+              ("C-c o" . org-sidebar-tree-toggle))
+  :hook
+  ;; org-modeに入ったときサイドバーを自動表示する。
+  ;; org-sidebar-treeのtreeバッファはorg-modeの間接バッファなので、
+  ;; buffer-base-bufferで判定して再帰的な表示を防ぐ。
+  (org-mode . (lambda ()
+                (unless (buffer-base-buffer)
+                  (org-sidebar-tree))))
   :custom
   (org-sidebar-tree-side 'left))
 
@@ -1050,7 +1060,78 @@
   :bind (:map outli-mode-map ; convenience key to get back to containing heading
 	      ("C-c C-p" . (lambda () (interactive) (outline-back-to-heading)))
               ("C-c C-n" . outline-next-visible-heading))
-  :hook ((prog-mode text-mode) . outli-mode)) ; or whichever modes you prefer
+  :hook (((prog-mode text-mode) . outli-mode)
+         (outli-mode . my/outline-imenu-setup))
+  :config
+  ;; outliはimenu-generic-expressionに全見出しをフラットな"Headings"
+  ;; カテゴリとして登録するだけなので、imenu/imenu-listに階層が出ない。
+  ;; outline-regexp/outline-level（outliが設定済み）から階層付きの
+  ;; imenuインデックスを作る。アルゴリズムはmarkdown-mode.elの
+  ;; markdown-imenu-create-nested-indexを一般化したもの。
+  (require 'cl-lib)
+  (defun my/outline-imenu-create-index ()
+    "outline-regexp/outline-levelに基づき階層付きのimenuインデックスを作る。"
+    (let ((root (list nil))
+          headers)
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward (concat "^\\(?:" outline-regexp "\\)") nil t)
+          (let ((level (funcall outline-level))
+                (pos (match-beginning 0))
+                (heading (string-trim
+                          (buffer-substring-no-properties (match-end 0) (line-end-position)))))
+            (push (list :heading heading :point pos :level level) headers))
+          (end-of-line))
+        (cl-loop with cur-level = 0
+                 with cur-alist = nil
+                 with empty-heading = "-"
+                 with self-heading = "."
+                 for header in (reverse headers)
+                 for level = (plist-get header :level)
+                 do
+                 (let ((alist (list (cons (plist-get header :heading) (plist-get header :point)))))
+                   (cond
+                    ((= cur-level level)      ; 兄弟
+                     (setcdr cur-alist alist)
+                     (setq cur-alist alist))
+                    ((< cur-level level)      ; 最初の子
+                     (dotimes (_ (- level cur-level 1))
+                       (setq alist (list (cons empty-heading alist))))
+                     (if cur-alist
+                         (let* ((parent (car cur-alist))
+                                (self-pos (cdr parent)))
+                           (setcdr parent (cons (cons self-heading self-pos) alist)))
+                       (setcdr root alist))
+                     (setq cur-alist alist)
+                     (setq cur-level level))
+                    (t                        ; 先祖の兄弟
+                     (let ((sibling-alist (last (cdr root))))
+                       (dotimes (_ (1- level))
+                         (setq sibling-alist (last (cdar sibling-alist))))
+                       (setcdr sibling-alist alist)
+                       (setq cur-alist alist))
+                     (setq cur-level level)))))
+        (cdr root))))
+  (defun my/outline-imenu-setup ()
+    "outli-modeの有効/無効に応じてimenuを階層付きインデックスに切り替える。
+また、outli-mode有効化時にimenu-listを自動的に表示する。"
+    (setq-local imenu-create-index-function
+                (if outli-mode
+                    #'my/outline-imenu-create-index
+                  #'imenu-default-create-index-function))
+    (when outli-mode
+      (imenu-list-minor-mode 1))))
+
+;;;; imenu-list - アウトライン（見出し）を別ウィンドウに表示
+;; outliがimenu-generic-expressionを設定するので、imenu経由のこのパッケージで
+;; outli-modeのアウトラインも別ウィンドウに表示できる。
+(use-package imenu-list
+  :ensure t
+  :bind (("C-c o" . imenu-list-smart-toggle))
+  :custom
+  (imenu-list-position 'left)
+  :hook
+  (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode -1))))
 
 ;;;; multiple-cursors - 複数カーソル同時編集
 (use-package multiple-cursors
@@ -1396,16 +1477,6 @@ _~_: modified
 ;;   (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
 ;;   (setq whitespace-space-regexp "\\(\u3000+\\)")
 ;;   (global-whitespace-mode t))
-
-;; (use-package imenu-list
-;;   :bind (("C-c i" . imenu-list-smart-toggle))
-;;   :hook
-;;   (imenu-list-major-mode-hook . (lambda nil (display-line-numbers-mode -1))))
-
-;; (add-hook 'org-mode-hook
-;;           (lambda () (imenu-add-to-menubar "Imenu")))
-;; (setq org-imenu-depth 3)
-;; (add-hook 'org-mode-hook 'imenu-list-minor-mode)
 
 ;; (use-package moody
 ;;   :config
