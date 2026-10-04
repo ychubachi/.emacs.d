@@ -11,26 +11,26 @@ README.org
 + init.el 内は [[https://github.com/jdtsmith/outli][outli-mode]] 対応の見出し（;;; / ;;;;）でセクション分けしている。見出しの折り畳みや imenu-list サイドバーでの一覧表示に対応
 
 * ファイル構成
-| ファイル      | 内容                                               |
-|----------------+----------------------------------------------------|
+| ファイル      | 内容                                                         |
+|---------------+--------------------------------------------------------------|
 | early-init.el | GCしきい値、package.elの無効化、メニュー・ツールバー、最大化 |
-| init.el       | 全設定（outli-modeの見出しで以下のセクションに分割） |
+| init.el       | 全設定（outli-modeの見出しで以下のセクションに分割）         |
 
 init.el内の主なセクション（;;;見出し）:
-| セクション                 | 内容                                                           |
-|-----------------------------+----------------------------------------------------------------|
-| パッケージ管理（elpaca）     | elpaca、no-littering、org(最新版)                              |
-| Emacs本体の基本設定         | キー、警告抑制、GnuPG、ffap、recentf、savehist、auto-revert、dired等 |
-| 日本語環境の設定             | 言語環境・文字コード、mozc                                     |
-| 見た目の設定                 | テーマ、フォント、ウィンドウ余白、minions、beacon、hydra-zoom  |
-| 補完機能の設定               | vertico、orderless、consult、embark、corfu、cape               |
-| Orgモードの設定              | org本体、キャプチャ、org-sidebar、org-roam、org-modern、org-download |
-| 文書作成・エクスポートの設定 | AUCTeX、pandoc、orgのエクスポート(LaTeX/HTML/publish)、eww    |
+| セクション                         | 内容                                                                      |
+|------------------------------------+---------------------------------------------------------------------------|
+| パッケージ管理（elpaca）           | elpaca、no-littering、org(最新版)                                         |
+| Emacs本体の基本設定                | キー、警告抑制、GnuPG、ffap、recentf、savehist、auto-revert、dired等      |
+| 日本語環境の設定                   | 言語環境・文字コード、mozc                                                |
+| 見た目の設定                       | テーマ、フォント、ウィンドウ余白、minions、beacon、hydra-zoom             |
+| 補完機能の設定                     | vertico、orderless、consult、embark、corfu、cape                          |
+| Orgモードの設定                    | org本体、キャプチャ、org-sidebar、org-roam、org-modern、org-download      |
+| 文書作成・エクスポートの設定       | AUCTeX、pandoc、orgのエクスポート(LaTeX/HTML/publish)、eww                |
 | テキスト編集・ウィンドウ操作の設定 | undo-tree、outli、imenu-list、multiple-cursors、yasnippet、ウィンドウ操作 |
-| バージョン管理の設定         | magit、diff-hl、vc                                             |
-| プログラミング支援の設定     | flymake、eglot、Lisp編集、Docker/YAML、projectile               |
-| AI関連の設定                 | agent-shell(Claude Code)                                       |
-| その他の設定                 | shell-pop、free-keys、未整理・要確認の設定                     |
+| バージョン管理の設定               | magit、diff-hl、vc                                                        |
+| プログラミング支援の設定           | flymake、eglot、Lisp編集、Docker/YAML、projectile                         |
+| AI関連の設定                       | agent-shell(Claude Code)                                                  |
+| その他の設定                       | shell-pop、free-keys、未整理・要確認の設定                                |
 + 機能を一時的に外すときは対象の use-package 式をコメントアウトする
 
 * Emacsのデフォルトキーバインドを上書きしたキー
@@ -38,38 +38,38 @@ Emacsにデフォルトで割り当てられている動作を、init.elで別�
 （デフォルトが未割り当てのキーに新規割り当てしたもの、C-cプレフィックス等のユーザー領域への新規割り当ては含まない）
 
 ** グローバル
-| キー     | 元のデフォルト動作                    | 変更後                        |
-|----------+----------------------------------------+-------------------------------|
-| C-h      | help-command（ヘルプ）                | delete-backward-char（BS）    |
-| C-z      | suspend-frame                         | undo-tree-visualize           |
-| C-o      | open-line                             | toggle-input-method（mozc）   |
-| C-s      | isearch-forward                       | consult-line                  |
-| C-x o    | other-window                          | ace-window                    |
-| C-x C-b  | list-buffers                          | persp-list-buffers            |
-| C-x b    | switch-to-buffer                      | consult-buffer                |
-| C-x 4 b  | switch-to-buffer-other-window         | consult-buffer-other-window   |
-| C-x 5 b  | switch-to-buffer-other-frame          | consult-buffer-other-frame    |
-| C-x t b  | switch-to-buffer-other-tab            | consult-buffer-other-tab      |
-| C-x r b  | bookmark-jump                         | consult-bookmark              |
-| C-x p b  | project-switch-to-buffer              | consult-project-buffer        |
-| C-x M-:  | repeat-complex-command                | consult-complex-command       |
-| M-y      | yank-pop                              | consult-yank-pop               |
-| M-g g    | goto-line                             | consult-goto-line             |
-| M-g M-g  | goto-line                             | consult-goto-line             |
-| M-'      | abbrev-prefix-mark                    | consult-register-store        |
+| キー    | 元のデフォルト動作            | 変更後                      |
+|---------+-------------------------------+-----------------------------|
+| C-h     | help-command（ヘルプ）        | delete-backward-char（BS）  |
+| C-z     | suspend-frame                 | undo-tree-visualize         |
+| C-o     | open-line                     | toggle-input-method（mozc） |
+| C-s     | isearch-forward               | consult-line                |
+| C-x o   | other-window                  | ace-window                  |
+| C-x C-b | list-buffers                  | persp-list-buffers          |
+| C-x b   | switch-to-buffer              | consult-buffer              |
+| C-x 4 b | switch-to-buffer-other-window | consult-buffer-other-window |
+| C-x 5 b | switch-to-buffer-other-frame  | consult-buffer-other-frame  |
+| C-x t b | switch-to-buffer-other-tab    | consult-buffer-other-tab    |
+| C-x r b | bookmark-jump                 | consult-bookmark            |
+| C-x p b | project-switch-to-buffer      | consult-project-buffer      |
+| C-x M-: | repeat-complex-command        | consult-complex-command     |
+| M-y     | yank-pop                      | consult-yank-pop            |
+| M-g g   | goto-line                     | consult-goto-line           |
+| M-g M-g | goto-line                     | consult-goto-line           |
+| M-'     | abbrev-prefix-mark            | consult-register-store      |
 + C-hをBSに変更した代わりに、ヘルプは C-^（元は未割り当て）で呼び出す
 
 ** isearch中のみ（isearch-mode-map）
-| キー   | 元のデフォルト動作      | 変更後                  |
-|--------+--------------------------+--------------------------|
-| M-e    | isearch-edit-string      | consult-isearch-history |
-| M-s e  | isearch-edit-string      | consult-isearch-history |
+| キー  | 元のデフォルト動作  | 変更後                  |
+|-------+---------------------+-------------------------|
+| M-e   | isearch-edit-string | consult-isearch-history |
+| M-s e | isearch-edit-string | consult-isearch-history |
 
 ** ミニバッファ内のみ（minibuffer-local-map）
-| キー | 元のデフォルト動作                   | 変更後           |
-|------+----------------------------------------+-------------------|
-| M-s  | next-matching-history-element         | consult-history   |
-| M-r  | previous-matching-history-element     | consult-history   |
+| キー | 元のデフォルト動作                | 変更後          |
+|------+-----------------------------------+-----------------|
+| M-s  | next-matching-history-element     | consult-history |
+| M-r  | previous-matching-history-element | consult-history |
 
 * lisp/*.el を init.el に統合 (2026-10-04)
 モジュールごとに分割していた lisp/init-*.el を、見通しの良さを優先して init.el 1ファイルに統合し、outli-modeの見出し階層で区切る形に変換した。対応関係は「ファイル構成」の節のとおり（ファイル名→セクション見出し）。あわせて組み込み機能の設定（旧init-core.el/init-files.el相当）も「Emacs本体の基本設定」セクションに一本化した。
