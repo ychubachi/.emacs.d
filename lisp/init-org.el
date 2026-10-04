@@ -140,6 +140,10 @@
   :custom
   (org-sidebar-tree-side 'left))
 
+;;; markdown-mode - org-src内でMarkdownをハイライトするために使用
+(use-package markdown-mode
+  :ensure t)
+
 ;;; org-tempo - #begin_...を簡単に
 ;; <el TAB -> #begin_src elisp
 
@@ -156,6 +160,8 @@
                '("j"  . "src java :results output"))
   (add-to-list 'org-structure-template-alist
                '("py" . "src python :results output"))
+  (add-to-list 'org-structure-template-alist
+               '("md" . "src markdown"))
   (add-to-list 'org-structure-template-alist
                '("n" . "note"))
   (add-to-list 'org-structure-template-alist
