@@ -135,8 +135,39 @@
   (user-full-name "Yoshihide CHUBACHI")
   (user-mail-address "yoshi@chubachi.net")
 
+  ;; recentf
+  (recentf-max-menu-items 100)
+  (recentf-max-saved-items 1000)
+  (recentf-auto-cleanup 'never)
+  (recentf-exclude '("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:" "/elpaca"))
+
+  ;; auto-revert
+  (auto-revert-interval 1)
+  (auto-revert-verbose nil)
+  (auto-revert-check-vc-info t) ; VCで更新があった場合、自動で更新
+
+  ;; files
+  (make-backup-files nil)
+  (auto-save-default nil)
+  (create-lockfiles nil)
+  (vc-follow-symlinks t) ; シンボリックリンクを自動で辿る
+
+  ;; dired
+  (dired-dwim-target t)
+
+  ;; vc-hooks
+  (vc-handled-backends '(Git)) ; Gitのみ使用
+
+  ;; eww
+  (shr-use-colors nil)
+  (shr-use-fonts nil)
+  (shr-image-animate nil)
+  (shr-width 72)
+  (eww-search-prefix "https://www.google.com/search?q=")
+
   :bind
   ("M-SPC" . cycle-spacing)
+  ("<f11>" . toggle-frame-maximized) ; frame - 画面の最大化をトグル
 
   :hook
   (before-save . delete-trailing-whitespace)
@@ -150,7 +181,17 @@
 
   (ffap-bindings) ; ffap（ポイント位置のファイルを探す）を有効にする
   (global-goto-address-mode 1) ; バッファ内のすべてのURLやメールアドレスを自動でリンク化（クリック可能に）
-  )
+
+  (savehist-mode 1)
+  (save-place-mode 1)
+  (global-auto-revert-mode 1)
+
+  (recentf-mode 1)
+  (run-at-time nil (* 5 60)
+               #'recentf-save-list) ; recentf
+
+  (with-eval-after-load 'dired
+    (keymap-set dired-mode-map "r" #'wdired-change-to-wdired-mode))) ; wdired
 
 ;;; 日本語環境の設定
 ;; 言語環境・文字コードと日本語入力（mozc）の設定。
@@ -196,107 +237,13 @@
             (lambda () (set-cursor-color my/cursor-color-default)))
   )
 
-;;; ファイル操作の設定 - ファイルの履歴・自動保存・再読込、dired等の設定。
-
-;;;; recentf
-(use-package recentf
-  :ensure nil
-  :init
-  (recentf-mode 1)
-
-  :custom
-  (recentf-max-menu-items 100)
-  (recentf-max-saved-items 1000)
-  (recentf-auto-cleanup 'never)
-  (recentf-exclude '("/recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:" "/elpaca"))
-
-  :config
-  (run-at-time nil (* 5 60)
-               #'recentf-save-list))
-
-;;;; savehist
-(use-package savehist
-  :ensure nil
-  :init
-  (savehist-mode 1))
-
-;;;; saveplace
-(use-package saveplace
-  :ensure nil
-  :init
-  (save-place-mode 1))
-
-;;;; auto-revert
-(use-package autorevert
-  :ensure nil
-
-  :custom
-  (auto-revert-interval 1)
-  (auto-revert-verbose nil)
-  (auto-revert-check-vc-info t) ; VCで更新があった場合、自動で更新
-
-  :init
-  (global-auto-revert-mode 1))
-
-;;;; files
-(use-package files
-  :ensure nil
-
-  :custom
-  (make-backup-files nil)
-  (auto-save-default nil)
-  (create-lockfiles nil)
-
-  ;; シンボリックリンクを自動で辿る
-  (vc-follow-symlinks t))
-
-;;;; dired
-(use-package dired
-  :ensure nil
-
-  :custom
-  (dired-dwim-target t))
-
-;;;; wdired
-(use-package wdired
-  :ensure nil
-
-  :bind
-  (:map dired-mode-map
-        ("r" . wdired-change-to-wdired-mode)))
-
-;;;; WSLVIEWはサポート終了？
-;; ;;; WSL環境でリンクをクリックした時に、Windows側のブラウザで開く設定
-;; ;; wslview (wsluパッケージ) が必要: sudo apt install wslu
-;; (use-package emacs
-;;   :ensure nil
-;;   :config
-;;   (defun cmd/wsl-browser (url &rest _ignore)
-;;     "Browse URL using wslview."
-;;     (interactive "sURL: ")
-;;     (shell-command (concat "wslview " "'" url "'")))
-
-;;   (when (and (eq system-type 'gnu/linux)
-;;              (getenv "WSLENV"))
-;;     (setq browse-url-browser-function 'cmd/wsl-browser)))
-
-;; ;;; Dired上で `J` を押すと、Windows側の既定のアプリ（Word、PDF、画像など）で開く
-;; ;; wslview (wsluパッケージ) が必要: sudo apt install wslu
-;; (use-package dired-launch
-;;   :ensure t
-;;   :hook (dired-mode . dired-launch-mode)
-;;   :config
-;;   (when (and (eq system-type 'gnu/linux)
-;;              (getenv "WSLENV"))
-;;     (setq dired-launch-default-launcher '("wslview"))))
-
 ;;; 見た目の設定
 ;; テーマ・フォント・フレーム・モードラインなど見た目の設定。
 
 ;;;; テーマの設定
 (load-theme 'misterioso)
 
-;;;; フォントを設定する
+;;;; フォント・フレームの設定
 ;; Ubuntuの場合、~/.fontsに必要なフォントを入れて
 ;; # fc-cache -fv
 ;; を実行
@@ -323,11 +270,6 @@
   (face-spec-reset-face face)
   (set-face-foreground face (face-attribute 'default :background)))
 (set-face-background 'fringe (face-attribute 'default :background))
-
-;;;; frame - 画面の最大化をトグル
-(use-package frame
-  :ensure nil
-  :bind ("<f11>" . toggle-frame-maximized))
 
 ;;;; minions - マイナーモード表示をコンパクトにする
 (use-package minions
@@ -1089,16 +1031,6 @@
   :ensure t
   :after org)
 
-;;;; eww - org-preview-html-viewerで使うewwの見た目設定
-(use-package eww
-  :ensure nil
-  :custom
-  (shr-use-colors nil)
-  (shr-use-fonts nil)
-  (shr-image-animate nil)
-  (shr-width 72)
-  (eww-search-prefix "https://www.google.com/search?q="))
-
 ;;; テキスト編集・ウィンドウ操作の設定
 ;; テキスト編集全般と、ウィンドウ・バッファ操作の設定。
 
@@ -1262,11 +1194,6 @@ _~_: modified
   (unless (display-graphic-p)
     (diff-hl-margin-mode 1)))
 
-;;;; vc-hooks
-(use-package vc-hooks
-  :ensure nil
-  :custom
-  (vc-handled-backends '(Git))) ; Gitのみ使用
 
 ;;; プログラミング支援の設定
 ;; LSP・構文チェック・Lisp編集・プロジェクト管理など、プログラミング全般の設定。
