@@ -1,34 +1,34 @@
-;;; 最初期に実施するパッケージの導入・初期化
-;;;; no-littering - Emacsのバックアップファイルや一時ファイルを整理する
-(use-package no-littering
-  :ensure (:wait t)
-  :demand t
-  :config
-  (setq auto-save-file-name-transforms
-        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
-  (setq backup-directory-alist
-        `(("." . ,(no-littering-expand-var-file-name "backup/"))))
-  ;; Theme standard backups and undo-tree history locations
-  (no-littering-theme-backups))
+;;; init-core.el --- Emacs本体の基本設定  -*- lexical-binding: t; -*-
+;; Copyright (C) 2022-2026 Yoshihide Chubachi
 
-;;;; org - Orgモードの最新版を利用する
-(use-package org
-  :ensure (:wait t)  ;; Block until the updated Org package is ready
-  )
+;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
 
-;;; Emacs本体の設定
-;;;; Emacsの組み込み機能を初期化する
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; Emacsの組み込み機能の基本設定。
+
+;;; Code:
+
+;;; Emacsの組み込み機能を初期化する
 (use-package emacs
   :ensure nil
-;;;;; custom
+;;;; custom
   :custom
   ;; startup
   (inhibit-startup-screen t)
-
-  ;; auto-revert
-  (auto-revert-interval 1)      ; 再読み込みの間隔
-  (auto-revert-verbose nil)     ; 再読込の際、メッセージを非表示
-  (auto-revert-check-vc-info t) ; VCで更新があった場合、自動で更新
 
   ;; ui
   (ring-bell-function #'ignore)
@@ -49,27 +49,19 @@
   (epg-pinentry-mode 'loopback)
   (plstore-cache-passphrase-for-symmetric-encryption t)
 
-  ;; dired
-  (dired-dwim-target t)
-
-  ;; mail
+  ;; user
   (user-full-name "Yoshihide Chubachi")
   (user-mail-address "yoshihide.chubachi@gmail.com")
-  (mail-user-agent 'message-user-agent)
-  (message-send-mail-function 'smtpmail-send-it)
-  (smtpmail-stream-type 'starttls)
-  (smtpmail-smtp-server "smtp.gmail.com")
-  (smtpmail-smtp-service 587)
 
-;;;;; bind
+;;;; bind
   :bind
   ("M-SPC" . cycle-spacing)
 
-;;;;; hook
+;;;; hook
   :hook
   (before-save . delete-trailing-whitespace)
 
-;;;;; init
+;;;; init
   :init
   ;; (keyboard-translate ?\C-h ?\C-?)
   (global-set-key (kbd "C-h") #'delete-backward-char) ; C-hをBSにする
@@ -77,17 +69,9 @@
 
   (defalias 'yes-or-no-p 'y-or-n-p) ; yos/noをy/nに変更する
 
-  (global-auto-revert-mode 1)
   (ffap-bindings) ; ffap（ポイント位置のファイルを探す）を有効にする
   (global-goto-address-mode 1) ; バッファ内のすべてのURLやメールアドレスを自動でリンク化（クリック可能に）
   )
 
-;;;; undo-tree - C-zでUndoするようにする
-(use-package undo-tree
-  :demand t
-  :bind ("C-z" . undo-tree-visualize)
-  :config
-  (setq undo-tree-auto-save-history t)
-  (global-undo-tree-mode))
-
 (provide 'init-core)
+;;; init-core.el ends here

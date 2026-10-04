@@ -1,9 +1,50 @@
-;;;; init-misc.el --- 未整理・要確認の設定置き場
+;;; init-misc.el --- その他の設定  -*- lexical-binding: t; -*-
+;; Copyright (C) 2022-2026 Yoshihide Chubachi
+
+;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; 単独で使う小物ツールと、未整理・要確認の設定置き場。
 ;;
 ;; init.old.org（旧設定）からの移植候補のうち、現行のlisp/*.elに
 ;; 既に取り込んだもの・明らかに不要と判断したものは削除済み。
-;; ここに残っているのは (1) 使うかどうか判断がつかない設定、
+;; 「未検討（保留）」「要確認」に残っているのは (1) 使うかどうか判断がつかない設定、
 ;; (2) 本人に利用状況を確認してから移植/削除を決めたい設定。
+
+;;; Code:
+
+;;; ツール
+
+;;;; shell-pop - ポップアップ型シェルバッファ
+
+(use-package shell-pop
+  :ensure t
+  :bind
+  (("C-c z" . shell-pop))
+  :custom
+  (shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda () (ansi-term shell-pop-term-shell))))
+  (shell-pop-window-position "bottom")
+  (shell-pop-window-size 30)
+  (shell-pop-full-span t))
+
+;;;; free-keys - 空いているキーバインドを確認する
+(use-package free-keys
+  :ensure t
+  :commands free-keys)
 
 ;;; 未検討（保留）
 
@@ -81,9 +122,5 @@
 ;;            :base-extension "jpg\\|gif\\|png|css\\|el"
 ;;            :recursive t))))
 
-;;; free-keys - 空いているキーバインドを確認する
-(use-package free-keys
-  :ensure t
-  :commands free-keys)
-
 (provide 'init-misc)
+;;; init-misc.el ends here

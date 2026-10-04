@@ -1,3 +1,35 @@
+;;; init-editing.el --- テキスト編集・ウィンドウ操作の設定  -*- lexical-binding: t; -*-
+;; Copyright (C) 2022-2026 Yoshihide Chubachi
+
+;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; テキスト編集全般と、ウィンドウ・バッファ操作の設定。
+
+;;; Code:
+
+;;; undo-tree - C-zでUndoツリーを表示する
+(use-package undo-tree
+  :demand t
+  :bind ("C-z" . undo-tree-visualize)
+  :config
+  (setq undo-tree-auto-save-history t)
+  (global-undo-tree-mode))
+
 ;;; outli - Orgぽく使えるアウトラインモード
 ;; https://github.com/jdtsmith/outli
 
@@ -8,17 +40,14 @@
               ("C-c C-n" . outline-next-visible-heading))
   :hook ((prog-mode text-mode) . outli-mode)) ; or whichever modes you prefer
 
-;;; LeTeX - AUCTeXの利用（Cofuと連携可）
-
-;; 近年Emacsコミュニティで主流になっている、軽量で動作が非常に滑らかな Corfu を使う方法です。
-;; こちらはAUCTeXが標準で提供する補完機能（completion-at-point）をそのまま綺麗にポップアップ化するため、追加の連携パッケージが不要で動作が極めて高速です。
-
-(use-package tex
-  :ensure auctex
-  :mode ("\\.tex\\'" . latex-mode)
-  :config
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t))
+;;; multiple-cursors - 複数カーソル同時編集
+(use-package multiple-cursors
+  :ensure t
+  :bind
+  (("C-S-c C-S-c" . mc/edit-lines)
+   ("C->"         . mc/mark-next-like-this)
+   ("C-<"         . mc/mark-previous-like-this)
+   ("C-c C-<"     . mc/mark-all-like-this)))
 
 ;;; yasnippet - テンプレート挿入機能
 (use-package yasnippet
@@ -33,52 +62,10 @@
   :ensure t
   :after yasnippet)
 
-;;; shell-pop - ポップアップ型シェルバッファ
-
-(use-package shell-pop
-  :ensure t
-  :bind
-  (("C-c z" . shell-pop))
-  :custom
-  (shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda () (ansi-term shell-pop-term-shell))))
-  (shell-pop-window-position "bottom")
-  (shell-pop-window-size 30)
-  (shell-pop-full-span t))
-
-;;; pandoc-mode - Pandoc経由の文書変換
-(use-package pandoc-mode
-  :ensure t
-  :after hydra
-  :commands pandoc-mode)
-
-;;; multiple-cursors - 複数カーソル同時編集
-(use-package multiple-cursors
-  :ensure t
-  :bind
-  (("C-S-c C-S-c" . mc/edit-lines)
-   ("C->"         . mc/mark-next-like-this)
-   ("C-<"         . mc/mark-previous-like-this)
-   ("C-c C-<"     . mc/mark-all-like-this)))
-
-;;; swap-buffers - 隣のウィンドウとバッファを入れ替え
-(use-package swap-buffers
-  :ensure t
-  :bind
-  ("C-c b" . swap-buffers)
-  :custom
-  ;; Dvorak配列のホームポジション（ace-windowと同じ考え方）
-  (swap-buffers-qwerty-shortcuts '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
-
 ;;; hydra - 複数キーの連続操作をまとめる
 (use-package hydra
   :ensure t
   :config
-  (defhydra hydra-zoom (global-map "<f12>")
-    "zoom"
-    ("i" text-scale-increase "Zoom in")
-    ("o" text-scale-decrease "Zoom out")
-    ("l" global-display-line-numbers-mode "Line number"))
-
   (defhydra hydra-buffer-menu (:color pink :hint nil)
     "
 ^Mark^             ^Unmark^           ^Actions^          ^Search
@@ -109,7 +96,9 @@ _~_: modified
     ("q" quit-window "quit" :color blue))
   (define-key Buffer-menu-mode-map "." 'hydra-buffer-menu/body))
 
-;;; ace-window - ウィンドウにラベルを表示して素早く移動・操作する
+;;; ウィンドウ・バッファ操作
+
+;;;; ace-window - ウィンドウにラベルを表示して素早く移動・操作する
 (use-package ace-window
   :ensure t
   :bind
@@ -121,4 +110,24 @@ _~_: modified
   :custom-face
   (aw-leading-char-face ((t (:height 3.0 :foreground "red")))))
 
+;;;; swap-buffers - 隣のウィンドウとバッファを入れ替え
+(use-package swap-buffers
+  :ensure t
+  :bind
+  ("C-c b" . swap-buffers)
+  :custom
+  ;; Dvorak配列のホームポジション（ace-windowと同じ考え方）
+  (swap-buffers-qwerty-shortcuts '("a" "o" "e" "u" "i" "d" "h" "t" "n" "s" "-")))
+
+;;;; perspective - バッファをグループ化して切り替える
+(use-package perspective
+  :ensure t
+  :bind
+  (("C-x C-b" . persp-list-buffers))
+  :custom
+  (persp-mode-prefix-key (kbd "C-c M-p"))
+  :config
+  (persp-mode 1))
+
 (provide 'init-editing)
+;;; init-editing.el ends here

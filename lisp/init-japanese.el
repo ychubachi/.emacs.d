@@ -1,3 +1,27 @@
+;;; init-japanese.el --- 日本語環境の設定  -*- lexical-binding: t; -*-
+;; Copyright (C) 2022-2026 Yoshihide Chubachi
+
+;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; 言語環境・文字コードと日本語入力（mozc）の設定。
+
+;;; Code:
+
 ;;; 言語環境と文字コードを設定する
 (use-package emacs
   :ensure nil
@@ -7,23 +31,6 @@
   (cond ((eq system-type 'windows-nt)
 	 (setq default-process-coding-system
 	       (cons 'utf-8 'cp932-unix)))))
-
-;;; 文字フォントを設定する
-;; Ubuntuの場合、~/.fontsに必要なフォントを入れて
-;; # fc-cache -fv
-;; を実行
-
-;; ｜あいうえお｜
-;; ｜憂鬱な檸檬｜
-;; ｜<miilwiim>｜
-;; ｜!"#$%&'~{}｜
-;; ｜🙆iimmiim>｜
-(use-package emacs
-  :ensure nil
-  :config
-  (custom-set-faces
-   '(default ((t (:family "HackGen")))) ;; (x-list-fonts "HackGen") で確認可能
-   ))
 
 ;;; mozc - 日本語変換用ヘルパーの呼び出し設定
 ;; WSL(Ubuntu) から利用する場合:
@@ -57,3 +64,4 @@
   )
 
 (provide 'init-japanese)
+;;; init-japanese.el ends here

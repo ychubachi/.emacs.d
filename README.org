@@ -5,12 +5,44 @@ README.org
 - [[https://github.com/ychubachi/.emacs.d#readme][ychubachi/.emacs.d: emacs setting files created on 2020/11/23]]
 
 * はじめに
-+ Emacsの設定ファイルです
-+ init.elは [[FILE:init.org][init.org]] から生成します
-+ init.elは config.org を読み込みます
++ Emacsの設定ファイルです（Emacs 30で動作確認）
++ パッケージ管理は [[https://github.com/progfolio/elpaca][elpaca]] + use-package
++ [[FILE:early-init.el][early-init.el]] で起動初期の設定（GC、フレーム）を行い、[[FILE:init.el][init.el]] は lisp/ 以下のモジュールを順に require するだけ
+
+* ファイル構成
+| ファイル                | 内容                                                           |
+|-------------------------+----------------------------------------------------------------|
+| early-init.el           | GCしきい値、package.elの無効化、メニュー・ツールバー、最大化 |
+| init.el                 | lisp/ をload-pathに追加し、各モジュールを読み込む             |
+| lisp/init-package.el    | elpaca、no-littering、org(最新版)                              |
+| lisp/init-core.el       | Emacs本体の基本設定（キー、警告抑制、GnuPG、ffapなど）         |
+| lisp/init-japanese.el   | 言語環境・文字コード、mozc                                     |
+| lisp/init-files.el      | recentf、savehist、auto-revert、dired、WSL連携                 |
+| lisp/init-ui.el         | テーマ、フォント、ウィンドウ余白、minions、beacon、hydra-zoom  |
+| lisp/init-completion.el | vertico、orderless、consult、embark、corfu、cape               |
+| lisp/init-org.el        | org本体、キャプチャ、org-roam、org-modern、org-download       |
+| lisp/init-document.el   | AUCTeX、pandoc、orgのエクスポート(LaTeX/HTML/publish)、eww    |
+| lisp/init-editing.el    | undo-tree、outli、multiple-cursors、yasnippet、ウィンドウ操作 |
+| lisp/init-vcs.el        | magit、diff-hl、vc                                             |
+| lisp/init-programming.el | flymake、eglot、Lisp編集、Docker/YAML、projectile             |
+| lisp/init-ai.el         | agent-shell(Claude Code)                                       |
+| lisp/init-misc.el       | shell-pop、free-keys、未整理・要確認の設定                     |
++ 各モジュールは同じ形式のヘッダー（ライセンス、lexical-binding、Commentary）を持つ
++ 機能を一時的に外すときは init.el の require をコメントアウトする
+
+* ファイル構成の再整理 (2026-09-30)
+設定の内容・種類に応じて lisp/*.el を再配置した。以下の履歴に出てくるファイル名は当時のもので、現在の場所は次のとおり。
++ magit / diff-hl / vc-handled-backends → init-vcs.el
++ AUCTeX / pandoc-mode / ox-latex / ox-html / ox-publish / ox-pandoc / org-preview-html / eww → init-document.el
++ undo-tree（init-core.elから）、ace-window / swap-buffers / perspective → init-editing.el
++ フォント（init-japanese.elから）、ウィンドウ余白（org-modernから）、hydra-zoom → init-ui.el
++ no-littering / org(最新版) → init-package.el
++ shell-pop → init-misc.el
++ メール送信設定(smtpmail) は削除。未使用の init-emacs.el も削除
++ auto-revert / dired-dwim-target の重複設定を init-files.el に一本化
 
 * init.old.org の整理 (2026-09-22)
-[[FILE:init.old.org][init.old.org]]（旧org-babel形式の設定ファイル、現在は不使用）の内容を、現行の lisp/*.el と照合して選別した結果。
+init.old.org（旧org-babel形式の設定ファイル、削除済み）の内容を、当時の lisp/*.el と照合して選別した結果。
 
 ** 不要（現行設定で既にカバー済み・時代遅れ）
 + org-superstar — org-modern(init-org.el)に統合済みで重複

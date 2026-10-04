@@ -1,3 +1,27 @@
+;;; init-files.el --- ファイル操作の設定  -*- lexical-binding: t; -*-
+;; Copyright (C) 2022-2026 Yoshihide Chubachi
+
+;; Author: Yoshihide Chubachi <yoshi@chubachi.net>
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; ファイルの履歴・自動保存・再読込、dired、WSL連携の設定。
+
+;;; Code:
+
 ;;; recentf
 (use-package recentf
   :ensure nil
@@ -33,6 +57,7 @@
   :custom
   (auto-revert-interval 1)
   (auto-revert-verbose nil)
+  (auto-revert-check-vc-info t) ; VCで更新があった場合、自動で更新
 
   :init
   (global-auto-revert-mode 1))
@@ -48,12 +73,6 @@
 
   ;; シンボリックリンクを自動で辿る
   (vc-follow-symlinks t))
-
-;;; vc-hooks
-(use-package vc-hooks
-  :ensure nil
-  :custom
-  (vc-handled-backends '(Git))) ; Gitのみ使用
 
 ;;; dired
 (use-package dired
@@ -96,3 +115,6 @@
 ;;     (setq dired-launch-default-launcher '("wslview"))))
 
 (provide 'init-files)
+
+(provide 'init-files)
+;;; init-files.el ends here
